@@ -1,0 +1,95 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape_gradient"
+    tools:context="com.icloudoor.clouddoor.WeatherWidgeFragment" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/bg_image_calendar_11" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="42.5dp"
+        android:layout_marginTop="14.5dp"
+        android:text="广州·番禺"
+        android:textColor="#000000"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="11.5dp"
+        android:text="4月2日"
+        android:textColor="#ffffff"
+        android:textSize="16sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="281dp"
+        android:layout_marginTop="8dp"
+        android:text="周四\n2015年"
+        android:textColor="#47494a"
+        android:textSize="11sp" />
+
+    <TextView
+        android:layout_width="178dp"
+        android:layout_height="16.5dp"
+        android:layout_marginLeft="46dp"
+        android:layout_marginTop="44dp"
+        android:gravity="center_vertical"
+        android:text="宜 "
+        android:textColor="#2db9e5"
+        android:textSize="12sp" />
+
+    <TextView
+        android:layout_width="178dp"
+        android:layout_height="16.5dp"
+        android:layout_marginLeft="46dp"
+        android:layout_marginTop="60.5dp"
+        android:gravity="center_vertical"
+        android:text="忌 "
+        android:textColor="#fe4a61"
+        android:textSize="12sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="270dp"
+        android:layout_marginTop="50dp"
+        android:text="-30"
+        android:textColor="#2db9e5"
+        android:textSize="30sp" />
+
+    <include
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="95.5dp"
+        android:layout_marginTop="97.5dp"
+        layout="@layout/date_recommended" />
+
+    <include
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="167.5dp"
+        android:layout_marginTop="97.5dp"
+        layout="@layout/date_default" />
+
+    <include
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="239.5dp"
+        android:layout_marginTop="97.5dp"
+        layout="@layout/date_default" />
+
+
+
+</RelativeLayout>

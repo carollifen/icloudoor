@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f7f9fd"
+    android:orientation="vertical" >
+
+<!--     <android.support.v4.view.ViewPager -->
+<!--         android:id="@+id/vPager" -->
+<!--         android:layout_width="wrap_content" -->
+<!--         android:layout_height="0dp" -->
+<!--         android:layout_gravity="center" -->
+<!--         android:layout_weight="1.0" -->
+<!--         android:background="#f7f9fd" -->
+<!--         android:flipInterval="30" -->
+<!--         android:persistentDrawingCache="animation" /> -->
+
+	<FrameLayout
+            android:id="@+id/id_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:id="@+id/bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_below="@id/id_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:id="@+id/bottom_msg_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+<!--             <ImageView -->
+<!--             android:layout_width="119.5dp" -->
+<!--             android:layout_height="55dp" -->
+<!--             android:src="@drawable/tab_plan_55" /> -->
+
+
+<!--             <ImageView -->
+<!--             android:id="@+id/btn_Msg" -->
+<!--             android:layout_width="20dp" -->
+<!--             android:layout_height="20dp" -->
+<!--             android:layout_centerHorizontal="true" -->
+<!--             android:layout_marginTop="11.5dp" -->
+<!--             android:src="@drawable/tab__message" /> -->
+
+
+<!--             <TextView -->
+<!--             android:id="@+id/bottom_tv_msg" -->
+<!--             android:layout_width="wrap_content" -->
+<!--             android:layout_height="wrap_content" -->
+<!--             android:layout_centerHorizontal="true" -->
+<!--             android:layout_marginTop="36.5dp" -->
+<!--             android:text="消息" -->
+<!--             android:textColor="#bdc7d4" -->
+<!--             android:textSize="14sp" /> -->
+
+            <include
+                android:id="@+id/bottom_msg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                layout="@layout/compose_msg_pressed" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/blank_tv1"
+            android:layout_width="1dp"
+            android:layout_height="55dp"
+            />
+
+        <RelativeLayout
+            android:id="@+id/bottom_key_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <!-- <ImageView -->
+            <!-- android:layout_width="119.5dp" -->
+            <!-- android:layout_height="55dp" -->
+            <!-- android:src="@drawable/tab_plan_55" /> -->
+
+
+            <!-- <ImageView -->
+            <!-- android:id="@+id/btn_Key" -->
+            <!-- android:layout_width="20dp" -->
+            <!-- android:layout_height="20dp" -->
+            <!-- android:layout_centerHorizontal="true" -->
+            <!-- android:layout_marginTop="11.5dp" -->
+            <!-- android:src="@drawable/tab__key" /> -->
+
+
+            <!-- <TextView -->
+            <!-- android:id="@+id/bottom_tv_key" -->
+            <!-- android:layout_width="wrap_content" -->
+            <!-- android:layout_height="wrap_content" -->
+            <!-- android:layout_centerHorizontal="true" -->
+            <!-- android:layout_marginTop="36.5dp" -->
+            <!-- android:text="钥匙" -->
+            <!-- android:textColor="#bdc7d4" -->
+            <!-- android:textSize="14sp" /> -->
+
+            <include
+                android:id="@+id/bottom_key"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                layout="@layout/compose_key_pressed" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/blank_tv2"
+            android:layout_width="1dp"
+            android:layout_height="55dp"
+            />
+
+        <RelativeLayout
+            android:id="@+id/bottom_setting_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+<!--             <ImageView -->
+<!--                 android:layout_width="119.5dp" -->
+<!--                 android:layout_height="55dp" -->
+<!--                 android:background="@drawable/tab_plan_55" /> -->
+
+<!--             <ImageView -->
+<!--                 android:id="@+id/btn_set" -->
+<!--                 android:layout_width="20dp" -->
+<!--                 android:layout_height="20dp" -->
+<!--                 android:layout_centerHorizontal="true" -->
+<!--                 android:layout_marginTop="11.5dp" -->
+<!--                 android:background="@drawable/tab__set" /> -->
+
+<!--             <TextView -->
+<!--                 android:id="@+id/bottom_tv_setting" -->
+<!--                 android:layout_width="wrap_content" -->
+<!--                 android:layout_height="wrap_content" -->
+<!--                 android:layout_centerHorizontal="true" -->
+<!--                 android:layout_marginTop="36.5dp" -->
+<!--                 android:text="我的" -->
+<!--                 android:textColor="#000000" -->
+<!--                 android:textSize="14sp" /> -->
+
+            <include
+                android:id="@+id/bottom_set"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                layout="@layout/compose_set_pressed" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>

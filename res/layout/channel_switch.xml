@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="69dp"
+    android:background="#f7f9fd" >
+
+    <RelativeLayout
+        android:id="@+id/channel_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp" >
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="5dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/btn_slide_bar" />
+
+        <ImageView
+            android:id="@+id/Iv_choose_car"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_choise_car" />
+
+        <ImageView
+            android:id="@+id/Iv_choose_man"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="83dp"
+            android:src="@drawable/btn_choise_man" />
+    </RelativeLayout>
+
+    <!-- <include -->
+    <!-- android:layout_width="wrap_content" -->
+    <!-- android:layout_height="wrap_content" -->
+    <!-- layout="@layout/car_channel" -->
+    <!-- android:layout_centerHorizontal="true" -->
+    <!-- android:layout_marginTop="32dp" -->
+    <!-- /> -->
+
+    <TextView
+        android:id="@+id/Tv_choose_car"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="69dp"
+        android:layout_marginTop="42dp"
+        android:text="车道"
+        android:textColor="#002f4a"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/Tv_choose_man"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="258dp"
+        android:layout_marginTop="42dp"
+        android:text="行人道"
+        android:textColor="#002f4a"
+        android:textSize="16sp" />
+"
+
+</RelativeLayout>

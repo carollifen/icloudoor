@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">云门</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="searching_key">正在为您搜索~</string>
+    <string name="can_shake_to_open_door">摇一摇可开门</string>
+    <string name="input_right_phone_num">请输入正确的手机号码</string>
+    <string name="diff_pwd">两次输入的密码不一致，请重新输入</string>
+    <string name="wrong_old_pwd">旧密码不正确，请重新输入</string>
+    <string name="login_fail">用户名不存在或者密码不正确，请重新输入</string>
+    <string name="send_too_many_a_day">发送短信数量超出限制(10条/天)</string>
+    <string name="send_too_frequently">发送短信过于频繁</string>
+    <string name="input_wrong_certi_code">验证码错误</string>
+    <string name="certi_code_overdue">验证码已失效，请重新获取</string>
+    <string name="phone_num_have_been_registerred">该手机号已被注册</string>
+    <string name="weak_pwd">密码强度不够，请输入新密码</string>
+    <string name="not_login">用户未登录</string>
+    <string name="unknown_err">未知错误，请重试</string>
+    <string name="title_activity_launcher">LauncherActivity</string>
+    <string name="hello_world">Hello world!</string>
+
+</resources>

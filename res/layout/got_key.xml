@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="104dp" 
+    android:background="#e7edf8">
+    
+    <TextView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_background_blue"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"/>
+    
+    <ImageView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_serch_open"
+        android:layout_marginTop="17dp"
+        android:layout_marginLeft="246dp"/>
+    
+    <TextView
+        android:id="@+id/district_door"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="锦绣香江北门"
+        android:textSize="18sp"
+        android:textColor="#ffffff"
+        android:layout_marginLeft="71dp"
+        android:layout_marginTop="25dp"/>
+    
+    <TextView
+        android:id="@+id/car_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="粤A XXXXX"
+        android:textSize="18sp"
+        android:textColor="#ffffff"
+        android:layout_marginLeft="79dp"
+        android:layout_marginTop="55dp"/>    
+
+</RelativeLayout>

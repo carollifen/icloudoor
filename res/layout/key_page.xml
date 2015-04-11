@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f7f9fd" >
+
+    <include
+        android:id="@+id/title_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        layout="@layout/title_bar_key_page" />
+
+    <include
+        android:id="@+id/weather_widge"
+        android:layout_width="fill_parent"
+        android:layout_height="155dp"
+        android:layout_below="@+id/title_bar"
+        layout="@layout/weather" />
+
+    <include
+        android:id="@+id/channel_widge"
+        android:layout_width="fill_parent"
+        android:layout_height="69dp"
+        android:layout_below="@+id/weather_widge"
+        layout="@layout/channel_switch" />
+
+    <TextView
+        android:id="@+id/blank_tv_below_channel_widge"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/channel_widge"
+        android:background="#f7f9fd" />
+
+    <RelativeLayout
+        android:id="@+id/key_widge"
+        android:layout_width="match_parent"
+        android:layout_height="114dp"
+        android:layout_below="@+id/blank_tv_below_channel_widge"
+        android:background="#f7f9fd" >
+
+        <ImageView
+            android:id="@+id/Iv_search_key"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/btn_background_gray" />
+
+        <ImageView
+            android:id="@+id/Iv_open_door_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="246dp"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/btn_serch_1" />
+
+        <TextView
+            android:id="@+id/district_door"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="71dp"
+            android:layout_marginTop="25dp"
+            android:text="@string/searching_key"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/car_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="79dp"
+            android:layout_marginTop="55dp"
+            android:text="@string/can_shake_to_open_door"
+            android:textColor="#7d7d7d"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+    <!-- <include -->
+    <!-- android:layout_width="fill_parent" -->
+    <!-- android:layout_height="114dp" -->
+    <!-- android:layout_below="@+id/blank_tv_below_channel_widge" -->
+    <!-- layout="@layout/got_key" -->
+    <!-- /> -->
+
+</RelativeLayout>

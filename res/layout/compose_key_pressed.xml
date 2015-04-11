@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+    
+    <ImageView
+        android:layout_width="119.5dp"
+        android:layout_height="55dp"
+        android:background="@drawable/tab_plan_55"/>
+ 
+    <ImageView
+        android:id="@+id/btn_Key"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@drawable/tab__key"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="11.5dp"/>
+    
+    
+    <TextView 
+        android:id="@+id/bottom_tv_key"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="钥匙"
+        android:textSize="14sp"
+        android:textColor="#000000"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="36.5dp"
+        />
+    
+
+</RelativeLayout>

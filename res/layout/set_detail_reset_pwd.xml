@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ecf0f7" >
+
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        layout="@layout/title_bar_set_detail_reset_pwd" />
+
+    <EditText
+        android:id="@+id/input_old_pwd"
+        android:layout_width="300dp"
+        android:layout_height="48dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="83.5dp"
+        android:background="@drawable/shape_white"
+        android:hint="输入旧密码"
+        android:paddingLeft="10dp"
+        android:textColorHint="#bdc7d4"
+        android:textSize="17sp"
+        android:inputType="numberPassword" />"
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="96dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="143.5dp"
+        android:background="@drawable/shape_white"
+        android:orientation="vertical" >
+
+        <EditText
+            android:id="@+id/input_new_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:hint="输入新密码"
+            android:paddingLeft="10dp"
+            android:textColorHint="#bdc7d4"
+            android:textSize="17sp"
+            android:inputType="numberPassword" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#bdc7d4" />
+
+        <EditText
+            android:id="@+id/confirm_new_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:hint="再输一遍"
+            android:paddingLeft="10dp"
+            android:textColorHint="#bdc7d4"
+            android:textSize="17sp"
+            android:inputType="numberPassword" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/reset_pwd_done"
+        android:layout_width="270dp"
+        android:layout_height="48dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="287dp"
+        android:background="@drawable/shape_color_blue"
+        android:gravity="center"
+        android:text="确    定"
+        android:textColor="#ffffff"
+        android:textSize="17sp" />
+
+</RelativeLayout>

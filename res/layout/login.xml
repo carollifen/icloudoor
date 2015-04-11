@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/login_logo"
+        android:layout_marginTop="40dp"
+        android:layout_centerHorizontal="true"
+        />
+    
+    <EditText 
+        android:id="@+id/login_input_phone_num"
+        android:layout_width="300dp"
+        android:layout_height="48dp"
+        android:background="@drawable/shape"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="155dp"
+        android:drawableLeft="@drawable/login_phone"
+        android:padding="12dp"
+        android:hint="云门号或手机号"
+        android:textColorHint="#8b9eb6"
+        android:textSize="16sp"
+        android:textColor="#000000"
+        android:inputType="phone"
+        />
+
+    <EditText 
+        android:id="@+id/login_input_pwd"
+        android:layout_width="300dp"
+        android:layout_height="48dp"
+        android:background="@drawable/shape"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="215dp"
+        android:drawableLeft="@drawable/login_password"
+        android:paddingLeft="12dp"  
+        android:drawableRight="@drawable/login_eyes"
+        android:paddingRight="10dp"    
+        android:inputType="numberPassword" 
+        />    
+
+    <TextView 
+        android:id="@+id/btn_login"
+        android:layout_width="270dp"
+        android:layout_height="48dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="287dp"
+        android:background="#2bd9e5"
+        android:text="登    录"
+        android:textSize="17sp"
+        android:textColor="#ffffff"
+        android:gravity="center"/>
+    
+    <TextView 
+        android:id="@+id/login_foget_pwd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="67.5dp"
+        android:layout_marginLeft="70dp"
+        android:text="忘记密码"
+        android:textSize="16sp"
+        android:textColor="#747f8d"/>   
+        
+    <TextView 
+        android:id="@+id/login_go_to_regi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="67.5dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="70dp"
+        android:text="立即注册"
+        android:textSize="16sp"
+        android:textColor="#747f8d"/>     
+
+</RelativeLayout>
