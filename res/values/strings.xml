@@ -20,5 +20,8 @@
     <string name="unknown_err">未知错误，请重试</string>
     <string name="title_activity_launcher">LauncherActivity</string>
     <string name="hello_world">Hello world!</string>
+    <string name="year">年</string>
+    <string name="month">月</string>
+    <string name="day">日</string>
 
 </resources>

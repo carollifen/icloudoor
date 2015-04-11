@@ -3,12 +3,155 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f7f9fd" >
-    
+
     <include
         android:id="@+id/title_bar_continue"
         android:layout_width="fill_parent"
         android:layout_height="40dp"
         layout="@layout/titile_bar_continue" />
-    
+
+    <TextView
+        android:id="@+id/continue_date"
+        android:layout_width="300dp"
+        android:layout_height="48dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:background="#ffffff"
+        android:gravity="center" />
+
+<!--     <RelativeLayout -->
+<!--         android:layout_width="250dp" -->
+<!--         android:layout_height="48dp" -->
+<!--         android:layout_centerHorizontal="true" -->
+<!--         android:layout_marginTop="60dp" > -->
+
+<!--         <TextView -->
+<!--             android:id="@+id/pick_year" -->
+<!--             android:layout_width="62dp" -->
+<!--             android:layout_height="match_parent" -->
+<!--             android:gravity="center" -->
+<!--             android:layout_alignParentLeft="true" -->
+<!--             android:text="2015" -->
+<!--             android:textSize="18sp" /> -->
+        
+<!--         <TextView -->
+<!--             android:layout_width="18dp" -->
+<!--             android:layout_height="match_parent" -->
+<!--             android:gravity="center" -->
+<!--             android:text="年" -->
+<!--             android:textSize="18sp" -->
+<!--             android:layout_toRightOf="@id/pick_year" /> -->"
+
+<!--         <TextView -->
+<!--             android:id="@+id/pick_month" -->
+<!--             android:layout_width="62dp" -->
+<!--             android:layout_height="match_parent" -->
+<!--             android:layout_marginLeft="85dp" -->
+<!--             android:gravity="center" -->
+<!--             android:text="4" -->
+<!--             android:textSize="18sp" /> -->
+        
+<!--         <TextView -->
+<!--             android:layout_width="18dp" -->
+<!--             android:layout_height="match_parent" -->
+<!--             android:gravity="center" -->
+<!--             android:text="月" -->
+<!--             android:textSize="18sp" -->
+<!--             android:layout_toRightOf="@id/pick_month" /> -->
+
+<!--         <TextView -->
+<!--             android:id="@+id/pick_day" -->
+<!--             android:layout_width="80dp" -->
+<!--             android:layout_height="match_parent" -->
+<!--             android:gravity="center" -->
+<!--             android:layout_alignParentRight="true" -->
+<!--             android:text="11日" -->
+<!--             android:textSize="18sp" /> -->
+<!--     </RelativeLayout> -->
+
+    <TextView
+    android:id="@+id/pick_year"
+    android:layout_width="80dp"
+    android:layout_height="48dp"
+    android:layout_alignBottom="@+id/continue_date"
+    android:layout_alignLeft="@+id/continue_date"
+    android:layout_marginLeft="25dp"
+    android:gravity="center"
+    android:text="2015年"
+    android:textSize="18sp" />
+
+
+    <TextView
+    android:id="@+id/pick_month"
+    android:layout_width="80dp"
+    android:layout_height="48dp"
+    android:layout_alignBottom="@+id/continue_date"
+    android:layout_centerHorizontal="true"
+    android:gravity="center"
+    android:text="4月"
+    android:textSize="18sp" />
+
+
+    <TextView
+    android:id="@+id/pick_day"
+    android:layout_width="80dp"
+    android:layout_height="48dp"
+    android:layout_alignBottom="@+id/continue_date"
+    android:layout_alignRight="@+id/continue_date"
+    android:layout_marginRight="25dp"
+    android:gravity="center"
+    android:text="11日"
+    android:textSize="18sp" />
+
+    <View
+        android:layout_width="300dp"
+        android:layout_height="0.5dp"
+        android:layout_alignBottom="@+id/continue_date"
+        android:layout_alignLeft="@+id/continue_date"
+        android:layout_centerHorizontal="true"
+        android:background="#bdc7d4" />
+
+    <View
+        android:layout_width="300dp"
+        android:layout_height="0.5dp"
+        android:layout_alignLeft="@+id/continue_date"
+        android:layout_alignTop="@+id/continue_date"
+        android:background="#bdc7d4" />
+
+    <TextView
+        android:id="@+id/btn_key_continue"
+        android:layout_width="263dp"
+        android:layout_height="48dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="244dp"
+        android:background="@drawable/shape_color_blue"
+        android:gravity="center"
+        android:text="续    期"
+        android:textColor="#ffffff"
+        android:textSize="17sp" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="150dp"
+        android:orientation="horizontal" >
+
+        <com.icloudoor.clouddoor.MyDatePickerUtilView
+            android:id="@+id/numberpicker"
+            android:layout_width="100dp"
+            android:layout_height="120dp" />
+
+        <TextView
+            android:id="@+id/picker_scope"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/numberpicker"
+            android:text="@string/year"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+    </RelativeLayout>
 
 </RelativeLayout>

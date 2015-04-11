@@ -57,7 +57,7 @@ public class SettingFragment extends Fragment {
 
 		myClickListener = new MyOnClickListener();
 
-		mQueue = Volley.newRequestQueue(context);
+		mQueue = Volley.newRequestQueue(getActivity());
 		sid = loadSid();
 
 		RLSet = (RelativeLayout) view.findViewById(R.id.btn_set);
