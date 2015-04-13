@@ -2,6 +2,7 @@ package com.icloudoor.clouddoor;
 
 import java.util.ArrayList;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,6 +24,7 @@ public class KeyFragment extends Fragment {
 	private TextView TvChooseMan;
 	private TextView TvDistrictDoor;
 	private TextView TvCarNumber;
+	private TextView TvOpenKeyList;
 
 	private ImageView IvChooseCar;
 	private ImageView IvChooseMan;
@@ -64,6 +66,7 @@ public class KeyFragment extends Fragment {
 		TvChooseMan = (TextView) view.findViewById(R.id.Tv_choose_man);
 		TvDistrictDoor = (TextView) view.findViewById(R.id.district_door);
 		TvCarNumber = (TextView) view.findViewById(R.id.car_number);
+		TvOpenKeyList = (TextView) view.findViewById(R.id.open_key_list);
 		
 		IvChooseCar = (ImageView) view.findViewById(R.id.Iv_choose_car);
 		IvChooseMan = (ImageView) view.findViewById(R.id.Iv_choose_man);
@@ -125,6 +128,16 @@ public class KeyFragment extends Fragment {
 					IvOpenDoorLogo.setImageResource(R.drawable.selector_pressed);
 					isFindKey = false;
 				}
+			}
+			
+		});
+		TvOpenKeyList.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent();
+				intent.setClass(getActivity(), KeyList.class);
+				startActivity(intent);
 			}
 			
 		});

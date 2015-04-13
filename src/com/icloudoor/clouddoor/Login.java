@@ -20,10 +20,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +36,10 @@ public class Login extends Activity {
 	private TextView TVLogin;
 	private TextView TVFogetPwd;
 	private TextView TVGoToRegi;
+	private ImageView IVShowPwd;
+
+	private boolean isHiddenPwd = true;
+
 	private URL loginURL;
 	private RequestQueue mQueue;
 
@@ -41,7 +48,7 @@ public class Login extends Activity {
 	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
 
 	private int loginStatusCode;
-	
+
 	private String sid;
 	private int isLogin = 0;
 
@@ -58,8 +65,25 @@ public class Login extends Activity {
 		TVLogin = (TextView) findViewById(R.id.btn_login);
 		TVFogetPwd = (TextView) findViewById(R.id.login_foget_pwd);
 		TVGoToRegi = (TextView) findViewById(R.id.login_go_to_regi);
-		
+		IVShowPwd = (ImageView) findViewById(R.id.btn_show_pwd);
+
 		sid = loadSid();
+
+		IVShowPwd.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (isHiddenPwd) {
+					isHiddenPwd = false;
+					ETInputPwd.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+				} else {
+					isHiddenPwd = true;
+					ETInputPwd.setTransformationMethod(PasswordTransformationMethod.getInstance());
+				}
+
+			}
+
+		});
 
 		TVGoToRegi.setOnClickListener(new OnClickListener() {
 
@@ -86,7 +110,8 @@ public class Login extends Activity {
 			@Override
 			public void onClick(View v) {
 				try {
-					loginURL = new URL(HOST + "/user/manage/login.do" + "?sid=" + sid);
+					loginURL = new URL(HOST + "/user/manage/login.do" + "?sid="
+							+ sid);
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				}
@@ -131,25 +156,25 @@ public class Login extends Activity {
 					Toast.makeText(v.getContext(), R.string.login_fail,
 							Toast.LENGTH_SHORT).show();
 				} else if (loginStatusCode == 1) {
-					
+
 					isLogin = 1;
-					SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS",
-							MODE_PRIVATE);
+					SharedPreferences loginStatus = getSharedPreferences(
+							"LOGINSTATUS", MODE_PRIVATE);
 					Editor editor = loginStatus.edit();
 					editor.putInt("LOGIN", isLogin);
 					editor.commit();
-					
+
 					Intent intent = new Intent();
 					intent.setClass(v.getContext(), CloudDoorMainActivity.class);
 					startActivity(intent);
-					
+
 					finish();
 				}
 			}
 
 		});
 	}
-	
+
 	public void saveSid(String sid) {
 		SharedPreferences savedSid = getSharedPreferences("SAVEDSID",
 				MODE_PRIVATE);
@@ -162,5 +187,5 @@ public class Login extends Activity {
 		SharedPreferences loadSid = getSharedPreferences("SAVEDSID", 0);
 		return loadSid.getString("SID", null);
 	}
-	
+
 }

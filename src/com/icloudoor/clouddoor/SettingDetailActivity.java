@@ -37,6 +37,7 @@ public class SettingDetailActivity extends Activity {
 		IVSetDetailDisturb = (ImageView) findViewById(R.id.btn_set_detail_disturb);
 		IVSwitchCar = (ImageView) findViewById(R.id.btn_switch_car);
 		IVSwitchMan = (ImageView) findViewById(R.id.btn_switch_man);
+		IVBack = (ImageView) findViewById(R.id.btn_back_set_detail);
 		
 		mMyBtnOnClickListener = new MyBtnOnClickListener();
 		
@@ -44,7 +45,6 @@ public class SettingDetailActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				Intent intent = new Intent();
 				intent.setClass(v.getContext(), ResetPwdActivity.class);
 				startActivity(intent);
@@ -55,10 +55,17 @@ public class SettingDetailActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				Intent intent = new Intent();
 				intent.setClass(v.getContext(), ChangePhoneActivity.class);
 				startActivity(intent);
+			}
+			
+		});
+		IVBack.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				finish();		
 			}
 			
 		});
@@ -88,7 +95,6 @@ public class SettingDetailActivity extends Activity {
 
 		@Override
 		public void onClick(View v) {
-			// TODO Auto-generated method stub
 			switch(v.getId()){
 			case R.id.btn_set_detail_shake:
 				if(canShake){

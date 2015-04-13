@@ -6,8 +6,10 @@ import java.util.List;
 import com.icloudoor.clouddoor.SlideView.OnSlideListener;
 import com.icloudoor.clouddoor.SlideView;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +27,8 @@ public class MsgFragment extends Fragment implements OnItemClickListener, OnClic
 	private MsgListView mMsgList;
 	private List<MessageItem> mMessageItems = new ArrayList<MessageItem>();
 	private SlideView mLastSlideViewWithStatusOn;
+	
+	private TextView mPopupWindow;
 
 	public MsgFragment() {
 		// Required empty public constructor

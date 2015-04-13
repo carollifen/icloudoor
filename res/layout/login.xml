@@ -36,10 +36,18 @@
         android:layout_marginTop="215dp"
         android:drawableLeft="@drawable/login_password"
         android:paddingLeft="12dp"  
-        android:drawableRight="@drawable/login_eyes"
-        android:paddingRight="10dp"    
         android:inputType="numberPassword" 
         />    
+        
+    <ImageView
+        android:id="@+id/btn_show_pwd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="230dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="40dp"
+        android:background="@drawable/login_eyes"
+        />
 
     <TextView 
         android:id="@+id/btn_login"

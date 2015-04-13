@@ -24,12 +24,12 @@
         android:layout_height="48dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp" >
-        
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:layout_alignParentLeft="true" >
+            android:layout_alignParentLeft="true"
+            android:orientation="horizontal" >
 
             <TextView
                 android:id="@+id/pick_year"
@@ -46,12 +46,12 @@
                 android:text=" 年"
                 android:textSize="18sp" />
         </LinearLayout>
-        
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:layout_centerHorizontal="true" >
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal" >
 
             <TextView
                 android:id="@+id/pick_month"
@@ -68,12 +68,12 @@
                 android:text=" 月"
                 android:textSize="18sp" />
         </LinearLayout>
-        
-		<LinearLayout
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:layout_alignParentRight="true" >
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal" >
 
             <TextView
                 android:id="@+id/pick_day"
@@ -90,42 +90,41 @@
                 android:text=" 日"
                 android:textSize="18sp" />
         </LinearLayout>
-
     </RelativeLayout>
 
-<!--     <TextView -->
-<!--     android:id="@+id/pick_year" -->
-<!--     android:layout_width="80dp" -->
-<!--     android:layout_height="48dp" -->
-<!--     android:layout_alignBottom="@+id/continue_date" -->
-<!--     android:layout_alignLeft="@+id/continue_date" -->
-<!--     android:layout_marginLeft="25dp" -->
-<!--     android:gravity="center" -->
-<!--     android:text="2015年" -->
-<!--     android:textSize="18sp" /> -->
+    <!-- <TextView -->
+    <!-- android:id="@+id/pick_year" -->
+    <!-- android:layout_width="80dp" -->
+    <!-- android:layout_height="48dp" -->
+    <!-- android:layout_alignBottom="@+id/continue_date" -->
+    <!-- android:layout_alignLeft="@+id/continue_date" -->
+    <!-- android:layout_marginLeft="25dp" -->
+    <!-- android:gravity="center" -->
+    <!-- android:text="2015年" -->
+    <!-- android:textSize="18sp" /> -->
 
 
-<!--     <TextView -->
-<!--     android:id="@+id/pick_month" -->
-<!--     android:layout_width="80dp" -->
-<!--     android:layout_height="48dp" -->
-<!--     android:layout_alignBottom="@+id/continue_date" -->
-<!--     android:layout_centerHorizontal="true" -->
-<!--     android:gravity="center" -->
-<!--     android:text="4月" -->
-<!--     android:textSize="18sp" /> -->
+    <!-- <TextView -->
+    <!-- android:id="@+id/pick_month" -->
+    <!-- android:layout_width="80dp" -->
+    <!-- android:layout_height="48dp" -->
+    <!-- android:layout_alignBottom="@+id/continue_date" -->
+    <!-- android:layout_centerHorizontal="true" -->
+    <!-- android:gravity="center" -->
+    <!-- android:text="4月" -->
+    <!-- android:textSize="18sp" /> -->
 
 
-<!--     <TextView -->
-<!--     android:id="@+id/pick_day" -->
-<!--     android:layout_width="80dp" -->
-<!--     android:layout_height="48dp" -->
-<!--     android:layout_alignBottom="@+id/continue_date" -->
-<!--     android:layout_alignRight="@+id/continue_date" -->
-<!--     android:layout_marginRight="25dp" -->
-<!--     android:gravity="center" -->
-<!--     android:text="11日" -->
-<!--     android:textSize="18sp" /> -->
+    <!-- <TextView -->
+    <!-- android:id="@+id/pick_day" -->
+    <!-- android:layout_width="80dp" -->
+    <!-- android:layout_height="48dp" -->
+    <!-- android:layout_alignBottom="@+id/continue_date" -->
+    <!-- android:layout_alignRight="@+id/continue_date" -->
+    <!-- android:layout_marginRight="25dp" -->
+    <!-- android:gravity="center" -->
+    <!-- android:text="11日" -->
+    <!-- android:textSize="18sp" /> -->
 
     <View
         android:layout_width="300dp"
