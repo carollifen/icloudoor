@@ -23,5 +23,8 @@
     <string name="year">年</string>
     <string name="month">月</string>
     <string name="day">日</string>
+    <string name="ble_not_supported">不支持Bluetooth Low Energy</string>
+    <string name="bt_enabled">蓝牙已开启</string>
+    <string name="door_open">开门</string>
 
 </resources>
