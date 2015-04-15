@@ -20,6 +20,8 @@ public class LauncherActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		getActionBar().hide();
 		setContentView(R.layout.activity_launcher);
+		
+		CheckFirstRun();
 
 		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", 0);
 		isLogin = loginStatus.getInt("LOGIN", 0);
@@ -44,6 +46,30 @@ public class LauncherActivity extends Activity {
 		};
 		jump.schedule(jumpTask, 2000);
 	}
+	
+	private void addShortcutToDesktop() {
+    	Intent shortcut = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
+    	shortcut.putExtra("duplicate", false);
+    	shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, this.getString(R.string.app_name));
+    	shortcut.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(this, R.drawable.logo_deep144));
+    	shortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT, new Intent(this, this.getClass()).setAction(Intent.ACTION_MAIN));
+    	sendBroadcast(shortcut);
+    }
+    
+	private void CheckFirstRun() {
+    	SharedPreferences setting = getSharedPreferences("com.icloudoor.clouddoor", 0);
+    	boolean user_first = setting.getBoolean("FIRST",true);
+    	if(user_first) {
+    		setting.edit().putBoolean("FIRST", false).commit();
+    		addShortcutToDesktop();         
+    	}
+    }
+	
+	public String loadSid() {
+		SharedPreferences loadSid = getSharedPreferences("SAVEDSID", 0);
+		return loadSid.getString("SID", null);
+	}
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -62,10 +88,5 @@ public class LauncherActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-	
-	public String loadSid() {
-		SharedPreferences loadSid = getSharedPreferences("SAVEDSID", 0);
-		return loadSid.getString("SID", null);
 	}
 }
