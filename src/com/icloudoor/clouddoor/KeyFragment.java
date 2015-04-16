@@ -1,5 +1,6 @@
 package com.icloudoor.clouddoor;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,7 @@ import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,6 +36,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -83,12 +86,16 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 	private static final int REQUEST_ENABLE_BT = 0;
 	private static final long SCAN_PERIOD = 10000; // ms
 	private BluetoothAdapter mBluetoothAdapter;
+	private DeviceAdapter mDeviceAdapter;
 	private UartService mUartService = null;
 	private ShakeEventManager mShakeMgr;
 	private List<BluetoothDevice> mDeviceList;
 	private Map<String, Integer> mDevRssiValues;
 	
-	private SQLiteDatabase mKeyDB = null;
+	private SoundPool mSoundPool;
+//	private MediaPlayer mMediaPlayer;
+	
+	private SQLiteDatabase mSQLiteDatabase = null;
 
 	public KeyFragment() {
 		// Required empty public constructor
@@ -98,7 +105,6 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
-		//TODO for BLE
 		if (!getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             Toast.makeText(getActivity(), R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
         }
@@ -109,11 +115,15 @@ public class KeyFragment extends Fragment implements ShakeListener  {
         BluetoothManager mBluetoothManager = (BluetoothManager) getActivity().getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = mBluetoothManager.getAdapter();
 		        
+        if (mBluetoothAdapter == null) {
+            Toast.makeText(getActivity(), R.string.bt_not_supported, Toast.LENGTH_SHORT).show();
+        }
+        
         mShakeMgr = new ShakeEventManager();
         mShakeMgr.setListener(KeyFragment.this);
 		mShakeMgr.init(getActivity());
 		
-		checkBlueToothState();
+//		checkBlueToothState();
 		
 		service_init(); 
 	
@@ -132,17 +142,20 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 		IvChooseMan = (ImageView) view.findViewById(R.id.Iv_choose_man); 
 		IvSearchKey = (ImageView) view.findViewById(R.id.Iv_search_key);   //需要改变背景颜色以区别搜索状态
 		IvOpenDoorLogo = (ImageView) view.findViewById(R.id.Iv_open_door_logo);  //需要改变图标以区别搜索状态
+		IvWeatherWidgePush1 = (ImageView) view.findViewById(R.id.Iv_weather_widge_push1);
+		IvWeatherWidgePush2 = (ImageView) view.findViewById(R.id.Iv_weather_widge_push2);
 		IvOpenDoorLogo.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
+				
 				doOpenDoor();
+				playOpenDoorSound();
 			}
 			
 		});
 		
-		IvWeatherWidgePush1 = (ImageView) view.findViewById(R.id.Iv_weather_widge_push1);
-		IvWeatherWidgePush2 = (ImageView) view.findViewById(R.id.Iv_weather_widge_push2);
+		
 
 		mFragmentManager = getChildFragmentManager();
 		mWeatherWidgePager = (ViewPager) view.findViewById(R.id.weather_widge_pager);
@@ -174,34 +187,34 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 		
 		//TODO
 		//按钮的监听需要变成检测到正在搜索时和搜索到钥匙时两种状态的监听
-		keyWidge.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				if (!isFindKey) {
-					TvDistrictDoor.setText(R.string.searching_key);
-					TvDistrictDoor.setTextSize(18);
-					TvDistrictDoor.setTextColor(0xFFffffff);
-					TvCarNumber.setText(R.string.can_shake_to_open_door);
-					TvCarNumber.setTextSize(12);
-					TvCarNumber.setTextColor(0xFF7d7d7d);
-					IvSearchKey.setImageResource(R.drawable.btn_background_gray);
-					IvOpenDoorLogo.setImageResource(R.drawable.btn_serch_1);
-					isFindKey = true;
-				}else{
-					TvDistrictDoor.setText("锦绣香江北门");
-					TvDistrictDoor.setTextSize(18);
-					TvDistrictDoor.setTextColor(0xFFffffff);
-					TvCarNumber.setText("粤A XXXXX");
-					TvCarNumber.setTextSize(18);
-					TvCarNumber.setTextColor(0xFFffffff);
-					IvSearchKey.setImageResource(R.drawable.btn_background_blue);
-					IvOpenDoorLogo.setImageResource(R.drawable.selector_pressed);
-					isFindKey = false;
-				}
-			}
-			
-		});
+//		keyWidge.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				if (!isFindKey) {
+//					TvDistrictDoor.setText(R.string.searching_key);
+//					TvDistrictDoor.setTextSize(18);
+//					TvDistrictDoor.setTextColor(0xFFffffff);
+//					TvCarNumber.setText(R.string.can_shake_to_open_door);
+//					TvCarNumber.setTextSize(12);
+//					TvCarNumber.setTextColor(0xFF7d7d7d);
+//					IvSearchKey.setImageResource(R.drawable.btn_background_gray);
+//					IvOpenDoorLogo.setImageResource(R.drawable.btn_serch_1);
+//					isFindKey = true;
+//				}else{
+//					TvDistrictDoor.setText("锦绣香江北门");
+//					TvDistrictDoor.setTextSize(18);
+//					TvDistrictDoor.setTextColor(0xFFffffff);
+//					TvCarNumber.setText("粤A XXXXX");
+//					TvCarNumber.setTextSize(18);
+//					TvCarNumber.setTextColor(0xFFffffff);
+//					IvSearchKey.setImageResource(R.drawable.btn_background_blue);
+//					IvOpenDoorLogo.setImageResource(R.drawable.selector_pressed);
+//					isFindKey = false;
+//				}
+//			}
+//			
+//		});
 		TvOpenKeyList.setOnClickListener(new OnClickListener(){
 
 			@Override
@@ -271,6 +284,7 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 	
 	private void populateDeviceList() {
 		mDeviceList = new ArrayList<BluetoothDevice>();
+		mDeviceAdapter = new DeviceAdapter(getActivity(),  mDeviceList);
 		mDevRssiValues = new HashMap<String, Integer>();
         scanLeDevice(true);
 	}
@@ -304,7 +318,9 @@ public class KeyFragment extends Fragment implements ShakeListener  {
         mDevRssiValues.put(device.getAddress(), rssi);
         if (!deviceFound) {
         	mDeviceList.add(device);
+        	mDeviceAdapter.notifyDataSetChanged();
         }
+        
     }	
 	
 	private void sendOpenDoorSignal() {
@@ -324,19 +340,38 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 		IvOpenDoorLogo.setEnabled(false);
 		Toast.makeText(getActivity(), R.string.door_open, Toast.LENGTH_SHORT).show();
 		
+		checkBlueToothState();
+		
 		if(mDeviceList != null  && mDeviceList.size() > 0) {
-			if(mDeviceList.get(0).getAddress() != null) {
+			
+			int maxRssiIndex = 0;
+			int maxRssi = -128;
+			
+			for(int i = 0; i < mDeviceList.size(); i++) {
+				String tempAdd = mDeviceList.get(i).getAddress();
+				int tempRssi = mDevRssiValues.get(tempAdd);
+				if(tempRssi > maxRssi) {
+					maxRssi = tempRssi;
+					maxRssiIndex = i;
+				}
+			}
+			
+			if(mDeviceList.get(maxRssiIndex).getAddress() != null) {
 				mBluetoothAdapter.stopLeScan(mLeScanCallback);
-		        mUartService.connect(mDeviceList.get(0).getAddress());
+		        mUartService.connect(mDeviceList.get(maxRssiIndex).getAddress());
 		        IvOpenDoorLogo.setImageResource(R.drawable.selector_pressed);
 		        IvSearchKey.setImageResource(R.drawable.btn_background_blue);
-		        TvDistrictDoor.setText("锦绣香江北门");
+		        TvDistrictDoor.setText(mDeviceList.get(maxRssiIndex).getName());
 		        TvDistrictDoor.setTextSize(18);
 		        TvDistrictDoor.setTextColor(0xFFffffff);
-		        TvCarNumber.setText("粤A XXXXX");
+		        TvCarNumber.setText(mDeviceList.get(maxRssiIndex).getAddress());
 		        TvCarNumber.setTextSize(18);
 		        TvCarNumber.setTextColor(0xFFffffff);
-			}		
+		        
+		        Toast.makeText(getActivity(), String.valueOf(mDevRssiValues.get(mDeviceList.get(maxRssiIndex).getAddress())), Toast.LENGTH_LONG).show();
+			}
+			
+			
 		}
 	}
 	
@@ -541,8 +576,59 @@ public class KeyFragment extends Fragment implements ShakeListener  {
         }
     };
 	
+    private class DeviceAdapter extends BaseAdapter {
+    	private Context context;
+		private List<BluetoothDevice> devices;
+
+		public DeviceAdapter(Context context, List<BluetoothDevice> devices) {
+			this.context = context;
+			this.devices = devices;
+		}
+		@Override
+		public int getCount() {
+			int ret = 0;
+			if(devices != null && devices.size() > 0) {
+				ret = devices.size();
+			}
+			return ret;
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return devices.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			return null;
+		}
+    	
+    }
+    
 	@Override
 	public void onShake() {
 		doOpenDoor();
+	}
+	
+	public void playOpenDoorSound(){
+		mSoundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
+		mSoundPool.play(mSoundPool.load(getActivity(), R.raw.ring, 0), 1, 1, 0, 0, 1);
+//		mMediaPlayer = MediaPlayer.create(getActivity(), R.raw.ring);
+//		if(mMediaPlayer != null) {		
+//			try {
+//				mMediaPlayer.stop();
+//				mMediaPlayer.prepare();
+//				mMediaPlayer.start();
+//			} catch (IllegalStateException e) {
+//				e.printStackTrace();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}					
+//		}
 	}
 }

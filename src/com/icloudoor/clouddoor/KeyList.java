@@ -1,8 +1,5 @@
 package com.icloudoor.clouddoor;
 
-import java.io.*;
-import org.json.*;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -64,8 +61,6 @@ public class KeyList extends Activity{
 	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
 	private String sid = null;
 	private JsonObjectRequest mJsonRequest;
-	
-	private JSONObject oldData;
 
 	// Door info variable
 	ListView mKeyList;
@@ -455,22 +450,10 @@ public class KeyList extends Activity{
 		return loadSid.getString("SID", null);
 	}
 
-	
-	public void saveKeyListInfo(JSONObject data) {
-		SharedPreferences savedKeyList = getSharedPreferences("SAVEDKEYLIST",
-				MODE_PRIVATE);
-		Editor editor = savedKeyList.edit();
-		editor.putString("KEYLIST", data.toString());
-		editor.commit();
-	}
-	
-	public JSONObject loadKey() {
-		SharedPreferences loadKeyList = getSharedPreferences("SAVEDKEYLIST", 0);
-		try {
-			return new JSONObject(loadKeyList.getString("KEYLIST", null));
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return null;
+	public boolean isDataTableEmpty(){
+		boolean isEmpty = false;
+		
+		
+		return isEmpty;
 	}
 }
