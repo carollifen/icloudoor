@@ -123,7 +123,7 @@ public class KeyFragment extends Fragment implements ShakeListener  {
         mShakeMgr.setListener(KeyFragment.this);
 		mShakeMgr.init(getActivity());
 		
-//		checkBlueToothState();
+		checkBlueToothState();
 		
 		service_init(); 
 	
@@ -148,7 +148,6 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 
 			@Override
 			public void onClick(View v) {
-				
 				doOpenDoor();
 				playOpenDoorSound();
 			}
@@ -339,8 +338,6 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 	private void doOpenDoor() {
 		IvOpenDoorLogo.setEnabled(false);
 		Toast.makeText(getActivity(), R.string.door_open, Toast.LENGTH_SHORT).show();
-		
-		checkBlueToothState();
 		
 		if(mDeviceList != null  && mDeviceList.size() > 0) {
 			
