@@ -20,7 +20,7 @@
         android:paddingLeft="10dp"
         android:textColorHint="#bdc7d4"
         android:textSize="17sp"
-        android:inputType="numberPassword" />"
+        android:inputType="textPassword" />"
 
     <LinearLayout
         android:layout_width="300dp"
@@ -39,7 +39,7 @@
             android:paddingLeft="10dp"
             android:textColorHint="#bdc7d4"
             android:textSize="17sp"
-            android:inputType="numberPassword" />
+            android:inputType="textPassword" />
 
         <View
             android:layout_width="match_parent"
@@ -55,7 +55,7 @@
             android:paddingLeft="10dp"
             android:textColorHint="#bdc7d4"
             android:textSize="17sp"
-            android:inputType="numberPassword" />
+            android:inputType="textPassword" />
 
     </LinearLayout>
 

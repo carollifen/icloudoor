@@ -16,13 +16,13 @@
         android:layout_height="48dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="155dp"
-        android:hint="输入密码"
+        android:hint="输入至少8位密码，包含字符和数字"
         android:textColorHint="#8b9eb6"
         android:padding="10dp"
         android:textSize="17dp"
         android:textColor="#000000"
         android:background="@drawable/shape"
-        android:inputType="numberPassword" />
+        android:inputType="textPassword" />
 
     <EditText
         android:id="@+id/regi_input_pwd_again"
@@ -36,7 +36,7 @@
         android:textSize="17dp"
         android:textColor="#000000"
         android:background="@drawable/shape"
-        android:inputType="numberPassword" />
+        android:inputType="textPassword" />
 
     <TextView
         android:id="@+id/btn_regi_complete"

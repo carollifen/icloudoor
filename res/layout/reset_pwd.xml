@@ -21,7 +21,7 @@
         android:textSize="17dp"
         android:textColor="#000000"
         android:background="@drawable/shape"
-        android:inputType="numberPassword" />
+        android:inputType="textPassword" />
 
     <EditText
         android:id="@+id/reset_pwd_input_pwd_again"
@@ -35,7 +35,7 @@
         android:textSize="17dp"
         android:textColor="#000000"
         android:background="@drawable/shape"
-        android:inputType="numberPassword" />
+        android:inputType="textPassword" />
 
     <TextView
         android:id="@+id/reset_pwd_complete"

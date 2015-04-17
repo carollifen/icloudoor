@@ -24,7 +24,7 @@
         android:textColorHint="#8b9eb6"
         android:textSize="16sp"
         android:textColor="#000000"
-        android:inputType="phone"
+        android:inputType="number"
         />
 
     <EditText 
@@ -36,7 +36,7 @@
         android:layout_marginTop="215dp"
         android:drawableLeft="@drawable/login_password"
         android:paddingLeft="12dp"  
-        android:inputType="numberPassword" 
+        android:inputType="textPassword"
         />    
         
     <ImageView

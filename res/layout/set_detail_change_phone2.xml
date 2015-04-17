@@ -71,7 +71,7 @@
             android:textSize="17sp"
             android:background="@null"
             android:layout_marginLeft="84dp"
-            android:inputType="phone" />
+            android:inputType="number" />
     </RelativeLayout>
 
     <TextView

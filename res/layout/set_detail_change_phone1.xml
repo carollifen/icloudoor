@@ -28,7 +28,7 @@
         android:padding="10dp"
         android:textColor="#000000"
         android:textSize="17sp"
-        android:inputType="phone" />
+        android:inputType="number" />
     
     <TextView
         android:id="@+id/btn_change_phone2"
