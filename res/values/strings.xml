@@ -16,8 +16,10 @@
     <string name="certi_code_overdue">验证码已失效，请重新获取</string>
     <string name="phone_num_have_been_registerred">该手机号已被注册</string>
     <string name="weak_pwd">密码强度不够，请输入新密码</string>
-    <string name="not_login">用户未登录</string>
+    <string name="not_login">用户未登录，请重新登录</string>
     <string name="unknown_err">未知错误，请重试</string>
+    <string name="have_no_key_authorised">该用户未授权任何门锁信息</string>
+    <string name="downloading_key_list">正在加载钥匙列表</string>
     <string name="title_activity_launcher">LauncherActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="year">年</string>

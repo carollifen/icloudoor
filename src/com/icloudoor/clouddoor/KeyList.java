@@ -29,7 +29,9 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
@@ -44,6 +46,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 @SuppressLint("NewApi")
 public class KeyList extends Activity{
@@ -61,6 +64,8 @@ public class KeyList extends Activity{
 	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
 	private String sid = null;
 	private JsonObjectRequest mJsonRequest;
+	private int statusCode;
+	private int isLogin;
 
 	// Door info variable
 	ListView mKeyList;
@@ -92,17 +97,34 @@ public class KeyList extends Activity{
 			e.printStackTrace();
 		}
 
+		
+		
+		mKeyDBHelper = new MyDataBaseHelper(KeyList.this, DATABASE_NAME);
+		mKeyDB = mKeyDBHelper.getWritableDatabase();
+ 
 		mJsonRequest = new JsonObjectRequest(Method.POST,
 				downLoadKeyURL.toString(), null,
 				new Response.Listener<JSONObject>() {
 
 					@Override
 					public void onResponse(JSONObject response) {
-						doorNameList = parseKeyData(response);
-						mAdapter = new KeyListAdapter(KeyList.this,
-								doorNameList);
-						mKeyList.setAdapter(mAdapter);
-						Log.e("TEST", response.toString());
+						try {
+							statusCode = response.getInt("code");
+							if (statusCode == 1) {
+								Toast.makeText(KeyList.this, R.string.downloading_key_list,
+										Toast.LENGTH_SHORT).show();
+								
+								doorNameList = parseKeyData(response);
+								mAdapter = new KeyListAdapter(KeyList.this,
+										doorNameList);
+								mKeyList.setAdapter(mAdapter);
+								Log.e("TEST", response.toString());
+								Log.e("TEST  DB  count: ", String.valueOf(DBCount()));
+							}
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+						
 					}
 				}, new Response.ErrorListener() {
 
@@ -112,6 +134,26 @@ public class KeyList extends Activity{
 					}
 				});
 		mQueue.add(mJsonRequest);
+		
+		if (statusCode == -2) {
+			Toast.makeText(KeyList.this, R.string.not_login, Toast.LENGTH_SHORT)
+					.show();
+			isLogin = 0;
+			SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS",
+					MODE_PRIVATE);
+			Editor editor = loginStatus.edit();
+			editor.putInt("LOGIN", isLogin);
+			editor.commit();
+
+			Intent intent = new Intent();
+			intent.setClass(KeyList.this, Login.class);
+			startActivity(intent);
+
+			finish();
+		} else if (statusCode == -81) {
+			Toast.makeText(KeyList.this, R.string.have_no_key_authorised,
+					Toast.LENGTH_SHORT).show();
+		}
 		
 		IvBack = (ImageView) findViewById(R.id.btn_back_key_list);
 		IvBack.setOnClickListener(new OnClickListener() {
@@ -128,10 +170,7 @@ public class KeyList extends Activity{
 	public ArrayList<HashMap<String, String>> parseKeyData(JSONObject response) {
 		ArrayList<HashMap<String, String>> doorNameList = new ArrayList<HashMap<String, String>>();
 		doorNameList = new ArrayList<HashMap<String, String>>();
-		mKeyDBHelper = new MyDataBaseHelper(KeyList.this,
-				DATABASE_NAME);
-		mKeyDB = mKeyDBHelper.getWritableDatabase();
-		
+
 		try {
 			JSONArray dataArray = response.getJSONArray("data"); // 得到"data"这个array
 
@@ -149,27 +188,29 @@ public class KeyList extends Activity{
 							.get(indexL1Car);
 
 					ContentValues values = new ContentValues();
-					if (L1CarDoorsData.getInt("status") == 1) {
-						mapL1Car.put(
-								"Door",
-								L1ZoneName
-										+ L1CarDoorsData.getString("doorName"));
-						mapL1Car.put("BEGIN", keyBeginDay);
-						mapL1Car.put("END", keyEndDay);
-						mapL1Car.put("DOORID",
-								L1CarDoorsData.getString("doorId"));
-						mapL1Car.put("DEVICEID",
-								L1CarDoorsData.getString("deviceId"));
-						doorNameList.add(mapL1Car);
-						
-						values.put("doorId", L1CarDoorsData.getString("doorId"));
-						values.put("doorName",
-								L1ZoneName + L1CarDoorsData.getString("doorName"));
-						values.put("deviceId", L1CarDoorsData.getString("deviceId"));
-						values.put("authFrom", keyBeginDay);
-						values.put("authTo", keyEndDay);
-						values.put("status", L1CarDoorsData.getInt("status"));
-						mKeyDB.insert(TABLE_NAME, null, values);
+					if (L1CarDoorsData.getInt("status") == 1) {				
+						if(!hasData(mKeyDB, L1CarDoorsData.getString("deviceId")) && L1CarDoorsData.getString("deviceId") != null){
+							mapL1Car.put(
+									"Door",
+									L1ZoneName
+											+ L1CarDoorsData.getString("doorName"));
+							mapL1Car.put("BEGIN", keyBeginDay);
+							mapL1Car.put("END", keyEndDay);
+							mapL1Car.put("DOORID",
+									L1CarDoorsData.getString("doorId"));
+							mapL1Car.put("DEVICEID",
+									L1CarDoorsData.getString("deviceId"));
+							doorNameList.add(mapL1Car);
+							
+							values.put("doorId", L1CarDoorsData.getString("doorId"));
+							values.put("doorName",
+									L1ZoneName + L1CarDoorsData.getString("doorName"));
+							values.put("deviceId", L1CarDoorsData.getString("deviceId"));
+							values.put("authFrom", keyBeginDay);
+							values.put("authTo", keyEndDay);
+							values.put("status", L1CarDoorsData.getInt("status"));
+							mKeyDB.insert(TABLE_NAME, null, values);						
+						}
 					}
 				}
 
@@ -181,26 +222,28 @@ public class KeyList extends Activity{
 
 					ContentValues values = new ContentValues();
 					if (L1ManDoorsData.getInt("status") == 1) {
-						mapL1Man.put(
-								"Door",
-								L1ZoneName
-										+ L1ManDoorsData.getString("doorName"));
-						mapL1Man.put("BEGIN", keyBeginDay);
-						mapL1Man.put("END", keyEndDay);
-						mapL1Man.put("DOORID",
-								L1ManDoorsData.getString("doorId"));
-						mapL1Man.put("DEVICEID",
-								L1ManDoorsData.getString("deviceId"));
-						doorNameList.add(mapL1Man);
-						
-						values.put("doorId", L1ManDoorsData.getString("doorId"));
-						values.put("doorName",
-								L1ZoneName + L1ManDoorsData.getString("doorName"));
-						values.put("deviceId", L1ManDoorsData.getString("deviceId"));
-						values.put("authFrom", keyBeginDay);
-						values.put("authTo", keyEndDay);
-						values.put("status", L1ManDoorsData.getInt("status"));
-						mKeyDB.insert(TABLE_NAME, null, values);
+						if(!hasData(mKeyDB, L1ManDoorsData.getString("deviceId")) && L1ManDoorsData.getString("deviceId") != null){
+							mapL1Man.put(
+									"Door",
+									L1ZoneName
+											+ L1ManDoorsData.getString("doorName"));
+							mapL1Man.put("BEGIN", keyBeginDay);
+							mapL1Man.put("END", keyEndDay);
+							mapL1Man.put("DOORID",
+									L1ManDoorsData.getString("doorId"));
+							mapL1Man.put("DEVICEID",
+									L1ManDoorsData.getString("deviceId"));
+							doorNameList.add(mapL1Man);
+							
+							values.put("doorId", L1ManDoorsData.getString("doorId"));
+							values.put("doorName",
+									L1ZoneName + L1ManDoorsData.getString("doorName"));
+							values.put("deviceId", L1ManDoorsData.getString("deviceId"));
+							values.put("authFrom", keyBeginDay);
+							values.put("authTo", keyEndDay);
+							values.put("status", L1ManDoorsData.getInt("status"));
+							mKeyDB.insert(TABLE_NAME, null, values);
+						}						
 					}
 				}
 
@@ -218,25 +261,27 @@ public class KeyList extends Activity{
 
 						ContentValues values = new ContentValues();
 						if (L2CarDoorsData.getInt("status") == 1) {
-							mapL2Car.put("Door", L1ZoneName + L2ZoneName
-									+ L2CarDoorsData.getString("doorName"));
-							mapL2Car.put("BEGIN", keyBeginDay);
-							mapL2Car.put("END", keyEndDay);
-							mapL2Car.put("DOORID",
-									L2CarDoorsData.getString("doorId"));
-							mapL2Car.put("DEVICEID",
-									L2CarDoorsData.getString("deviceId"));
-							doorNameList.add(mapL2Car);
-							
-							values.put("doorId", L2CarDoorsData.getString("doorId"));
-							values.put("doorName", L1ZoneName + L2ZoneName
-									+ L2CarDoorsData.getString("doorName"));
-							values.put("deviceId",
-									L2CarDoorsData.getString("deviceId"));
-							values.put("authFrom", keyBeginDay);
-							values.put("authTo", keyEndDay);
-							values.put("status", L2CarDoorsData.getInt("status"));
-							mKeyDB.insert(TABLE_NAME, null, values);
+							if(!hasData(mKeyDB, L2CarDoorsData.getString("deviceId")) && L2CarDoorsData.getString("deviceId") != null){
+								mapL2Car.put("Door", L1ZoneName + L2ZoneName
+										+ L2CarDoorsData.getString("doorName"));
+								mapL2Car.put("BEGIN", keyBeginDay);
+								mapL2Car.put("END", keyEndDay);
+								mapL2Car.put("DOORID",
+										L2CarDoorsData.getString("doorId"));
+								mapL2Car.put("DEVICEID",
+										L2CarDoorsData.getString("deviceId"));
+								doorNameList.add(mapL2Car);
+								
+								values.put("doorId", L2CarDoorsData.getString("doorId"));
+								values.put("doorName", L1ZoneName + L2ZoneName
+										+ L2CarDoorsData.getString("doorName"));
+								values.put("deviceId",
+										L2CarDoorsData.getString("deviceId"));
+								values.put("authFrom", keyBeginDay);
+								values.put("authTo", keyEndDay);
+								values.put("status", L2CarDoorsData.getInt("status"));
+								mKeyDB.insert(TABLE_NAME, null, values);
+							}
 						}
 					}
 
@@ -248,25 +293,27 @@ public class KeyList extends Activity{
 
 						ContentValues values = new ContentValues();
 						if (L2ManDoorsData.getInt("status") == 1) {
-							mapL2Man.put("Door", L1ZoneName + L2ZoneName
-									+ L2ManDoorsData.getString("doorName"));
-							mapL2Man.put("BEGIN", keyBeginDay);
-							mapL2Man.put("END", keyEndDay);
-							mapL2Man.put("DOORID",
-									L2ManDoorsData.getString("doorId"));
-							mapL2Man.put("DEVICEID",
-									L2ManDoorsData.getString("deviceId"));
-							doorNameList.add(mapL2Man);
-							
-							values.put("doorId", L2ManDoorsData.getString("doorId"));
-							values.put("doorName", L1ZoneName + L2ZoneName
-									+ L2ManDoorsData.getString("doorName"));
-							values.put("deviceId",
-									L2ManDoorsData.getString("deviceId"));
-							values.put("authFrom", keyBeginDay);
-							values.put("authTo", keyEndDay);
-							values.put("status", L2ManDoorsData.getInt("status"));
-							mKeyDB.insert(TABLE_NAME, null, values);
+							if(!hasData(mKeyDB, L2ManDoorsData.getString("deviceId")) && L2ManDoorsData.getString("deviceId") != null){
+								mapL2Man.put("Door", L1ZoneName + L2ZoneName
+										+ L2ManDoorsData.getString("doorName"));
+								mapL2Man.put("BEGIN", keyBeginDay);
+								mapL2Man.put("END", keyEndDay);
+								mapL2Man.put("DOORID",
+										L2ManDoorsData.getString("doorId"));
+								mapL2Man.put("DEVICEID",
+										L2ManDoorsData.getString("deviceId"));
+								doorNameList.add(mapL2Man);
+								
+								values.put("doorId", L2ManDoorsData.getString("doorId"));
+								values.put("doorName", L1ZoneName + L2ZoneName
+										+ L2ManDoorsData.getString("doorName"));
+								values.put("deviceId",
+										L2ManDoorsData.getString("deviceId"));
+								values.put("authFrom", keyBeginDay);
+								values.put("authTo", keyEndDay);
+								values.put("status", L2ManDoorsData.getInt("status"));
+								mKeyDB.insert(TABLE_NAME, null, values);
+							}
 						}
 					}
 
@@ -286,37 +333,39 @@ public class KeyList extends Activity{
 
 							ContentValues values = new ContentValues();
 							if (L3CarDoorsData.getInt("status") == 1) {
-								mapL3Car.put(
-										"Door",
-										L1ZoneName
-												+ L2ZoneName
-												+ L3ZoneName
-												+ L3CarDoorsData
-														.getString("doorName"));
-								mapL3Car.put("BEGIN", keyBeginDay);
-								mapL3Car.put("END", keyEndDay);
-								mapL3Car.put("DOORID",
-										L3CarDoorsData.getString("doorId"));
-								mapL3Car.put("DEVICEID",
-										L3CarDoorsData.getString("deviceId"));
-								doorNameList.add(mapL3Car);
-								
-								values.put("doorId",
-										L3CarDoorsData.getString("doorId"));
-								values.put(
-										"doorName",
-										L1ZoneName
-												+ L2ZoneName
-												+ L3ZoneName
-												+ L3CarDoorsData
-														.getString("doorName"));
-								values.put("deviceId",
-										L3CarDoorsData.getString("deviceId"));
-								values.put("authFrom", keyBeginDay);
-								values.put("authTo", keyEndDay);
-								values.put("status",
-										L3CarDoorsData.getInt("status"));
-								mKeyDB.insert(TABLE_NAME, null, values);
+								if(!hasData(mKeyDB, L3CarDoorsData.getString("deviceId")) && L3CarDoorsData.getString("deviceId") != null){
+									mapL3Car.put(
+											"Door",
+											L1ZoneName
+													+ L2ZoneName
+													+ L3ZoneName
+													+ L3CarDoorsData
+															.getString("doorName"));
+									mapL3Car.put("BEGIN", keyBeginDay);
+									mapL3Car.put("END", keyEndDay);
+									mapL3Car.put("DOORID",
+											L3CarDoorsData.getString("doorId"));
+									mapL3Car.put("DEVICEID",
+											L3CarDoorsData.getString("deviceId"));
+									doorNameList.add(mapL3Car);
+									
+									values.put("doorId",
+											L3CarDoorsData.getString("doorId"));
+									values.put(
+											"doorName",
+											L1ZoneName
+													+ L2ZoneName
+													+ L3ZoneName
+													+ L3CarDoorsData
+															.getString("doorName"));
+									values.put("deviceId",
+											L3CarDoorsData.getString("deviceId"));
+									values.put("authFrom", keyBeginDay);
+									values.put("authTo", keyEndDay);
+									values.put("status",
+											L3CarDoorsData.getInt("status"));
+									mKeyDB.insert(TABLE_NAME, null, values);
+								}							
 							}
 						}
 
@@ -330,37 +379,39 @@ public class KeyList extends Activity{
 
 							ContentValues values = new ContentValues();
 							if (L3ManDoorsData.getInt("status") == 1) {
-								mapL3Man.put(
-										"Door",
-										L1ZoneName
-												+ L2ZoneName
-												+ L3ZoneName
-												+ L3ManDoorsData
-														.getString("doorName"));
-								mapL3Man.put("BEGIN", keyBeginDay);
-								mapL3Man.put("END", keyEndDay);
-								mapL3Man.put("DOORID",
-										L3ManDoorsData.getString("doorId"));
-								mapL3Man.put("DEVICEID",
-										L3ManDoorsData.getString("deviceId"));
-								doorNameList.add(mapL3Man);
-								
-								values.put("doorId",
-										L3ManDoorsData.getString("doorId"));
-								values.put(
-										"doorName",
-										L1ZoneName
-												+ L2ZoneName
-												+ L3ZoneName
-												+ L3ManDoorsData
-														.getString("doorName"));
-								values.put("deviceId",
-										L3ManDoorsData.getString("deviceId"));
-								values.put("authFrom", keyBeginDay);
-								values.put("authTo", keyEndDay);
-								values.put("status",
-										L3ManDoorsData.getInt("status"));
-								mKeyDB.insert(TABLE_NAME, null, values);
+								if(!hasData(mKeyDB, L3ManDoorsData.getString("deviceId")) && L3ManDoorsData.getString("deviceId") != null){
+									mapL3Man.put(
+											"Door",
+											L1ZoneName
+													+ L2ZoneName
+													+ L3ZoneName
+													+ L3ManDoorsData
+															.getString("doorName"));
+									mapL3Man.put("BEGIN", keyBeginDay);
+									mapL3Man.put("END", keyEndDay);
+									mapL3Man.put("DOORID",
+											L3ManDoorsData.getString("doorId"));
+									mapL3Man.put("DEVICEID",
+											L3ManDoorsData.getString("deviceId"));
+									doorNameList.add(mapL3Man);
+									
+									values.put("doorId",
+											L3ManDoorsData.getString("doorId"));
+									values.put(
+											"doorName",
+											L1ZoneName
+													+ L2ZoneName
+													+ L3ZoneName
+													+ L3ManDoorsData
+															.getString("doorName"));
+									values.put("deviceId",
+											L3ManDoorsData.getString("deviceId"));
+									values.put("authFrom", keyBeginDay);
+									values.put("authTo", keyEndDay);
+									values.put("status",
+											L3ManDoorsData.getInt("status"));
+									mKeyDB.insert(TABLE_NAME, null, values);
+								}
 							}
 						}
 					}
@@ -370,7 +421,8 @@ public class KeyList extends Activity{
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		mKeyDB.close();
+				
+		//mKeyDB.close();
 		return doorNameList;
 	}
 
@@ -450,10 +502,30 @@ public class KeyList extends Activity{
 		return loadSid.getString("SID", null);
 	}
 
-	public boolean isDataTableEmpty(){
-		boolean isEmpty = false;
+	//返回数据表KeyInfoTable里面记录的数量
+	private long DBCount() {  
+	    String sql = "SELECT COUNT(*) FROM " + TABLE_NAME;
+	    SQLiteStatement statement = mKeyDB.compileStatement(sql);
+	    long count = statement.simpleQueryForLong();
+	    return count;
+	}
+	
+	private boolean hasData(SQLiteDatabase mDB, String str){
+		boolean hasData = false;
+		Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME,null);
 		
-		
-		return isEmpty;
+		if(mCursor.moveToFirst()){
+			int deviceIdIndex = mCursor.getColumnIndex("deviceId");
+			do{
+				 String deviceId = mCursor.getString(deviceIdIndex);
+				 
+				 if(deviceId.equals(str)) {
+					 hasData = true;
+					 break;
+				 }
+				 
+			}while(mCursor.moveToNext());
+		}
+		return hasData;
 	}
 }
