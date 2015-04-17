@@ -114,12 +114,53 @@ public class KeyList extends Activity{
 								Toast.makeText(KeyList.this, R.string.downloading_key_list,
 										Toast.LENGTH_SHORT).show();
 								
-								doorNameList = parseKeyData(response);
-								mAdapter = new KeyListAdapter(KeyList.this,
-										doorNameList);
-								mKeyList.setAdapter(mAdapter);
+								parseKeyData(response);
+//								mAdapter = new KeyListAdapter(KeyList.this,
+//										doorNameList);
+//								mKeyList.setAdapter(mAdapter);
 								Log.e("TEST", response.toString());
 								Log.e("TEST  DB  count: ", String.valueOf(DBCount()));
+
+								//show the key list  --  START
+								if(mKeyDBHelper.tabIsExist(TABLE_NAME)){
+									if(DBCount() > 0) {
+										 Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME,null);   
+										 if(mCursor.moveToFirst()){
+											 
+											 doorNameList = new ArrayList<HashMap<String, String>>();
+											 
+											 int deviceIdIndex = mCursor.getColumnIndex("deviceId");
+											 int authFromIndex = mCursor.getColumnIndex("authFrom");
+											 int authToIndex = mCursor.getColumnIndex("authTo");
+											 int doorNamemIndex = mCursor.getColumnIndex("doorName");
+											 
+											 do{
+												 String deviceId = mCursor.getString(deviceIdIndex);
+												 String doorName = mCursor.getString(doorNamemIndex);
+												 String authFrom = mCursor.getString(authFromIndex);
+												 String authTo = mCursor.getString(authToIndex);
+												 
+												 Log.e("TESTTESTDB deviceId =", deviceId);
+												 Log.e("TESTTESTDB doorName =", doorName);
+												 Log.e("TESTTESTDB authFrom =", authFrom);
+												 Log.e("TESTTESTDB authTo =", authTo);
+												 
+												 HashMap<String, String> keyFromDB = new HashMap<String, String>();
+												 keyFromDB.put("Door", doorName);
+												 keyFromDB.put("BEGIN", authFrom);
+												 keyFromDB.put("END", authTo);
+												 
+												 doorNameList.add(keyFromDB);		
+												 
+											 }while(mCursor.moveToNext());
+											 mAdapter = new KeyListAdapter(KeyList.this,
+													 doorNameList);
+												mKeyList.setAdapter(mAdapter);
+										 }
+										 mCursor.close();									 
+									}
+								}
+								//show the key list  --  END								
 							}
 						} catch (JSONException e) {
 							e.printStackTrace();
@@ -134,6 +175,8 @@ public class KeyList extends Activity{
 					}
 				});
 		mQueue.add(mJsonRequest);
+		
+		
 		
 		if (statusCode == -2) {
 			Toast.makeText(KeyList.this, R.string.not_login, Toast.LENGTH_SHORT)
@@ -167,9 +210,8 @@ public class KeyList extends Activity{
 
 	}
 
-	public ArrayList<HashMap<String, String>> parseKeyData(JSONObject response) {
+	public void parseKeyData(JSONObject response) {
 		ArrayList<HashMap<String, String>> doorNameList = new ArrayList<HashMap<String, String>>();
-		doorNameList = new ArrayList<HashMap<String, String>>();
 
 		try {
 			JSONArray dataArray = response.getJSONArray("data"); // 得到"data"这个array
@@ -423,7 +465,7 @@ public class KeyList extends Activity{
 		}
 				
 		//mKeyDB.close();
-		return doorNameList;
+//		return doorNameList;
 	}
 
 	private class KeyListAdapter extends BaseAdapter {
