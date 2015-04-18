@@ -10,6 +10,7 @@ import java.util.Random;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothManager;
 import android.content.pm.PackageManager;
 import android.content.BroadcastReceiver;
@@ -91,6 +92,8 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 	private ShakeEventManager mShakeMgr;
 	private List<BluetoothDevice> mDeviceList;
 	private Map<String, Integer> mDevRssiValues;
+	
+	private BluetoothGattCharacteristic mNotifyCharacteristic;
 	
 	private SoundPool mSoundPool;
 //	private MediaPlayer mMediaPlayer;
@@ -322,19 +325,15 @@ public class KeyFragment extends Fragment implements ShakeListener  {
         
     }	
 	
-	private void sendOpenDoorSignal() {
-		if(mUartService != null) {
-			String message = new String(Character.toChars(new Random().nextInt(90 - 65) + 65));
-			try{
-				byte[] value = message.getBytes("UTF-8");
-				mUartService.writeRXCharacteristic(value);
-			} catch(Exception e) {
-				
-			}
-			
-		}
-	}
-	
+//	private void sendOpenDoorSignal() {
+//		if(mUartService != null) {
+//			
+//				mUartService.readRXCharacteristic();
+//			
+//			
+//		}
+//	}
+//	
 	private void doOpenDoor() {
 		IvOpenDoorLogo.setEnabled(false);
 		Toast.makeText(getActivity(), R.string.door_open, Toast.LENGTH_SHORT).show();
@@ -513,7 +512,9 @@ public class KeyFragment extends Fragment implements ShakeListener  {
             if (action.equals(UartService.ACTION_GATT_SERVICES_DISCOVERED)) {
             	getActivity().runOnUiThread(new Runnable() {
                     public void run() {     
-                    	sendOpenDoorSignal();
+						if (mUartService != null) {
+							mUartService.readRXCharacteristic();
+						}
                     }
                 });
             }
@@ -545,7 +546,16 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 				final byte[] txValue = intent.getByteArrayExtra(UartService.EXTRA_DATA);
                  getActivity().runOnUiThread(new Runnable() {
                      public void run() {
-                    	 
+                    	 if(mUartService != null) {
+                 			String message = new String(Character.toChars(new Random().nextInt(90 - 65) + 65));
+                 			try{
+                 				byte[] value = message.getBytes("UTF-8");
+                 				mUartService.writeRXCharacteristic(value);
+                 			} catch(Exception e) {
+                 				
+                 			}
+                 			
+                 		}
                      }
                  });
              }
@@ -563,7 +573,7 @@ public class KeyFragment extends Fragment implements ShakeListener  {
         	mUartService = ((UartService.LocalBinder) rawBinder).getService();
         		if (!mUartService.initialize()) {
         			getActivity().finish();
-                }
+                } 
 
         }
 

@@ -84,7 +84,15 @@
         android:text="忌 "
         android:textColor="#898989"
         android:textSize="12sp" />
-
+    
+    <ImageView
+        android:id="@+id/weather_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="240dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/clear"/>
+    
     <TextView
         android:id="@+id/weather_temperature"
         android:layout_width="wrap_content"
@@ -93,7 +101,7 @@
         android:layout_marginTop="50dp"
         android:text="-30"
         android:textColor="#2db9e5"
-        android:textSize="30sp" />
+        android:textSize="30sp"/>"
 
     <include
         android:layout_width="wrap_content"
