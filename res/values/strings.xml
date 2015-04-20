@@ -29,5 +29,7 @@
     <string name="bt_not_supported">该设备不支持蓝牙</string>
     <string name="bt_enabled">蓝牙已开启</string>
     <string name="door_open">开门</string>
+    
+    <string name="centigrade">&#176;C</string> 
 
 </resources>

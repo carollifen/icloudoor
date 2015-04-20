@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="42.5dp"
         android:layout_marginTop="12dp"
-        android:text="广州·番禺"
+        android:text=""
         android:textColor="#000000"
         android:textSize="12sp"
         android:textStyle="bold" />
@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="9dp"
-        android:text="2015年4月2日"
+        android:text=""
         android:textColor="#ffffff"
         android:textSize="16sp" />
 
@@ -39,11 +39,12 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="281dp"
         android:layout_marginTop="12dp"
-        android:text="星期四"
+        android:text=""
         android:textColor="#47494a"
         android:textSize="12sp" />
 
     <TextView
+        android:id="@+id/weather_title_yi"
         android:layout_width="12dp"
         android:layout_height="16.5dp"
         android:layout_marginLeft="46dp"
@@ -54,13 +55,13 @@
         android:textSize="12sp" />
     
     <TextView
-        android:id="@+id/weather_yi"
-        android:layout_width="166dp"
+        android:id="@+id/weather_content_yi"
+        android:layout_width="160dp"
         android:layout_height="16.5dp"
         android:layout_marginLeft="66dp"
         android:layout_marginTop="44dp"
         android:gravity="center_vertical"
-        android:text="宜 "
+        android:text=""
         android:textColor="#898989"
         android:textSize="12sp" />
 
@@ -68,40 +69,41 @@
         android:layout_width="12dp"
         android:layout_height="16.5dp"
         android:layout_marginLeft="46dp"
-        android:layout_marginTop="75.5dp"
+ 		android:layout_below="@id/weather_title_yi"
         android:gravity="center_vertical"
         android:text="忌 "
         android:textColor="#fe4a61"
         android:textSize="12sp" />
     
     <TextView
-        android:id="@+id/weather_ji"
-        android:layout_width="166dp"
+        android:id="@+id/weather_content_ji"
+        android:layout_width="160dp"
         android:layout_height="16.5dp"
         android:layout_marginLeft="66dp"
-        android:layout_marginTop="75.5dp"
+        android:layout_below="@id/weather_content_yi"
         android:gravity="center_vertical"
-        android:text="忌 "
+        android:text=""
         android:textColor="#898989"
         android:textSize="12sp" />
     
     <ImageView
         android:id="@+id/weather_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="240dp"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:layout_marginLeft="250dp"
         android:layout_marginTop="40dp"
-        android:background="@drawable/clear"/>
-    
+        android:background="@drawable/testest" />"
+ 
     <TextView
         android:id="@+id/weather_temperature"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="270dp"
+        android:layout_marginLeft="210dp"
         android:layout_marginTop="50dp"
-        android:text="-30"
+        android:text=""
+        android:gravity="right"
         android:textColor="#2db9e5"
-        android:textSize="30sp"/>"
+        android:textSize="30sp"/>
 
     <include
         android:layout_width="wrap_content"
