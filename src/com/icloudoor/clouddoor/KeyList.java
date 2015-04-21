@@ -175,9 +175,7 @@ public class KeyList extends Activity{
 					}
 				});
 		mQueue.add(mJsonRequest);
-		
-		
-		
+				
 		if (statusCode == -2) {
 			Toast.makeText(KeyList.this, R.string.not_login, Toast.LENGTH_SHORT)
 					.show();
@@ -250,7 +248,7 @@ public class KeyList extends Activity{
 							values.put("deviceId", L1CarDoorsData.getString("deviceId"));
 							values.put("authFrom", keyBeginDay);
 							values.put("authTo", keyEndDay);
-							values.put("status", L1CarDoorsData.getInt("status"));
+							values.put("CarOrMan", "1");
 							mKeyDB.insert(TABLE_NAME, null, values);						
 						}
 					}
@@ -283,7 +281,7 @@ public class KeyList extends Activity{
 							values.put("deviceId", L1ManDoorsData.getString("deviceId"));
 							values.put("authFrom", keyBeginDay);
 							values.put("authTo", keyEndDay);
-							values.put("status", L1ManDoorsData.getInt("status"));
+							values.put("CarOrMan", "0");
 							mKeyDB.insert(TABLE_NAME, null, values);
 						}						
 					}
@@ -321,7 +319,7 @@ public class KeyList extends Activity{
 										L2CarDoorsData.getString("deviceId"));
 								values.put("authFrom", keyBeginDay);
 								values.put("authTo", keyEndDay);
-								values.put("status", L2CarDoorsData.getInt("status"));
+								values.put("CarOrMan", "1");
 								mKeyDB.insert(TABLE_NAME, null, values);
 							}
 						}
@@ -353,7 +351,7 @@ public class KeyList extends Activity{
 										L2ManDoorsData.getString("deviceId"));
 								values.put("authFrom", keyBeginDay);
 								values.put("authTo", keyEndDay);
-								values.put("status", L2ManDoorsData.getInt("status"));
+								values.put("CarOrMan", "0");
 								mKeyDB.insert(TABLE_NAME, null, values);
 							}
 						}
@@ -404,8 +402,7 @@ public class KeyList extends Activity{
 											L3CarDoorsData.getString("deviceId"));
 									values.put("authFrom", keyBeginDay);
 									values.put("authTo", keyEndDay);
-									values.put("status",
-											L3CarDoorsData.getInt("status"));
+									values.put("CarOrMan", "1");
 									mKeyDB.insert(TABLE_NAME, null, values);
 								}							
 							}
@@ -450,8 +447,7 @@ public class KeyList extends Activity{
 											L3ManDoorsData.getString("deviceId"));
 									values.put("authFrom", keyBeginDay);
 									values.put("authTo", keyEndDay);
-									values.put("status",
-											L3ManDoorsData.getInt("status"));
+									values.put("CarOrMan", "0");
 									mKeyDB.insert(TABLE_NAME, null, values);
 								}
 							}
@@ -463,9 +459,6 @@ public class KeyList extends Activity{
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-				
-		//mKeyDB.close();
-//		return doorNameList;
 	}
 
 	private class KeyListAdapter extends BaseAdapter {

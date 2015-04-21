@@ -36,7 +36,7 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
 		sBuffer.append("[deviceId] TEXT,");
 		sBuffer.append("[authFrom] TEXT,");
 		sBuffer.append("[authTo] TEXT,");
-		sBuffer.append("[status] INTEGER)");
+		sBuffer.append("[CarOrMan] TEXT)");
 
 		db.execSQL(sBuffer.toString());
 		

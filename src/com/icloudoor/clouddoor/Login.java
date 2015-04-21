@@ -162,6 +162,7 @@ public class Login extends Activity {
 							"LOGINSTATUS", MODE_PRIVATE);
 					Editor editor = loginStatus.edit();
 					editor.putInt("LOGIN", isLogin);
+					editor.putString("PHONENUM", phoneNum);
 					editor.commit();
 
 					Intent intent = new Intent();

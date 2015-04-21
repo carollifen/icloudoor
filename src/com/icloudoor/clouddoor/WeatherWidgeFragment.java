@@ -2,6 +2,7 @@ package com.icloudoor.clouddoor;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,21 +54,28 @@ public class WeatherWidgeFragment extends Fragment {
 	private TextView Day1Bg;
 	private TextView Day2Bg;
 	private TextView Day3Bg;
+	private TextView YiContent;
+	private TextView JiContent;
 	private ImageView WeatherIcon;
 	private MyClick myClick;
 	
 	public final Calendar c =  Calendar.getInstance();
+	
 	public char centigrade = 176;
 	
 	// 获取经纬度
 	private LocationManager locationManager;
 	private double longitude = 0.0;
 	private double latitude = 0.0;
-
+	//心知天气
 	private String HOST = "https://api.thinkpage.cn/v2/weather/all.json?";
 	private URL weatherURL;
 	private String Key = "XSI7AKYYBY";
 	private RequestQueue mQueue;
+	//聚合老黄历
+	private String HOST_Laohuangli = "http://v.juhe.cn/laohuangli/d?";
+	private URL laohuangliRequestURL;
+	private String laohuangliKey = "ce9652a2ea10b061e3e479606c5529ca";
 	
 	private long mLastRequestTime;
 	private long mCurrentRequestTime;
@@ -101,6 +109,8 @@ public class WeatherWidgeFragment extends Fragment {
 		Day1Bg = (TextView) view.findViewById(R.id.weather_day_now_color);
 		Day2Bg = (TextView) view.findViewById(R.id.weather_day_after_color);
 		Day3Bg = (TextView) view.findViewById(R.id.weather_day_after_after_color);
+		YiContent = (TextView) view.findViewById(R.id.weather_content_yi);
+		JiContent = (TextView) view.findViewById(R.id.weather_content_ji);
 		WeatherIcon = (ImageView) view.findViewById(R.id.weather_icon);
 		
 		Day1Bg.setOnClickListener(myClick);
@@ -123,6 +133,9 @@ public class WeatherWidgeFragment extends Fragment {
 		}
 		
 		// INIT -- To get the current date
+		SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String date = sDateFormat.format(new java.util.Date());
+		
 		c.setTimeZone(TimeZone.getTimeZone("GMT+8:00")); 
 	
 		Date.setText(String.valueOf(c.get(Calendar.YEAR)) + "年" 
@@ -251,7 +264,7 @@ public class WeatherWidgeFragment extends Fragment {
 			
 			City.setText(loadWeather.getString("City", null));
 			Temp.setText(loadWeather.getString("Day1Temp", null) + String.valueOf(centigrade));		
-			WeatherIcon.setImageResource(weatherIcons[Integer.parseInt(loadWeather.getString("Day1IconIndex", null))]);
+			WeatherIcon.setImageResource(weatherIcons[Integer.parseInt(loadWeather.getString("Day1IconIndex", "0"))]);
 		}
 		
 		return view;
@@ -277,7 +290,7 @@ public class WeatherWidgeFragment extends Fragment {
 				
 				Temp.setText(loadWeather.getString("Day1Temp", null) + String.valueOf(centigrade));
 				
-				WeatherIcon.setImageResource(weatherIcons[Integer.parseInt(loadWeather.getString("Day1IconIndex", null))]);
+				WeatherIcon.setImageResource(weatherIcons[Integer.parseInt(loadWeather.getString("Day1IconIndex", "0"))]);
 				
 				break;
 			case R.id.weather_day_after_color:
@@ -331,7 +344,7 @@ public class WeatherWidgeFragment extends Fragment {
 				
 				Temp.setText(loadWeather.getString("Day2TempHigh", null) + String.valueOf(centigrade));
 				
-				WeatherIcon.setImageResource(weatherIcons[Integer.parseInt(loadWeather.getString("Day2IconIndexDay", null))]);
+				WeatherIcon.setImageResource(weatherIcons[Integer.parseInt(loadWeather.getString("Day2IconIndexDay", "0"))]);
 				
 				break;
 			case R.id.weather_day_after_after_color:
@@ -384,7 +397,7 @@ public class WeatherWidgeFragment extends Fragment {
 				
 				Temp.setText(loadWeather.getString("Day3TempHigh", null) + String.valueOf(centigrade));
 				
-				WeatherIcon.setImageResource(weatherIcons[Integer.parseInt(loadWeather.getString("Day3IconIndexDay", null))]);
+				WeatherIcon.setImageResource(weatherIcons[Integer.parseInt(loadWeather.getString("Day3IconIndexDay", "0"))]);
 				
 				break;
 			default:

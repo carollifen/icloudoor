@@ -19,8 +19,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
@@ -50,6 +53,14 @@ import com.icloudoor.clouddoor.ShakeEventManager.ShakeListener;
 @SuppressLint("NewApi")
 public class KeyFragment extends Fragment implements ShakeListener  {
 	
+	private MyDataBaseHelper mKeyDBHelper;
+	private SQLiteDatabase mKeyDB;
+	private final String DATABASE_NAME = "KeyDB.db";
+	private final String TABLE_NAME = "KeyInfoTable";
+	
+	private ArrayList<HashMap<String, String>> carDoorList;
+	private ArrayList<HashMap<String, String>> manDoorList;
+	
 	private RelativeLayout channelSwitch;
 	private RelativeLayout keyWidge;
 
@@ -69,7 +80,7 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 	private int COLOR_CHANNEL_CHOOSE = 0xFF00354a;
 	private int COLOR_CHANNEL_NOT_CHOOSE = 0xFFb5b5b5;
 
-	private boolean isChooseCarChannel;
+	private int isChooseCarChannel;
 	private boolean isFindKey;
 
 	private float alpha_transparent = 0.0f;
@@ -91,14 +102,14 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 	private UartService mUartService = null;
 	private ShakeEventManager mShakeMgr;
 	private List<BluetoothDevice> mDeviceList;
-	private Map<String, Integer> mDevRssiValues;
-	
+	private Map<String, Integer> mDevRssiValues;	
 	private BluetoothGattCharacteristic mNotifyCharacteristic;
+	
+	private String NameOfDoorToOpen = null;
+	private String IdOfDoorToOpen = null;
 	
 	private SoundPool mSoundPool;
 //	private MediaPlayer mMediaPlayer;
-	
-	private SQLiteDatabase mSQLiteDatabase = null;
 
 	public KeyFragment() {
 		// Required empty public constructor
@@ -108,6 +119,35 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
+		View view = inflater.inflate(R.layout.key_page, container, false);
+		
+		channelSwitch = (RelativeLayout) view.findViewById(R.id.channel_switch);  // 点击 选择门的类型，车or人 ； 在setting中可以设置常用的门类型
+		keyWidge = (RelativeLayout) view.findViewById(R.id.key_widge);    
+		
+		TvChooseCar = (TextView) view.findViewById(R.id.Tv_choose_car);
+		TvChooseMan = (TextView) view.findViewById(R.id.Tv_choose_man);
+		TvDistrictDoor = (TextView) view.findViewById(R.id.district_door);
+		TvCarNumber = (TextView) view.findViewById(R.id.car_number);
+		TvOpenKeyList = (TextView) view.findViewById(R.id.open_key_list);
+		
+		IvChooseCar = (ImageView) view.findViewById(R.id.Iv_choose_car);   
+		IvChooseMan = (ImageView) view.findViewById(R.id.Iv_choose_man); 
+		IvSearchKey = (ImageView) view.findViewById(R.id.Iv_search_key);
+		IvOpenDoorLogo = (ImageView) view.findViewById(R.id.Iv_open_door_logo);
+		IvWeatherWidgePush1 = (ImageView) view.findViewById(R.id.Iv_weather_widge_push1);
+		IvWeatherWidgePush2 = (ImageView) view.findViewById(R.id.Iv_weather_widge_push2);
+
+		mFragmentManager = getChildFragmentManager();
+		mWeatherWidgePager = (ViewPager) view.findViewById(R.id.weather_widge_pager);
+		myPageChangeListener = new MyPageChangeListener();
+		
+		InitFragmentViews();
+		InitViewPager();
+		
+		mKeyDBHelper = new MyDataBaseHelper(getActivity(), DATABASE_NAME);
+		mKeyDB = mKeyDBHelper.getWritableDatabase();
+		
+		//BLE
 		if (!getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             Toast.makeText(getActivity(), R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
         }
@@ -121,32 +161,98 @@ public class KeyFragment extends Fragment implements ShakeListener  {
         if (mBluetoothAdapter == null) {
             Toast.makeText(getActivity(), R.string.bt_not_supported, Toast.LENGTH_SHORT).show();
         }
-        
+       
+        service_init(); 		
+        checkBlueToothState();
+		
         mShakeMgr = new ShakeEventManager();
         mShakeMgr.setListener(KeyFragment.this);
 		mShakeMgr.init(getActivity());
 		
-		checkBlueToothState();
 		
-		service_init(); 
-	
-		View view = inflater.inflate(R.layout.key_page, container, false);
+		carDoorList = new ArrayList<HashMap<String, String>>();
+		manDoorList = new ArrayList<HashMap<String, String>>();
+		if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
+			if (DBCount() > 0) {
+				Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME, null);
+				if (mCursor.moveToFirst()) {
+					int deviceIdIndex = mCursor.getColumnIndex("deviceId");
+					int doorNamemIndex = mCursor.getColumnIndex("doorName");
+					int CarOrManIndex = mCursor.getColumnIndex("CarOrMan");
+					
+					do {
+						HashMap<String, String> temp = new HashMap<String, String>();
+						String deviceId = mCursor.getString(deviceIdIndex);
+						String doorName = mCursor.getString(doorNamemIndex);
+						String CarOrMan = mCursor.getString(CarOrManIndex);
+						
+						if(CarOrMan.equals("1")){    //可通行的车门列表，包括deviceId, doorName
+							temp.put("CDdeviceid", deviceId);
+							temp.put("CDdoorName", doorName);						
+							carDoorList.add(temp);
+						}else if(CarOrMan.equals("0")){   //可通行的人门列表，包括deviceId, doorName
+							temp.put("MDdeviceid", deviceId);
+							temp.put("MDdoorName", doorName);						
+							manDoorList.add(temp);
+						}
+					} while (mCursor.moveToNext());
+				}
+			}
+		}
+				
+		// Attemp to find the door can open
+		for (int index = 0; index < mDeviceList.size(); index++) {
+			
+			isFindKey = false;
+			String temp = mDeviceList.get(index).getAddress();
+			if (isChooseCarChannel == 1) {
+				
+				for (int i = 0; i < carDoorList.size(); i++) {
+					if (temp.equals(carDoorList.get(i).get("CDdeviceid"))) {
+						IdOfDoorToOpen = temp;
+						NameOfDoorToOpen = carDoorList.get(i).get("CDdoorName");
+						isFindKey = true;
+						break;
+					}
+				}
+			} else {
+				
+				for (int i = 0; i < manDoorList.size(); i++) {
+					if (temp.equals(manDoorList.get(i).get("MDdeviceid"))) {
+						IdOfDoorToOpen = temp;
+						NameOfDoorToOpen = manDoorList.get(i).get("MDdoorName");
+						isFindKey = true;
+						break;
+					}
+				}
+			}
+			if (isFindKey){
+				Log.e("TEST", "got a door");
+				break;
+			}
+		}
 
-		channelSwitch = (RelativeLayout) view.findViewById(R.id.channel_switch);  // 点击 选择门的类型，车or人 ； 在setting中可以设置常用的门类型
-		keyWidge = (RelativeLayout) view.findViewById(R.id.key_widge);    
-		
-		TvChooseCar = (TextView) view.findViewById(R.id.Tv_choose_car);
-		TvChooseMan = (TextView) view.findViewById(R.id.Tv_choose_man);
-		TvDistrictDoor = (TextView) view.findViewById(R.id.district_door);
-		TvCarNumber = (TextView) view.findViewById(R.id.car_number);
-		TvOpenKeyList = (TextView) view.findViewById(R.id.open_key_list);
-		
-		IvChooseCar = (ImageView) view.findViewById(R.id.Iv_choose_car);   
-		IvChooseMan = (ImageView) view.findViewById(R.id.Iv_choose_man); 
-		IvSearchKey = (ImageView) view.findViewById(R.id.Iv_search_key);   //需要改变背景颜色以区别搜索状态
-		IvOpenDoorLogo = (ImageView) view.findViewById(R.id.Iv_open_door_logo);  //需要改变图标以区别搜索状态
-		IvWeatherWidgePush1 = (ImageView) view.findViewById(R.id.Iv_weather_widge_push1);
-		IvWeatherWidgePush2 = (ImageView) view.findViewById(R.id.Iv_weather_widge_push2);
+		channelSwitch.setOnClickListener(new OnClickListener() {      //点击后图标和字体颜色做相应变化
+
+			@Override
+			public void onClick(View v) {
+				if (isChooseCarChannel == 1) {       //选择人门
+					TvChooseCar.setTextColor(COLOR_CHANNEL_CHOOSE);
+					TvChooseMan.setTextColor(COLOR_CHANNEL_NOT_CHOOSE);
+					IvChooseCar.setAlpha(alpha_opaque);
+					IvChooseMan.setAlpha(alpha_transparent);
+					isChooseCarChannel = 0;
+				} else {      //选择车门
+					TvChooseCar.setTextColor(COLOR_CHANNEL_NOT_CHOOSE);
+					TvChooseMan.setTextColor(COLOR_CHANNEL_CHOOSE);
+					IvChooseCar.setAlpha(alpha_transparent);
+					IvChooseMan.setAlpha(alpha_opaque);
+					isChooseCarChannel = 1;
+				}
+			}
+
+		});
+				
 		IvOpenDoorLogo.setOnClickListener(new OnClickListener(){
 
 			@Override
@@ -157,66 +263,6 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 			
 		});
 		
-		
-
-		mFragmentManager = getChildFragmentManager();
-		mWeatherWidgePager = (ViewPager) view.findViewById(R.id.weather_widge_pager);
-		myPageChangeListener = new MyPageChangeListener();
-		
-		InitViewPager();
-		InitFragmentViews();
-
-		channelSwitch.setOnClickListener(new OnClickListener() {      //点击后图标和字体颜色做相应变化
-
-			@Override
-			public void onClick(View v) {
-				if (isChooseCarChannel) {
-					TvChooseCar.setTextColor(COLOR_CHANNEL_CHOOSE);
-					TvChooseMan.setTextColor(COLOR_CHANNEL_NOT_CHOOSE);
-					IvChooseCar.setAlpha(alpha_opaque);
-					IvChooseMan.setAlpha(alpha_transparent);
-					isChooseCarChannel = false;
-				} else {
-					TvChooseCar.setTextColor(COLOR_CHANNEL_NOT_CHOOSE);
-					TvChooseMan.setTextColor(COLOR_CHANNEL_CHOOSE);
-					IvChooseCar.setAlpha(alpha_transparent);
-					IvChooseMan.setAlpha(alpha_opaque);
-					isChooseCarChannel = true;
-				}
-			}
-
-		});
-		
-		//TODO
-		//按钮的监听需要变成检测到正在搜索时和搜索到钥匙时两种状态的监听
-//		keyWidge.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				if (!isFindKey) {
-//					TvDistrictDoor.setText(R.string.searching_key);
-//					TvDistrictDoor.setTextSize(18);
-//					TvDistrictDoor.setTextColor(0xFFffffff);
-//					TvCarNumber.setText(R.string.can_shake_to_open_door);
-//					TvCarNumber.setTextSize(12);
-//					TvCarNumber.setTextColor(0xFF7d7d7d);
-//					IvSearchKey.setImageResource(R.drawable.btn_background_gray);
-//					IvOpenDoorLogo.setImageResource(R.drawable.btn_serch_1);
-//					isFindKey = true;
-//				}else{
-//					TvDistrictDoor.setText("锦绣香江北门");
-//					TvDistrictDoor.setTextSize(18);
-//					TvDistrictDoor.setTextColor(0xFFffffff);
-//					TvCarNumber.setText("粤A XXXXX");
-//					TvCarNumber.setTextSize(18);
-//					TvCarNumber.setTextColor(0xFFffffff);
-//					IvSearchKey.setImageResource(R.drawable.btn_background_blue);
-//					IvOpenDoorLogo.setImageResource(R.drawable.selector_pressed);
-//					isFindKey = false;
-//				}
-//			}
-//			
-//		});
 		TvOpenKeyList.setOnClickListener(new OnClickListener(){
 
 			@Override
@@ -266,6 +312,7 @@ public class KeyFragment extends Fragment implements ShakeListener  {
     }
 
 	private void checkBlueToothState() {
+		Log.e("BLE", "checkBlueToothState");
 		if(mBluetoothAdapter == null) {
 	        Toast.makeText(getActivity(), R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
 		} else {
@@ -281,10 +328,11 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 						BluetoothAdapter.ACTION_REQUEST_ENABLE);
 				startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 			}
-		}			    
+		}
 	}
 	
 	private void populateDeviceList() {
+		Log.e("BLE", "populateDeviceList");
 		mDeviceList = new ArrayList<BluetoothDevice>();
 		mDeviceAdapter = new DeviceAdapter(getActivity(),  mDeviceList);
 		mDevRssiValues = new HashMap<String, Integer>();
@@ -292,6 +340,7 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 	}
 	
 	private void scanLeDevice(final boolean enable) {
+		Log.e("BLE", "scanLeDevice");
         if (enable) {
             // Stops scanning after a pre-defined scan period.
             new Handler().postDelayed(new Runnable() {
@@ -304,10 +353,10 @@ public class KeyFragment extends Fragment implements ShakeListener  {
         } else {
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
         }
-
     }
 
 	private void addDevice(BluetoothDevice device, int rssi) {
+		Log.e("BLE", "addDevice");
         boolean deviceFound = false;
 
         for (BluetoothDevice listDev : mDeviceList) {
@@ -335,6 +384,7 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 //	}
 //	
 	private void doOpenDoor() {
+		Log.e("BLE", "doOpenDoor");
 		IvOpenDoorLogo.setEnabled(false);
 		Toast.makeText(getActivity(), R.string.door_open, Toast.LENGTH_SHORT).show();
 		
@@ -376,6 +426,7 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 
         @Override
         public void onLeScan(final BluetoothDevice device, final int rssi, byte[] scanRecord) {
+        	Log.e("BLE", "onLeScan");
         	getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -393,13 +444,21 @@ public class KeyFragment extends Fragment implements ShakeListener  {
     };
 	
 	public void InitFragmentViews() {
-		isChooseCarChannel = true;
 		isFindKey = false;
-
-		TvChooseCar.setTextColor(COLOR_CHANNEL_CHOOSE);
-		TvChooseMan.setTextColor(COLOR_CHANNEL_NOT_CHOOSE);
-		IvChooseCar.setAlpha(alpha_opaque);
-		IvChooseMan.setAlpha(alpha_transparent);
+		
+		SharedPreferences setting = getActivity().getSharedPreferences("SETTING", 0);
+		isChooseCarChannel = setting.getInt("chooseCar", 1);
+		if(isChooseCarChannel == 1){
+			TvChooseCar.setTextColor(COLOR_CHANNEL_CHOOSE);
+			TvChooseMan.setTextColor(COLOR_CHANNEL_NOT_CHOOSE);
+			IvChooseCar.setAlpha(alpha_opaque);
+			IvChooseMan.setAlpha(alpha_transparent);
+		}else{
+			TvChooseCar.setTextColor(COLOR_CHANNEL_NOT_CHOOSE);
+			TvChooseMan.setTextColor(COLOR_CHANNEL_CHOOSE);
+			IvChooseCar.setAlpha(alpha_transparent);
+			IvChooseMan.setAlpha(alpha_opaque);
+		}
 		
 		TvDistrictDoor.setText(R.string.searching_key);
 		TvDistrictDoor.setTextSize(18);
@@ -410,6 +469,7 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 		
 		IvSearchKey.setImageResource(R.drawable.btn_background_gray);
 		IvOpenDoorLogo.setImageResource(R.drawable.btn_serch_1);
+		IvOpenDoorLogo.setClickable(false);
 		
 		IvWeatherWidgePush1.setImageResource(R.drawable.push_current);
 		IvWeatherWidgePush2.setImageResource(R.drawable.push_next);
@@ -462,6 +522,7 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 	private final BroadcastReceiver mBluetoothStateReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
+			Log.e("BLE", "mBluetoothStateReceiver");
 			final String action = intent.getAction();
 			if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
 				 final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE,
@@ -469,25 +530,28 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 				 
 				 switch (state) {
 				case BluetoothAdapter.STATE_OFF:
-					
+					Log.e("BLE", "BluetoothAdapter.STATE_OFF");
 					break;
 	
 				case BluetoothAdapter.STATE_TURNING_OFF:
+					Log.e("BLE", "BluetoothAdapter.STATE_TURNING_OFF");
 					break;
 					
 				case BluetoothAdapter.STATE_ON:
+					Log.e("BLE", "BluetoothAdapter.STATE_ON");
 					populateDeviceList();
 					break;
 					
 				case BluetoothAdapter.STATE_TURNING_ON:
+					Log.e("BLE", "BluetoothAdapter.STATE_TURNING_ON");
 					break;
 				}
-			}
-			
+			}		
 		} 
 	};
 	
 	private static IntentFilter makeGattUpdateIntentFilter() {
+		Log.e("BLE", "makeGattUpdateIntentFilter");
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(UartService.ACTION_GATT_CONNECTED);
         intentFilter.addAction(UartService.ACTION_GATT_DISCONNECTED);
@@ -500,9 +564,11 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 	private final BroadcastReceiver UARTStatusChangeReceiver = new BroadcastReceiver() {
 
         public void onReceive(Context context, Intent intent) {
+        	Log.e("BLE", "UARTStatusChangeReceiver");
             String action = intent.getAction();
             
             if (action.equals(UartService.ACTION_GATT_CONNECTED)) {
+            	Log.e("BLE", "UartService.ACTION_GATT_CONNECTED");
             	getActivity().runOnUiThread(new Runnable() {
                      public void run() {
                      }
@@ -510,6 +576,7 @@ public class KeyFragment extends Fragment implements ShakeListener  {
             }
             
             if (action.equals(UartService.ACTION_GATT_SERVICES_DISCOVERED)) {
+            	Log.e("BLE", "UartService.ACTION_GATT_SERVICES_DISCOVERED");
             	getActivity().runOnUiThread(new Runnable() {
                     public void run() {     
 						if (mUartService != null) {
@@ -519,6 +586,7 @@ public class KeyFragment extends Fragment implements ShakeListener  {
                 });
             }
             if (action.equals(UartService.ACTION_GATT_DISCONNECTED)) {
+            	Log.e("BLE", "UartService.ACTION_GATT_DISCONNECTED");
             	getActivity().runOnUiThread(new Runnable() {
                      public void run() {
                     	 IvOpenDoorLogo.setEnabled(true);
@@ -537,10 +605,12 @@ public class KeyFragment extends Fragment implements ShakeListener  {
             }
             
             if (action.equals(UartService.ACTION_GATT_SERVICES_DISCOVERED)) {
+            	Log.e("BLE", "UartService.ACTION_GATT_SERVICES_DISCOVERED");
              	 mUartService.enableTXNotification();
             }
 
             if (action.equals(UartService.ACTION_DATA_AVAILABLE)) {
+            	Log.e("BLE", "UartService.ACTION_DATA_AVAILABLE");
               
                  @SuppressWarnings("unused")
 				final byte[] txValue = intent.getByteArrayExtra(UartService.EXTRA_DATA);
@@ -551,16 +621,15 @@ public class KeyFragment extends Fragment implements ShakeListener  {
                  			try{
                  				byte[] value = message.getBytes("UTF-8");
                  				mUartService.writeRXCharacteristic(value);
-                 			} catch(Exception e) {
-                 				
+                 			} catch(Exception e) {                				
                  			}
-                 			
                  		}
                      }
                  });
              }
             
             if (action.equals(UartService.DEVICE_DOES_NOT_SUPPORT_UART)){
+            	Log.e("BLE", "UartService.DEVICE_DOES_NOT_SUPPORT_UART");
             	mUartService.disconnect();
             }
             
@@ -570,6 +639,7 @@ public class KeyFragment extends Fragment implements ShakeListener  {
        
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder rawBinder) {
+        	Log.e("BLE", "onServiceConnected");
         	mUartService = ((UartService.LocalBinder) rawBinder).getService();
         		if (!mUartService.initialize()) {
         			getActivity().finish();
@@ -578,6 +648,7 @@ public class KeyFragment extends Fragment implements ShakeListener  {
         }
 
         public void onServiceDisconnected(ComponentName classname) {
+        	Log.e("BLE", "onServiceDisconnected");
         	mUartService = null;
 
         }
@@ -637,5 +708,13 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 //				e.printStackTrace();
 //			}					
 //		}
+	}
+	
+	// 返回数据表KeyInfoTable里面记录的数量
+	private long DBCount() {
+		String sql = "SELECT COUNT(*) FROM " + TABLE_NAME;
+		SQLiteStatement statement = mKeyDB.compileStatement(sql);
+		long count = statement.simpleQueryForLong();
+		return count;
 	}
 }

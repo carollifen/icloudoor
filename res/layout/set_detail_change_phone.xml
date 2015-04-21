@@ -26,6 +26,7 @@
             android:textSize="17sp" />
         
         <TextView
+            android:id="@+id/my_phone_num"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:layout_alignParentRight="true"

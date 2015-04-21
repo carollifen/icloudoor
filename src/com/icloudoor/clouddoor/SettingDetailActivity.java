@@ -2,6 +2,8 @@ package com.icloudoor.clouddoor;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,7 +22,7 @@ public class SettingDetailActivity extends Activity {
 	
 	private ImageView IVBack;
 	
-	private boolean canShake, haveSound, canDisturb, switchToCar;
+	private int canShake, haveSound, canDisturb, switchToCar;
 	private MyBtnOnClickListener mMyBtnOnClickListener;
 		
 	@Override
@@ -65,6 +67,15 @@ public class SettingDetailActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
+				//to save the setting detail
+				SharedPreferences setting = getSharedPreferences("SETTING",
+						MODE_PRIVATE);
+				Editor editor = setting.edit();
+				editor.putInt("chooseCar", switchToCar);
+				editor.putInt("disturb", canDisturb);
+				editor.putInt("sound", haveSound);
+				editor.putInt("shake", canShake);
+				editor.commit();
 				finish();		
 			}
 			
@@ -79,16 +90,35 @@ public class SettingDetailActivity extends Activity {
 	}
 	
 	public void InitBtns(){
-		canShake = true;
-		haveSound = true;
-		canDisturb = true;
-		switchToCar = false;
 		
-		IVSetDetailShake.setImageResource(R.drawable.btn_yes);
-		IVSetDetailSound.setImageResource(R.drawable.btn_yes);
-		IVSetDetailDisturb.setImageResource(R.drawable.btn_yes);
-		IVSwitchCar.setImageResource(R.drawable.icon_car_gray);
-		IVSwitchMan.setImageResource(R.drawable.icon_ren);
+		SharedPreferences setting = getSharedPreferences("SETTING", 0);		
+		canShake = setting.getInt("shake", 1);
+		haveSound = setting.getInt("sound", 1);
+		canDisturb = setting.getInt("disturb", 1);
+		switchToCar = setting.getInt("chooseCar", 1);
+		
+		if(canShake == 1)
+			IVSetDetailShake.setImageResource(R.drawable.btn_yes);
+		else
+			IVSetDetailShake.setImageResource(R.drawable.btn_no);
+		
+		if(haveSound == 1)
+			IVSetDetailSound.setImageResource(R.drawable.btn_yes);
+		else
+			IVSetDetailSound.setImageResource(R.drawable.btn_no);
+
+		if(canDisturb == 1)
+			IVSetDetailDisturb.setImageResource(R.drawable.btn_yes);
+		else
+			IVSetDetailDisturb.setImageResource(R.drawable.btn_no);
+		
+		if(switchToCar == 1){
+			IVSwitchCar.setImageResource(R.drawable.icon_car);
+			IVSwitchMan.setImageResource(R.drawable.icon_ren_gray);
+		}else{
+			IVSwitchCar.setImageResource(R.drawable.icon_car_gray);
+			IVSwitchMan.setImageResource(R.drawable.icon_ren);
+		}		
 	}
 	
 	public class MyBtnOnClickListener implements OnClickListener {
@@ -97,40 +127,40 @@ public class SettingDetailActivity extends Activity {
 		public void onClick(View v) {
 			switch(v.getId()){
 			case R.id.btn_set_detail_shake:
-				if(canShake){
+				if(canShake == 1){
 					IVSetDetailShake.setImageResource(R.drawable.btn_no);
-					canShake = false;
+					canShake = 0;
 				}else{
 					IVSetDetailShake.setImageResource(R.drawable.btn_yes);
-					canShake = true;
+					canShake = 1;
 				}
 				break;
 			case R.id.btn_set_detail_sound:
-				if(haveSound){
+				if(haveSound == 1){
 					IVSetDetailSound.setImageResource(R.drawable.btn_no);
-					haveSound = false;
+					haveSound = 0;
 				}else{
 					IVSetDetailSound.setImageResource(R.drawable.btn_yes);
-					haveSound = true;
+					haveSound = 1;
 				}
 				break;
 			case R.id.btn_set_detail_disturb:
-				if(canDisturb){
+				if(canDisturb == 1){
 					IVSetDetailDisturb.setImageResource(R.drawable.btn_no);
-					canDisturb = false;
+					canDisturb = 0;
 				}else{
 					IVSetDetailDisturb.setImageResource(R.drawable.btn_yes);
-					canDisturb = true;
+					canDisturb = 1;
 				}
 				break;
 			case R.id.btn_switch_car:
 			case R.id.btn_switch_man:
-				if(switchToCar){
-					switchToCar = false;
+				if(switchToCar == 1){
+					switchToCar = 0;
 					IVSwitchCar.setImageResource(R.drawable.icon_car_gray);
 					IVSwitchMan.setImageResource(R.drawable.icon_ren);
 				}else{
-					switchToCar = true;
+					switchToCar = 1;
 					IVSwitchCar.setImageResource(R.drawable.icon_car);
 					IVSwitchMan.setImageResource(R.drawable.icon_ren_gray);
 				}
