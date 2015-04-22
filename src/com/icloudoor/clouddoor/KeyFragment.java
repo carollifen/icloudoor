@@ -165,10 +165,9 @@ public class KeyFragment extends Fragment implements ShakeListener  {
         service_init(); 		
         checkBlueToothState();
 		
-        mShakeMgr = new ShakeEventManager();
+        mShakeMgr = new ShakeEventManager(getActivity());
         mShakeMgr.setListener(KeyFragment.this);
 		mShakeMgr.init(getActivity());
-		
 		
 		carDoorList = new ArrayList<HashMap<String, String>>();
 		manDoorList = new ArrayList<HashMap<String, String>>();
@@ -200,78 +199,134 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 			}
 		}
 		
-		// Attemp to find the door can open
-		for (int index = 0; index < mDeviceList.size(); index++) {
-			
+		// INIT: attemp to find the door can open
+		for (int index = 0; index < mDeviceList.size(); index++) {		
 			isFindKey = false;
 			String temp = mDeviceList.get(index).getAddress();
-			if (isChooseCarChannel == 1) {
-				
+			if (isChooseCarChannel == 1) {				
 				for (int i = 0; i < carDoorList.size(); i++) {
 					if (temp.equals(carDoorList.get(i).get("CDdeviceid"))) {
 						IdOfDoorToOpen = temp;
 						NameOfDoorToOpen = carDoorList.get(i).get("CDdoorName");
 						isFindKey = true;
+						IvOpenDoorLogo.setImageResource(R.drawable.selector_pressed);
+				        IvSearchKey.setImageResource(R.drawable.btn_background_blue);
+				        TvDistrictDoor.setText(mDeviceList.get(index).getName());
+				        TvDistrictDoor.setTextSize(18);
+				        TvDistrictDoor.setTextColor(0xFFffffff);
+				        TvCarNumber.setText(mDeviceList.get(index).getAddress());
+				        TvCarNumber.setTextSize(18);
+				        TvCarNumber.setTextColor(0xFFffffff);
 						break;
 					}
 				}
-			} else {
-				
+			} else {				
 				for (int i = 0; i < manDoorList.size(); i++) {
 					if (temp.equals(manDoorList.get(i).get("MDdeviceid"))) {
 						IdOfDoorToOpen = temp;
 						NameOfDoorToOpen = manDoorList.get(i).get("MDdoorName");
 						isFindKey = true;
+						IvOpenDoorLogo.setImageResource(R.drawable.selector_pressed);
+				        IvSearchKey.setImageResource(R.drawable.btn_background_blue);
+				        TvDistrictDoor.setText(mDeviceList.get(index).getName());
+				        TvDistrictDoor.setTextSize(18);
+				        TvDistrictDoor.setTextColor(0xFFffffff);
+				        TvCarNumber.setText(mDeviceList.get(index).getAddress());
+				        TvCarNumber.setTextSize(18);
+				        TvCarNumber.setTextColor(0xFFffffff);
 						break;
 					}
 				}
 			}
 			if (isFindKey){
-				Log.e("TEST", "got a door");
 				break;
 			}
 		}
 
-		channelSwitch.setOnClickListener(new OnClickListener() {      //点击后图标和字体颜色做相应变化
-
+		channelSwitch.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (isChooseCarChannel == 1) {       //选择人门
+				if (isChooseCarChannel == 1) {     
 					TvChooseCar.setTextColor(COLOR_CHANNEL_CHOOSE);
 					TvChooseMan.setTextColor(COLOR_CHANNEL_NOT_CHOOSE);
 					IvChooseCar.setAlpha(alpha_opaque);
 					IvChooseMan.setAlpha(alpha_transparent);
 					isChooseCarChannel = 0;
-				} else {      //选择车门
+					
+					for (int index = 0; index < mDeviceList.size(); index++) {		
+						isFindKey = false;
+						String temp = mDeviceList.get(index).getAddress();
+						for (int i = 0; i < manDoorList.size(); i++) {
+							if (temp.equals(manDoorList.get(i).get("MDdeviceid"))) {
+								IdOfDoorToOpen = temp;
+								NameOfDoorToOpen = manDoorList.get(i).get("MDdoorName");
+								isFindKey = true;
+								IvOpenDoorLogo.setImageResource(R.drawable.selector_pressed);
+						        IvSearchKey.setImageResource(R.drawable.btn_background_blue);
+						        TvDistrictDoor.setText(mDeviceList.get(index).getName());
+						        TvDistrictDoor.setTextSize(18);
+						        TvDistrictDoor.setTextColor(0xFFffffff);
+						        TvCarNumber.setText(mDeviceList.get(index).getAddress());
+						        TvCarNumber.setTextSize(18);
+						        TvCarNumber.setTextColor(0xFFffffff);
+								break;
+							}
+						}
+						if (isFindKey){
+							Log.e("TEST", "got a car door");
+							break;
+						}
+					}					
+				} else {     
 					TvChooseCar.setTextColor(COLOR_CHANNEL_NOT_CHOOSE);
 					TvChooseMan.setTextColor(COLOR_CHANNEL_CHOOSE);
 					IvChooseCar.setAlpha(alpha_transparent);
 					IvChooseMan.setAlpha(alpha_opaque);
 					isChooseCarChannel = 1;
+					
+					for (int index = 0; index < mDeviceList.size(); index++) {		
+						isFindKey = false;
+						String temp = mDeviceList.get(index).getAddress();
+						for (int i = 0; i < carDoorList.size(); i++) {
+							if (temp.equals(carDoorList.get(i).get("CDdeviceid"))) {
+								IdOfDoorToOpen = temp;
+								NameOfDoorToOpen = carDoorList.get(i).get("CDdoorName");
+								isFindKey = true;
+								IvOpenDoorLogo.setImageResource(R.drawable.selector_pressed);
+						        IvSearchKey.setImageResource(R.drawable.btn_background_blue);
+						        TvDistrictDoor.setText(mDeviceList.get(index).getName());
+						        TvDistrictDoor.setTextSize(18);
+						        TvDistrictDoor.setTextColor(0xFFffffff);
+						        TvCarNumber.setText(mDeviceList.get(index).getAddress());
+						        TvCarNumber.setTextSize(18);
+						        TvCarNumber.setTextColor(0xFFffffff);
+								break;
+							}
+						}
+						if (isFindKey){
+							Log.e("TEST", "got a man door");
+							break;
+						}
+					}
 				}
 			}
-
 		});
 				
 		IvOpenDoorLogo.setOnClickListener(new OnClickListener(){
-
 			@Override
 			public void onClick(View v) {
 				doOpenDoor();
 				playOpenDoorSound();
-			}
-			
+			}			
 		});
 		
 		TvOpenKeyList.setOnClickListener(new OnClickListener(){
-
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent();
 				intent.setClass(getActivity(), KeyList.class);
 				startActivity(intent);
-			}
-			
+			}		
 		});
 		return view;
 	}
@@ -690,6 +745,7 @@ public class KeyFragment extends Fragment implements ShakeListener  {
     
 	@Override
 	public void onShake() {
+		Log.e("TEST","shaking");
 		doOpenDoor();
 	}
 	

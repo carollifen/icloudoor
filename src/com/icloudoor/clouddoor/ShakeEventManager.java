@@ -1,5 +1,6 @@
 package com.icloudoor.clouddoor;
 
+import android.app.Activity;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -11,7 +12,8 @@ public class ShakeEventManager implements SensorEventListener {
 	private SensorManager sManager;
     private Sensor s;
 
-
+    private Context context;
+    
     private static final int MOV_COUNTS = 2;
     private static final int MOV_THRESHOLD = 7;
     private static final float ALPHA = 0.8F;
@@ -23,7 +25,9 @@ public class ShakeEventManager implements SensorEventListener {
     private long firstMovTime;
     private ShakeListener listener;
 
-    public ShakeEventManager() {
+    public ShakeEventManager(Context context) {
+    	super();
+    	this.context = context;
     }
 
     public void setListener(ShakeListener listener) {

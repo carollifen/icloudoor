@@ -7,11 +7,14 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -73,6 +76,16 @@ public class WeatherWidgeFragment extends Fragment {
 	private URL weatherURL;
 	private String Key = "XSI7AKYYBY";
 	private RequestQueue mQueue;
+	
+	//老黄历接口
+	private String lhlHOST = "http://zone.icloudoor.com/icloudoor-web";
+	private URL lhlURL;
+	private int lhlCode;
+	private String sid;
+	
+	private String day1;
+	private String lastRequestLHL;
+	private boolean haveRequestLHL;
 	
 	private long mLastRequestTime;
 	private long mCurrentRequestTime;
@@ -140,10 +153,22 @@ public class WeatherWidgeFragment extends Fragment {
 				}
 			}, 2000);
 		}
+				
+		// INIT -- 获取当前日期
+		Date date = new Date();// 取时间
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(date);
+		date = calendar.getTime();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		day1 = formatter.format(date);
 		
-		// INIT -- To get the current date
-		SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		String date = sDateFormat.format(new java.util.Date());
+		SharedPreferences saveRequestLHL = getActivity().getSharedPreferences("LHLREQUESTDATE",
+				0);
+		lastRequestLHL = saveRequestLHL.getString("LHLlastrequestdate", null);
+		if (day1.equals(lastRequestLHL))
+			haveRequestLHL = true;
+		else
+			haveRequestLHL = false;
 		
 		c.setTimeZone(TimeZone.getTimeZone("GMT+8:00")); 
 	
@@ -200,13 +225,85 @@ public class WeatherWidgeFragment extends Fragment {
 		}
 				
 		mQueue = Volley.newRequestQueue(getActivity());
-			
+		sid = loadSid();	
+		
 		try {
 			weatherURL = new URL(HOST + "city=" + String.valueOf(latitude) + ":" + String.valueOf(longitude)
 					+ "&language=zh-chs&unit=c&aqi=city&key=" + Key);
+			lhlURL = new URL(lhlHOST + "/user/data/laohuangli/get.do" + "?sid=" + sid);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
+		
+		MyJsonObjectRequest mLhlRequest = new MyJsonObjectRequest(
+				Method.POST, lhlURL.toString(), null,
+				new Response.Listener<JSONObject>() {
+
+					@Override
+					public void onResponse(JSONObject response) {
+						try {
+							if (response.getString("sid") != null) {
+								sid = response.getString("sid");
+								saveSid(sid);
+							}
+							lhlCode = response.getInt("code");
+							if(lhlCode == 1){
+								JSONArray data = response.getJSONArray("data");
+								JSONObject Day1 = (JSONObject) data.get(0);
+								JSONObject Day2 = (JSONObject) data.get(1);
+								JSONObject Day3 = (JSONObject) data.get(2);
+								
+								SharedPreferences savedLHL = getActivity().getSharedPreferences("SAVEDLHL",
+										0);
+								Editor editor = savedLHL.edit();
+								editor.putString("D1YI", Day1.getString("yi"));
+								editor.putString("D1JI", Day1.getString("ji"));
+								editor.putString("D2YI", Day2.getString("yi"));
+								editor.putString("D2JI", Day2.getString("ji"));
+								editor.putString("D3YI", Day3.getString("yi"));
+								editor.putString("D3JI", Day3.getString("ji"));
+								editor.commit();
+								
+								YiContent.setText(Day1.getString("yi"));
+								JiContent.setText(Day1.getString("ji"));
+								
+								SharedPreferences saveRequestLHL = getActivity().getSharedPreferences("LHLREQUESTDATE",
+										0);
+								Editor editor1 = saveRequestLHL.edit();
+								editor1.putString("LHLlastrequestdate", day1);
+								editor1.commit();
+							} 
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+						Log.e("TEST", response.toString());
+					}
+				}, new Response.ErrorListener() {
+
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						// TODO Auto-generated method stub
+						
+					}
+				}){
+			@Override
+			protected Map<String, String> getParams()
+					throws AuthFailureError {
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("date", day1);
+				map.put("days", "3");
+				return map;
+			}
+		};
+		if(!haveRequestLHL){
+			mQueue.add(mLhlRequest);
+		}else{
+			SharedPreferences loadLHL = getActivity().getSharedPreferences("SAVEDLHL",
+					0);
+			YiContent.setText(loadLHL.getString("D1YI", null));
+			JiContent.setText(loadLHL.getString("D1JI", null));
+		}
+		
 		
 		JsonObjectRequest mWeatherRequest = new JsonObjectRequest(
 				Method.GET, weatherURL.toString(), null,
@@ -277,9 +374,10 @@ public class WeatherWidgeFragment extends Fragment {
 		return view;
 	}
 	
-	//TODO
 	public class MyClick implements OnClickListener{
 		SharedPreferences loadWeather = getActivity().getSharedPreferences("SAVEDWEATHER",
+				0);
+		SharedPreferences loadLHL = getActivity().getSharedPreferences("SAVEDLHL",
 				0);
 		
 		@Override
@@ -299,6 +397,9 @@ public class WeatherWidgeFragment extends Fragment {
 				
 				WeatherIcon.setImageResource(weatherIcons[Integer.parseInt(loadWeather.getString("Day1IconIndex", "0"))]);
 				
+				YiContent.setText(loadLHL.getString("D1YI", null));
+				JiContent.setText(loadLHL.getString("D1JI", null));
+				
 				break;
 			case R.id.weather_day_after_color:
 				Day2Bg.setBackgroundResource(R.drawable.home_btn_recommended);
@@ -307,9 +408,15 @@ public class WeatherWidgeFragment extends Fragment {
 				
 				if(isBigMonth(c.get(Calendar.MONTH) + 1)){                 //大月
 					if(c.get(Calendar.DAY_OF_MONTH) == 31){
-						Date.setText(String.valueOf(c.get(Calendar.YEAR)) + "年" 
-								+ String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + "月" 
-								+ String.valueOf(1) + "日");
+						if((c.get(Calendar.MONTH) + 1) == 12){   
+							Date.setText(String.valueOf(c.get(Calendar.YEAR) + 1) + "年" 
+									+ String.valueOf(1) + "月" 
+									+ String.valueOf(1) + "日");
+						}else{
+							Date.setText(String.valueOf(c.get(Calendar.YEAR)) + "年" 
+									+ String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + "月" 
+									+ String.valueOf(1) + "日");
+						}
 					}else{
 						Date.setText(String.valueOf(c.get(Calendar.YEAR)) + "年" 
 								+ String.valueOf(c.get(Calendar.MONTH) + 1) + "月" 
@@ -347,11 +454,14 @@ public class WeatherWidgeFragment extends Fragment {
 					}
 				}
 				
-				Week.setText("星期" + getWeek((c.get(Calendar.DAY_OF_WEEK)+1)%7));
+				Week.setText("星期" + getWeek(c.get(Calendar.DAY_OF_WEEK)+1));
 				
 				Temp.setText(loadWeather.getString("Day2TempHigh", null) + String.valueOf(centigrade));
 				
 				WeatherIcon.setImageResource(weatherIcons[Integer.parseInt(loadWeather.getString("Day2IconIndexDay", "0"))]);
+				
+				YiContent.setText(loadLHL.getString("D2YI", null));
+				JiContent.setText(loadLHL.getString("D2JI", null));
 				
 				break;
 			case R.id.weather_day_after_after_color:
@@ -360,17 +470,23 @@ public class WeatherWidgeFragment extends Fragment {
 				Day2Bg.setBackgroundResource(R.drawable.home_btn_recommended_default);
 				
 				if(isBigMonth(c.get(Calendar.MONTH) + 1)){                 //大月
-					if(c.get(Calendar.DAY_OF_MONTH) == 31 && c.get(Calendar.DAY_OF_MONTH) == 30){
-						Date.setText(String.valueOf(c.get(Calendar.YEAR)) + "年" 
-								+ String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + "月" 
-								+ String.valueOf((c.get(Calendar.DAY_OF_MONTH)+2)%31) + "日");
+					if(c.get(Calendar.DAY_OF_MONTH) == 31 || c.get(Calendar.DAY_OF_MONTH) == 30){
+						if((c.get(Calendar.MONTH) + 1) == 12){   
+							Date.setText(String.valueOf(c.get(Calendar.YEAR) + 1) + "年" 
+									+ String.valueOf(1) + "月" 
+									+ String.valueOf((c.get(Calendar.DAY_OF_MONTH)+2)%31) + "日");
+						}else{
+							Date.setText(String.valueOf(c.get(Calendar.YEAR)) + "年" 
+									+ String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + "月" 
+									+ String.valueOf((c.get(Calendar.DAY_OF_MONTH)+2)%31) + "日");
+						}
 					}else{
 						Date.setText(String.valueOf(c.get(Calendar.YEAR)) + "年" 
 								+ String.valueOf(c.get(Calendar.MONTH) + 1) + "月" 
 								+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)+2) + "日");	
 					}
 				}else if(isSmallMonth(c.get(Calendar.MONTH) + 1)){      //小月
-					if(c.get(Calendar.DAY_OF_MONTH) == 30 && c.get(Calendar.DAY_OF_MONTH) == 29){
+					if(c.get(Calendar.DAY_OF_MONTH) == 30 || c.get(Calendar.DAY_OF_MONTH) == 29){
 						Date.setText(String.valueOf(c.get(Calendar.YEAR)) + "年" 
 								+ String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + "月" 
 								+ String.valueOf((c.get(Calendar.DAY_OF_MONTH)+2)%30) + "日");
@@ -380,7 +496,7 @@ public class WeatherWidgeFragment extends Fragment {
 								+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)+2) + "日");
 					}
 				}else if(isLeapYear(c.get(Calendar.MONTH) + 1)) {       //闰年2月  
-					if(c.get(Calendar.DAY_OF_MONTH) == 29 && c.get(Calendar.DAY_OF_MONTH) == 28){
+					if(c.get(Calendar.DAY_OF_MONTH) == 29 || c.get(Calendar.DAY_OF_MONTH) == 28){
 						Date.setText(String.valueOf(c.get(Calendar.YEAR)) + "年" 
 								+ String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + "月" 
 								+ String.valueOf((c.get(Calendar.DAY_OF_MONTH)+2)%29) + "日");
@@ -390,7 +506,7 @@ public class WeatherWidgeFragment extends Fragment {
 								+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)+2) + "日");
 					}
 				}else if(!(isLeapYear(c.get(Calendar.MONTH) + 1))){     //非闰年2月 
-					if(c.get(Calendar.DAY_OF_MONTH) == 28 && c.get(Calendar.DAY_OF_MONTH) == 27){
+					if(c.get(Calendar.DAY_OF_MONTH) == 28 || c.get(Calendar.DAY_OF_MONTH) == 27){
 						Date.setText(String.valueOf(c.get(Calendar.YEAR)) + "年" 
 								+ String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + "月" 
 								+ String.valueOf((c.get(Calendar.DAY_OF_MONTH)+2)%28) + "日");
@@ -400,11 +516,14 @@ public class WeatherWidgeFragment extends Fragment {
 								+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)+2) + "日");
 					}
 				}	
-				Week.setText("星期" + getWeek((c.get(Calendar.DAY_OF_WEEK)+2)%7));
+				Week.setText("星期" + getWeek(c.get(Calendar.DAY_OF_WEEK)+2));
 				
 				Temp.setText(loadWeather.getString("Day3TempHigh", null) + String.valueOf(centigrade));
 				
 				WeatherIcon.setImageResource(weatherIcons[Integer.parseInt(loadWeather.getString("Day3IconIndexDay", "0"))]);
+				
+				YiContent.setText(loadLHL.getString("D3YI", null));
+				JiContent.setText(loadLHL.getString("D3JI", null));
 				
 				break;
 			default:
@@ -482,6 +601,7 @@ public class WeatherWidgeFragment extends Fragment {
 
 	public String getWeek(int i){
 		String week = null;
+		if(i > 7) i = i - 7;
 		if(i == 1){
 			week ="天";
 		}else if(i == 2){
@@ -529,6 +649,19 @@ public class WeatherWidgeFragment extends Fragment {
 	public long loadLastRequestTime() {
 		SharedPreferences loadTime = getActivity().getSharedPreferences("SAVEDTIME", 0);
 		return loadTime.getLong("TIME", 0);
+	}
+	
+	public void saveSid(String sid) {
+		SharedPreferences savedSid = getActivity().getSharedPreferences("SAVEDSID",
+				0);
+		Editor editor = savedSid.edit();
+		editor.putString("SID", sid);
+		editor.commit();
+	}
+
+	public String loadSid() {
+		SharedPreferences loadSid = getActivity().getSharedPreferences("SAVEDSID", 0);
+		return loadSid.getString("SID", null);
 	}
 
 }

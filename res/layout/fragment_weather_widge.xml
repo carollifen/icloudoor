@@ -59,7 +59,7 @@
         android:layout_width="160dp"
         android:layout_height="16.5dp"
         android:layout_marginLeft="66dp"
-        android:layout_marginTop="46dp"
+        android:layout_marginTop="46.5dp"
         android:ellipsize="marquee"
         android:focusable="true"
         android:gravity="center_vertical"

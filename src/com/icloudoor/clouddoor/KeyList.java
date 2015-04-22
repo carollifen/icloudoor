@@ -97,7 +97,8 @@ public class KeyList extends Activity{
 			e.printStackTrace();
 		}
 
-		
+		Toast.makeText(KeyList.this, R.string.downloading_key_list,
+				Toast.LENGTH_LONG).show();
 		
 		mKeyDBHelper = new MyDataBaseHelper(KeyList.this, DATABASE_NAME);
 		mKeyDB = mKeyDBHelper.getWritableDatabase();
@@ -111,8 +112,6 @@ public class KeyList extends Activity{
 						try {
 							statusCode = response.getInt("code");
 							if (statusCode == 1) {
-								Toast.makeText(KeyList.this, R.string.downloading_key_list,
-										Toast.LENGTH_SHORT).show();
 								
 								parseKeyData(response);
 //								mAdapter = new KeyListAdapter(KeyList.this,
