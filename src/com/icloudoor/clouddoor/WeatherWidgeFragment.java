@@ -32,6 +32,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +42,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 public class WeatherWidgeFragment extends Fragment {
 	
@@ -72,21 +73,27 @@ public class WeatherWidgeFragment extends Fragment {
 	private URL weatherURL;
 	private String Key = "XSI7AKYYBY";
 	private RequestQueue mQueue;
-	//æ€∫œ¿œª∆¿˙
-	private String HOST_Laohuangli = "http://v.juhe.cn/laohuangli/d?";
-	private URL laohuangliRequestURL;
-	private String laohuangliKey = "ce9652a2ea10b061e3e479606c5529ca";
 	
 	private long mLastRequestTime;
 	private long mCurrentRequestTime;
 	
-	private static int[] weatherIcons = new int[]{R.drawable.sunny, R.drawable.clear, R.drawable.fair, R.drawable.fair1, R.drawable.cloudy, R.drawable.party_cloudy
-		, R.drawable.party_cloudy1, R.drawable.mostly_cloudy, R.drawable.mostly_cloudy1, R.drawable.overcast, R.drawable.shower, R.drawable.thundershower
-		, R.drawable.thundershower_with_hail, R.drawable.light_rain, R.drawable.moderate_rain, R.drawable.heavy_rain, R.drawable.storm, R.drawable.heavy_storm
-		, R.drawable.severe_storm, R.drawable.ice_rain, R.drawable.sleet, R.drawable.snow_flurry, R.drawable.light_snow, R.drawable.moderate_snow
-		, R.drawable.heavy_snow, R.drawable.snowstorm, R.drawable.dust, R.drawable.sand, R.drawable.duststorm, R.drawable.sandstorm, R.drawable.foggy
-		, R.drawable.haze, R.drawable.windy, R.drawable.blustery, R.drawable.hurricane, R.drawable.tropical_storm, R.drawable.tornado, R.drawable.cold, R.drawable.hot};
-		
+	private static int[] weatherIcons = new int[] { R.drawable.sunny,
+			R.drawable.clear, R.drawable.fair, R.drawable.fair1,
+			R.drawable.cloudy, R.drawable.party_cloudy,
+			R.drawable.party_cloudy1, R.drawable.mostly_cloudy,
+			R.drawable.mostly_cloudy1, R.drawable.overcast, R.drawable.shower,
+			R.drawable.thundershower, R.drawable.thundershower_with_hail,
+			R.drawable.light_rain, R.drawable.moderate_rain,
+			R.drawable.heavy_rain, R.drawable.storm, R.drawable.heavy_storm,
+			R.drawable.severe_storm, R.drawable.ice_rain, R.drawable.sleet,
+			R.drawable.snow_flurry, R.drawable.light_snow,
+			R.drawable.moderate_snow, R.drawable.heavy_snow,
+			R.drawable.snowstorm, R.drawable.dust, R.drawable.sand,
+			R.drawable.duststorm, R.drawable.sandstorm, R.drawable.foggy,
+			R.drawable.haze, R.drawable.windy, R.drawable.blustery,
+			R.drawable.hurricane, R.drawable.tropical_storm,
+			R.drawable.tornado, R.drawable.cold, R.drawable.hot };
+
 	public WeatherWidgeFragment() {
 	}
 
@@ -111,6 +118,8 @@ public class WeatherWidgeFragment extends Fragment {
 		Day3Bg = (TextView) view.findViewById(R.id.weather_day_after_after_color);
 		YiContent = (TextView) view.findViewById(R.id.weather_content_yi);
 		JiContent = (TextView) view.findViewById(R.id.weather_content_ji);
+		YiContent.setSelected(true);
+		JiContent.setSelected(true);
 		WeatherIcon = (ImageView) view.findViewById(R.id.weather_icon);
 		
 		Day1Bg.setOnClickListener(myClick);
@@ -238,9 +247,7 @@ public class WeatherWidgeFragment extends Fragment {
 								City.setText(data.getString("city_name"));
 								Temp.setText(now.getString("temperature") + String.valueOf(centigrade));
 								WeatherIcon.setImageResource(weatherIcons[Integer.parseInt(now.getString("code"))]);													
-							} else {
-								
-							}
+							} 
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}

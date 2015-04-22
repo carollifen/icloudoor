@@ -199,7 +199,7 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 				}
 			}
 		}
-				
+		
 		// Attemp to find the door can open
 		for (int index = 0; index < mDeviceList.size(); index++) {
 			
