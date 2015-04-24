@@ -31,21 +31,14 @@
             android:src="@drawable/btn_choise_man" />
     </RelativeLayout>
 
-    <!-- <include -->
-    <!-- android:layout_width="wrap_content" -->
-    <!-- android:layout_height="wrap_content" -->
-    <!-- layout="@layout/car_channel" -->
-    <!-- android:layout_centerHorizontal="true" -->
-    <!-- android:layout_marginTop="32dp" -->
-    <!-- /> -->
 
     <TextView
         android:id="@+id/Tv_choose_car"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="69dp"
+        android:layout_marginLeft="53dp"
         android:layout_marginTop="42dp"
-        android:text="车道"
+        android:text="车    道"
         android:textColor="#002f4a"
         android:textSize="16sp" />
 

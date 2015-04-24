@@ -118,9 +118,6 @@ public class RegisterActivity extends Activity {
 					Toast.makeText(v.getContext(),
 							R.string.send_too_frequently, Toast.LENGTH_SHORT)
 							.show();
-				} else if (RequestCertiStatusCode != 1) {
-					Toast.makeText(v.getContext(), R.string.unknown_err,
-							Toast.LENGTH_SHORT).show();
 				}
 
 			}
@@ -195,9 +192,6 @@ public class RegisterActivity extends Activity {
 							.show();
 				} else if (ConfirmCertiStatusCode == -31) {
 					Toast.makeText(v.getContext(), R.string.certi_code_overdue,
-							Toast.LENGTH_SHORT).show();
-				} else {
-					Toast.makeText(v.getContext(), R.string.unknown_err,
 							Toast.LENGTH_SHORT).show();
 				}
 			}

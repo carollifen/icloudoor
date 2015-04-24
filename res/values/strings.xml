@@ -31,5 +31,6 @@
     <string name="door_open">开门</string>
     <string name="centigrade">&#176;C</string>
     <string name="title_activity_set_personal_info">SetPersonalInfo</string>
+    <string name="title_activity_personal_info_detail">PersonalInfoDetail</string>
 
 </resources>

@@ -13,7 +13,7 @@
     <include
         android:id="@+id/weather_widge"
         android:layout_width="fill_parent"
-        android:layout_height="155dp"
+        android:layout_height="175dp"
         android:layout_below="@+id/title_bar"
         layout="@layout/weather" />
 
@@ -27,7 +27,7 @@
     <TextView
         android:id="@+id/blank_tv_below_channel_widge"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="50dp"
         android:layout_below="@+id/channel_widge"
         android:background="#ecf0f7" />
 

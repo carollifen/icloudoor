@@ -103,11 +103,7 @@ public class ForgetPwdNewPwd extends Activity {
 						Intent intent = new Intent();
 						intent.setClass(v.getContext(), Login.class);
 						startActivity(intent);
-					} else {
-						Toast.makeText(v.getContext(), R.string.unknown_err,
-								Toast.LENGTH_SHORT).show();
-					}
-
+					} 
 				} else {
 					Toast.makeText(v.getContext(), R.string.diff_pwd,
 							Toast.LENGTH_SHORT).show();

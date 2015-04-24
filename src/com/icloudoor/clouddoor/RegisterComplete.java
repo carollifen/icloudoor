@@ -124,9 +124,6 @@ public class RegisterComplete extends Activity {
 					} else if (statusCode == -41) {
 						Toast.makeText(v.getContext(), R.string.weak_pwd,
 								Toast.LENGTH_SHORT).show();
-					} else {
-						Toast.makeText(v.getContext(), R.string.unknown_err,
-								Toast.LENGTH_SHORT).show();
 					}
 				} else {
 					Toast.makeText(v.getContext(), R.string.diff_pwd,

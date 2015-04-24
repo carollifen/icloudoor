@@ -2,15 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/shape_gradient"
+    android:background="#ecf0f7"
     tools:context="com.icloudoor.clouddoor.WeatherWidgeFragment2" >
 
-    <!-- TODO: Update blank fragment layout -->
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Empty fragment, wait for opening" 
-        android:gravity="center"/>
+        android:gravity="center"
+        android:text="Empty fragment, wait for opening" />
 
 </FrameLayout>

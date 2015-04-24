@@ -190,7 +190,8 @@ public class KeyFragment extends Fragment implements ShakeListener  {
         mBluetoothAdapter = mBluetoothManager.getAdapter();
 		        
         if (mBluetoothAdapter == null) {
-            Toast.makeText(getActivity(), R.string.bt_not_supported, Toast.LENGTH_SHORT).show();
+        	if(getActivity() != null)
+        		Toast.makeText(getActivity(), R.string.bt_not_supported, Toast.LENGTH_SHORT).show();
         }
        
         service_init(); 		
@@ -322,13 +323,15 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 	private void checkBlueToothState() {
 		Log.e("BLE", "checkBlueToothState");
 		if(mBluetoothAdapter == null) {
-	        Toast.makeText(getActivity(), R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
+			if(getActivity() != null)
+				Toast.makeText(getActivity(), R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
 		} else {
 			if (mBluetoothAdapter.isEnabled()) {
 				if (mBluetoothAdapter.isDiscovering()) {
 				} else {
 					populateDeviceList();
-					Toast.makeText(getActivity(), R.string.bt_enabled,
+					if(getActivity() != null)
+						Toast.makeText(getActivity(), R.string.bt_enabled,
 							Toast.LENGTH_SHORT).show();
 				}
 			} else {
@@ -438,10 +441,13 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 //		}
 //	}
 //	
+
 	private void doOpenDoor() {
 		Log.e("BLE", "doOpenDoor");
 		IvOpenDoorLogo.setEnabled(false);
-		Toast.makeText(getActivity(), R.string.door_open, Toast.LENGTH_SHORT).show();
+		if(getActivity() != null)
+			Toast.makeText(getActivity(), R.string.door_open, Toast.LENGTH_SHORT).show();
+		
 		
 		if(mDeviceList != null  && mDeviceList.size() > 0) {
 //			

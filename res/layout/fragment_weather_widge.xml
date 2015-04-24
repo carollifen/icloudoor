@@ -2,18 +2,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/shape_gradient"
+    android:background="#ecf0f7"
     tools:context="com.icloudoor.clouddoor.WeatherWidgeFragment" >
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="28dp"
         android:background="@drawable/bg_image_calendar_11" >
 
         <RelativeLayout
-            android:layout_width="275dp"
+            android:layout_width="295dp"
             android:layout_height="32dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" >
@@ -26,83 +26,173 @@
                 android:layout_centerVertical="true"
                 android:text="定位中..."
                 android:textColor="#000000"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+                android:textSize="12sp"  />
 
             <TextView
                 android:id="@+id/weather_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="1"
+                android:text="null"
                 android:textColor="#ffffff"
                 android:textSize="16sp" />
 
-            <TextView
+            <LinearLayout
+                 android:layout_width="wrap_content"
+                 android:layout_height="27dp"
+                 android:orientation="vertical"
+                 android:layout_alignParentRight="true"
+                 android:layout_centerVertical="true"
+                >
+                
+                <TextView
                 android:id="@+id/weather_week"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:text="周四"
+                android:text="null"
                 android:textColor="#47494a"
-                android:textSize="12sp" />
+                android:textSize="11sp" />
+                
+                <TextView
+                android:id="@+id/weather_year"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2015年"
+                android:textColor="#47494a"
+                android:textSize="11sp" />
+                
+            </LinearLayout>
+            
+            
+            
+            
+            
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="178dp"
+            android:layout_width="188dp"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="12.5dp" >
 
-            <TextView
-                android:id="@+id/weather_title_yi"
-                android:layout_width="wrap_content"
-                android:layout_height="18dp"
-                android:gravity="center"
-                android:text="宜 "
-                android:textColor="#2db9e5"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/weather_content_yi"
+            <LinearLayout 
+                android:id="@+id/content_yi"
                 android:layout_width="match_parent"
-                android:layout_height="18dp"
-                android:layout_marginLeft="24dp"
-                android:ellipsize="marquee"
-                android:focusable="true"
-                android:gravity="center_vertical"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:text="dfd"
-                android:textColor="#898989"
-                android:textSize="12sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="18dp"
-                android:layout_alignParentBottom="true"
-                android:gravity="center"
-                android:text="忌 "
-                android:textColor="#fe4a61"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/weather_content_ji"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+                
+                <TextView
+                    android:id="@+id/weather_title_yi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="宜 "
+                    android:textColor="#2db9e5"
+                    android:textSize="12sp" />
+                
+                <TextView
+                    android:id="@+id/weather_content_yi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="14dp"
+                    android:gravity="center_vertical"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:text="null"
+                    android:textColor="#898989"
+                    android:textSize="12sp" />
+                
+<!--                 <TextView -->
+<!--                     android:id="@+id/weather_content_yi" -->
+<!--                     android:layout_width="match_parent" -->
+<!--                     android:layout_height="18dp" -->
+<!--                     android:layout_marginLeft="24dp" -->
+<!--                     android:ellipsize="marquee" -->
+<!--                     android:focusable="true" -->
+<!--                     android:gravity="center_vertical" -->
+<!--                     android:marqueeRepeatLimit="marquee_forever" -->
+<!--                     android:scrollHorizontally="true" -->
+<!--                     android:singleLine="true" -->
+<!--                     android:text="null" -->
+<!--                     android:textColor="#898989" -->
+<!--                     android:textSize="12sp" /> -->
+                
+            </LinearLayout>
+            
+            <LinearLayout 
+                android:id="@+id/content_ji"
                 android:layout_width="match_parent"
-                android:layout_height="18dp"
-                android:layout_alignParentBottom="true"
-                android:layout_marginLeft="24dp"
-                android:ellipsize="marquee"
-                android:focusable="true"
-                android:gravity="center_vertical"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:text="fgfg"
-                android:textColor="#898989"
-                android:textSize="12sp" />
+                android:layout_height="wrap_content"
+                android:layout_below="@id/content_yi"
+                android:orientation="horizontal"
+                >
+                
+                <TextView
+                    android:id="@+id/weather_title_ji"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="忌 "
+                    android:textColor="#fe4a61"
+                    android:textSize="12sp" />
+                
+                <TextView
+                    android:id="@+id/weather_content_ji"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="14dp"
+                    android:gravity="center_vertical"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:text="null"
+                    android:textColor="#898989"
+                    android:textSize="12sp" />
+                
+<!--                 <TextView -->
+<!--                     android:id="@+id/weather_content_yi" -->
+<!--                     android:layout_width="match_parent" -->
+<!--                     android:layout_height="18dp" -->
+<!--                     android:layout_marginLeft="24dp" -->
+<!--                     android:ellipsize="marquee" -->
+<!--                     android:focusable="true" -->
+<!--                     android:gravity="center_vertical" -->
+<!--                     android:marqueeRepeatLimit="marquee_forever" -->
+<!--                     android:scrollHorizontally="true" -->
+<!--                     android:singleLine="true" -->
+<!--                     android:text="null" -->
+<!--                     android:textColor="#898989" -->
+<!--                     android:textSize="12sp" /> -->
+                
+            </LinearLayout>
+
+
+
+
+<!--             <TextView -->
+<!--                 android:layout_width="wrap_content" -->
+<!--                 android:layout_height="18dp" -->
+<!--                 android:layout_alignParentBottom="true" -->
+<!--                 android:gravity="center" -->
+<!--                 android:text="忌 " -->
+<!--                 android:textColor="#fe4a61" -->
+<!--                 android:textSize="12sp" /> -->
+
+<!--             <TextView -->
+<!--                 android:id="@+id/weather_content_ji" -->
+<!--                 android:layout_width="match_parent" -->
+<!--                 android:layout_height="18dp" -->
+<!--                 android:layout_alignParentBottom="true" -->
+<!--                 android:layout_marginLeft="24dp" -->
+<!--                 android:ellipsize="marquee" -->
+<!--                 android:focusable="true" -->
+<!--                 android:gravity="center_vertical" -->
+<!--                 android:marqueeRepeatLimit="marquee_forever" -->
+<!--                 android:scrollHorizontally="true" -->
+<!--                 android:singleLine="true" -->
+<!--                 android:text="null" -->
+<!--                 android:textColor="#898989" -->
+<!--                 android:textSize="12sp" /> -->
         </RelativeLayout>
 
         <RelativeLayout
