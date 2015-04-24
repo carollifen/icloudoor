@@ -2,26 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f7f9fd"
+    android:background="#ecf0f7"
     android:orientation="vertical" >
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/weather_widge_pager"
+        android:id="@+id/wuye_widge_pager"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_gravity="center"
         android:layout_weight="1.0"
-        android:background="#f7f9fd"
+        android:background="#ecf0f7"
         android:flipInterval="30"
         android:persistentDrawingCache="animation" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="10dp"
-        android:background="#ecf0f7" >
+        android:orientation="horizontal" >
 
         <ImageView
-            android:id="@+id/Iv_weather_widge_push1"
+            android:id="@+id/Iv_wuye_widge_push1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -30,7 +30,7 @@
             android:background="@drawable/push_current" />
 
         <ImageView
-            android:id="@+id/Iv_weather_widge_push2"
+            android:id="@+id/Iv_wuye_widge_push2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

@@ -53,16 +53,16 @@ public class SettingDetailActivity extends Activity {
 			}
 			
 		});
-		TVBtnChangePhone.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent();
-				intent.setClass(v.getContext(), ChangePhoneActivity.class);
-				startActivity(intent);
-			}
-			
-		});
+//		TVBtnChangePhone.setOnClickListener(new OnClickListener(){
+//
+//			@Override
+//			public void onClick(View v) {
+//				Intent intent = new Intent();
+//				intent.setClass(v.getContext(), ChangePhoneActivity.class);
+//				startActivity(intent);
+//			}
+//			
+//		});
 		IVBack.setOnClickListener(new OnClickListener(){
 
 			@Override

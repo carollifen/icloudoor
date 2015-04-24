@@ -24,9 +24,9 @@ import android.widget.Toast;
 
 public class MsgFragment extends Fragment implements OnItemClickListener, OnClickListener, OnSlideListener {
 	
-	private MsgListView mMsgList;
+//	private MsgListView mMsgList;
 	private List<MessageItem> mMessageItems = new ArrayList<MessageItem>();
-	private SlideView mLastSlideViewWithStatusOn;
+//	private SlideView mLastSlideViewWithStatusOn;
 	
 	private TextView mPopupWindow;
 
@@ -39,15 +39,15 @@ public class MsgFragment extends Fragment implements OnItemClickListener, OnClic
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.msg_page, container,false);
 		
-		mMsgList = (MsgListView) view.findViewById(R.id.msg_list);
+//		mMsgList = (MsgListView) view.findViewById(R.id.msg_list);
 		MessageItem item = new MessageItem();
 		item.image = R.drawable.icon_boy_110;
 		item.name = "Name";
 		item.content = "message";
 		item.time = "11:50";
 		mMessageItems.add(item);
-		mMsgList.setAdapter(new SlideAdapter());
-		mMsgList.setOnItemClickListener(this);
+//		mMsgList.setAdapter(new SlideAdapter());
+//		mMsgList.setOnItemClickListener(this);
 		
 		return view;
 	}
@@ -131,17 +131,17 @@ public class MsgFragment extends Fragment implements OnItemClickListener, OnClic
         }
     }	
 	
-	@Override
-	public void onSlide(View view, int status) {
-		if (mLastSlideViewWithStatusOn != null && mLastSlideViewWithStatusOn != view) {
-            mLastSlideViewWithStatusOn.shrink();
-        }
-
-        if (status == SLIDE_STATUS_ON) {
-            mLastSlideViewWithStatusOn = (SlideView) view;
-        }
-		
-	}
+//	@Override
+//	public void onSlide(View view, int status) {
+//		if (mLastSlideViewWithStatusOn != null && mLastSlideViewWithStatusOn != view) {
+//            mLastSlideViewWithStatusOn.shrink();
+//        }
+//
+//        if (status == SLIDE_STATUS_ON) {
+//            mLastSlideViewWithStatusOn = (SlideView) view;
+//        }
+//		
+//	}
 
 	@Override
 	public void onClick(View v) {
@@ -153,6 +153,12 @@ public class MsgFragment extends Fragment implements OnItemClickListener, OnClic
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
+	}
+
+	@Override
+	public void onSlide(View view, int status) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

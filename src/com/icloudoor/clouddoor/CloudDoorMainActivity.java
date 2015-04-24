@@ -26,7 +26,9 @@ public class CloudDoorMainActivity extends FragmentActivity {
 	private MsgFragment mMsgFragment;
 	private KeyFragment mKeyFragment;
 	private SettingFragment mSettingFragment;
+	private WuyeFragment mWuyeFragment;
 
+	private RelativeLayout bottomWuye;
 	private RelativeLayout bottomMsg;
 	private RelativeLayout bottomKey;
 	private RelativeLayout bottomSetting;
@@ -34,17 +36,19 @@ public class CloudDoorMainActivity extends FragmentActivity {
 	private TextView bottomTvMsg;
 	private TextView bottomTvKey;
 	private TextView bottomTvSetting;
+	private TextView bottomTvWuye;
 
 	private ImageView bottomIvMsg;
 	private ImageView bottomIvKey;
 	private ImageView bottomIvSetting;
+	private ImageView bottomIvWuye;
 
 	public FragmentManager mFragmentManager;
 	public MyOnClickListener myClickListener;
 	public FragmentTransaction mFragmenetTransaction;
 //	public MyPageChangeListener myPageChangeListener;
 
-	private int COLOR_GRAY = 0xFFbdc7d4;
+	private int COLOR_GRAY = 0xFF747f8d;
 	private int COLOR_BLACK = 0xFF000000;
 
 	private float alpha_half_transparent = 0.2f;
@@ -59,7 +63,7 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		mMsgFragment = new MsgFragment();
 		mKeyFragment = new KeyFragment();
 		mSettingFragment = new SettingFragment();
-		
+		mWuyeFragment = new WuyeFragment();
 		
 		
 //		mFragmentManager = getSupportFragmentManager();
@@ -78,21 +82,25 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		bottomMsg = (RelativeLayout) findViewById(R.id.bottom_msg_layout);
 		bottomKey = (RelativeLayout) findViewById(R.id.bottom_key_layout);
 		bottomSetting = (RelativeLayout) findViewById(R.id.bottom_setting_layout);
+		bottomWuye = (RelativeLayout) findViewById(R.id.bottom_wuye_layout);
 
-		bottomTvMsg = (TextView) findViewById(R.id.bottom_tv_msg);
-		bottomTvKey = (TextView) findViewById(R.id.bottom_tv_key);
-		bottomTvSetting = (TextView) findViewById(R.id.bottom_tv_setting);
+		bottomTvMsg = (TextView) findViewById(R.id.msg_text);
+		bottomTvKey = (TextView) findViewById(R.id.key_text);
+		bottomTvSetting = (TextView) findViewById(R.id.set_text);
+		bottomTvWuye = (TextView) findViewById(R.id.wuye_text);
 
-		bottomIvMsg = (ImageView) findViewById(R.id.btn_Msg);
-		bottomIvKey = (ImageView) findViewById(R.id.btn_Key);
-		bottomIvSetting = (ImageView) findViewById(R.id.btn_set);
+		bottomIvMsg = (ImageView) findViewById(R.id.msg_image);
+		bottomIvKey = (ImageView) findViewById(R.id.key_image);
+		bottomIvSetting = (ImageView) findViewById(R.id.set_image);
+		bottomIvWuye = (ImageView) findViewById(R.id.wuye_image);
 
 //		mViewPager.setAdapter(mFragmentAdapter);
 //		mViewPager.setOnPageChangeListener(myPageChangeListener);
 
-		bottomIvMsg.setOnClickListener(myClickListener);
-		bottomIvKey.setOnClickListener(myClickListener);
-		bottomIvSetting.setOnClickListener(myClickListener);
+		bottomMsg.setOnClickListener(myClickListener);
+		bottomKey.setOnClickListener(myClickListener);
+		bottomSetting.setOnClickListener(myClickListener);
+		bottomWuye.setOnClickListener(myClickListener);
 	}
 
 //	public void InitViewPager() {
@@ -119,9 +127,12 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		bottomTvKey.setTextColor(COLOR_BLACK);
 		bottomTvMsg.setTextColor(COLOR_GRAY);
 		bottomTvSetting.setTextColor(COLOR_GRAY);
-		bottomIvKey.setAlpha(alpha_opaque);
-		bottomIvMsg.setAlpha(alpha_half_transparent);		
-		bottomIvSetting.setAlpha(alpha_half_transparent);
+		bottomTvWuye.setTextColor(COLOR_GRAY);
+
+		bottomIvMsg.setImageResource(R.drawable.button_199);
+		bottomIvKey.setImageResource(R.drawable.button_201);
+		bottomIvSetting.setImageResource(R.drawable.button_207);
+		bottomIvWuye.setImageResource(R.drawable.button_194);
 	}
 
 	public class MyOnClickListener implements OnClickListener {
@@ -155,43 +166,61 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		mFragmentManager = getSupportFragmentManager();
 		mFragmenetTransaction = mFragmentManager.beginTransaction();
 		switch (index) {
-//		case 0:
-		case R.id.btn_Msg:
-			bottomTvMsg.setTextColor(COLOR_BLACK);
+		case R.id.bottom_wuye_layout:
 			bottomTvKey.setTextColor(COLOR_GRAY);
+			bottomTvMsg.setTextColor(COLOR_GRAY);
 			bottomTvSetting.setTextColor(COLOR_GRAY);
+			bottomTvWuye.setTextColor(COLOR_BLACK);
 
-			bottomIvMsg.setAlpha(alpha_opaque);
-			bottomIvKey.setAlpha(alpha_half_transparent);
-			bottomIvSetting.setAlpha(alpha_half_transparent);
+			bottomIvMsg.setImageResource(R.drawable.button_199);
+			bottomIvKey.setImageResource(R.drawable.button_203);
+			bottomIvSetting.setImageResource(R.drawable.button_207);
+			bottomIvWuye.setImageResource(R.drawable.button_192);
+			
+			mFragmenetTransaction.replace(R.id.id_content, mWuyeFragment);
+			break;
+		case R.id.bottom_msg_layout:
+			bottomTvKey.setTextColor(COLOR_GRAY);
+			bottomTvMsg.setTextColor(COLOR_BLACK);
+			bottomTvSetting.setTextColor(COLOR_GRAY);
+			bottomTvWuye.setTextColor(COLOR_GRAY);
+
+			bottomIvMsg.setImageResource(R.drawable.button_196);
+			bottomIvKey.setImageResource(R.drawable.button_203);
+			bottomIvSetting.setImageResource(R.drawable.button_207);
+			bottomIvWuye.setImageResource(R.drawable.button_194);
 
 			mFragmenetTransaction.replace(R.id.id_content, mMsgFragment);
 			
 //			mViewPager.setCurrentItem(0);
 			break;
-//		case 1:
-		case R.id.btn_Key:
+
+		case R.id.bottom_key_layout:
 			bottomTvKey.setTextColor(COLOR_BLACK);
 			bottomTvMsg.setTextColor(COLOR_GRAY);
 			bottomTvSetting.setTextColor(COLOR_GRAY);
+			bottomTvWuye.setTextColor(COLOR_GRAY);
 
-			bottomIvKey.setAlpha(alpha_opaque);
-			bottomIvMsg.setAlpha(alpha_half_transparent);
-			bottomIvSetting.setAlpha(alpha_half_transparent);
+			bottomIvMsg.setImageResource(R.drawable.button_199);
+			bottomIvKey.setImageResource(R.drawable.button_201);
+			bottomIvSetting.setImageResource(R.drawable.button_207);
+			bottomIvWuye.setImageResource(R.drawable.button_194);
 
 			mFragmenetTransaction.replace(R.id.id_content, mKeyFragment);
 			
 //			mViewPager.setCurrentItem(1);
 			break;
-//		case 2:
-		case R.id.btn_set:
-			bottomTvSetting.setTextColor(COLOR_BLACK);
-			bottomTvMsg.setTextColor(COLOR_GRAY);
-			bottomTvKey.setTextColor(COLOR_GRAY);
 
-			bottomIvSetting.setAlpha(alpha_opaque);
-			bottomIvMsg.setAlpha(alpha_half_transparent);
-			bottomIvKey.setAlpha(alpha_half_transparent);
+		case R.id.bottom_setting_layout:
+			bottomTvKey.setTextColor(COLOR_GRAY);
+			bottomTvMsg.setTextColor(COLOR_GRAY);
+			bottomTvSetting.setTextColor(COLOR_BLACK);
+			bottomTvWuye.setTextColor(COLOR_GRAY);
+
+			bottomIvMsg.setImageResource(R.drawable.button_199);
+			bottomIvKey.setImageResource(R.drawable.button_203);
+			bottomIvSetting.setImageResource(R.drawable.button_205);
+			bottomIvWuye.setImageResource(R.drawable.button_194);
 
 			mFragmenetTransaction.replace(R.id.id_content, mSettingFragment);
 			

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="49dp"
+    android:orientation="vertical" >
+    
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#cccccc" />
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:orientation="horizontal" >
+        
+        <RelativeLayout
+            android:id="@+id/bottom_wuye_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+			
+            <ImageView
+                android:id="@+id/wuye_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_194"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                />
+            
+            <TextView
+                android:id="@+id/wuye_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="物业服务"
+                android:textSize="10sp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="34.5dp"
+                />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/bottom_msg_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+            
+            <ImageView
+                android:id="@+id/msg_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_199"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                />
+            
+            <TextView
+                android:id="@+id/msg_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="消息"
+                android:textSize="10sp"
+                android:textColor="#747f8d"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="34.5dp"
+                />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/bottom_key_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <ImageView
+                android:id="@+id/key_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_203"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                />
+            
+            <TextView
+                android:id="@+id/key_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="钥匙"
+                android:textSize="10sp"
+                android:textColor="#747f8d"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="34.5dp"
+                />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/bottom_setting_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+            
+            <ImageView
+                android:id="@+id/set_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_207"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                />
+            
+            <TextView
+                android:id="@+id/set_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="我的"
+                android:textSize="10sp"
+                android:textColor="#747f8d"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="34.5dp"
+                />
+
+        </RelativeLayout>
+        
+    </LinearLayout>"
+    
+    
+
+</LinearLayout>
