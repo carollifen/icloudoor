@@ -35,6 +35,7 @@ public class SettingFragment extends Fragment {
 	private RelativeLayout RLUpdate;
 
 	private TextView logOut;
+	private TextView toShowPersonalInfo;
 
 	private MyOnClickListener myClickListener;
 
@@ -65,6 +66,7 @@ public class SettingFragment extends Fragment {
 		RLShare = (RelativeLayout) view.findViewById(R.id.btn_share);
 		RLUpdate = (RelativeLayout) view.findViewById(R.id.btn_update);
 
+		toShowPersonalInfo = (TextView) view.findViewById(R.id.toshow_personal_info_in_set);
 		logOut = (TextView) view.findViewById(R.id.btn_logout);
 
 		RLSet.setOnClickListener(myClickListener);
@@ -72,6 +74,7 @@ public class SettingFragment extends Fragment {
 		RLShare.setOnClickListener(myClickListener);
 		RLUpdate.setOnClickListener(myClickListener);
 
+		toShowPersonalInfo.setOnClickListener(myClickListener);
 		logOut.setOnClickListener(myClickListener);
 
 		return view;
@@ -82,6 +85,8 @@ public class SettingFragment extends Fragment {
 		@Override
 		public void onClick(View v) {
 			switch (v.getId()) {
+			case R.id.toshow_personal_info_in_set:
+				break;
 			case R.id.btn_set:
 				Intent intent = new Intent();
 				intent.setClass(getActivity(), SettingDetailActivity.class);

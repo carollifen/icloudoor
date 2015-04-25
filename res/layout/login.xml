@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="#116dad" >
     
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/login_logo"
-        android:layout_marginTop="60dp"
+        android:background="@drawable/logo"
+        android:layout_marginTop="50dp"
+        android:layout_centerHorizontal="true"
+        />
+    
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_blue"
         android:layout_centerHorizontal="true"
         />
     
@@ -21,9 +29,9 @@
         android:drawableLeft="@drawable/login_phone"
         android:padding="12dp"
         android:hint="云门号或手机号"
-        android:textColorHint="#8b9eb6"
+        android:textColorHint="#ffffff"
         android:textSize="16sp"
-        android:textColor="#000000"
+        android:textColor="#ffffff"
         android:inputType="number"
         />
 
@@ -37,6 +45,7 @@
         android:drawableLeft="@drawable/login_password"
         android:paddingLeft="12dp"  
         android:inputType="textPassword"
+        android:textColor="#ffffff"
         />    
         
     <ImageView
@@ -55,10 +64,10 @@
         android:layout_height="48dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="307dp"
-        android:background="@drawable/shape_color_blue"
+        android:background="@drawable/but_login"
         android:text="登    录"
         android:textSize="17sp"
-        android:textColor="#ffffff"
+        android:textColor="#000000"
         android:gravity="center"/>
     
     <TextView 
@@ -70,7 +79,7 @@
         android:layout_marginLeft="70dp"
         android:text="忘记密码"
         android:textSize="16sp"
-        android:textColor="#747f8d"/>   
+        android:textColor="#ffffff"/>   
         
     <TextView 
         android:id="@+id/login_go_to_regi"
@@ -82,6 +91,6 @@
         android:layout_marginRight="70dp"
         android:text="立即注册"
         android:textSize="16sp"
-        android:textColor="#747f8d"/>     
+        android:textColor="#ffffff"/>     
 
 </RelativeLayout>

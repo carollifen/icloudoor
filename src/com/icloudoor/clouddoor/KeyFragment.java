@@ -96,7 +96,7 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 	
 	//for BLE
 	private static final int REQUEST_ENABLE_BT = 0;
-	private static final long SCAN_PERIOD = 10000; // ms
+	private static final long SCAN_PERIOD = 3000; // ms
 	private BluetoothAdapter mBluetoothAdapter;
 	private DeviceAdapter mDeviceAdapter;
 	private UartService mUartService = null;
@@ -330,9 +330,9 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 				if (mBluetoothAdapter.isDiscovering()) {
 				} else {
 					populateDeviceList();
-					if(getActivity() != null)
-						Toast.makeText(getActivity(), R.string.bt_enabled,
-							Toast.LENGTH_SHORT).show();
+//					if(getActivity() != null)
+//						Toast.makeText(getActivity(), R.string.bt_enabled,
+//							Toast.LENGTH_SHORT).show();
 				}
 			} else {
 				Intent enableBtIntent = new Intent(
@@ -409,8 +409,15 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 
 		if (isChooseCarChannel == 1) {
 			for (int i = 0; i < carDoorList.size(); i++) {
-				if (device.getAddress().equals(
-						carDoorList.get(i).get("CDdeviceid"))) {
+				String tempDID = carDoorList.get(i).get("CDdeviceid");
+				tempDID = tempDID.toUpperCase();
+				char[] data= tempDID.toCharArray();
+				String formatDeviceId = String.valueOf(data[0])+String.valueOf(data[1]) + ":" + String.valueOf(data[2])+String.valueOf(data[3])
+						+ ":" + String.valueOf(data[4])+String.valueOf(data[5]) + ":" + String.valueOf(data[6])+String.valueOf(data[7])
+						+ ":" + String.valueOf(data[8])+String.valueOf(data[9]) + ":" + String.valueOf(data[10])+String.valueOf(data[11]);
+				Log.e("TEST", "CDdeviceID:"+formatDeviceId);
+				
+				if (device.getAddress().equals(formatDeviceId)) {
 					mDevRssiValues.put(device.getAddress(), rssi);
 					if (!deviceFound) {
 						mDeviceList.add(device);
@@ -420,8 +427,15 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 			}
 		} else {
 			for (int i = 0; i < manDoorList.size(); i++) {
-				if (device.getAddress().equals(
-						manDoorList.get(i).get("MDdeviceid"))) {
+				String tempDID = manDoorList.get(i).get("MDdeviceid");
+				tempDID = tempDID.toUpperCase();
+				char[] data= tempDID.toCharArray();
+				String formatDeviceId = String.valueOf(data[0])+String.valueOf(data[1]) + ":" + String.valueOf(data[2])+String.valueOf(data[3])
+						+ ":" + String.valueOf(data[4])+String.valueOf(data[5]) + ":" + String.valueOf(data[6])+String.valueOf(data[7])
+						+ ":" + String.valueOf(data[8])+String.valueOf(data[9]) + ":" + String.valueOf(data[10])+String.valueOf(data[11]);
+				Log.e("TEST", "MDdeviceID:"+formatDeviceId);
+				
+				if (device.getAddress().equals(formatDeviceId)) {
 					mDevRssiValues.put(device.getAddress(), rssi);
 					if (!deviceFound) {
 						mDeviceList.add(device);
@@ -445,8 +459,8 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 	private void doOpenDoor() {
 		Log.e("BLE", "doOpenDoor");
 		IvOpenDoorLogo.setEnabled(false);
-		if(getActivity() != null)
-			Toast.makeText(getActivity(), R.string.door_open, Toast.LENGTH_SHORT).show();
+//		if(getActivity() != null)
+//			Toast.makeText(getActivity(), R.string.door_open, Toast.LENGTH_SHORT).show();
 		
 		
 		if(mDeviceList != null  && mDeviceList.size() > 0) {
@@ -466,6 +480,10 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 //			if(mDeviceList.get(deviceIndexToOpen).getAddress() != null) {
 				mBluetoothAdapter.stopLeScan(mLeScanCallback);
 		        mUartService.connect(mDeviceList.get(deviceIndexToOpen).getAddress());
+		        
+				if(getActivity() != null)
+					Toast.makeText(getActivity(), mDeviceList.get(deviceIndexToOpen).getName(), Toast.LENGTH_SHORT).show();
+				
 //		        IvOpenDoorLogo.setImageResource(R.drawable.selector_pressed);
 //		        IvSearchKey.setImageResource(R.drawable.btn_background_blue);
 //		        TvDistrictDoor.setText(mDeviceList.get(maxRssiIndex).getName());
@@ -489,14 +507,15 @@ public class KeyFragment extends Fragment implements ShakeListener  {
         	getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                	
-                	getActivity().runOnUiThread(new Runnable() {
+                	if(getActivity() != null){
+                		getActivity().runOnUiThread(new Runnable() {
                           @Override
                           public void run() {
                         	  addDevice(device,rssi);
                           }
                       });
-                   
+                	}
+       
                 }
             });
         }

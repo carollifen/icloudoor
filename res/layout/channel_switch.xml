@@ -6,7 +6,7 @@
 
     <RelativeLayout
         android:id="@+id/channel_switch"
-        android:layout_width="wrap_content"
+        android:layout_width="132dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="32dp" >
@@ -15,20 +15,22 @@
             android:layout_width="120dp"
             android:layout_height="5dp"
             android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
             android:src="@drawable/btn_slide_bar" />
 
         <ImageView
             android:id="@+id/Iv_choose_car"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/btn_choise_car" />
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/icon_car" />
 
         <ImageView
             android:id="@+id/Iv_choose_man"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="83dp"
-            android:src="@drawable/btn_choise_man" />
+            android:layout_alignParentRight="true"
+            android:src="@drawable/icon_ren" />
     </RelativeLayout>
 
 

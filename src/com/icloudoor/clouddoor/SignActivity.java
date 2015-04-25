@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 public class SignActivity extends Activity{
 	private ImageView IvSignSwitch;
+	private ImageView back;
 	private boolean useSign;
 	
 	@Override
@@ -18,6 +19,7 @@ public class SignActivity extends Activity{
 		
 		useSign = true;
 		
+		back = (ImageView) findViewById(R.id.btn_back);
 		IvSignSwitch = (ImageView) findViewById(R.id.btn_sign_switch);
 		IvSignSwitch.setImageResource(R.drawable.btn_yes);
 		IvSignSwitch.setOnClickListener(new OnClickListener(){
@@ -32,6 +34,14 @@ public class SignActivity extends Activity{
 					IvSignSwitch.setImageResource(R.drawable.btn_yes);
 					useSign = true;
 				}
+			}
+			
+		});
+		back.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				finish();
 			}
 			
 		});

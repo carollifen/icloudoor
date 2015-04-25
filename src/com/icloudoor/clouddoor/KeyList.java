@@ -134,48 +134,7 @@ public class KeyList extends Activity{
 					}
 				});
 		mQueue.add(mJsonRequest);
-				
-		//show the key list  --  START
-		if(mKeyDBHelper.tabIsExist(TABLE_NAME)){
-			if(DBCount() > 0) {
-				 Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME,null);   
-				 if(mCursor.moveToFirst()){
-					 
-					 doorNameList = new ArrayList<HashMap<String, String>>();
-					 
-					 int deviceIdIndex = mCursor.getColumnIndex("deviceId");
-					 int authFromIndex = mCursor.getColumnIndex("authFrom");
-					 int authToIndex = mCursor.getColumnIndex("authTo");
-					 int doorNamemIndex = mCursor.getColumnIndex("doorName");
-					 
-					 do{
-						 String deviceId = mCursor.getString(deviceIdIndex);
-						 String doorName = mCursor.getString(doorNamemIndex);
-						 String authFrom = mCursor.getString(authFromIndex);
-						 String authTo = mCursor.getString(authToIndex);
-						 
-						 Log.e("TESTTESTDB deviceId =", deviceId);
-						 Log.e("TESTTESTDB doorName =", doorName);
-						 Log.e("TESTTESTDB authFrom =", authFrom);
-						 Log.e("TESTTESTDB authTo =", authTo);
-						 
-						 HashMap<String, String> keyFromDB = new HashMap<String, String>();
-						 keyFromDB.put("Door", doorName);
-						 keyFromDB.put("BEGIN", authFrom);
-						 keyFromDB.put("END", authTo);
-						 
-						 doorNameList.add(keyFromDB);		
-						 
-					 }while(mCursor.moveToNext());
-					 mAdapter = new KeyListAdapter(KeyList.this,
-							 doorNameList);
-						mKeyList.setAdapter(mAdapter);
-				 }
-				 mCursor.close();									 
-			}
-		}
-		//show the key list  --  END			
-		
+						
 		if (statusCode == -2) {
 			Toast.makeText(KeyList.this, R.string.not_login, Toast.LENGTH_SHORT)
 					.show();
@@ -195,6 +154,46 @@ public class KeyList extends Activity{
 			Toast.makeText(KeyList.this, R.string.have_no_key_authorised,
 					Toast.LENGTH_SHORT).show();
 		}
+		
+		//show the key list  --  START
+				if(mKeyDBHelper.tabIsExist(TABLE_NAME)){
+					if(DBCount() > 0) {
+						 Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME,null);   
+						 if(mCursor.moveToFirst()){
+							 
+							 doorNameList = new ArrayList<HashMap<String, String>>();
+							 
+							 int deviceIdIndex = mCursor.getColumnIndex("deviceId");
+							 int authFromIndex = mCursor.getColumnIndex("authFrom");
+							 int authToIndex = mCursor.getColumnIndex("authTo");
+							 int doorNamemIndex = mCursor.getColumnIndex("doorName");
+							 
+							 do{
+								 String deviceId = mCursor.getString(deviceIdIndex);
+								 String doorName = mCursor.getString(doorNamemIndex);
+								 String authFrom = mCursor.getString(authFromIndex);
+								 String authTo = mCursor.getString(authToIndex);
+								 
+								 Log.e("TESTTESTDB deviceId =", deviceId);
+								 Log.e("TESTTESTDB doorName =", doorName);
+								 Log.e("TESTTESTDB authFrom =", authFrom);
+								 Log.e("TESTTESTDB authTo =", authTo);
+								 
+								 HashMap<String, String> keyFromDB = new HashMap<String, String>();
+								 keyFromDB.put("Door", doorName);
+								 keyFromDB.put("BEGIN", authFrom);
+								 keyFromDB.put("END", authTo);
+								 
+								 doorNameList.add(keyFromDB);		
+								 
+							 }while(mCursor.moveToNext());
+							 mAdapter = new KeyListAdapter(KeyList.this,
+									 doorNameList);
+								mKeyList.setAdapter(mAdapter);
+						 }
+						 mCursor.close();									 
+					}
+				}
 		
 		IvBack = (ImageView) findViewById(R.id.btn_back_key_list);
 		IvBack.setOnClickListener(new OnClickListener() {

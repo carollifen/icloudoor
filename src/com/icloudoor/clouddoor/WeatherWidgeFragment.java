@@ -231,8 +231,11 @@ public class WeatherWidgeFragment extends Fragment {
 		sid = loadSid();	
 		
 		try {
-			weatherURL = new URL(HOST + "city=" + String.valueOf(latitude) + ":" + String.valueOf(longitude)
-					+ "&language=zh-chs&unit=c&aqi=city&key=" + Key);
+			if(latitude != 0.0 || longitude != 0.0) 
+				weatherURL = new URL(HOST + "city=" + String.valueOf(latitude) + ":" + String.valueOf(longitude) + "&language=zh-chs&unit=c&aqi=city&key=" + Key);
+			else 
+				weatherURL = new URL(HOST + "city=ip" + "&language=zh-chs&unit=c&aqi=city&key=" + Key);
+			
 			lhlURL = new URL(lhlHOST + "/user/data/laohuangli/get.do" + "?sid=" + sid);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();

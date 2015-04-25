@@ -18,9 +18,10 @@
         >
         
         <TextView
+        android:id="@+id/toshow_personal_info_in_set"
         android:layout_width="303dp"
         android:layout_height="120dp"
-        android:background="@drawable/shape_white"
+        android:background="@drawable/selector_in_set_personal"
         android:gravity="center" />
         
         <ImageView
