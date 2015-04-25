@@ -39,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="53dp"
-        android:layout_marginTop="42dp"
+        android:layout_marginTop="39dp"
         android:text="车    道"
         android:textColor="#002f4a"
         android:textSize="16sp" />
@@ -49,7 +49,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="258dp"
-        android:layout_marginTop="42dp"
+        android:layout_marginTop="39dp"
         android:text="行人道"
         android:textColor="#002f4a"
         android:textSize="16sp" />
