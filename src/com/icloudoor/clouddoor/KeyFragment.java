@@ -81,6 +81,9 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 	private int COLOR_CHANNEL_NOT_CHOOSE = 0xFFb5b5b5;
 
 	private int isChooseCarChannel;
+	private int canDisturb;
+	private int haveSound;
+	private int canShake;
 	private boolean isFindKey;
 
 	private float alpha_transparent = 0.0f;
@@ -227,7 +230,9 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 			@Override
 			public void onClick(View v) {
 				doOpenDoor();
-				playOpenDoorSound();
+				if(haveSound == 1){
+					playOpenDoorSound();
+				}
 			}			
 		});
 		
@@ -433,9 +438,9 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 		if(mDeviceList != null  && mDeviceList.size() > 0) {
 			if(mDeviceList.get(deviceIndexToOpen).getAddress() != null) {
 				mBluetoothAdapter.stopLeScan(mLeScanCallback);
-		        mUartService.connect(mDeviceList.get(deviceIndexToOpen).getAddress());	                
+		        mUartService.connect(mDeviceList.get(deviceIndexToOpen).getAddress());	
+		        populateDeviceList();
 			}		
-			populateDeviceList();
 		}
 	}
 	
@@ -467,6 +472,10 @@ public class KeyFragment extends Fragment implements ShakeListener  {
 		
 		SharedPreferences setting = getActivity().getSharedPreferences("SETTING", 0);
 		isChooseCarChannel = setting.getInt("chooseCar", 1);
+		canDisturb = setting.getInt("disturb", 1);
+		haveSound = setting.getInt("sound", 1);
+		canShake = setting.getInt("shake", 0);
+		
 		if(isChooseCarChannel == 1){
 			TvChooseCar.setTextColor(COLOR_CHANNEL_CHOOSE);
 			TvChooseMan.setTextColor(COLOR_CHANNEL_NOT_CHOOSE);
@@ -702,8 +711,10 @@ public class KeyFragment extends Fragment implements ShakeListener  {
     
 	@Override
 	public void onShake() {
-		Log.e("TEST","shaking");
-		doOpenDoor();
+		if(canShake == 1){
+			Log.e("TEST","shaking");
+			doOpenDoor();
+		}
 	}
 	
 	public void playOpenDoorSound(){

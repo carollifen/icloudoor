@@ -119,7 +119,7 @@ public class KeyList extends Activity{
 //								mKeyList.setAdapter(mAdapter);
 								Log.e("TEST", response.toString());
 								Log.e("TEST  DB  count: ", String.valueOf(DBCount()));
-					
+
 							}
 						} catch (JSONException e) {
 							e.printStackTrace();
@@ -134,7 +134,7 @@ public class KeyList extends Activity{
 					}
 				});
 		mQueue.add(mJsonRequest);
-						
+		
 		if (statusCode == -2) {
 			Toast.makeText(KeyList.this, R.string.not_login, Toast.LENGTH_SHORT)
 					.show();
@@ -156,45 +156,48 @@ public class KeyList extends Activity{
 		}
 		
 		//show the key list  --  START
-				if(mKeyDBHelper.tabIsExist(TABLE_NAME)){
-					if(DBCount() > 0) {
-						 Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME,null);   
-						 if(mCursor.moveToFirst()){
-							 
-							 doorNameList = new ArrayList<HashMap<String, String>>();
-							 
-							 int deviceIdIndex = mCursor.getColumnIndex("deviceId");
-							 int authFromIndex = mCursor.getColumnIndex("authFrom");
-							 int authToIndex = mCursor.getColumnIndex("authTo");
-							 int doorNamemIndex = mCursor.getColumnIndex("doorName");
-							 
-							 do{
-								 String deviceId = mCursor.getString(deviceIdIndex);
-								 String doorName = mCursor.getString(doorNamemIndex);
-								 String authFrom = mCursor.getString(authFromIndex);
-								 String authTo = mCursor.getString(authToIndex);
-								 
-								 Log.e("TESTTESTDB deviceId =", deviceId);
-								 Log.e("TESTTESTDB doorName =", doorName);
-								 Log.e("TESTTESTDB authFrom =", authFrom);
-								 Log.e("TESTTESTDB authTo =", authTo);
-								 
-								 HashMap<String, String> keyFromDB = new HashMap<String, String>();
-								 keyFromDB.put("Door", doorName);
-								 keyFromDB.put("BEGIN", authFrom);
-								 keyFromDB.put("END", authTo);
-								 
-								 doorNameList.add(keyFromDB);		
-								 
-							 }while(mCursor.moveToNext());
-							 mAdapter = new KeyListAdapter(KeyList.this,
-									 doorNameList);
-								mKeyList.setAdapter(mAdapter);
-						 }
-						 mCursor.close();									 
-					}
+		if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
+			Log.e("TESTTESTDB", "have the table");
+			if (DBCount() > 0) {
+				Log.e("TESTTESTDB", "table is not empty");
+				Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME,
+						null);
+				if (mCursor.moveToFirst()) {
+
+					doorNameList = new ArrayList<HashMap<String, String>>();
+					mAdapter = new KeyListAdapter(KeyList.this, doorNameList);
+					mKeyList.setAdapter(mAdapter);
+
+					int deviceIdIndex = mCursor.getColumnIndex("deviceId");
+					int authFromIndex = mCursor.getColumnIndex("authFrom");
+					int authToIndex = mCursor.getColumnIndex("authTo");
+					int doorNamemIndex = mCursor.getColumnIndex("doorName");
+
+					do {
+						String deviceId = mCursor.getString(deviceIdIndex);
+						String doorName = mCursor.getString(doorNamemIndex);
+						String authFrom = mCursor.getString(authFromIndex);
+						String authTo = mCursor.getString(authToIndex);
+
+						Log.e("TESTTESTDB deviceId =", deviceId);
+						Log.e("TESTTESTDB doorName =", doorName);
+						Log.e("TESTTESTDB authFrom =", authFrom);
+						Log.e("TESTTESTDB authTo =", authTo);
+
+						HashMap<String, String> keyFromDB = new HashMap<String, String>();
+						keyFromDB.put("Door", doorName);
+						keyFromDB.put("BEGIN", authFrom);
+						keyFromDB.put("END", authTo);
+
+						doorNameList.add(keyFromDB);
+						mAdapter.notifyDataSetChanged();
+
+					} while (mCursor.moveToNext());				
 				}
-		
+				mCursor.close();
+			}
+		}
+				
 		IvBack = (ImageView) findViewById(R.id.btn_back_key_list);
 		IvBack.setOnClickListener(new OnClickListener() {
 
@@ -506,7 +509,8 @@ public class KeyList extends Activity{
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
-
+			
+			holder.doorname.setSelected(true);
 			holder.doorname.setText(doorNameList.get(position).get("Door"));
 			holder.beginday.setText(doorNameList.get(position).get("BEGIN"));
 			holder.endday.setText(doorNameList.get(position).get("END"));

@@ -20,7 +20,7 @@
         android:padding="10dp"
         android:textColorHint="#8b9eb6"
         android:textSize="17sp"
-        android:background="@drawable/shape"
+        android:background="@drawable/shape_confirm"
         android:inputType="number" />"
 
     <EditText
@@ -33,7 +33,7 @@
         android:padding="10dp"
         android:textColorHint="#8b9eb6"
         android:textSize="17sp"
-        android:background="@drawable/shape"
+        android:background="@drawable/shape_confirm"
         android:inputType="number" />
 
     <TextView

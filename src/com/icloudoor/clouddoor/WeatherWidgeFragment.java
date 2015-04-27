@@ -243,7 +243,7 @@ public class WeatherWidgeFragment extends Fragment {
 				SharedPreferences loadLocation = getActivity().getSharedPreferences("LOCATION", 0);         // if we can't get the location in time, use the location for the last usage
 				latitude = Double.parseDouble(loadLocation.getString("Latitude", "0.0"));
 				longitude = Double.parseDouble(loadLocation.getString("Longitude", "0.0"));
-				
+		
 				weatherURL = new URL(HOST + "city=" + String.valueOf(latitude) + ":" + String.valueOf(longitude) + "&language=zh-chs&unit=c&aqi=city&key=" + Key);
 				if(longitude == 0.0 && latitude == 0.0)      // if no location for the last usage, then use the ip address to get the weather info for better user experiences
 					weatherURL = new URL(HOST + "city=ip" + "&language=zh-chs&unit=c&aqi=city&key=" + Key);
