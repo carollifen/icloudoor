@@ -95,6 +95,19 @@ public class RegisterComplete extends Activity {
 									} catch (JSONException e) {
 										e.printStackTrace();
 									}
+
+									if (statusCode == 1) {
+										Intent intent = new Intent();
+										intent.setClass(getApplicationContext(), Login.class);
+										startActivity(intent);
+									} else if (statusCode == -40) {
+										Toast.makeText(getApplicationContext(),
+												R.string.phone_num_have_been_registerred,
+												Toast.LENGTH_SHORT).show();
+									} else if (statusCode == -41) {
+										Toast.makeText(getApplicationContext(), R.string.weak_pwd,
+												Toast.LENGTH_SHORT).show();
+									}
 								}
 							}, new Response.ErrorListener() {
 
@@ -112,19 +125,6 @@ public class RegisterComplete extends Activity {
 						}
 					};
 					mQueue.add(mJsonRequest);
-
-					if (statusCode == 1) {
-						Intent intent = new Intent();
-						intent.setClass(v.getContext(), Login.class);
-						startActivity(intent);
-					} else if (statusCode == -40) {
-						Toast.makeText(v.getContext(),
-								R.string.phone_num_have_been_registerred,
-								Toast.LENGTH_SHORT).show();
-					} else if (statusCode == -41) {
-						Toast.makeText(v.getContext(), R.string.weak_pwd,
-								Toast.LENGTH_SHORT).show();
-					}
 				} else {
 					Toast.makeText(v.getContext(), R.string.diff_pwd,
 							Toast.LENGTH_SHORT).show();

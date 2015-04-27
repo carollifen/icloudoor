@@ -106,7 +106,7 @@
         android:layout_height="48dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="372.5dp"
-        android:background="@drawable/shape_white"
+        android:background="@drawable/selector_in_set_items"
         android:gravity="center"
         android:text="退    出"
         android:textColor="#f74461"

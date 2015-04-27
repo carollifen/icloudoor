@@ -133,6 +133,26 @@ public class Login extends Activity {
 									e.printStackTrace();
 								}
 								Log.e("TEST", response.toString());
+								
+								if (loginStatusCode == -71) {
+									Toast.makeText(getApplicationContext(), R.string.login_fail,
+											Toast.LENGTH_SHORT).show();
+								} else if (loginStatusCode == 1) {
+
+									isLogin = 1;
+									SharedPreferences loginStatus = getSharedPreferences(
+											"LOGINSTATUS", MODE_PRIVATE);
+									Editor editor = loginStatus.edit();
+									editor.putInt("LOGIN", isLogin);
+									editor.putString("PHONENUM", phoneNum);
+									editor.commit();
+
+									Intent intent = new Intent();
+									intent.setClass(getApplicationContext(), CloudDoorMainActivity.class);
+									startActivity(intent);
+
+									finish();
+								}
 							}
 						}, new Response.ErrorListener() {
 
@@ -151,26 +171,6 @@ public class Login extends Activity {
 					}
 				};
 				mQueue.add(mJsonRequest);
-
-				if (loginStatusCode == -71) {
-					Toast.makeText(v.getContext(), R.string.login_fail,
-							Toast.LENGTH_SHORT).show();
-				} else if (loginStatusCode == 1) {
-
-					isLogin = 1;
-					SharedPreferences loginStatus = getSharedPreferences(
-							"LOGINSTATUS", MODE_PRIVATE);
-					Editor editor = loginStatus.edit();
-					editor.putInt("LOGIN", isLogin);
-					editor.putString("PHONENUM", phoneNum);
-					editor.commit();
-
-					Intent intent = new Intent();
-					intent.setClass(v.getContext(), CloudDoorMainActivity.class);
-					startActivity(intent);
-
-					finish();
-				}
 			}
 
 		});

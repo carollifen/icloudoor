@@ -81,6 +81,15 @@ public class ForgetPwdActivity extends Activity{
 								} catch (JSONException e) {
 									e.printStackTrace();
 								}
+								if (RequestCertiStatusCode == -20) {
+									Toast.makeText(getApplicationContext(),
+											R.string.send_too_many_a_day, Toast.LENGTH_SHORT)
+											.show();
+								} else if (RequestCertiStatusCode == -21) {
+									Toast.makeText(getApplicationContext(),
+											R.string.send_too_frequently, Toast.LENGTH_SHORT)
+											.show();
+								}
 							}
 						}, 
 						new Response.ErrorListener() {
@@ -98,16 +107,6 @@ public class ForgetPwdActivity extends Activity{
 					}
 				};
 				mQueue.add(mJsonRequest);
-				
-				if (RequestCertiStatusCode == -20) {
-					Toast.makeText(v.getContext(),
-							R.string.send_too_many_a_day, Toast.LENGTH_SHORT)
-							.show();
-				} else if (RequestCertiStatusCode == -21) {
-					Toast.makeText(v.getContext(),
-							R.string.send_too_frequently, Toast.LENGTH_SHORT)
-							.show();
-				}
 			}
 			
 		});
@@ -140,6 +139,18 @@ public class ForgetPwdActivity extends Activity{
 								} catch (JSONException e) {
 									e.printStackTrace();
 								}
+								if (ConfirmCertiStatusCode == 1) {
+									Intent intent = new Intent();
+									intent.setClass(getApplicationContext(), RegisterComplete.class);
+									startActivity(intent);
+								} else if (ConfirmCertiStatusCode == -30) {
+									Toast.makeText(getApplicationContext(),
+											R.string.input_wrong_certi_code, Toast.LENGTH_SHORT)
+											.show();
+								} else if (ConfirmCertiStatusCode == -31) {
+									Toast.makeText(getApplicationContext(), R.string.certi_code_overdue,
+											Toast.LENGTH_SHORT).show();
+								}
 							}
 						}, 
 						new Response.ErrorListener() {
@@ -157,19 +168,6 @@ public class ForgetPwdActivity extends Activity{
 					}
 				};
 				mQueue.add(mJsonRequest);
-				
-				if (ConfirmCertiStatusCode == 1) {
-					Intent intent = new Intent();
-					intent.setClass(v.getContext(), RegisterComplete.class);
-					startActivity(intent);
-				} else if (ConfirmCertiStatusCode == -30) {
-					Toast.makeText(v.getContext(),
-							R.string.input_wrong_certi_code, Toast.LENGTH_SHORT)
-							.show();
-				} else if (ConfirmCertiStatusCode == -31) {
-					Toast.makeText(v.getContext(), R.string.certi_code_overdue,
-							Toast.LENGTH_SHORT).show();
-				}
 			}
 			
 		});

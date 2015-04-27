@@ -112,6 +112,15 @@ public class ResetPwdActivity extends Activity {
 									} catch (JSONException e) {
 										e.printStackTrace();
 									}
+									if (statusCode == 1) {
+										Intent intent = new Intent();
+										intent.setClass(getApplicationContext(),
+												SettingDetailActivity.class);
+										startActivity(intent);
+									} else if (statusCode == -51) {
+										Toast.makeText(getApplicationContext(), R.string.wrong_old_pwd,
+												Toast.LENGTH_SHORT).show();
+									}
 								}
 							}, new Response.ErrorListener() {
 
@@ -130,16 +139,6 @@ public class ResetPwdActivity extends Activity {
 						}
 					};
 					mQueue.add(mJsonRequest);
-
-					if (statusCode == 1) {
-						Intent intent = new Intent();
-						intent.setClass(v.getContext(),
-								SettingDetailActivity.class);
-						startActivity(intent);
-					} else if (statusCode == -51) {
-						Toast.makeText(v.getContext(), R.string.wrong_old_pwd,
-								Toast.LENGTH_SHORT).show();
-					}
 				} else {
 					Toast.makeText(v.getContext(), R.string.diff_pwd,
 							Toast.LENGTH_SHORT).show();
