@@ -31,12 +31,15 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
 		StringBuffer sBuffer = new StringBuffer();
 
 		sBuffer.append("CREATE TABLE [" + TABLE_NAME + "] (");
-		sBuffer.append("[doorId] TEXT, ");
-		sBuffer.append("[doorName] TEXT,");
+		sBuffer.append("[zoneName] TEXT, ");
+		sBuffer.append("[zoneId] TEXT, ");
+		sBuffer.append("[doorName] TEXT, ");
+		sBuffer.append("[doorId] TEXT,");
 		sBuffer.append("[deviceId] TEXT,");
+		sBuffer.append("[doorType] TEXT,");
+		sBuffer.append("[authType] TEXT,");
 		sBuffer.append("[authFrom] TEXT,");
-		sBuffer.append("[authTo] TEXT,");
-		sBuffer.append("[CarOrMan] TEXT)");
+		sBuffer.append("[authTo] TEXT)");
 
 		db.execSQL(sBuffer.toString());
 		
@@ -62,7 +65,7 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
 		SQLiteDatabase db = null;
 		Cursor cursor = null;
 		try {
-			db = this.getReadableDatabase();// 此this是继承SQLiteOpenHelper类得到的
+			db = this.getWritableDatabase();// 此this是继承SQLiteOpenHelper类得到的
 			String sql = "select count(*) as c from sqlite_master where type ='table' and name ='"+tabName.trim()+"' ";
 			cursor = db.rawQuery(sql, null);
 			if (cursor.moveToNext()) {

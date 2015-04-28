@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -64,7 +65,6 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		mKeyFragment = new KeyFragment();
 		mSettingFragment = new SettingFragment();
 		mWuyeFragment = new WuyeFragment();
-		
 		
 //		mFragmentManager = getSupportFragmentManager();
 
