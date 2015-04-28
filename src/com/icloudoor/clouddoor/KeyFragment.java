@@ -77,8 +77,8 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	private ImageView IvWeatherWidgePush1;
 	private ImageView IvWeatherWidgePush2;
 
-	private int COLOR_CHANNEL_CHOOSE = 0xFF00354a;
-	private int COLOR_CHANNEL_NOT_CHOOSE = 0xFFb5b5b5;
+	private int COLOR_CHANNEL_CHOOSE = 0xFF010101;
+	private int COLOR_CHANNEL_NOT_CHOOSE = 0xFF999999;
 
 	private int isChooseCarChannel;
 	private int canDisturb;
@@ -401,9 +401,8 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		TvDistrictDoor.setTextSize(18);
 		TvDistrictDoor.setTextColor(0xFFffffff);
 		TvCarNumber.setText(R.string.can_shake_to_open_door);
-		TvCarNumber.setTextSize(12);
-		TvCarNumber.setTextColor(0xFF7d7d7d);
-		IvSearchKey.setBackgroundResource(R.drawable.btn_background_gray);
+		TvCarNumber.setTextColor(0xFFffffff);
+		IvSearchKey.setBackgroundResource(R.drawable.btn_gray);
 		IvOpenDoorLogo.setImageResource(R.drawable.btn_serch_1);
 
 		if (mDeviceList != null && mDeviceList.size() > 0) {
@@ -480,14 +479,13 @@ public class KeyFragment extends Fragment implements ShakeListener {
 						IvOpenDoorLogo
 								.setImageResource(R.drawable.selector_pressed);
 						IvSearchKey
-								.setBackgroundResource(R.drawable.btn_background_blue);
+								.setBackgroundResource(R.drawable.btn_blue);
 						TvDistrictDoor.setText(carDoorList.get(i).get(
 								"CDdoorName"));
 						TvDistrictDoor.setTextSize(18);
 						TvDistrictDoor.setTextColor(0xFFffffff);
 						TvCarNumber.setText(carDoorList.get(i)
 								.get("CDdeviceid"));
-						TvCarNumber.setTextSize(18);
 						TvCarNumber.setTextColor(0xFFffffff);
 					}
 				}
@@ -519,14 +517,13 @@ public class KeyFragment extends Fragment implements ShakeListener {
 						IvOpenDoorLogo
 								.setImageResource(R.drawable.selector_pressed);
 						IvSearchKey
-								.setBackgroundResource(R.drawable.btn_background_blue);
+								.setBackgroundResource(R.drawable.btn_blue);
 						TvDistrictDoor.setText(manDoorList.get(i).get(
 								"MDdoorName"));
 						TvDistrictDoor.setTextSize(18);
 						TvDistrictDoor.setTextColor(0xFFffffff);
 						TvCarNumber.setText(manDoorList.get(i)
 								.get("MDdeviceid"));
-						TvCarNumber.setTextSize(18);
 						TvCarNumber.setTextColor(0xFFffffff);
 					}
 				}
@@ -600,10 +597,9 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		TvDistrictDoor.setTextSize(18);
 		TvDistrictDoor.setTextColor(0xFFffffff);
 		TvCarNumber.setText(R.string.can_shake_to_open_door);
-		TvCarNumber.setTextSize(12);
-		TvCarNumber.setTextColor(0xFF7d7d7d);
+		TvCarNumber.setTextColor(0xFFffffff);
 
-		IvSearchKey.setBackgroundResource(R.drawable.btn_background_gray);
+		IvSearchKey.setBackgroundResource(R.drawable.btn_gray);
 		IvOpenDoorLogo.setImageResource(R.drawable.btn_serch_1);
 		IvOpenDoorLogo.setEnabled(false);
 

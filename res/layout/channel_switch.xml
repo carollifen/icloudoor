@@ -6,31 +6,31 @@
 
     <RelativeLayout
         android:id="@+id/channel_switch"
-        android:layout_width="132dp"
+        android:layout_width="210dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="32dp" >
 
         <ImageView
-            android:layout_width="120dp"
+            android:layout_width="wrap_content"
             android:layout_height="5dp"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/btn_slide_bar" />
+            android:src="@drawable/bar" />
 
         <ImageView
             android:id="@+id/Iv_choose_car"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:src="@drawable/icon_car" />
+            android:src="@drawable/btn_car" />
 
         <ImageView
             android:id="@+id/Iv_choose_man"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:src="@drawable/icon_ren" />
+            android:src="@drawable/btn_ren" />
     </RelativeLayout>
 
 
@@ -38,20 +38,20 @@
         android:id="@+id/Tv_choose_car"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="53dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="39dp"
         android:text="车    道"
-        android:textColor="#002f4a"
+        android:textColor="#010101"
         android:textSize="16sp" />
 
     <TextView
         android:id="@+id/Tv_choose_man"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="258dp"
+        android:layout_marginLeft="291dp"
         android:layout_marginTop="39dp"
         android:text="行人道"
-        android:textColor="#002f4a"
+        android:textColor="#999999"
         android:textSize="16sp" />
 "
 

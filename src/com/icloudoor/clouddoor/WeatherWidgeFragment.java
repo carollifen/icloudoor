@@ -137,6 +137,14 @@ public class WeatherWidgeFragment extends Fragment {
 		JiContent.setSelected(true);
 		WeatherIcon = (ImageView) view.findViewById(R.id.weather_icon);
 		
+		Day1Bg.setBackgroundResource(R.drawable.btn_cal_pre);
+		Day2Bg.setBackgroundResource(R.drawable.btn_cal);
+		Day3Bg.setBackgroundResource(R.drawable.btn_cal);
+		Day1.setTextColor(0xFFff0000);
+		Day2.setTextColor(0xFFffffff);
+		Day3.setTextColor(0xFFffffff);
+		
+		
 		Day1Bg.setOnClickListener(myClick);
 		Day2Bg.setOnClickListener(myClick);
 		Day3Bg.setOnClickListener(myClick);
@@ -402,10 +410,13 @@ public class WeatherWidgeFragment extends Fragment {
 		public void onClick(View v) {
 			switch(v.getId()){
 			case R.id.weather_day_now_color:
-				Day1Bg.setBackgroundResource(R.drawable.home_btn_recommended);
-				Day2Bg.setBackgroundResource(R.drawable.home_btn_recommended_default);
-				Day3Bg.setBackgroundResource(R.drawable.home_btn_recommended_default);
+				Day1Bg.setBackgroundResource(R.drawable.btn_cal_pre);
+				Day2Bg.setBackgroundResource(R.drawable.btn_cal);
+				Day3Bg.setBackgroundResource(R.drawable.btn_cal);
 				
+				Day1.setTextColor(0xFFff0000);
+				Day2.setTextColor(0xFFffffff);
+				Day3.setTextColor(0xFFffffff);
 				
 				Year.setText(String.valueOf(c.get(Calendar.YEAR)) + "年");
 				Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1) + "月" 
@@ -421,9 +432,13 @@ public class WeatherWidgeFragment extends Fragment {
 				
 				break;
 			case R.id.weather_day_after_color:
-				Day2Bg.setBackgroundResource(R.drawable.home_btn_recommended);
-				Day1Bg.setBackgroundResource(R.drawable.home_btn_recommended_default);
-				Day3Bg.setBackgroundResource(R.drawable.home_btn_recommended_default);
+				Day2Bg.setBackgroundResource(R.drawable.btn_cal_pre);
+				Day1Bg.setBackgroundResource(R.drawable.btn_cal);
+				Day3Bg.setBackgroundResource(R.drawable.btn_cal);
+				
+				Day2.setTextColor(0xFFff0000);
+				Day1.setTextColor(0xFFffffff);
+				Day3.setTextColor(0xFFffffff);
 				
 				if(isBigMonth(c.get(Calendar.MONTH) + 1)){                 //大月
 					if(c.get(Calendar.DAY_OF_MONTH) == 31){
@@ -485,9 +500,13 @@ public class WeatherWidgeFragment extends Fragment {
 				
 				break;
 			case R.id.weather_day_after_after_color:
-				Day3Bg.setBackgroundResource(R.drawable.home_btn_recommended);
-				Day1Bg.setBackgroundResource(R.drawable.home_btn_recommended_default);
-				Day2Bg.setBackgroundResource(R.drawable.home_btn_recommended_default);
+				Day3Bg.setBackgroundResource(R.drawable.btn_cal_pre);
+				Day1Bg.setBackgroundResource(R.drawable.btn_cal);
+				Day2Bg.setBackgroundResource(R.drawable.btn_cal);
+				
+				Day3.setTextColor(0xFFff0000);
+				Day2.setTextColor(0xFFffffff);
+				Day1.setTextColor(0xFFffffff);
 				
 				if(isBigMonth(c.get(Calendar.MONTH) + 1)){                 //大月
 					if(c.get(Calendar.DAY_OF_MONTH) == 31 || c.get(Calendar.DAY_OF_MONTH) == 30){

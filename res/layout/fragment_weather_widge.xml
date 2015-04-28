@@ -7,10 +7,10 @@
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="28dp"
-        android:background="@drawable/bg_image_calendar_11" >
+        android:layout_marginTop="8dp"
+        android:background="@drawable/cal" >
 
         <RelativeLayout
             android:layout_width="295dp"
@@ -23,7 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
+                android:layout_marginTop="5dp"
                 android:text="定位中..."
                 android:textColor="#000000"
                 android:textSize="12sp"  />
@@ -32,17 +32,17 @@
                 android:id="@+id/weather_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="3dp"
                 android:text="null"
                 android:textColor="#ffffff"
                 android:textSize="16sp" />
 
             <LinearLayout
                  android:layout_width="wrap_content"
-                 android:layout_height="27dp"
+                 android:layout_height="30dp"
                  android:orientation="vertical"
                  android:layout_alignParentRight="true"
-                 android:layout_centerVertical="true"
                 >
                 
                 <TextView
@@ -213,7 +213,6 @@
                 android:id="@+id/weather_temperature"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
                 android:gravity="right"
                 android:text="-24"
                 android:textColor="#2db9e5"
@@ -221,8 +220,8 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="169dp"
-            android:layout_height="40dp"
+            android:layout_width="230dp"
+            android:layout_height="33dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true" >
 
@@ -235,16 +234,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:background="@drawable/home_btn_recommended" />
+                    android:background="@drawable/btn_cal_pre" />
 
                 <TextView
                     android:id="@+id/weather_day_now"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
+                    android:gravity="center"
                     android:text="16"
-                    android:textColor="#ffffff"
-                    android:textSize="15sp" />
+                    android:textColor="#ff0000"
+                    android:textSize="12sp" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -257,16 +257,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:background="@drawable/home_btn_recommended_default" />
+                    android:background="@drawable/btn_cal" />
 
                 <TextView
                     android:id="@+id/weather_day_after"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
+                    android:gravity="center"
                     android:text="17"
                     android:textColor="#ffffff"
-                    android:textSize="15sp" />
+                    android:textSize="12sp" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -279,16 +280,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:background="@drawable/home_btn_recommended_default" />
+                    android:background="@drawable/btn_cal" />
 
                 <TextView
                     android:id="@+id/weather_day_after_after"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
+                    android:gravity="center"
                     android:text="18"
                     android:textColor="#ffffff"
-                    android:textSize="15sp" />
+                    android:textSize="12sp" />
             </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>

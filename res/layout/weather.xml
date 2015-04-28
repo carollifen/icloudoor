@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="160dp"
     android:background="#ecf0f7"
     android:orientation="vertical" >
 
@@ -20,24 +20,26 @@
         android:layout_height="10dp"
         android:background="#ecf0f7" >
 
-        <ImageView
-            android:id="@+id/Iv_weather_widge_push1"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="16dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="4dp"
-            android:layout_marginLeft="172dp"
-            android:background="@drawable/push_current" />
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" >
 
-        <ImageView
-            android:id="@+id/Iv_weather_widge_push2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="4dp"
-            android:layout_marginRight="172dp"
-            android:background="@drawable/push_next" />
+            <ImageView
+                android:id="@+id/Iv_weather_widge_push1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/push_current" />
+
+            <ImageView
+                android:id="@+id/Iv_weather_widge_push2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/push_next" />
+        </RelativeLayout>
     </RelativeLayout>
 
 </LinearLayout>
