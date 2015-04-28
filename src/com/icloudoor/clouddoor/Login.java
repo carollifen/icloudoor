@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +37,7 @@ public class Login extends Activity {
 	private TextView TVLogin;
 	private TextView TVFogetPwd;
 	private TextView TVGoToRegi;
-	private ImageView IVShowPwd;
+	private RelativeLayout IVShowPwd;
 
 	private boolean isHiddenPwd = true;
 
@@ -65,7 +66,7 @@ public class Login extends Activity {
 		TVLogin = (TextView) findViewById(R.id.btn_login);
 		TVFogetPwd = (TextView) findViewById(R.id.login_foget_pwd);
 		TVGoToRegi = (TextView) findViewById(R.id.login_go_to_regi);
-		IVShowPwd = (ImageView) findViewById(R.id.btn_show_pwd);
+		IVShowPwd = (RelativeLayout) findViewById(R.id.btn_show_pwd);
 
 		sid = loadSid();
 
