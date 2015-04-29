@@ -57,10 +57,11 @@ import android.widget.Toast;
 @SuppressLint("NewApi")
 public class KeyList extends Activity{
 
-	private MyDataBaseHelper mKeyDBHelper;
-	private SQLiteDatabase mKeyDB;
 	private final String DATABASE_NAME = "KeyDB.db";
 	private final String TABLE_NAME = "KeyInfoTable";
+	private MyDataBaseHelper mKeyDBHelper = new MyDataBaseHelper(KeyList.this, DATABASE_NAME);
+	private SQLiteDatabase mKeyDB;
+	
 
 	private ImageView IvBack;
 
@@ -94,6 +95,9 @@ public class KeyList extends Activity{
 		
 		mKeyList = (ListView) findViewById(R.id.key_listview);
 
+//		mKeyDBHelper = new MyDataBaseHelper(KeyList.this, DATABASE_NAME);
+		mKeyDB = mKeyDBHelper.getWritableDatabase();
+		
 		mQueue = Volley.newRequestQueue(this);
 		
 		sid = loadSid();
@@ -111,9 +115,6 @@ public class KeyList extends Activity{
 
 		Toast.makeText(KeyList.this, R.string.downloading_key_list, Toast.LENGTH_SHORT).show();
 		
-		mKeyDBHelper = new MyDataBaseHelper(KeyList.this, DATABASE_NAME);
-		mKeyDB = mKeyDBHelper.getWritableDatabase();
- 
 		mJsonRequest = new MyJsonObjectRequest(Method.POST,
 				downLoadKeyURL.toString(), null,
 				new Response.Listener<JSONObject>() {
@@ -168,7 +169,7 @@ public class KeyList extends Activity{
 												keyFromDB.put("Door", doorName);
 												keyFromDB.put("BEGIN", authFrom);
 												keyFromDB.put("END", authTo);
-												keyFromDB.put("DoorType", doorType);
+												keyFromDB.put("AuthType", authType);
 
 												doorNameList.add(keyFromDB);
 												mAdapter.notifyDataSetChanged();
@@ -403,11 +404,11 @@ public class KeyList extends Activity{
 			holder.beginday.setText(doorNameList.get(position).get("BEGIN"));
 			holder.endday.setText(doorNameList.get(position).get("END"));
 			
-			if(doorNameList.get(position).get("DoorType").equals("1")){
+			if(doorNameList.get(position).get("AuthType").equals("1")){
 				holder.keyItemBg.setBackgroundResource(R.drawable.key_list_back_forever);
-			}else if(doorNameList.get(position).get("DoorType").equals("2")){
+			}else if(doorNameList.get(position).get("AuthType").equals("2")){
 				holder.keyItemBg.setBackgroundResource(R.drawable.key_list_back_long);
-			}else if(doorNameList.get(position).get("DoorType").equals("3")){
+			}else if(doorNameList.get(position).get("AuthType").equals("3")){
 				holder.keyItemBg.setBackgroundResource(R.drawable.key_list_back_temp);
 			}
 
