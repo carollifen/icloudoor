@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,6 +35,8 @@ public class RegisterActivity extends Activity {
 	private EditText ETInputCertiCode;
 	private URL requestCertiCodeURL, verifyCertiCodeURL;
 	private RequestQueue mQueue;
+	
+	private TimeCount counter;
 
 	private int RequestCertiStatusCode;
 	private int ConfirmCertiStatusCode;
@@ -56,6 +59,7 @@ public class RegisterActivity extends Activity {
 
 		sid = loadSid();
 		
+		counter = new TimeCount(60000, 1000);
 		TVGetCertiCode.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -63,6 +67,7 @@ public class RegisterActivity extends Activity {
 				
 				Log.e("TEST***", "Button1 Clicked!!!");
 
+				counter.start();
 				try {
 					requestCertiCodeURL = new URL(HOST
 							+ "/user/manage/sendVerifyCode.do"+"?sid="+sid);
@@ -198,6 +203,22 @@ public class RegisterActivity extends Activity {
 		});
 	}
 
+	class TimeCount extends CountDownTimer {
+		public TimeCount(long millisInFuture, long countDownInterval) {
+		super(millisInFuture, countDownInterval);//参数依次为总时长,和计时的时间间隔
+		}
+		@Override
+		public void onFinish() {//计时完毕时触发
+			TVGetCertiCode.setText("获取验证码");
+			TVGetCertiCode.setEnabled(true);
+		}
+		@Override
+		public void onTick(long millisUntilFinished){//计时过程显示
+			TVGetCertiCode.setEnabled(false);
+			TVGetCertiCode.setText(millisUntilFinished /1000+"秒后重新获取");
+		}
+	}
+	
 	public void saveSid(String sid) {
 		SharedPreferences savedSid = getSharedPreferences("SAVEDSID", MODE_PRIVATE);
 		Editor editor = savedSid.edit();

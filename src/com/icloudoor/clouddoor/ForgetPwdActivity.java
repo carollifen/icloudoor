@@ -15,12 +15,14 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.icloudoor.clouddoor.RegisterActivity.TimeCount;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -35,6 +37,8 @@ public class ForgetPwdActivity extends Activity{
 	private TextView TVGotoNext;
 	private URL requestCertiCodeURL, verifyCertiCodeURL;
 	private RequestQueue mQueue;
+	
+	private TimeCount counter;
 	
 	private int RequestCertiStatusCode;
 	private int ConfirmCertiStatusCode;
@@ -57,10 +61,12 @@ public class ForgetPwdActivity extends Activity{
 		
 		sid = loadSid();
 		
+		counter = new TimeCount(60000, 1000);
 		TVGetCertiCode.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
+				counter.start();
 				
 				try {
 					requestCertiCodeURL = new URL(HOST+"/user/manage/sendVerifyCode.do"+"?sid="+sid);
@@ -171,6 +177,22 @@ public class ForgetPwdActivity extends Activity{
 			}
 			
 		});
+	}
+	
+	class TimeCount extends CountDownTimer {
+		public TimeCount(long millisInFuture, long countDownInterval) {
+		super(millisInFuture, countDownInterval);//参数依次为总时长,和计时的时间间隔
+		}
+		@Override
+		public void onFinish() {//计时完毕时触发
+			TVGetCertiCode.setText("获取验证码");
+			TVGetCertiCode.setEnabled(true);
+		}
+		@Override
+		public void onTick(long millisUntilFinished){//计时过程显示
+			TVGetCertiCode.setEnabled(false);
+			TVGetCertiCode.setText(millisUntilFinished /1000+"秒后重新获取");
+		}
 	}
 	
 	public void saveSid(String sid) {
