@@ -168,8 +168,8 @@ public class KeyFragment extends Fragment implements ShakeListener {
 				Toast.makeText(getActivity(), R.string.bt_not_supported, Toast.LENGTH_SHORT).show();
 		}
 
-		service_init();
 		checkBlueToothState();
+		service_init();
 
 		mShakeMgr = new ShakeEventManager(getActivity());
 		mShakeMgr.setListener(KeyFragment.this);
@@ -259,7 +259,8 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	@Override
 	public void onPause() {
 		super.onPause();
-		scanLeDevice(false);
+		if(mBluetoothAdapter.isEnabled())
+			scanLeDevice(false);
 	}
 
 	@Override
@@ -280,8 +281,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 
 	private void service_init() {
 		Intent bindIntent = new Intent(getActivity(), UartService.class);
-		getActivity().bindService(bindIntent, mServiceConnection,
-				Context.BIND_AUTO_CREATE);
+		getActivity().bindService(bindIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
 		LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
 				UARTStatusChangeReceiver, makeGattUpdateIntentFilter());
 	}
@@ -294,7 +294,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		} else {
 			if (mBluetoothAdapter.isEnabled()) {
 				if (mBluetoothAdapter.isDiscovering()) {
-				} else {
+				} else{
 					populateDeviceList();
 					// if(getActivity() != null)
 					// Toast.makeText(getActivity(), R.string.bt_enabled,
