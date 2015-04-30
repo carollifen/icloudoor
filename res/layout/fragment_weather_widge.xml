@@ -93,7 +93,7 @@
                 
                 <TextView
                     android:id="@+id/weather_content_yi"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="14dp"
                     android:gravity="center_vertical"
@@ -131,7 +131,7 @@
                 <TextView
                     android:id="@+id/weather_title_ji"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="18dp"
                     android:gravity="center"
                     android:text="忌 "
                     android:textColor="#fe4a61"
@@ -140,7 +140,7 @@
                 <TextView
                     android:id="@+id/weather_content_ji"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="18dp"
                     android:layout_marginLeft="14dp"
                     android:gravity="center_vertical"
                     android:maxLines="2"

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class SettingDetailActivity extends Activity {
@@ -20,7 +21,7 @@ public class SettingDetailActivity extends Activity {
 	private ImageView IVSwitchCar;
 	private ImageView IVSwitchMan;
 	
-	private ImageView IVBack;
+	private RelativeLayout IVBack;
 	
 	private int canShake, haveSound, canDisturb, switchToCar;
 	private MyBtnOnClickListener mMyBtnOnClickListener;
@@ -39,7 +40,7 @@ public class SettingDetailActivity extends Activity {
 		IVSetDetailDisturb = (ImageView) findViewById(R.id.btn_set_detail_disturb);
 		IVSwitchCar = (ImageView) findViewById(R.id.btn_switch_car);
 		IVSwitchMan = (ImageView) findViewById(R.id.btn_switch_man);
-		IVBack = (ImageView) findViewById(R.id.btn_back_set_detail);
+		IVBack = (RelativeLayout) findViewById(R.id.btn_back_set_detail);
 		
 		mMyBtnOnClickListener = new MyBtnOnClickListener();
 		

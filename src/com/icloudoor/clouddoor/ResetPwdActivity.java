@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +34,7 @@ public class ResetPwdActivity extends Activity {
 	private EditText ETInputNewPwd;
 	private EditText ETConfirmNewPwd;
 	private TextView TVResetDone;
-	private ImageView IVBack;
+	private RelativeLayout IVBack;
 	private URL resetPwdURL;
 	private RequestQueue mQueue;
 	private String oldPwd, newPwd, confirmPwd;
@@ -50,7 +51,7 @@ public class ResetPwdActivity extends Activity {
 
 		mQueue = Volley.newRequestQueue(this);
 
-		IVBack = (ImageView) findViewById(R.id.btn_back_reset_pwd);
+		IVBack = (RelativeLayout) findViewById(R.id.btn_back_reset_pwd);
 		ETInputOldPwd = (EditText) findViewById(R.id.input_old_pwd);
 		ETInputNewPwd = (EditText) findViewById(R.id.input_new_pwd);
 		ETConfirmNewPwd = (EditText) findViewById(R.id.confirm_new_pwd);

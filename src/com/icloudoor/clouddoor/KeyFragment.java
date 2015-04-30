@@ -68,7 +68,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	private TextView TvChooseMan;
 	private TextView TvDistrictDoor;
 	private TextView TvCarNumber;
-	private TextView TvOpenKeyList;
+	private RelativeLayout TvOpenKeyList;
 
 	private ImageView IvChooseCar;
 	private ImageView IvChooseMan;
@@ -139,7 +139,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		TvCarNumber = (TextView) view.findViewById(R.id.car_number);
 		TvDistrictDoor.setSelected(true);
 		TvCarNumber.setSelected(true);
-		TvOpenKeyList = (TextView) view.findViewById(R.id.open_key_list);
+		TvOpenKeyList = (RelativeLayout) view.findViewById(R.id.open_key_list);
 
 		IvChooseCar = (ImageView) view.findViewById(R.id.Iv_choose_car);
 		IvChooseMan = (ImageView) view.findViewById(R.id.Iv_choose_man);

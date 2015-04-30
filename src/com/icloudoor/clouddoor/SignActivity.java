@@ -5,10 +5,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 public class SignActivity extends Activity{
 	private ImageView IvSignSwitch;
-	private ImageView back;
+	private RelativeLayout back;
 	private boolean useSign;
 	
 	@Override
@@ -19,7 +20,7 @@ public class SignActivity extends Activity{
 		
 		useSign = true;
 		
-		back = (ImageView) findViewById(R.id.btn_back);
+		back = (RelativeLayout) findViewById(R.id.btn_back);
 		IvSignSwitch = (ImageView) findViewById(R.id.btn_sign_switch);
 		IvSignSwitch.setImageResource(R.drawable.btn_yes);
 		IvSignSwitch.setOnClickListener(new OnClickListener(){

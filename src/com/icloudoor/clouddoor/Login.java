@@ -141,12 +141,13 @@ public class Login extends Activity {
 								} else if (loginStatusCode == 1) {
 
 									isLogin = 1;
-									SharedPreferences loginStatus = getSharedPreferences(
-											"LOGINSTATUS", MODE_PRIVATE);
+									SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
 									Editor editor = loginStatus.edit();
 									editor.putInt("LOGIN", isLogin);
 									editor.putString("PHONENUM", phoneNum);
 									editor.commit();
+									
+									Toast.makeText(getApplicationContext(), R.string.login_ing, Toast.LENGTH_SHORT).show();
 
 									Intent intent = new Intent();
 									intent.setClass(getApplicationContext(), CloudDoorMainActivity.class);

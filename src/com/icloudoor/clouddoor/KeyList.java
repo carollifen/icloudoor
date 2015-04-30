@@ -63,7 +63,7 @@ public class KeyList extends Activity{
 	private SQLiteDatabase mKeyDB;
 	
 
-	private ImageView IvBack;
+	private RelativeLayout IvBack;
 
 	private URL downLoadKeyURL;
 	private RequestQueue mQueue;
@@ -253,7 +253,7 @@ public class KeyList extends Activity{
 			}
 		}
 				
-		IvBack = (ImageView) findViewById(R.id.btn_back_key_list);
+		IvBack = (RelativeLayout) findViewById(R.id.btn_back_key_list);
 		IvBack.setOnClickListener(new OnClickListener() {
 
 			@Override

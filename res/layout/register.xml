@@ -21,8 +21,21 @@
         android:textColorHint="#8b9eb6"
         android:textSize="17sp"
         android:background="@drawable/shape_confirm"
-        android:inputType="number" />"
+        android:inputType="number" />
 
+	<TextView
+        android:id="@+id/btn_regi_get_certi_code"
+        android:layout_width="100dp"
+        android:layout_height="48dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="175dp"
+        android:background="@drawable/shape_get_certification_code"
+        android:gravity="center"
+        android:text="获取验证码"
+        android:textColor="#ffffff"
+        android:textSize="17sp" />
+    
     <EditText
         android:id="@+id/regi_input_certi_code"
         android:layout_width="300dp"
@@ -35,19 +48,6 @@
         android:textSize="17sp"
         android:background="@drawable/shape_confirm"
         android:inputType="number" />
-
-    <TextView
-        android:id="@+id/btn_regi_get_certi_code"
-        android:layout_width="100dp"
-        android:layout_height="48dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="235dp"
-        android:background="@drawable/shape_get_certification_code"
-        android:gravity="center"
-        android:text="获取验证码"
-        android:textColor="#ffffff"
-        android:textSize="17sp" />
 
     <TextView
         android:id="@+id/btn_regi_next_step"

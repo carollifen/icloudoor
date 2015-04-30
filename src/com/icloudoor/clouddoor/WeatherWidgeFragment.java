@@ -135,6 +135,10 @@ public class WeatherWidgeFragment extends Fragment {
 		JiContent = (TextView) view.findViewById(R.id.weather_content_ji);
 		YiContent.setSelected(true);
 		JiContent.setSelected(true);
+		
+	    if(YiContent.getLineCount() == 2) YiContent.setHeight(72);
+	    if(YiContent.getLineCount() == 1) YiContent.setHeight(36);
+		
 		WeatherIcon = (ImageView) view.findViewById(R.id.weather_icon);
 		
 		Day1Bg.setBackgroundResource(R.drawable.btn_cal_pre);
