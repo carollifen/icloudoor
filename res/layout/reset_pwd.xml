@@ -39,7 +39,7 @@
 
     <TextView
         android:id="@+id/reset_pwd_complete"
-        android:layout_width="270dp"
+        android:layout_width="300dp"
         android:layout_height="48dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="287dp"

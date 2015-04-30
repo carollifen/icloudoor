@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ecf0f7"
-    android:orientation="vertical" >
+    android:background="#ecf0f7"  >
 
 <!--     <android.support.v4.view.ViewPager -->
 <!--         android:id="@+id/vPager" -->
@@ -14,15 +13,18 @@
 <!--         android:background="#f7f9fd" -->
 <!--         android:flipInterval="30" -->
 <!--         android:persistentDrawingCache="animation" /> -->
-	<FrameLayout
+    
+    <FrameLayout
         android:id="@+id/id_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
+    
     <include
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         layout="@layout/bottom_bar" />
+    
+
 
 </RelativeLayout>

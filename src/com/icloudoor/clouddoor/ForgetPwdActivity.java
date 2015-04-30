@@ -186,11 +186,13 @@ public class ForgetPwdActivity extends Activity{
 		@Override
 		public void onFinish() {//计时完毕时触发
 			TVGetCertiCode.setText("获取验证码");
+			TVGetCertiCode.setTextSize(17);
 			TVGetCertiCode.setEnabled(true);
 		}
 		@Override
 		public void onTick(long millisUntilFinished){//计时过程显示
 			TVGetCertiCode.setEnabled(false);
+			TVGetCertiCode.setTextSize(14);
 			TVGetCertiCode.setText(millisUntilFinished /1000+"秒后重新获取");
 		}
 	}

@@ -11,7 +11,7 @@
 
     <EditText
         android:id="@+id/forget_pwd_input_phone_num"
-        android:layout_width="200dp"
+        android:layout_width="300dp"
         android:layout_height="48dp"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="155dp"
@@ -48,7 +48,7 @@
 
     <TextView
         android:id="@+id/forget_pwd_goto_next"
-        android:layout_width="270dp"
+        android:layout_width="300dp"
         android:layout_height="48dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="287dp"
