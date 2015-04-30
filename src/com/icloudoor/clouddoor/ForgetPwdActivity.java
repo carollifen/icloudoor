@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ public class ForgetPwdActivity extends Activity{
 	private TextView TVGotoNext;
 	private URL requestCertiCodeURL, verifyCertiCodeURL;
 	private RequestQueue mQueue;
+	private RelativeLayout BtnBack;
 	
 	private TimeCount counter;
 	
@@ -58,6 +60,15 @@ public class ForgetPwdActivity extends Activity{
 		ETInputCertiCode = (EditText) findViewById(R.id.forget_pwd_input_certi_code);
 		TVGotoNext = (TextView) findViewById(R.id.forget_pwd_goto_next);
 		TVGetCertiCode = (TextView) findViewById(R.id.forget_pwd_get_certi_code);
+		BtnBack = (RelativeLayout) findViewById(R.id.btn_back);
+		BtnBack.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+			
+		});
 		
 		sid = loadSid();
 		

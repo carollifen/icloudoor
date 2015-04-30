@@ -20,6 +20,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
@@ -37,10 +39,13 @@ public class Login extends Activity {
 	private TextView TVLogin;
 	private TextView TVFogetPwd;
 	private TextView TVGoToRegi;
-	private RelativeLayout IVShowPwd;
+	private RelativeLayout ShowPwd;
+	private ImageView IVPwdIcon;
 
 	private boolean isHiddenPwd = true;
-
+	boolean hasInputPhoneNum = false;
+	boolean hasInputPwd = false;
+	
 	private URL loginURL;
 	private RequestQueue mQueue;
 
@@ -66,20 +71,24 @@ public class Login extends Activity {
 		TVLogin = (TextView) findViewById(R.id.btn_login);
 		TVFogetPwd = (TextView) findViewById(R.id.login_foget_pwd);
 		TVGoToRegi = (TextView) findViewById(R.id.login_go_to_regi);
-		IVShowPwd = (RelativeLayout) findViewById(R.id.btn_show_pwd);
+		ShowPwd = (RelativeLayout) findViewById(R.id.show_pwd);
+		IVPwdIcon = (ImageView) findViewById(R.id.btn_show_pwd);
+		IVPwdIcon.setImageResource(R.drawable.hide_pwd);
 
 		sid = loadSid();
 
-		IVShowPwd.setOnClickListener(new OnClickListener() {
+		ShowPwd.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				if (isHiddenPwd) {
 					isHiddenPwd = false;
 					ETInputPwd.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+					IVPwdIcon.setImageResource(R.drawable.show_pwd);
 				} else {
 					isHiddenPwd = true;
 					ETInputPwd.setTransformationMethod(PasswordTransformationMethod.getInstance());
+					IVPwdIcon.setImageResource(R.drawable.hide_pwd);
 				}
 
 			}
@@ -106,6 +115,7 @@ public class Login extends Activity {
 			}
 
 		});
+
 		TVLogin.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -176,6 +186,13 @@ public class Login extends Activity {
 			}
 
 		});
+	}
+
+	@Override
+	protected void onResume() {
+	    super.onResume();
+	    ETInputPhoneNum.setText("");
+	    ETInputPwd.setText("");
 	}
 
 	public void saveSid(String sid) {

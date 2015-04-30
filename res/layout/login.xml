@@ -19,56 +19,75 @@
         android:layout_centerHorizontal="true"
         />
     
-    <EditText 
-        android:id="@+id/login_input_phone_num"
+    <RelativeLayout
         android:layout_width="300dp"
         android:layout_height="48dp"
-        android:background="@drawable/shape"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="175dp"
-        android:drawableLeft="@drawable/login_phone"
-        android:padding="12dp"
-        android:hint="云门号或手机号"
-        android:textColorHint="#ffffff"
-        android:textSize="16sp"
-        android:textColor="#ffffff"
-        android:inputType="number"
-        />
-
-    <EditText 
-        android:id="@+id/login_input_pwd"
-        android:layout_width="300dp"
-        android:layout_height="48dp"
-        android:background="@drawable/shape"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="235dp"
-        android:drawableLeft="@drawable/login_password"
-        android:paddingLeft="12dp"  
-        android:inputType="textPassword"
-        android:textColor="#ffffff"
-        />    
-        
-    <RelativeLayout
-        android:id="@+id/btn_show_pwd"
-        android:layout_width="40dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="235dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="30dp"
+        android:background="@drawable/input_login"
         >
         
         <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@drawable/login_eyes"
-        />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="12dp"
+            android:background="@drawable/login_phone" />
+
+        <EditText
+            android:id="@+id/login_input_phone_num"
+            android:layout_width="268dp"
+            android:layout_height="48dp"
+			android:background="@null"
+			android:layout_marginLeft="32dp"
+            android:hint="请输入您的手机号"
+            android:inputType="number"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff"
+            android:textSize="16sp" />
         
     </RelativeLayout>
     
-    
-    
-    
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="48dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="235dp"
+        android:background="@drawable/input_login" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="12dp"
+            android:background="@drawable/login_password" />
+
+        <EditText
+            android:id="@+id/login_input_pwd"
+            android:layout_width="268dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="32dp"
+            android:background="@null"
+            android:hint="请输入您的密码"
+            android:inputType="textPassword"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff"
+            android:textSize="16sp" />
+
+        <RelativeLayout
+            android:id="@+id/show_pwd"
+            android:layout_width="40dp"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true" >
+
+            <ImageView
+                android:id="@+id/btn_show_pwd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/hide_pwd" />
+        </RelativeLayout>
+    </RelativeLayout>
 
     <TextView 
         android:id="@+id/btn_login"
@@ -76,7 +95,7 @@
         android:layout_height="48dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="307dp"
-        android:background="@drawable/but_login"
+        android:background="@drawable/selector_login"
         android:text="登    录"
         android:textSize="17sp"
         android:textColor="#000000"
@@ -91,7 +110,7 @@
         android:layout_marginLeft="70dp"
         android:text="忘记密码"
         android:textSize="16sp"
-        android:textColor="#ffffff"/>   
+        android:textColor="@drawable/selector_text" />"
         
     <TextView 
         android:id="@+id/login_go_to_regi"
@@ -103,6 +122,6 @@
         android:layout_marginRight="70dp"
         android:text="立即注册"
         android:textSize="16sp"
-        android:textColor="#ffffff"/>     
+        android:textColor="@drawable/selector_text" />     
 
 </RelativeLayout>

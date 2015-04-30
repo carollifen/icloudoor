@@ -293,16 +293,16 @@ public class KeyList extends Activity{
 					JSONObject L1DoorsData = (JSONObject) L1Doors.get(L1DoorIndex);
 
 					ContentValues valuesL1 = new ContentValues();			
-					if (L1DoorsData.getString("deviceId") != null && !hasData(mKeyDB, L1DoorsData.getString("deviceId"))) {
-							mapL1.put("DoorName", L1ZoneName+L1DoorsData.getString("doorName"));
-							mapL1.put("DoorId", L1DoorsData.getString("doorId"));
-							mapL1.put("DeviceId", L1DoorsData.getString("deviceId"));
-							mapL1.put("DoorType", String.valueOf(L1DoorsData.getInt("doorType")));
-							mapL1.put("AuthType", String.valueOf(L1DoorsData.getInt("authType")));
-							mapL1.put("AuthFrom", L1DoorsData.getString("authFrom"));
-							mapL1.put("AuthTo", L1DoorsData.getString("authTo"));
-							doorNameList.add(mapL1);
-						
+					if (L1DoorsData.getString("deviceId") != null) {
+//						mapL1.put("DoorName", L1ZoneName+L1DoorsData.getString("doorName"));
+//						mapL1.put("DoorId", L1DoorsData.getString("doorId"));
+//						mapL1.put("DeviceId", L1DoorsData.getString("deviceId"));
+//						mapL1.put("DoorType", String.valueOf(L1DoorsData.getInt("doorType")));
+//						mapL1.put("AuthType", String.valueOf(L1DoorsData.getInt("authType")));
+//						mapL1.put("AuthFrom", L1DoorsData.getString("authFrom"));
+//						mapL1.put("AuthTo", L1DoorsData.getString("authTo"));
+//						doorNameList.add(mapL1);
+						if(!hasData(mKeyDB, L1DoorsData.getString("deviceId"))){
 							valuesL1.put("zoneName", L1ZoneName);
 							valuesL1.put("zoneId", L1ZoneID);
 							valuesL1.put("doorName", L1ZoneName+L1DoorsData.getString("doorName"));
@@ -313,7 +313,10 @@ public class KeyList extends Activity{
 							valuesL1.put("authFrom", L1DoorsData.getString("authFrom"));
 							valuesL1.put("authTo", L1DoorsData.getString("authTo"));
 							mKeyDB.insert(TABLE_NAME, null, valuesL1);
-					}else 
+						}else{
+							
+						}
+					}else
 						continue;
 				}
 				
@@ -332,16 +335,16 @@ public class KeyList extends Activity{
 						JSONObject L2DoorsData = (JSONObject) L2Doors.get(L2DoorIndex);
 
 						ContentValues valuesL2 = new ContentValues();
-						if (L2DoorsData.getString("deviceId") != null && !hasData(mKeyDB, L2DoorsData.getString("deviceId"))) {
-								mapL2.put("DoorName", L1ZoneName+L2ZoneName+L2DoorsData.getString("doorName"));
-								mapL2.put("DoorId", L2DoorsData.getString("doorId"));
-								mapL2.put("DeviceId", L2DoorsData.getString("deviceId"));
-								mapL2.put("DoorType", String.valueOf(L2DoorsData.getInt("doorType")));
-								mapL2.put("AuthType", String.valueOf(L2DoorsData.getInt("authType")));
-								mapL2.put("AuthFrom", L2DoorsData.getString("authFrom"));
-								mapL2.put("AuthTo", L2DoorsData.getString("authTo"));
-								doorNameList.add(mapL2);
-							
+						if (L2DoorsData.getString("deviceId") != null) {
+//								mapL2.put("DoorName", L1ZoneName+L2ZoneName+L2DoorsData.getString("doorName"));
+//								mapL2.put("DoorId", L2DoorsData.getString("doorId"));
+//								mapL2.put("DeviceId", L2DoorsData.getString("deviceId"));
+//								mapL2.put("DoorType", String.valueOf(L2DoorsData.getInt("doorType")));
+//								mapL2.put("AuthType", String.valueOf(L2DoorsData.getInt("authType")));
+//								mapL2.put("AuthFrom", L2DoorsData.getString("authFrom"));
+//								mapL2.put("AuthTo", L2DoorsData.getString("authTo"));
+//								doorNameList.add(mapL2);
+							if(!hasData(mKeyDB, L2DoorsData.getString("deviceId"))){
 								valuesL2.put("zoneName", L2ZoneName);
 								valuesL2.put("zoneId", L2ZoneID);
 								valuesL2.put("doorName", L1ZoneName+L2ZoneName+L2DoorsData.getString("doorName"));
@@ -352,6 +355,7 @@ public class KeyList extends Activity{
 								valuesL2.put("authFrom", L2DoorsData.getString("authFrom"));
 								valuesL2.put("authTo", L2DoorsData.getString("authTo"));
 								mKeyDB.insert(TABLE_NAME, null, valuesL2);
+							}
 						}else 
 							continue;
 					}
@@ -370,16 +374,16 @@ public class KeyList extends Activity{
 							JSONObject L3DoorsData = (JSONObject) L3Doors.get(L3DoorIndex);
 
 							ContentValues valuesL3 = new ContentValues();
-							if (L3DoorsData.getString("deviceId") != null && !hasData(mKeyDB, L3DoorsData.getString("deviceId"))) {
-									mapL3.put("DoorName", L1ZoneName+L2ZoneName+L3ZoneName+L3DoorsData.getString("doorName"));
-									mapL3.put("DoorId", L3DoorsData.getString("doorId"));
-									mapL3.put("DeviceId", L3DoorsData.getString("deviceId"));
-									mapL3.put("DoorType", String.valueOf(L3DoorsData.getInt("doorType")));
-									mapL3.put("AuthType", String.valueOf(L3DoorsData.getInt("authType")));
-									mapL3.put("AuthFrom", L3DoorsData.getString("authFrom"));
-									mapL3.put("AuthTo", L3DoorsData.getString("authTo"));
-									doorNameList.add(mapL3);
-								
+							if (L3DoorsData.getString("deviceId") != null) {
+//									mapL3.put("DoorName", L1ZoneName+L2ZoneName+L3ZoneName+L3DoorsData.getString("doorName"));
+//									mapL3.put("DoorId", L3DoorsData.getString("doorId"));
+//									mapL3.put("DeviceId", L3DoorsData.getString("deviceId"));
+//									mapL3.put("DoorType", String.valueOf(L3DoorsData.getInt("doorType")));
+//									mapL3.put("AuthType", String.valueOf(L3DoorsData.getInt("authType")));
+//									mapL3.put("AuthFrom", L3DoorsData.getString("authFrom"));
+//									mapL3.put("AuthTo", L3DoorsData.getString("authTo"));
+//									doorNameList.add(mapL3);
+								if(!hasData(mKeyDB, L3DoorsData.getString("deviceId"))){
 									valuesL3.put("zoneName", L3ZoneName);
 									valuesL3.put("zoneId", L3ZoneID);
 									valuesL3.put("doorName", L1ZoneName+L2ZoneName+L3ZoneName+L3DoorsData.getString("doorName"));
@@ -390,6 +394,7 @@ public class KeyList extends Activity{
 									valuesL3.put("authFrom", L3DoorsData.getString("authFrom"));
 									valuesL3.put("authTo", L3DoorsData.getString("authTo"));
 									mKeyDB.insert(TABLE_NAME, null, valuesL3);
+								}
 							}else 
 								continue;
 						}

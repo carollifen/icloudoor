@@ -324,23 +324,6 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		mDevRssiValues = new HashMap<String, Integer>();
 		scanLeDevice(true);
 
-		if (mDeviceList != null && mDeviceList.size() > 0) {
-
-			int maxRssiIndex = 0;
-			int maxRssi = -128;
-
-			for (int i = 0; i < mDeviceList.size(); i++) {
-				Log.e("TEST", "checking rssi");
-				String tempAdd = mDeviceList.get(i).getAddress();
-				int tempRssi = mDevRssiValues.get(tempAdd);
-				if (tempRssi > maxRssi) {
-					maxRssi = tempRssi;
-					maxRssiIndex = i;
-				}
-			}
-			deviceIndexToOpen = maxRssiIndex;
-		}
-
 	}
 
 	private void scanLeDevice(final boolean enable) {
@@ -352,6 +335,24 @@ public class KeyFragment extends Fragment implements ShakeListener {
 				public void run() {
 					mBluetoothAdapter.stopLeScan(mLeScanCallback);
 					channelSwitch.setEnabled(true);
+					
+					if (mDeviceList != null && mDeviceList.size() > 0) {
+
+						int maxRssiIndex = 0;
+						int maxRssi = -128;
+
+						for (int i = 0; i < mDeviceList.size(); i++) {
+							Log.e("TEST", "checking rssi");
+							String tempAdd = mDeviceList.get(i).getAddress();
+							int tempRssi = mDevRssiValues.get(tempAdd);
+							if (tempRssi > maxRssi) {
+								maxRssi = tempRssi;
+								maxRssiIndex = i;
+							}
+						}
+						deviceIndexToOpen = maxRssiIndex;
+					}
+					
 					if (mDeviceList.size() != 0) {
 						if (isChooseCarChannel == 1) {
 							for (int i = 0; i < carDoorList.size(); i++) {
