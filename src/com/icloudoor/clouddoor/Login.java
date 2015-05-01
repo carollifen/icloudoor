@@ -126,6 +126,9 @@ public class Login extends Activity implements TextWatcher {
 
 			@Override
 			public void onClick(View v) {
+				
+				Toast.makeText(getApplicationContext(), R.string.login_ing, Toast.LENGTH_SHORT).show();
+				
 				try {
 					loginURL = new URL(HOST + "/user/manage/login.do" + "?sid="
 							+ sid);
@@ -162,8 +165,6 @@ public class Login extends Activity implements TextWatcher {
 									editor.putInt("LOGIN", isLogin);
 									editor.putString("PHONENUM", phoneNum);
 									editor.commit();
-									
-									Toast.makeText(getApplicationContext(), R.string.login_ing, Toast.LENGTH_SHORT).show();
 
 									Intent intent = new Intent();
 									intent.setClass(getApplicationContext(), CloudDoorMainActivity.class);
