@@ -6,11 +6,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class ChangePhoneActivityCertiCode extends Activity{
 	private TextView ChangePhoneDone;
-	private ImageView IVBack;
+	private RelativeLayout IVBack;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -18,7 +19,7 @@ public class ChangePhoneActivityCertiCode extends Activity{
 		getActionBar().hide();
 		setContentView(R.layout.set_detail_change_phone3);
 		
-		IVBack = (ImageView) findViewById(R.id.btn_back_change_phone);
+		IVBack = (RelativeLayout) findViewById(R.id.btn_back_change_phone);
 		ChangePhoneDone = (TextView) findViewById(R.id.btn_change_phone_done);
 		ChangePhoneDone.setOnClickListener(new OnClickListener(){
 

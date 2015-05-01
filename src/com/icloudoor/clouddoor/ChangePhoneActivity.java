@@ -8,12 +8,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class ChangePhoneActivity extends Activity {
 	private TextView MyNum;
 	private TextView TVBtnChangePhone;
-	private ImageView IVBack;
+	private RelativeLayout IVBack;
 	
 	private String phoneNum;
 	@Override
@@ -27,7 +28,7 @@ public class ChangePhoneActivity extends Activity {
 		phoneNum = loginStatus.getString("PHONENUM", null);
 		changeNum();
 		
-		IVBack = (ImageView) findViewById(R.id.btn_back_change_phone);
+		IVBack = (RelativeLayout) findViewById(R.id.btn_back_change_phone);
 		MyNum = (TextView) findViewById(R.id.my_phone_num);
 		MyNum.setText(phoneNum);
 		
