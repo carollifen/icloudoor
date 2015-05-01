@@ -33,7 +33,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Login extends Activity {
+public class Login extends Activity implements TextWatcher {
 	private EditText ETInputPhoneNum;
 	private EditText ETInputPwd;
 	private TextView TVLogin;
@@ -74,7 +74,13 @@ public class Login extends Activity {
 		ShowPwd = (RelativeLayout) findViewById(R.id.show_pwd);
 		IVPwdIcon = (ImageView) findViewById(R.id.btn_show_pwd);
 		IVPwdIcon.setImageResource(R.drawable.hide_pwd);
-
+		
+		TVLogin.setTextColor(0xFF999999);
+		TVLogin.setEnabled(false);
+		
+		ETInputPhoneNum.addTextChangedListener(this); 
+		ETInputPwd.addTextChangedListener(this);
+		
 		sid = loadSid();
 
 		ShowPwd.setOnClickListener(new OnClickListener() {
@@ -206,6 +212,27 @@ public class Login extends Activity {
 	public String loadSid() {
 		SharedPreferences loadSid = getSharedPreferences("SAVEDSID", 0);
 		return loadSid.getString("SID", null);
+	}
+
+	@Override
+	public void beforeTextChanged(CharSequence s, int start, int count,
+			int after) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTextChanged(CharSequence s, int start, int before, int count) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void afterTextChanged(Editable s) {
+		if(ETInputPhoneNum.getText().toString().length() > 10 && ETInputPwd.getText().toString().length() > 7){
+			TVLogin.setTextColor(0xFF000000);
+			TVLogin.setEnabled(true);
+		}
 	}
 
 }

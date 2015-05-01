@@ -8,11 +8,11 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.android.volley.Request.Method;
 import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.Request.Method;
 import com.android.volley.toolbox.Volley;
 
 import android.app.Activity;
@@ -26,42 +26,55 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class RegisterComplete extends Activity implements TextWatcher {
-	private TextView TVRegiComplete;
+public class ForgetPwdComplete extends Activity implements TextWatcher{
 	private EditText ETInputPwd;
 	private EditText ETConfirmPwd;
-	private URL registerURL;
-	private RequestQueue mQueue;
+	private TextView TVConfirm;
 	private String inputPwd, confirmPwd;
-
+	private RelativeLayout BtnBack;
+	
+	private URL registerURL;
+	private RequestQueue mQueue;	
 	private int statusCode;
 	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
 	private String sid = null;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getActionBar().hide();
-		setContentView(R.layout.register_complete);
-
-		mQueue = Volley.newRequestQueue(this);
-
-		ETInputPwd = (EditText) findViewById(R.id.regi_input_pwd);
-		ETConfirmPwd = (EditText) findViewById(R.id.regi_input_pwd_again);
-		TVRegiComplete = (TextView) findViewById(R.id.btn_regi_complete);
+		setContentView(R.layout.find_pwd_complete);
 		
-		TVRegiComplete.setTextColor(0xFFcccccc);
-		TVRegiComplete.setEnabled(false);
+		ETInputPwd = (EditText) findViewById(R.id.forget_pwd_input_new_pwd);
+		ETConfirmPwd = (EditText) findViewById(R.id.forget_pwd_confirm_pwd);
+		TVConfirm = (TextView) findViewById(R.id.forget_pwd_confirm);
+		
+		TVConfirm.setTextColor(0xFFcccccc);
+		TVConfirm.setEnabled(false);
 		
 		ETInputPwd.addTextChangedListener(this);
 		ETConfirmPwd.addTextChangedListener(this);
 		
+		BtnBack = (RelativeLayout) findViewById(R.id.btn_back);
+		BtnBack.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent();
+				intent.setClass(getApplicationContext(), ForgetPwdActivity.class);
+				startActivity(intent);
+			}
+			
+		});
+		
+		mQueue = Volley.newRequestQueue(this);
 		sid = loadSid();
 		
-		TVRegiComplete.setOnClickListener(new OnClickListener() {
+		TVConfirm.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
@@ -71,10 +84,10 @@ public class RegisterComplete extends Activity implements TextWatcher {
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				}
-
+				
 				inputPwd = ETInputPwd.getText().toString();
 				confirmPwd = ETConfirmPwd.getText().toString();
-				if (inputPwd.equals(confirmPwd)) {
+				if(inputPwd.equals(confirmPwd)){
 					MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
 							Method.POST, registerURL.toString(), null,
 							new Response.Listener<JSONObject>() {
@@ -90,16 +103,10 @@ public class RegisterComplete extends Activity implements TextWatcher {
 									} catch (JSONException e) {
 										e.printStackTrace();
 									}
-									Log.e("TEST",
-											"statusCode: "
-													+ String.valueOf(statusCode));
-									Log.e("TEST",
-											"response: " + response.toString());
+									Log.e("TEST", "statusCode: " + String.valueOf(statusCode));
+									Log.e("TEST", "response: " + response.toString());
 									try {
-										Log.e("TEST",
-												"sid: "
-														+ response
-																.getString("sid"));
+										Log.e("TEST", "sid: " + response.getString("sid"));
 									} catch (JSONException e) {
 										e.printStackTrace();
 									}
@@ -109,8 +116,7 @@ public class RegisterComplete extends Activity implements TextWatcher {
 										intent.setClass(getApplicationContext(), Login.class);
 										startActivity(intent);
 									} else if (statusCode == -40) {
-										Toast.makeText(getApplicationContext(),
-												R.string.phone_num_have_been_registerred,
+										Toast.makeText(getApplicationContext(), R.string.phone_num_have_been_registerred,
 												Toast.LENGTH_SHORT).show();
 									} else if (statusCode == -41) {
 										Toast.makeText(getApplicationContext(), R.string.weak_pwd,
@@ -133,15 +139,13 @@ public class RegisterComplete extends Activity implements TextWatcher {
 						}
 					};
 					mQueue.add(mJsonRequest);
-				} else {
-					Toast.makeText(v.getContext(), R.string.diff_pwd,
-							Toast.LENGTH_SHORT).show();
-				}
+				}else
+					Toast.makeText(v.getContext(), R.string.diff_pwd, Toast.LENGTH_SHORT).show();
 			}
-
+			
 		});
 	}
-
+	
 	public void saveSid(String sid) {
 		SharedPreferences savedSid = getSharedPreferences("SAVEDSID", MODE_PRIVATE);
 		Editor editor = savedSid.edit();
@@ -169,9 +173,10 @@ public class RegisterComplete extends Activity implements TextWatcher {
 
 	@Override
 	public void afterTextChanged(Editable s) {
-		if(ETInputPwd.getText().toString().length() > 7 && ETConfirmPwd.getText().toString().length() > 7){
-			TVRegiComplete.setTextColor(0xFFffffff);
-			TVRegiComplete.setEnabled(true);
+		if(ETConfirmPwd.getText().toString().length() > 7 && ETInputPwd.getText().toString().length() > 7){
+			TVConfirm.setTextColor(0xFFffffff);
+			TVConfirm.setEnabled(true);
 		}
 	}
+	
 }

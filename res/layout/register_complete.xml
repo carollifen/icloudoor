@@ -44,10 +44,10 @@
         android:layout_height="48dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="307dp"
-        android:background="@drawable/shape_color_blue"
+        android:background="@drawable/selector_blue_nextstep_confirm"
         android:gravity="center"
         android:text="注    册"
-        android:textColor="#ffffff"
+        android:textColor="#cccccc"
         android:textSize="17sp" />
 
 </RelativeLayout>

@@ -63,9 +63,10 @@ public class ResetPwdActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent();
-				intent.setClass(v.getContext(), SettingDetailActivity.class);
-				startActivity(intent);
+//				Intent intent = new Intent();
+//				intent.setClass(v.getContext(), SettingDetailActivity.class);
+//				startActivity(intent);
+				finish();
 			}
 
 		});

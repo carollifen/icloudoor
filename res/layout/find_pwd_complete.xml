@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <include
+        android:id="@+id/title_find_pwd"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        layout="@layout/title_find_pwd" />
+
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="48dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="155dp" >
+        
+        <TextView
+           	android:layout_width="wrap_content"
+           	android:layout_height="wrap_content"
+           	android:text="设置密码"
+           	android:textSize="16sp"
+           	android:textColor="#000000"
+           	android:layout_centerVertical="true"
+            />
+
+        <EditText
+            android:id="@+id/forget_pwd_input_new_pwd"
+            android:layout_width="230dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_confirm"
+            android:layout_alignParentRight="true"
+            android:hint="至少8位字符和数字"
+            android:inputType="textPassword"
+            android:padding="10dp"
+            android:textColor="#000000"
+            android:textColorHint="#bdc7d4"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+    
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="48dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="215dp" >
+        
+        <TextView
+           	android:layout_width="wrap_content"
+           	android:layout_height="wrap_content"
+           	android:text="再次输入"
+           	android:textSize="16sp"
+           	android:textColor="#000000"
+           	android:layout_centerVertical="true"
+            />
+
+        <EditText
+            android:id="@+id/forget_pwd_confirm_pwd"
+            android:layout_width="230dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_confirm"
+            android:layout_alignParentRight="true"
+            android:hint="再次输入"
+            android:inputType="textPassword"
+            android:padding="10dp"
+            android:textColor="#000000"
+            android:textColorHint="#bdc7d4"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+    
+    <TextView
+        android:id="@+id/forget_pwd_confirm"
+        android:layout_width="300dp"
+        android:layout_height="48dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="287dp"
+        android:background="@drawable/selector_blue_nextstep_confirm"
+        android:gravity="center"
+        android:text="确    定"
+        android:textColor="#cccccc"
+        android:textSize="17sp" />
+    
+</RelativeLayout>

@@ -23,6 +23,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,7 +33,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ForgetPwdActivity extends Activity{
+public class ForgetPwdActivity extends Activity implements TextWatcher {
 	private TextView TVGetCertiCode;
 	private EditText ETInputPhoneNum;
 	private EditText ETInputCertiCode;
@@ -60,6 +62,13 @@ public class ForgetPwdActivity extends Activity{
 		ETInputCertiCode = (EditText) findViewById(R.id.forget_pwd_input_certi_code);
 		TVGotoNext = (TextView) findViewById(R.id.forget_pwd_goto_next);
 		TVGetCertiCode = (TextView) findViewById(R.id.forget_pwd_get_certi_code);
+		
+		TVGotoNext.setTextColor(0xFFcccccc);
+		TVGotoNext.setEnabled(false);
+		
+		ETInputPhoneNum.addTextChangedListener(this);
+		ETInputCertiCode.addTextChangedListener(this);		
+		
 		BtnBack = (RelativeLayout) findViewById(R.id.btn_back);
 		BtnBack.setOnClickListener(new OnClickListener(){
 
@@ -131,9 +140,6 @@ public class ForgetPwdActivity extends Activity{
 
 			@Override
 			public void onClick(View v) {
-//				Intent intent = new Intent();
-//				intent.setClass(v.getContext(), ForgetPwdNewPwd.class);
-//				startActivity(intent);
 				try {
 					verifyCertiCodeURL = new URL(HOST
 							+ "/user/manage/confirmVerifyCode.do" + "?sid="
@@ -158,7 +164,7 @@ public class ForgetPwdActivity extends Activity{
 								}
 								if (ConfirmCertiStatusCode == 1) {
 									Intent intent = new Intent();
-									intent.setClass(getApplicationContext(), RegisterComplete.class);
+									intent.setClass(getApplicationContext(), ForgetPwdComplete.class);
 									startActivity(intent);
 								} else if (ConfirmCertiStatusCode == -30) {
 									Toast.makeText(getApplicationContext(),
@@ -199,13 +205,22 @@ public class ForgetPwdActivity extends Activity{
 			TVGetCertiCode.setText("重新验证");
 			TVGetCertiCode.setTextSize(17);
 			TVGetCertiCode.setEnabled(true);
+			TVGetCertiCode.setBackgroundResource(R.drawable.btn_certi);
 		}
 		@Override
 		public void onTick(long millisUntilFinished){//计时过程显示
 			TVGetCertiCode.setEnabled(false);
+			TVGetCertiCode.setBackgroundResource(R.drawable.btn_certi_counter);
 			TVGetCertiCode.setTextSize(16);
 			TVGetCertiCode.setText("已发验证" + '\n' + "(" + millisUntilFinished /1000+")");
 		}
+	}
+	
+	@Override
+	protected void onResume() {
+	    super.onResume();
+	    ETInputPhoneNum.setText("");
+	    ETInputCertiCode.setText("");
 	}
 	
 	public void saveSid(String sid) {
@@ -218,5 +233,26 @@ public class ForgetPwdActivity extends Activity{
 	public String loadSid() {
 		SharedPreferences loadSid = getSharedPreferences("SAVEDSID", 0);
 		return loadSid.getString("SID", null);
+	}
+
+	@Override
+	public void beforeTextChanged(CharSequence s, int start, int count,
+			int after) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTextChanged(CharSequence s, int start, int before, int count) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void afterTextChanged(Editable s) {
+		if(ETInputPhoneNum.getText().toString().length() > 10 && ETInputCertiCode.getText().toString().length() > 4){
+			TVGotoNext.setTextColor(0xFFffffff);
+			TVGotoNext.setEnabled(true);
+		}
 	}
 }

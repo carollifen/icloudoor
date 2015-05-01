@@ -21,6 +21,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,7 +30,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class RegisterActivity extends Activity {
+public class RegisterActivity extends Activity implements TextWatcher {
 	private TextView TVGetCertiCode;
 	private TextView TVNextStep;
 	private EditText ETInputPhoneNum;
@@ -57,6 +59,12 @@ public class RegisterActivity extends Activity {
 		TVGetCertiCode = (TextView) findViewById(R.id.btn_regi_get_certi_code);
 		TVNextStep = (TextView) findViewById(R.id.btn_regi_next_step);
 
+		TVNextStep.setTextColor(0xFFcccccc);
+		TVNextStep.setEnabled(false);
+		
+		ETInputPhoneNum.addTextChangedListener(this);
+		ETInputCertiCode.addTextChangedListener(this);
+		
 		sid = loadSid();
 		
 		counter = new TimeCount(60000, 1000);
@@ -212,13 +220,22 @@ public class RegisterActivity extends Activity {
 			TVGetCertiCode.setText("重新验证");
 			TVGetCertiCode.setTextSize(17);
 			TVGetCertiCode.setEnabled(true);
+			TVGetCertiCode.setBackgroundResource(R.drawable.btn_certi);
 		}
 		@Override
 		public void onTick(long millisUntilFinished){//计时过程显示
 			TVGetCertiCode.setEnabled(false);
 			TVGetCertiCode.setTextSize(16);
+			TVGetCertiCode.setBackgroundResource(R.drawable.btn_certi_counter);
 			TVGetCertiCode.setText("已发验证" + '\n' + "(" + millisUntilFinished /1000+")");
 		}
+	}
+	
+	@Override
+	protected void onResume() {
+	    super.onResume();
+	    ETInputPhoneNum.setText("");
+	    ETInputCertiCode.setText("");
 	}
 	
 	public void saveSid(String sid) {
@@ -231,6 +248,27 @@ public class RegisterActivity extends Activity {
 	public String loadSid() {
 		SharedPreferences loadSid = getSharedPreferences("SAVEDSID", 0);
 		return loadSid.getString("SID", null);
+	}
+
+	@Override
+	public void beforeTextChanged(CharSequence s, int start, int count,
+			int after) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTextChanged(CharSequence s, int start, int before, int count) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void afterTextChanged(Editable s) {
+		if(ETInputPhoneNum.getText().toString().length() > 10 && ETInputCertiCode.getText().toString().length() > 4){
+			TVNextStep.setTextColor(0xFFffffff);
+			TVNextStep.setEnabled(true);
+		}
 	}
 	
 }
