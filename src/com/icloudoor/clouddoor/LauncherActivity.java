@@ -21,18 +21,22 @@ public class LauncherActivity extends Activity {
 		getActionBar().hide();
 		setContentView(R.layout.activity_launcher);
 		
-		CheckFirstRun();
-
-		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", 0);
-		isLogin = loginStatus.getInt("LOGIN", 0);
-
-		sid = loadSid();
-		
 		final Intent intent = new Intent();
-		if (isLogin == 0 || sid == null) {
-			intent.setClass(this, Login.class);
-		} else if (isLogin == 1 && sid != null) {
-			intent.setClass(this, CloudDoorMainActivity.class);
+		if(CheckFirstRun()){
+    		addShortcutToDesktop();   
+    		
+    		intent.setClass(this, WizardActivity.class);
+		}else{
+			SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", 0);
+			isLogin = loginStatus.getInt("LOGIN", 0);
+
+			sid = loadSid();
+			
+			if (isLogin == 0 || sid == null) {
+				intent.setClass(this, Login.class);
+			} else if (isLogin == 1 && sid != null) {
+				intent.setClass(this, CloudDoorMainActivity.class);
+			}
 		}
 		Timer jump = new Timer();
 		TimerTask jumpTask = new TimerTask() {
@@ -56,13 +60,14 @@ public class LauncherActivity extends Activity {
     	sendBroadcast(shortcut);
     }
     
-	private void CheckFirstRun() {
+	private boolean CheckFirstRun() {
     	SharedPreferences setting = getSharedPreferences("com.icloudoor.clouddoor", 0);
     	boolean user_first = setting.getBoolean("FIRST",true);
     	if(user_first) {
     		setting.edit().putBoolean("FIRST", false).commit();
-    		addShortcutToDesktop();         
+    		return user_first;
     	}
+    	return user_first;
     }
 	
 	public String loadSid() {

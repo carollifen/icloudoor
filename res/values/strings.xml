@@ -33,5 +33,6 @@
     <string name="title_activity_set_personal_info">SetPersonalInfo</string>
     <string name="title_activity_personal_info_detail">PersonalInfoDetail</string>
     <string name="login_ing">正在登陆...</string>
+    <string name="title_activity_wizard">WizardActivity</string>
 
 </resources>
