@@ -102,19 +102,6 @@ public class SettingFragment extends Fragment {
 			case R.id.btn_update:
 				break;
 			case R.id.btn_logout:
-				isLogin = 0;
-				SharedPreferences loginStatus = getActivity()
-						.getSharedPreferences("LOGINSTATUS", 0);
-				Editor editor = loginStatus.edit();
-				editor.putInt("LOGIN", isLogin);
-				editor.commit();
-				Intent intent2 = new Intent();
-				intent2.setClass(getActivity(), Login.class);
-				startActivity(intent2);
-
-				CloudDoorMainActivity mainActivity = (CloudDoorMainActivity) getActivity();
-				mainActivity.finish();
-
 				try {
 					logOutURL = new URL(HOST + "/user/manage/logout.do"
 							+ "?sid=" + sid);
@@ -133,6 +120,19 @@ public class SettingFragment extends Fragment {
 										saveSid(sid);
 									}
 									statusCode = response.getInt("code");
+									
+									isLogin = 0;
+									SharedPreferences loginStatus = getActivity()
+											.getSharedPreferences("LOGINSTATUS", 0);
+									Editor editor1 = loginStatus.edit();
+									editor1.putInt("LOGIN", isLogin);
+									editor1.commit();
+									Intent intent2 = new Intent();
+									intent2.setClass(getActivity(), Login.class);
+									startActivity(intent2);
+									
+									CloudDoorMainActivity mainActivity = (CloudDoorMainActivity) getActivity();
+									mainActivity.finish();
 								} catch (JSONException e) {
 									e.printStackTrace();
 								}
