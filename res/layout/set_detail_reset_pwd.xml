@@ -68,7 +68,7 @@
         android:background="@drawable/selector_blue_nextstep_confirm"
         android:gravity="center"
         android:text="确    定"
-        android:textColor="#ffffff"
+        android:textColor="#cccccc"
         android:textSize="17sp" />
 
 </RelativeLayout>

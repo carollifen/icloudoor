@@ -172,6 +172,9 @@ public class RegisterComplete extends Activity implements TextWatcher {
 		if(ETInputPwd.getText().toString().length() > 7 && ETConfirmPwd.getText().toString().length() > 7){
 			TVRegiComplete.setTextColor(0xFFffffff);
 			TVRegiComplete.setEnabled(true);
+		} else {
+			TVRegiComplete.setTextColor(0xFFcccccc);
+			TVRegiComplete.setEnabled(false);
 		}
 	}
 }

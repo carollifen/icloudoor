@@ -20,6 +20,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,7 +31,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ResetPwdActivity extends Activity {
+public class ResetPwdActivity extends Activity implements TextWatcher {
 	private EditText ETInputOldPwd;
 	private EditText ETInputNewPwd;
 	private EditText ETConfirmNewPwd;
@@ -56,6 +58,12 @@ public class ResetPwdActivity extends Activity {
 		ETInputNewPwd = (EditText) findViewById(R.id.input_new_pwd);
 		ETConfirmNewPwd = (EditText) findViewById(R.id.confirm_new_pwd);
 		TVResetDone = (TextView) findViewById(R.id.reset_pwd_done);
+		
+		TVResetDone.setTextColor(0xFFcccccc);
+		TVResetDone.setEnabled(false);
+		
+		ETInputNewPwd.addTextChangedListener(this);
+		ETConfirmNewPwd.addTextChangedListener(this);
 		
 		sid = loadSid();
 
@@ -162,6 +170,30 @@ public class ResetPwdActivity extends Activity {
 	public String loadSid() {
 		SharedPreferences loadSid = getSharedPreferences("SAVEDSID", 0);
 		return loadSid.getString("SID", null);
+	}
+
+	@Override
+	public void beforeTextChanged(CharSequence s, int start, int count,
+			int after) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTextChanged(CharSequence s, int start, int before, int count) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void afterTextChanged(Editable s) {
+		if(ETInputNewPwd.getText().toString().length() > 7 && ETConfirmNewPwd.getText().toString().length() > 7){
+			TVResetDone.setTextColor(0xFFffffff);
+			TVResetDone.setEnabled(true);
+		} else {
+			TVResetDone.setTextColor(0xFFcccccc);
+			TVResetDone.setEnabled(false);
+		}
 	}	
 	
 }

@@ -176,6 +176,9 @@ public class ForgetPwdComplete extends Activity implements TextWatcher{
 		if(ETConfirmPwd.getText().toString().length() > 7 && ETInputPwd.getText().toString().length() > 7){
 			TVConfirm.setTextColor(0xFFffffff);
 			TVConfirm.setEnabled(true);
+		} else {
+			TVConfirm.setTextColor(0xFFcccccc);
+			TVConfirm.setEnabled(false);
 		}
 	}
 	

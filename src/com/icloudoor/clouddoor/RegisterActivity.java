@@ -268,6 +268,9 @@ public class RegisterActivity extends Activity implements TextWatcher {
 		if(ETInputPhoneNum.getText().toString().length() > 10 && ETInputCertiCode.getText().toString().length() > 4){
 			TVNextStep.setTextColor(0xFFffffff);
 			TVNextStep.setEnabled(true);
+		} else {
+			TVNextStep.setTextColor(0xFFcccccc);
+			TVNextStep.setEnabled(false);
 		}
 	}
 	

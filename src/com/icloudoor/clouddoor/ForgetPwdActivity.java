@@ -253,6 +253,9 @@ public class ForgetPwdActivity extends Activity implements TextWatcher {
 		if(ETInputPhoneNum.getText().toString().length() > 10 && ETInputCertiCode.getText().toString().length() > 4){
 			TVGotoNext.setTextColor(0xFFffffff);
 			TVGotoNext.setEnabled(true);
+		} else {
+			TVGotoNext.setTextColor(0xFFcccccc);
+			TVGotoNext.setEnabled(false);
 		}
 	}
 }

@@ -233,6 +233,9 @@ public class Login extends Activity implements TextWatcher {
 		if(ETInputPhoneNum.getText().toString().length() > 10 && ETInputPwd.getText().toString().length() > 7){
 			TVLogin.setTextColor(0xFF000000);
 			TVLogin.setEnabled(true);
+		} else {
+			TVLogin.setTextColor(0xFF999999);
+			TVLogin.setEnabled(false);
 		}
 	}
 
