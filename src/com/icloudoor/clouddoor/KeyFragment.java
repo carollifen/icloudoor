@@ -1,5 +1,7 @@
 package com.icloudoor.clouddoor;
 
+import com.jauker.widget.BadgeView;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,6 +38,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -138,7 +141,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		TvDistrictDoor = (TextView) view.findViewById(R.id.district_door);
 		TvCarNumber = (TextView) view.findViewById(R.id.car_number);
 		TvDistrictDoor.setSelected(true);
-		TvCarNumber.setSelected(true);
+		TvCarNumber.setSelected(true);	
 		TvOpenKeyList = (RelativeLayout) view.findViewById(R.id.open_key_list);
 
 		IvChooseCar = (ImageView) view.findViewById(R.id.Iv_choose_car);
@@ -179,6 +182,12 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		manDoorList = new ArrayList<HashMap<String, String>>();
 		if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
 			if (DBCount() > 0) {
+				
+				BadgeView badge = new com.jauker.widget.BadgeView(getActivity());
+				badge.setTargetView(TvOpenKeyList);
+				badge.setBadgeGravity(Gravity.RIGHT);
+				badge.setBadgeCount((int)DBCount());//TODO
+				
 				Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME,
 						null);
 				if (mCursor.moveToFirst()) {
