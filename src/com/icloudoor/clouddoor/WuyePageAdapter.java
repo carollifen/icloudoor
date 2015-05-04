@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.view.ViewGroup;
-import android.view.ViewParent;
 
 public class WuyePageAdapter extends FragmentPagerAdapter{
 	private ArrayList<Fragment> mWuyePageFragmentList;
@@ -31,7 +29,6 @@ public class WuyePageAdapter extends FragmentPagerAdapter{
 	public int getCount() {
 		// TODO Auto-generated method stub
 		return mWuyePageFragmentList.size();
-//		return Integer.MAX_VALUE;
 	}
-
+	
 }
