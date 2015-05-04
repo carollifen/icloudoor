@@ -1,0 +1,7 @@
+package com.icloudoor.clouddoor;
+
+public class SetGestureConstants {
+		public static final int POINT_STATE_NORMAL = 0; // Õý³£×´Ì¬
+		public static final int POINT_STATE_SELECTED = 1; // °´ÏÂ×´Ì¬
+		public static final int POINT_STATE_WRONG = 2; // ´íÎó×´Ì¬
+}

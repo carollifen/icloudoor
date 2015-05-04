@@ -164,6 +164,7 @@ public class Login extends Activity implements TextWatcher {
 									Editor editor = loginStatus.edit();
 									editor.putInt("LOGIN", isLogin);
 									editor.putString("PHONENUM", phoneNum);
+									editor.putString("PASSWARD", password);
 									editor.commit();
 
 									Intent intent = new Intent();

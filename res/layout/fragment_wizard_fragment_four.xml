@@ -4,14 +4,13 @@
     android:layout_height="match_parent"
     tools:context="com.icloudoor.clouddoor.WizardFragmentFour" >
 
-    <!-- TODO: Update blank fragment layout -->
-
     <TextView
         android:id="@+id/btn_welcome"
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
         android:gravity="center"
+        android:layout_centerInParent="true"
         android:background="@drawable/selector_blue_nextstep_confirm"
         android:text="欢迎使用"
         android:textColor="#ffffff"

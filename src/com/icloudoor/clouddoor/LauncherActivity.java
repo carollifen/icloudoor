@@ -14,6 +14,7 @@ public class LauncherActivity extends Activity {
 
 	private String sid = null;
 	private int isLogin = 0;
+	private int useSign = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,13 +30,19 @@ public class LauncherActivity extends Activity {
 		}else{
 			SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", 0);
 			isLogin = loginStatus.getInt("LOGIN", 0);
+			
+			SharedPreferences setSign = getSharedPreferences("SETTING", 0);
+			useSign = setSign.getInt("useSign", 0);
 
 			sid = loadSid();
 			
 			if (isLogin == 0 || sid == null) {
 				intent.setClass(this, Login.class);
 			} else if (isLogin == 1 && sid != null) {
-				intent.setClass(this, CloudDoorMainActivity.class);
+				if(useSign == 0)
+					intent.setClass(this, CloudDoorMainActivity.class);
+				else if(useSign == 1)
+					intent.setClass(this, VerifyGestureActivity.class);
 			}
 		}
 		Timer jump = new Timer();
@@ -75,23 +82,4 @@ public class LauncherActivity extends Activity {
 		return loadSid.getString("SID", null);
 	}
 	
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.launcher, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
 }
