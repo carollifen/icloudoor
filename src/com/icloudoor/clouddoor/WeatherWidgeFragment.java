@@ -1,5 +1,6 @@
 package com.icloudoor.clouddoor;
 
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -707,4 +708,19 @@ public class WeatherWidgeFragment extends Fragment {
 		return loadSid.getString("SID", null);
 	}
 
+	@Override
+    public void onDetach() {
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        super.onDetach();
+
+    }
+	
 }

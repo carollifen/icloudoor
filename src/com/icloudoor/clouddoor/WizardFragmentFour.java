@@ -1,5 +1,7 @@
 package com.icloudoor.clouddoor;
 
+import java.lang.reflect.Field;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -44,4 +46,18 @@ public class WizardFragmentFour extends Fragment {
 		return view;
 	}
 
+	@Override
+    public void onDetach() {
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        super.onDetach();
+
+    }
 }

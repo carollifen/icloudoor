@@ -3,6 +3,7 @@ package com.icloudoor.clouddoor;
 import com.jauker.widget.BadgeView;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -885,4 +886,19 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		long count = statement.simpleQueryForLong();
 		return count;
 	}
+	
+	@Override
+    public void onDetach() {
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        super.onDetach();
+
+    }
 }

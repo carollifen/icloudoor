@@ -1,5 +1,6 @@
 package com.icloudoor.clouddoor;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import android.os.Bundle;
@@ -152,5 +153,20 @@ public class WuyeFragment extends Fragment {
 		}
 		
 	}
+	
+	@Override
+    public void onDetach() {
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        super.onDetach();
+
+    }
 	
 }
