@@ -79,7 +79,7 @@ public class ForgetPwdComplete extends Activity implements TextWatcher{
 			@Override
 			public void onClick(View v) {
 				try {
-					registerURL = new URL(HOST + "/user/manage/createUser.do"
+					registerURL = new URL(HOST + "/user/manage/changePassword2.do"
 							+ "?sid=" + sid);
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
@@ -115,9 +115,6 @@ public class ForgetPwdComplete extends Activity implements TextWatcher{
 										Intent intent = new Intent();
 										intent.setClass(getApplicationContext(), Login.class);
 										startActivity(intent);
-									} else if (statusCode == -40) {
-										Toast.makeText(getApplicationContext(), R.string.phone_num_have_been_registerred,
-												Toast.LENGTH_SHORT).show();
 									} else if (statusCode == -41) {
 										Toast.makeText(getApplicationContext(), R.string.weak_pwd,
 												Toast.LENGTH_SHORT).show();
@@ -134,7 +131,7 @@ public class ForgetPwdComplete extends Activity implements TextWatcher{
 						protected Map<String, String> getParams()
 								throws AuthFailureError {
 							Map<String, String> map = new HashMap<String, String>();
-							map.put("password", confirmPwd);
+							map.put("newPassword", confirmPwd);
 							return map;
 						}
 					};
