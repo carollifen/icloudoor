@@ -180,40 +180,40 @@ public class KeyFragment extends Fragment implements ShakeListener {
 			
 		carDoorList = new ArrayList<HashMap<String, String>>();
 		manDoorList = new ArrayList<HashMap<String, String>>();
-		if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
-			if (DBCount() > 0) {
-				
-				BadgeView badge = new com.jauker.widget.BadgeView(getActivity());
-				badge.setTargetView(TvOpenKeyList);
-				badge.setBadgeGravity(Gravity.RIGHT);
-				badge.setBadgeCount((int)DBCount());//TODO
-				
-				Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME,
-						null);
-				if (mCursor.moveToFirst()) {
-					int deviceIdIndex = mCursor.getColumnIndex("deviceId");
-					int doorNamemIndex = mCursor.getColumnIndex("doorName");
-					int doorTypeIndex = mCursor.getColumnIndex("doorType");
-
-					do {
-						HashMap<String, String> temp = new HashMap<String, String>();
-						String deviceId = mCursor.getString(deviceIdIndex);
-						String doorName = mCursor.getString(doorNamemIndex);
-						String doorType = mCursor.getString(doorTypeIndex);
-
-						if (doorType.equals("2")) { // 可通行的车门列表，包括deviceId, doorName
-							temp.put("CDdeviceid", deviceId);
-							temp.put("CDdoorName", doorName);
-							carDoorList.add(temp);
-						} else if (doorType.equals("1")) { // 可通行的人门列表，包括deviceId, doorName
-							temp.put("MDdeviceid", deviceId);
-							temp.put("MDdoorName", doorName);
-							manDoorList.add(temp);
-						}
-					} while (mCursor.moveToNext());
-				}
-			}
-		}
+//		if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
+//			if (DBCount() > 0) {
+//				
+//				BadgeView badge = new com.jauker.widget.BadgeView(getActivity());
+//				badge.setTargetView(TvOpenKeyList);
+//				badge.setBadgeGravity(Gravity.RIGHT);
+//				badge.setBadgeCount((int)DBCount());//TODO
+//				
+//				Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME,
+//						null);
+//				if (mCursor.moveToFirst()) {
+//					int deviceIdIndex = mCursor.getColumnIndex("deviceId");
+//					int doorNamemIndex = mCursor.getColumnIndex("doorName");
+//					int doorTypeIndex = mCursor.getColumnIndex("doorType");
+//
+//					do {
+//						HashMap<String, String> temp = new HashMap<String, String>();
+//						String deviceId = mCursor.getString(deviceIdIndex);
+//						String doorName = mCursor.getString(doorNamemIndex);
+//						String doorType = mCursor.getString(doorTypeIndex);
+//
+//						if (doorType.equals("2")) { // 可通行的车门列表，包括deviceId, doorName
+//							temp.put("CDdeviceid", deviceId);
+//							temp.put("CDdoorName", doorName);
+//							carDoorList.add(temp);
+//						} else if (doorType.equals("1")) { // 可通行的人门列表，包括deviceId, doorName
+//							temp.put("MDdeviceid", deviceId);
+//							temp.put("MDdoorName", doorName);
+//							manDoorList.add(temp);
+//						}
+//					} while (mCursor.moveToNext());
+//				}
+//			}
+//		}
 
 		channelSwitch.setOnClickListener(new OnClickListener() {
 			@Override
@@ -265,6 +265,47 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		Log.e("TEST", "keyFragment onResume()");
+		
+		if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
+			if (DBCount() > 0) {
+				
+				BadgeView badge = new com.jauker.widget.BadgeView(getActivity());
+				badge.setTargetView(TvOpenKeyList);
+				badge.setBadgeGravity(Gravity.RIGHT);
+				badge.setBadgeCount((int)DBCount());//TODO
+				
+				Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME,
+						null);
+				if (mCursor.moveToFirst()) {
+					int deviceIdIndex = mCursor.getColumnIndex("deviceId");
+					int doorNamemIndex = mCursor.getColumnIndex("doorName");
+					int doorTypeIndex = mCursor.getColumnIndex("doorType");
+
+					do {
+						HashMap<String, String> temp = new HashMap<String, String>();
+						String deviceId = mCursor.getString(deviceIdIndex);
+						String doorName = mCursor.getString(doorNamemIndex);
+						String doorType = mCursor.getString(doorTypeIndex);
+
+						if (doorType.equals("2")) { // 可通行的车门列表，包括deviceId, doorName
+							temp.put("CDdeviceid", deviceId);
+							temp.put("CDdoorName", doorName);
+							carDoorList.add(temp);
+						} else if (doorType.equals("1")) { // 可通行的人门列表，包括deviceId, doorName
+							temp.put("MDdeviceid", deviceId);
+							temp.put("MDdoorName", doorName);
+							manDoorList.add(temp);
+						}
+					} while (mCursor.moveToNext());
+				}
+			}
+		}
+	}
+	
 	@Override
 	public void onPause() {
 		super.onPause();
