@@ -164,10 +164,8 @@ public class CloudDoorMainActivity extends FragmentActivity {
 			intent.setClass(getApplicationContext(), VerifyGestureActivity.class);
 			startActivity(intent);
 		}
-		
 	}
-	
-	
+ 
 	public class MyOnClickListener implements OnClickListener {
 		@Override
 		public void onClick(View view) {

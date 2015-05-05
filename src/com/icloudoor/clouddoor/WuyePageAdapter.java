@@ -16,7 +16,12 @@ public class WuyePageAdapter extends FragmentPagerAdapter{
 	
 	public WuyePageAdapter(FragmentManager fm, ArrayList<Fragment> FragmentList) {
 		super(fm);
-		this.mWuyePageFragmentList = FragmentList;
+		
+		if(FragmentList == null){
+			this.mWuyePageFragmentList = new ArrayList<Fragment>();
+		}else{
+			this.mWuyePageFragmentList = FragmentList;
+		}
 	}	
 
 	@Override

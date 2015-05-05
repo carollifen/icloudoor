@@ -10,6 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="Empty fragment, wait for opening" />
+        android:background="@drawable/add" />"
 
 </FrameLayout>
