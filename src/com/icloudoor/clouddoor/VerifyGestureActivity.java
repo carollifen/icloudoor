@@ -5,6 +5,7 @@ import com.icloudoor.clouddoor.SetGestureDrawLineView.SetGestureCallBack;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,11 +52,25 @@ public class VerifyGestureActivity extends Activity implements OnClickListener {
 			public void checkedSuccess() {
 				Toast.makeText(VerifyGestureActivity.this, R.string.sign_verify_success, Toast.LENGTH_SHORT).show();
 				
-				Intent intent = new Intent();
+				SharedPreferences homeKeyEvent = getSharedPreferences("HOMEKEY", 0);
+				int homePressed = homeKeyEvent.getInt("homePressed", 0);
+				
+				if(homePressed == 0){
+					Intent intent = new Intent();
 				intent.setClass(VerifyGestureActivity.this, CloudDoorMainActivity.class);
 				startActivity(intent);
 				
 				VerifyGestureActivity.this.finish();
+				} else {
+					homePressed = 0;
+					
+					Editor editor = homeKeyEvent.edit();
+					editor.putInt("homePressed", homePressed);
+					editor.commit();
+					
+					VerifyGestureActivity.this.finish();
+				}
+				
 			}
 
 			@Override
