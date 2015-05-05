@@ -25,7 +25,7 @@
                 android:id="@+id/wuye_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button_194"
+               
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
                 />
@@ -52,7 +52,7 @@
                 android:id="@+id/msg_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button_199"
+                
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
                 />
@@ -81,7 +81,7 @@
                 android:id="@+id/key_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button_203"
+                
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
                 />
@@ -110,7 +110,7 @@
                 android:id="@+id/set_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button_207"
+                
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
                 />
