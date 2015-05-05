@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ public class RegisterComplete extends Activity implements TextWatcher {
 	private URL registerURL;
 	private RequestQueue mQueue;
 	private String inputPwd, confirmPwd;
+	private RelativeLayout BtnBack;
 
 	private int statusCode;
 	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
@@ -59,6 +61,20 @@ public class RegisterComplete extends Activity implements TextWatcher {
 		ETInputPwd.addTextChangedListener(this);
 		ETConfirmPwd.addTextChangedListener(this);
 		
+		BtnBack = (RelativeLayout) findViewById(R.id.btn_back);
+		BtnBack.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent();
+				intent.setClass(getApplicationContext(), RegisterActivity.class);
+				startActivity(intent);
+				
+				RegisterComplete.this.finish();
+			}
+			
+		});
+				
 		sid = loadSid();
 		
 		TVRegiComplete.setOnClickListener(new OnClickListener() {

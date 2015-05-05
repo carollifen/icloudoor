@@ -67,6 +67,8 @@ public class ForgetPwdComplete extends Activity implements TextWatcher{
 				Intent intent = new Intent();
 				intent.setClass(getApplicationContext(), ForgetPwdActivity.class);
 				startActivity(intent);
+				
+				ForgetPwdComplete.this.finish();
 			}
 			
 		});

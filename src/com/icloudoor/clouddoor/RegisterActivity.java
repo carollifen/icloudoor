@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ public class RegisterActivity extends Activity implements TextWatcher {
 	private EditText ETInputCertiCode;
 	private URL requestCertiCodeURL, verifyCertiCodeURL;
 	private RequestQueue mQueue;
+	private RelativeLayout BtnBack;
 	
 	private TimeCount counter;
 
@@ -66,6 +68,16 @@ public class RegisterActivity extends Activity implements TextWatcher {
 		ETInputCertiCode.addTextChangedListener(this);
 		
 		sid = loadSid();
+		
+		BtnBack = (RelativeLayout) findViewById(R.id.btn_back);
+		BtnBack.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+			
+		});
 		
 		counter = new TimeCount(60000, 1000);
 		TVGetCertiCode.setOnClickListener(new OnClickListener() {
