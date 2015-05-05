@@ -127,7 +127,10 @@ public class ResetPwdActivity extends Activity implements TextWatcher {
 										intent.setClass(getApplicationContext(),
 												SettingDetailActivity.class);
 										startActivity(intent);
-									} else if (statusCode == -51) {
+									}else if (statusCode == -41) {
+										Toast.makeText(getApplicationContext(), R.string.weak_pwd,
+												Toast.LENGTH_SHORT).show();
+									}else if (statusCode == -51) {
 										Toast.makeText(getApplicationContext(), R.string.wrong_old_pwd,
 												Toast.LENGTH_SHORT).show();
 									}
