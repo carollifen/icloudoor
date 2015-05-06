@@ -57,6 +57,14 @@ public class Login extends Activity implements TextWatcher {
 
 	private String sid;
 	private int isLogin = 0;
+	
+	private int setPersonal;
+	
+	private String name;
+	private String nickname;
+	private String id;
+	private String birth;
+	private int sex, provinceId, cityId, districtId;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -168,7 +176,44 @@ public class Login extends Activity implements TextWatcher {
 									editor.commit();
 
 									Intent intent = new Intent();
-									intent.setClass(getApplicationContext(), CloudDoorMainActivity.class);
+									
+									SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
+									setPersonal = personalInfo.getInt("SETINFO", 0);
+									
+									
+									try {
+										JSONObject data = response.getJSONObject("data");
+										JSONObject info = data.getJSONObject("info");
+										
+										name = info.getString("userName");
+										nickname = info.getString("nickname");
+										id = info.getString("idCardNo");
+										birth = info.getString("birthday");
+										sex = info.getInt("sex");
+										provinceId = info.getInt("provinceId");
+										cityId = info.getInt("cityId");
+										districtId = info.getInt("districtId");
+										
+										editor.putString("NAME", name);
+										editor.putString("NICKNAME", nickname);
+										editor.putString("ID", id);
+										editor.putString("BIRTH", birth);
+										editor.putInt("PROVINCE", provinceId);
+										editor.putInt("CITY", cityId);
+										editor.putInt("DIS", districtId);
+										editor.commit();
+										
+									} catch (JSONException e) {
+										e.printStackTrace();
+									}					
+									
+									if(setPersonal == 1 || (!name.equals(null) && !nickname.equals(null) 
+											&& !id.equals(null) && !birth.equals(null))){
+										intent.setClass(getApplicationContext(), CloudDoorMainActivity.class);
+									} else{
+										intent.setClass(getApplicationContext(), SetPersonalInfo.class);
+									}
+									
 									startActivity(intent);
 
 									finish();

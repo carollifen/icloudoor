@@ -32,12 +32,12 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:text="个人信息"
+        android:text="修改"
         android:textColor="#000000"
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/save_person_info"
+        android:id="@+id/save_person_info_modify"
         android:layout_width="50dp"
         android:layout_height="40dp"
         android:layout_alignParentRight="true"

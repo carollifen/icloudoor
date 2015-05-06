@@ -39,5 +39,13 @@
     <string name="title_activity_verify_gesture">VerifyGestureActivity</string>
     <string name="sign_verify_success">手势密码正确</string>
     <string name="sign_verify_fail">手势密码输入错误，请重新输入</string>
+    <string name="wrong_params">参数错误</string>
+    <string name="plz_input_name">请输入姓名</string>
+    <string name="plz_input_nickname">请输入昵称</string>
+    <string name="plz_input_id">请输入身份证号码</string>
+    <string name="plz_input_birthday">请输入生日信息</string>
+    <string name="title_activity_show_personal_info">ShowPersonalInfo</string>
+    <string name="dot">&#183;</string>
+    <string name="title_activity_modify_personal_info">ModifyPersonalInfo</string>
 
 </resources>

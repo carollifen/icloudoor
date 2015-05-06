@@ -1,32 +1,28 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ecf0f7" >
+    android:background="#ecf0f7"  >
 
     <include
         android:layout_width="fill_parent"
         android:layout_height="40dp"
-        layout="@layout/title_bar_person_info" />
-
+        layout="@layout/title_bar_show_info" />
+    
     <ImageView
-        android:id="@+id/personal_AddPhoto"
+        android:id="@+id/personal_info_big_image"
+        android:layout_width="match_parent"
+        android:layout_height="195dp"
+        />
+    
+    <ImageView
+        android:id="@+id/personal_info_small_image"
         android:layout_width="90dp"
         android:layout_height="90dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="66.5dp"
         android:background="@drawable/icon_boy_110" />
-
-    <TextView
-        android:id="@+id/add_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="166dp"
-        android:text="添加图片"
-        android:textColor="#747f8d"
-        android:textSize="13sp" />
-
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="243dp"
@@ -53,15 +49,14 @@
                 android:textColor="#000000"
                 android:textSize="16sp" />
 
-            <EditText
-                android:id="@+id/personal_RealName"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/personal_info_name"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@null"
                 android:gravity="center_vertical"
-                android:hint="请填写真实名字"
-                android:textColorHint="#747f8d"
-                android:inputType="text" />"
+                android:text="显示姓名"
+                android:textSize="16sp"
+                android:textColor="#000000" />
         </LinearLayout>
 
         <View
@@ -83,15 +78,14 @@
                 android:textColor="#000000"
                 android:textSize="16sp" />
 
-            <EditText
-                android:id="@+id/personal_NickName"
+            <TextView
+                android:id="@+id/personal_info_NickName"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@null"
                 android:gravity="center_vertical"
-                android:hint="请输入昵称"
-                android:textColorHint="#747f8d"
-                android:inputType="text" />
+                android:text="显示昵称"
+                android:textSize="16sp"
+                android:textColor="#000000"/>
         </LinearLayout>
 
         <View
@@ -113,41 +107,23 @@
                 android:textSize="16sp" />
 
             <RelativeLayout
-                android:id="@+id/personal_sex"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_centerInParent="true" >
+                android:layout_marginLeft="110dp" >
 
                 <ImageView
-                    android:id="@+id/personal_SexMan"
+                    android:id="@+id/personal_info_sexImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:background="@drawable/sex_blue" />
 
                 <TextView
+                    android:id="@+id/personal_info_sexName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="7dp"
+                    android:layout_centerInParent="true"
                     android:text="男"
-                    android:textColor="#ffffff"
-                    android:textSize="16sp" />
-
-                <ImageView
-                    android:id="@+id/personal_SexWoman"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="75dp"
-                    android:background="@drawable/sex_gray" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="82dp"
-                    android:text="女"
                     android:textColor="#ffffff"
                     android:textSize="16sp" />
             </RelativeLayout>
@@ -171,27 +147,52 @@
                 android:text="住处"
                 android:textColor="#000000"
                 android:textSize="16sp" />
+            
+            <TextView
+                android:id="@+id/personal_info_province"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:gravity="center_vertical"
+                android:text="省"
+                android:textSize="16sp"
+                android:textColor="#000000" />
+            
+            <TextView
+                android:layout_width="10dp"
+                android:layout_height="48dp"
+                android:gravity="center"
+                android:text="@string/dot"
+                android:textSize="16sp"
+                android:textColor="#000000"
+                />
+            
+            <TextView
+                android:id="@+id/personal_info_city"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:gravity="center_vertical"
+                android:text="市"
+                android:textSize="16sp"
+                android:textColor="#000000" />
+            
+            <TextView
+                android:layout_width="10dp"
+                android:layout_height="48dp"
+                android:gravity="center"
+                android:text="@string/dot"
+                android:textSize="16sp"
+                android:textColor="#000000"
+                />
 
-            <Spinner
-                android:id="@+id/Addr_provice"
+            <TextView
+                android:id="@+id/personal_info_district"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                 />
-            
-            <Spinner
-                android:id="@+id/Addr_city"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                 />
-            
-            <Spinner
-                android:id="@+id/Addr_disctrict"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                 />
+                android:layout_height="48dp"
+                android:gravity="center_vertical"
+                android:text="区"
+                android:textSize="16sp"
+                android:textColor="#000000" />
+
 
         </LinearLayout>
 
@@ -214,54 +215,51 @@
                 android:textColor="#000000"
                 android:textSize="16sp" />
 
-            <EditText
-                android:id="@+id/personal_Year"
-                android:layout_width="55dp"
-                android:layout_height="match_parent"
-                android:background="@null"
-                android:gravity="center_vertical|center"
-                android:hint="yyyy"
-                android:inputType="date"
-                android:textColorHint="#747f8d" />
-
             <TextView
+                android:id="@+id/personal_info_year"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center_vertical"
+                android:gravity="center_vertical|center"
+                android:text="yyyy"
+                android:textSize="16sp"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
                 android:text="年"
                 android:textSize="16sp" />
 
-            <EditText
-                android:id="@+id/personal_Month"
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:background="@null"
-                android:gravity="center_vertical|center"
-                android:hint="mm"
-                android:inputType="date"
-                android:textColorHint="#747f8d" />
-
             <TextView
+                android:id="@+id/personal_info_month"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center_vertical"
+                android:gravity="center_vertical|center"
+                android:text="mm"
+                android:textSize="16sp"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
                 android:text="月"
                 android:textSize="16sp" />
 
-            <EditText
-                android:id="@+id/personal_Day"
-                android:layout_width="40dp"
-                android:layout_height="match_parent"
-                android:background="@null"
-                android:gravity="center_vertical|center"
-                android:hint="dd"
-                android:inputType="date"
-                android:textColorHint="#747f8d" />
-
             <TextView
+                android:id="@+id/personal_info_day"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center_vertical"
+                android:gravity="center_vertical|center"
+                android:text="dd"
+                android:textSize="16sp"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
                 android:text="日"
                 android:textSize="16sp" />
 
@@ -299,14 +297,14 @@
                 android:textColor="#000000"
                 android:textSize="16sp" />
 
-            <EditText
-                android:id="@+id/personal_ID"
+            <TextView
+                android:id="@+id/personal_info_ID"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@null"
                 android:gravity="center_vertical"
-                android:hint="必填，只供个人查看"
-                android:textColorHint="#747f8d" />
+                android:text="123456789123456789"
+                android:textColor="#000000"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <View
@@ -314,5 +312,6 @@
             android:layout_height="0.5dp"
             android:background="#bdc7d4" />
     </LinearLayout>
+    
 
 </RelativeLayout>

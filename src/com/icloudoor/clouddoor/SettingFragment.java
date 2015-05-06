@@ -34,9 +34,14 @@ public class SettingFragment extends Fragment {
 	private RelativeLayout RLSig;
 	private RelativeLayout RLShare;
 	private RelativeLayout RLUpdate;
+	private RelativeLayout showInfo;
 
 	private TextView logOut;
-	private TextView toShowPersonalInfo;
+	
+	private TextView showName;
+	private TextView showPhoneNum;
+	private String name;
+	private String phone;
 
 	private MyOnClickListener myClickListener;
 
@@ -57,17 +62,24 @@ public class SettingFragment extends Fragment {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.set_page, container, false);
 
+		mQueue = Volley.newRequestQueue(getActivity());
 		myClickListener = new MyOnClickListener();
 
-		mQueue = Volley.newRequestQueue(getActivity());
-		sid = loadSid();
-
+		showInfo = (RelativeLayout) view.findViewById(R.id.btn_show_personal_info);
 		RLSet = (RelativeLayout) view.findViewById(R.id.btn_set);
 		RLSig = (RelativeLayout) view.findViewById(R.id.btn_sig);
 		RLShare = (RelativeLayout) view.findViewById(R.id.btn_share);
 		RLUpdate = (RelativeLayout) view.findViewById(R.id.btn_update);
-
-		toShowPersonalInfo = (TextView) view.findViewById(R.id.toshow_personal_info_in_set);
+		showName = (TextView) view.findViewById(R.id.show_name);
+		showPhoneNum = (TextView) view.findViewById(R.id.show_phoneNum);
+		
+		SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);	
+		phone = loginStatus.getString("PHONENUM", null);	
+		name = loginStatus.getString("NAME", null);
+		changeNum();
+		showPhoneNum.setText(phone);
+		showName.setText(name);
+		
 		logOut = (TextView) view.findViewById(R.id.btn_logout);
 
 		RLSet.setOnClickListener(myClickListener);
@@ -75,7 +87,7 @@ public class SettingFragment extends Fragment {
 		RLShare.setOnClickListener(myClickListener);
 		RLUpdate.setOnClickListener(myClickListener);
 
-		toShowPersonalInfo.setOnClickListener(myClickListener);
+		showInfo.setOnClickListener(myClickListener);
 		logOut.setOnClickListener(myClickListener);
 
 		return view;
@@ -86,23 +98,28 @@ public class SettingFragment extends Fragment {
 		@Override
 		public void onClick(View v) {
 			switch (v.getId()) {
-			case R.id.toshow_personal_info_in_set:
-				break;
-			case R.id.btn_set:
+			case R.id.btn_show_personal_info:
 				Intent intent = new Intent();
-				intent.setClass(getActivity(), SettingDetailActivity.class);
+				intent.setClass(getActivity(), ShowPersonalInfo.class);
 				startActivity(intent);
 				break;
-			case R.id.btn_sig:
+			case R.id.btn_set:
 				Intent intent1 = new Intent();
-				intent1.setClass(getActivity(), SignActivity.class);
+				intent1.setClass(getActivity(), SettingDetailActivity.class);
 				startActivity(intent1);
+				break;
+			case R.id.btn_sig:
+				Intent intent2 = new Intent();
+				intent2.setClass(getActivity(), SignActivity.class);
+				startActivity(intent2);
 				break;
 			case R.id.btn_share:
 				break;
 			case R.id.btn_update:
 				break;
-			case R.id.btn_logout:
+			case R.id.btn_logout:			
+				sid = loadSid();
+				
 				try {
 					logOutURL = new URL(HOST + "/user/manage/logout.do"
 							+ "?sid=" + sid);
@@ -128,9 +145,9 @@ public class SettingFragment extends Fragment {
 									Editor editor1 = loginStatus.edit();
 									editor1.putInt("LOGIN", isLogin);
 									editor1.commit();
-									Intent intent2 = new Intent();
-									intent2.setClass(getActivity(), Login.class);
-									startActivity(intent2);
+									Intent intent3 = new Intent();
+									intent3.setClass(getActivity(), Login.class);
+									startActivity(intent3);
 									
 									CloudDoorMainActivity mainActivity = (CloudDoorMainActivity) getActivity();
 									mainActivity.finish();
@@ -152,6 +169,17 @@ public class SettingFragment extends Fragment {
 
 	}
 
+	public void changeNum(){
+		if(phone != null){	
+			StringBuilder sb = new StringBuilder(phone); 
+			sb.setCharAt(3, '*');
+			sb.setCharAt(4, '*');
+			sb.setCharAt(5, '*'); 
+			sb.setCharAt(6, '*');
+			phone = sb.toString();
+		}
+	}
+	
 	public void saveSid(String sid) {
 		SharedPreferences savedSid = getActivity().getSharedPreferences(
 				"SAVEDSID", 0);
