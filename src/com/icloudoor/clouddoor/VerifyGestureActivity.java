@@ -58,8 +58,8 @@ public class VerifyGestureActivity extends Activity implements OnClickListener {
 				
 				if(homePressed == 0){
 					Intent intent = new Intent();
-				intent.setClass(VerifyGestureActivity.this, CloudDoorMainActivity.class);
-				startActivity(intent);
+					intent.setClass(VerifyGestureActivity.this, CloudDoorMainActivity.class);
+					startActivity(intent);
 				
 				VerifyGestureActivity.this.finish();
 				} else {
@@ -68,6 +68,10 @@ public class VerifyGestureActivity extends Activity implements OnClickListener {
 					Editor editor = homeKeyEvent.edit();
 					editor.putInt("homePressed", homePressed);
 					editor.commit();
+					
+					Intent intent = new Intent();
+					intent.setClass(VerifyGestureActivity.this, CloudDoorMainActivity.class);
+					startActivity(intent);
 					
 					VerifyGestureActivity.this.finish();
 				}
