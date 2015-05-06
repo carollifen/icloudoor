@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -104,4 +105,17 @@ public class VerifyGestureActivity extends Activity implements OnClickListener {
 		SharedPreferences loadSign = getSharedPreferences("SAVESIGN", 0);
 		return loadSign.getString("SIGN", null);
 	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (event.getAction() == KeyEvent.ACTION_DOWN
+				&& KeyEvent.KEYCODE_BACK == keyCode) {
+			Intent intent = new Intent();
+			intent.addCategory(Intent.CATEGORY_HOME);
+			intent.setAction(Intent.ACTION_MAIN);
+			startActivity(intent);
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
 }
