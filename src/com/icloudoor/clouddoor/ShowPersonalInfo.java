@@ -258,6 +258,12 @@ public class ShowPersonalInfo extends Activity {
 							} catch (JSONException e) {
 								e.printStackTrace();
 							}
+						}else if (statusCode == -1) {
+							Toast.makeText(getApplicationContext(), R.string.wrong_params, Toast.LENGTH_SHORT).show();
+						} else if (statusCode == -2) {
+							Toast.makeText(getApplicationContext(), R.string.not_login, Toast.LENGTH_SHORT).show();
+						} else if (statusCode == -99) {
+							Toast.makeText(getApplicationContext(), R.string.unknown_err, Toast.LENGTH_SHORT).show();
 						}
 					}
 				}, new Response.ErrorListener() {
