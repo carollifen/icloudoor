@@ -69,9 +69,9 @@ public class VerifyGestureActivity extends Activity implements OnClickListener {
 					editor.putInt("homePressed", homePressed);
 					editor.commit();
 					
-					Intent intent = new Intent();
-					intent.setClass(VerifyGestureActivity.this, CloudDoorMainActivity.class);
-					startActivity(intent);
+//					Intent intent = new Intent();
+//					intent.setClass(VerifyGestureActivity.this, CloudDoorMainActivity.class);
+//					startActivity(intent);
 					
 					VerifyGestureActivity.this.finish();
 				}
