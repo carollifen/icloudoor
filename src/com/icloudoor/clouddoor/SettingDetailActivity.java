@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -170,4 +171,22 @@ public class SettingDetailActivity extends Activity {
 		}
 		
 	}
+	
+	@Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) { //按下的如果是BACK，同时没有重复
+            //do something here
+            SharedPreferences setting = getSharedPreferences("SETTING",
+                    MODE_PRIVATE);
+            Editor editor = setting.edit();
+            editor.putInt("chooseCar", switchToCar);
+            editor.putInt("disturb", canDisturb);
+            editor.putInt("sound", haveSound);
+            editor.putInt("shake", canShake);
+            editor.commit();
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }
