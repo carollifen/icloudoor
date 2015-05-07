@@ -290,7 +290,7 @@ public class KeyList extends Activity{
 					JSONObject L1DoorsData = (JSONObject) L1Doors.get(L1DoorIndex);
 
 					ContentValues valuesL1 = new ContentValues();			
-					if (L1DoorsData.getString("deviceId") != null) {
+					if (L1DoorsData.getString("deviceId").length() > 0) {
 //						mapL1.put("DoorName", L1ZoneName+L1DoorsData.getString("doorName"));
 //						mapL1.put("DoorId", L1DoorsData.getString("doorId"));
 //						mapL1.put("DeviceId", L1DoorsData.getString("deviceId"));
@@ -332,7 +332,7 @@ public class KeyList extends Activity{
 						JSONObject L2DoorsData = (JSONObject) L2Doors.get(L2DoorIndex);
 
 						ContentValues valuesL2 = new ContentValues();
-						if (L2DoorsData.getString("deviceId") != null) {
+						if (L2DoorsData.getString("deviceId").length() > 0) {
 //								mapL2.put("DoorName", L1ZoneName+L2ZoneName+L2DoorsData.getString("doorName"));
 //								mapL2.put("DoorId", L2DoorsData.getString("doorId"));
 //								mapL2.put("DeviceId", L2DoorsData.getString("deviceId"));
@@ -371,7 +371,7 @@ public class KeyList extends Activity{
 							JSONObject L3DoorsData = (JSONObject) L3Doors.get(L3DoorIndex);
 
 							ContentValues valuesL3 = new ContentValues();
-							if (L3DoorsData.getString("deviceId") != null) {
+							if (L3DoorsData.getString("deviceId").length() > 0) {
 //									mapL3.put("DoorName", L1ZoneName+L2ZoneName+L3ZoneName+L3DoorsData.getString("doorName"));
 //									mapL3.put("DoorId", L3DoorsData.getString("doorId"));
 //									mapL3.put("DeviceId", L3DoorsData.getString("deviceId"));
