@@ -3,6 +3,7 @@ package com.icloudoor.clouddoor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -62,7 +63,16 @@ public class WuyeFragment extends Fragment {
 		BtnLianxiwuye.setOnClickListener(myClick);
 		BtnNotice.setOnClickListener(myClick);
 		BtnFix.setOnClickListener(myClick);
-		BtnBad.setOnClickListener(myClick);
+		BtnBad.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent();
+				intent.setClass(getActivity(), TestWebViewActivity.class);
+				startActivity(intent);
+			}
+			
+		});
 		BtnGood.setOnClickListener(myClick);
 		BtnQuery.setOnClickListener(myClick);
 		BtnBill.setOnClickListener(myClick);
@@ -138,8 +148,8 @@ public class WuyeFragment extends Fragment {
 				break;
 			case R.id.btn_fix:
 				break;
-			case R.id.btn_bad:
-				break;
+//			case R.id.btn_bad:
+//				break;
 			case R.id.btn_good:
 				break;
 			case R.id.btn_query:

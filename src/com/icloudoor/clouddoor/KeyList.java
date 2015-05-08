@@ -40,6 +40,7 @@ import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -76,17 +77,17 @@ public class KeyList extends Activity{
 	private int isLogin;
 
 	// Door info variable
-	ListView mKeyList;
-	KeyListAdapter mAdapter;
-	ArrayList<HashMap<String, String>> doorNameList;
-	String L1ZoneName;
-	String L1ZoneID;
-	String L2ZoneName;
-	String L2ZoneID;
-	String L3ZoneName;
-	String L3ZoneID;
-	String[] carNums;
-
+	private ListView mKeyList;
+	private KeyListAdapter mAdapter;
+	private ArrayList<HashMap<String, String>> doorNameList;
+	private String L1ZoneName;
+	private String L1ZoneID;
+	private String L2ZoneName;
+	private String L2ZoneID;
+	private String L3ZoneName;
+	private String L3ZoneID;
+	private String[] carNums;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -203,9 +204,9 @@ public class KeyList extends Activity{
 		mQueue.add(mJsonRequest);
 		
 		if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
-			Log.e("TESTTESTDB", "have the table");
+			Log.e("TESTTESTDBDB", "have the table");
 			if (DBCount() > 0) {
-				Log.e("TESTTESTDB", "table is not empty");
+				Log.e("TESTTESTDBDB", "table is not empty");
 				Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME, null);
 				if (mCursor.moveToFirst()) {
 
@@ -228,12 +229,12 @@ public class KeyList extends Activity{
 						String doorType = mCursor.getString(doorTypeIndex);
 						String authType = mCursor.getString(authTypeIndex);
 
-						Log.e("TESTTESTDB deviceId =", deviceId);
-						Log.e("TESTTESTDB doorName =", doorName);
-						Log.e("TESTTESTDB authFrom =", authFrom);
-						Log.e("TESTTESTDB authTo =", authTo);
-						Log.e("TESTTESTDB doorType =", doorType);
-						Log.e("TESTTESTDB authType =", authType);
+						Log.e("TESTTESTDBDB deviceId =", deviceId);
+						Log.e("TESTTESTDBDB doorName =", doorName);
+						Log.e("TESTTESTDBDB authFrom =", authFrom);
+						Log.e("TESTTESTDBDB authTo =", authTo);
+						Log.e("TESTTESTDBDB doorType =", doorType);
+						Log.e("TESTTESTDBDB authType =", authType);
 
 						HashMap<String, String> keyFromDB = new HashMap<String, String>();
 						keyFromDB.put("Door", doorName);
@@ -272,6 +273,104 @@ public class KeyList extends Activity{
 	 */
 	public void parseKeyData(JSONObject response) {
 		ArrayList<HashMap<String, String>> doorNameList = new ArrayList<HashMap<String, String>>();
+		
+		//TODO delete the none key
+//		if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
+//			if (DBCount() > 0) {
+//				try {
+//					JSONArray dataArray = response.getJSONArray("data"); // 得到"data"这个array
+//					
+//					for (int indexL1 = 0; indexL1 < dataArray.length(); indexL1++) {
+//						JSONObject L1Data = (JSONObject) dataArray.get(indexL1); // 得到里面的具体object--第i层的具体数据
+//
+//						/*
+//						 * 第一层L1：小区级别钥匙信息
+//						 */
+//						L1ZoneName = L1Data.getString("zoneName"); 
+//						L1ZoneID = L1Data.getString("zoneId");
+//						JSONArray L1Doors = L1Data.getJSONArray("doors");
+//						for (int L1DoorIndex = 0; L1DoorIndex < L1Doors.length(); L1DoorIndex++) {
+//							HashMap<String, String> mapL1 = new HashMap<String, String>();
+//							JSONObject L1DoorsData = (JSONObject) L1Doors.get(L1DoorIndex);
+//
+//							if (L1DoorsData.getString("deviceId").length() > 0) {
+//								mapL1.put("DeviceId", L1DoorsData.getString("deviceId"));
+//								doorNameList.add(mapL1);
+//							}
+//						}
+//						
+//						/*
+//						 * 第二层L2：园区级别钥匙信息
+//						 */
+//						JSONArray L2DataArray = L1Data.getJSONArray("zones"); 
+//						for(int indexL2 = 0; indexL2 < L2DataArray.length(); indexL2++){
+//							
+//							JSONObject L2Data =  (JSONObject) L2DataArray.get(indexL2);
+//							L2ZoneName = L2Data.getString("zoneName");
+//							L2ZoneID = L2Data.getString("zoneId");
+//							JSONArray L2Doors = L2Data.getJSONArray("doors");
+//							for (int L2DoorIndex = 0; L2DoorIndex < L2Doors.length(); L2DoorIndex++) {
+//								HashMap<String, String> mapL2 = new HashMap<String, String>();
+//								JSONObject L2DoorsData = (JSONObject) L2Doors.get(L2DoorIndex);
+//
+//								if (L2DoorsData.getString("deviceId").length() > 0) {
+//									mapL2.put("DeviceId", L2DoorsData.getString("deviceId"));
+//									doorNameList.add(mapL2);
+//								}
+//							}
+//							
+//							/*
+//							 * 第三层L3：楼栋级别钥匙信息
+//							 */
+//							JSONArray L3DataArray = L2Data.getJSONArray("zones");
+//							for(int indexL3 = 0; indexL3 < L3DataArray.length(); indexL3++){
+//								JSONObject L3Data =  (JSONObject) L3DataArray.get(indexL3);
+//								L3ZoneName = L3Data.getString("zoneName");
+//								L3ZoneID = L3Data.getString("zoneId");
+//								JSONArray L3Doors = L3Data.getJSONArray("doors");
+//								for (int L3DoorIndex = 0; L3DoorIndex < L3Doors.length(); L3DoorIndex++) {
+//									HashMap<String, String> mapL3 = new HashMap<String, String>();
+//									JSONObject L3DoorsData = (JSONObject) L3Doors.get(L3DoorIndex);
+//
+//									if (L3DoorsData.getString("deviceId").length() > 0) {
+//										mapL3.put("DeviceId", L3DoorsData.getString("deviceId"));
+//										doorNameList.add(mapL3);
+//									}
+//								}
+//							}
+//						}
+//					}
+//
+//				} catch (JSONException e) {
+//					e.printStackTrace();
+//				}
+//				
+//				Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME, null); 
+//				if (mCursor.moveToFirst()) {
+//					int deviceIdIndex = mCursor.getColumnIndex("deviceId");
+//					do{
+//						String deviceId = mCursor.getString(deviceIdIndex);
+//						boolean haveKey = false;
+//						for(int a = 0; a < doorNameList.size(); a++){
+//							if(doorNameList.get(a).get("DeviceId").equals(deviceId)){
+//								haveKey = true;
+//								break;
+//							}
+//						}
+//						
+//						if(!haveKey){
+////							mKeyDB.delete(TABLE_NAME, "deviceId = ", new String[]{deviceId});
+//						}
+//						
+//						
+//						
+//					}while(mCursor.moveToNext());
+//				}
+//				mCursor.close();
+//			}
+//		}
+		//TODO delete the none key
+		
 
 		try {
 			JSONArray dataArray = response.getJSONArray("data"); // 得到"data"这个array
@@ -529,4 +628,5 @@ public class KeyList extends Activity{
 		}
 		return hasData;
 	}
+	
 }

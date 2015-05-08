@@ -1,12 +1,36 @@
 package com.icloudoor.clouddoor;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.ByteArrayBody;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
@@ -19,7 +43,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -50,6 +78,9 @@ public class ModifyPersonalInfo extends Activity {
 	private TextView TVday;
 	private TextView TVid;
 	
+	private TextView addImage;
+	private ImageView showImage;
+	
 	private String name, province, city, district, year, month, day, id, nickname, birthday;
 	private int sex, provinceId, cityId, districtId;
 	
@@ -58,6 +89,8 @@ public class ModifyPersonalInfo extends Activity {
 	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
 	private String sid;
 	private int statusCode;
+	
+	private boolean newTakePic = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +109,7 @@ public class ModifyPersonalInfo extends Activity {
 		TVmonth = (TextView) findViewById(R.id.personal_info_month);
 		TVday = (TextView) findViewById(R.id.personal_info_day);
 		TVid = (TextView) findViewById(R.id.personal_info_ID);
-		
+				
 		SharedPreferences loadProfile = getSharedPreferences("PROFILE", MODE_PRIVATE);
 		name = loadProfile.getString("NAME", null);
 		sex = loadProfile.getInt("SEX", 1);
@@ -118,6 +151,19 @@ public class ModifyPersonalInfo extends Activity {
 			
 		});
 		
+		addImage = (TextView) findViewById(R.id.add_image);
+		showImage = (ImageView) findViewById(R.id.personal_modifyPhoto);
+		addImage.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent();
+				intent.setClass(ModifyPersonalInfo.this, TakePictureActivity.class);	
+				startActivity(intent);
+			}
+			
+		});
+		
 		saveModify = (TextView) findViewById(R.id.save_person_info_modify);
 		
 		sid = loadSid();
@@ -134,6 +180,7 @@ public class ModifyPersonalInfo extends Activity {
 			@Override
 			public void onClick(View v) {	
 				
+				//upload profile
 				nickname = ETnickname.getText().toString();
 				birthday = year + "-" + month + "-" + day;				
 				MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
@@ -195,10 +242,97 @@ public class ModifyPersonalInfo extends Activity {
 				}else{
 					mQueue.add(mJsonRequest);
 				}
+				  
 			}	
 			
 		});
 	}
+	
+	//TODO
+	@Override
+	public void onResume() {
+		super.onResume();
+		
+		SharedPreferences takePic = getSharedPreferences("TAKPIC", 0);
+		if(takePic.getInt("TAKEN", 0) == 1){
+			
+			Editor editor = takePic.edit();
+			editor.putInt("TAKEN", 0);
+			editor.commit();
+			
+			List<File> mList = new ArrayList<File>();
+			String url = Environment.getExternalStorageDirectory().toString()+"/Cloudoor/ImageIcon";
+			File albumdir = new File(url);
+			File[] imgfile = albumdir.listFiles(filefiter);
+			int len = imgfile.length;
+			for(int i=0;i<len;i++){
+				mList.add(imgfile[i]);
+			}
+			Collections.sort(mList, new FileComparator());
+			
+			Log.e("TESt", mList.get(0).getAbsolutePath());
+			
+			Bitmap bm = BitmapFactory.decodeFile(mList.get(0).getAbsolutePath());
+			showImage.setImageBitmap(bm);
+			
+			//uploading image
+					
+//			HttpClient httpClient = new DefaultHttpClient();
+//			HttpPost postRequest = new HttpPost(HOST + "/user/api/uploadPortrait.do" + "?sid=" + sid);
+//			
+//			MultipartEntityBuilder builder = MultipartEntityBuilder.create(); 
+//			builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+//			FileBody fileBody = new FileBody(new File(mList.get(0).getAbsolutePath()));
+//			builder.addPart("portrait", fileBody); 
+//			HttpEntity entity = builder.build();
+//			postRequest.setEntity(entity);
+//			
+//			try {
+//				HttpResponse response = httpClient.execute(postRequest);
+//				BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
+//				String sResponse;
+//				StringBuilder s = new StringBuilder();
+//				while ((sResponse = reader.readLine()) != null) {
+//					s = s.append(sResponse);
+//				}	
+//				Log.e("TEst", s.toString());
+//			} catch (ClientProtocolException e) {
+//				e.printStackTrace();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+
+//			newTakePic = true;
+
+		}	
+	}
+	
+	private FileFilter filefiter = new FileFilter(){
+
+		@Override
+		public boolean accept(File pathname) {
+			String tmp = pathname.getName().toLowerCase();
+			
+			if(tmp.endsWith(".png")||tmp.endsWith(".jpg") ||tmp.endsWith(".jpeg")){
+				return true;
+			}
+			return false;
+		}
+		
+	};
+	
+	private class FileComparator implements Comparator<File>{
+
+		@Override
+		public int compare(File lhs, File rhs) {
+			if(lhs.lastModified()<rhs.lastModified()){
+				return 1;    //最后修改的照片在前
+			}else 
+				return -1;
+		}
+		
+	};
+	
 	
 	public void saveSid(String sid) {
 		SharedPreferences savedSid = getSharedPreferences("SAVEDSID",
@@ -212,5 +346,11 @@ public class ModifyPersonalInfo extends Activity {
 		SharedPreferences loadSid = getSharedPreferences("SAVEDSID", 0);
 		return loadSid.getString("SID", null);
 	}	
+	
+	public String loadUUID(){
+		SharedPreferences loadUUID = getSharedPreferences("SAVEDUUID",
+				MODE_PRIVATE);
+		return loadUUID.getString("UUID", null);
+	}
 
 }
