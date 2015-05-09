@@ -65,6 +65,8 @@ public class Login extends Activity implements TextWatcher {
 	private String id;
 	private String birth;
 	private int sex, provinceId, cityId, districtId;
+	private String portraitUrl, userId;
+	private int userStatus;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -194,6 +196,10 @@ public class Login extends Activity implements TextWatcher {
 										cityId = info.getInt("cityId");
 										districtId = info.getInt("districtId");
 										
+										portraitUrl = info.getString("portraitUrl");
+										userId = info.getString("userId");
+										userStatus = info.getInt("userStatus");
+										
 										editor.putString("NAME", name);
 										editor.putString("NICKNAME", nickname);
 										editor.putString("ID", id);
@@ -201,6 +207,9 @@ public class Login extends Activity implements TextWatcher {
 										editor.putInt("PROVINCE", provinceId);
 										editor.putInt("CITY", cityId);
 										editor.putInt("DIS", districtId);
+										editor.putString("URL", portraitUrl);
+										editor.putString("USERID", userId);
+										editor.putInt("STATUS", userStatus);
 										editor.commit();
 										
 									} catch (JSONException e) {

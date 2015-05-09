@@ -4,10 +4,12 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,13 +22,13 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.FileBody;
@@ -38,6 +40,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.Request.Method;
 import com.android.volley.toolbox.Volley;
+import com.icloudoor.clouddoor.Entities.FilePart;
+import com.icloudoor.clouddoor.Entities.MultipartEntity;
+import com.icloudoor.clouddoor.Entities.Part;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -48,11 +53,14 @@ import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.URLUtil;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -90,7 +98,15 @@ public class ModifyPersonalInfo extends Activity {
 	private String sid;
 	private int statusCode;
 	
-	private boolean newTakePic = false;
+	private List<File> mList;
+	
+	private String portraitUrl;
+	
+	private Bitmap bitmap;
+	private Thread mThread;
+	
+	private static final int MSG_SUCCESS = 0;// 获取图片成功的标识
+	private static final int MSG_FAILURE = 1;// 获取图片失败的标识
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -109,37 +125,6 @@ public class ModifyPersonalInfo extends Activity {
 		TVmonth = (TextView) findViewById(R.id.personal_info_month);
 		TVday = (TextView) findViewById(R.id.personal_info_day);
 		TVid = (TextView) findViewById(R.id.personal_info_ID);
-				
-		SharedPreferences loadProfile = getSharedPreferences("PROFILE", MODE_PRIVATE);
-		name = loadProfile.getString("NAME", null);
-		sex = loadProfile.getInt("SEX", 1);
-		province = loadProfile.getString("PROVINCE", null);
-		city = loadProfile.getString("CITY", null);
-		district = loadProfile.getString("DISTRICT", null);
-		year = loadProfile.getString("YEAR", "2015");
-		month = loadProfile.getString("MONTH", "03");
-		day = loadProfile.getString("DAY", "30");
-		id = loadProfile.getString("ID", null);
-		
-		provinceId = loadProfile.getInt("PROVINCEID", 000000);
-		cityId = loadProfile.getInt("CITYID", 000000);
-		districtId = loadProfile.getInt("DISTRICTID", 000000);
-		
-		TVname.setText(name);
-		if(sex == 1){
-			TVsex.setText("男");
-			IVsexImage.setImageResource(R.drawable.sex_blue);
-		}else if(sex == 2){
-			TVsex.setText("女");
-			IVsexImage.setImageResource(R.drawable.sex_red);
-		}
-		TVprovince.setText(province);
-		TVcity.setText(city);
-		TVdistrict.setText(district);
-		TVyear.setText(year);
-		TVmonth.setText(month);
-		TVday.setText(day);
-		TVid.setText(id);
 		
 		back = (RelativeLayout) findViewById(R.id.btn_back);
 		back.setOnClickListener(new OnClickListener(){
@@ -242,7 +227,57 @@ public class ModifyPersonalInfo extends Activity {
 				}else{
 					mQueue.add(mJsonRequest);
 				}
-				  
+				 
+				// uploading image with a new thread
+				new Thread() {
+
+					@Override
+					public void run() {
+
+						HttpClient httpClient = new DefaultHttpClient();
+						HttpPost postRequest = new HttpPost(HOST
+								+ "/user/api/uploadPortrait.do" + "?sid=" + sid);
+
+						File file = null;
+						if (URLUtil.isFileUrl(mList.get(0).getAbsolutePath())) {
+							file = new File(URI.create(mList.get(0)
+									.getAbsolutePath()));
+						} else {
+							file = new File(mList.get(0).getAbsolutePath());
+						}
+						Part[] parts = null;
+						FilePart filePart = null;
+						try {
+							filePart = new FilePart("portrait", file);
+						} catch (FileNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+						parts = new Part[] { filePart };
+
+						postRequest.setEntity(new MultipartEntity(parts));
+						try {
+							HttpResponse response = httpClient
+									.execute(postRequest);
+							BufferedReader reader = new BufferedReader(
+									new InputStreamReader(response.getEntity()
+											.getContent(), "UTF-8"));
+							String sResponse;
+							StringBuilder s = new StringBuilder();
+							while ((sResponse = reader.readLine()) != null) {
+								s = s.append(sResponse);
+							}
+							Log.e("TEst StringBuilder", s.toString());
+						} catch (ClientProtocolException e) {
+							e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+
+				}.start();
+				 
 			}	
 			
 		});
@@ -253,6 +288,37 @@ public class ModifyPersonalInfo extends Activity {
 	public void onResume() {
 		super.onResume();
 		
+		SharedPreferences loadProfile = getSharedPreferences("PROFILE", MODE_PRIVATE);
+		name = loadProfile.getString("NAME", null);
+		sex = loadProfile.getInt("SEX", 1);
+		province = loadProfile.getString("PROVINCE", null);
+		city = loadProfile.getString("CITY", null);
+		district = loadProfile.getString("DISTRICT", null);
+		year = loadProfile.getString("YEAR", "2015");
+		month = loadProfile.getString("MONTH", "03");
+		day = loadProfile.getString("DAY", "30");
+		id = loadProfile.getString("ID", null);
+		
+		provinceId = loadProfile.getInt("PROVINCEID", 000000);
+		cityId = loadProfile.getInt("CITYID", 000000);
+		districtId = loadProfile.getInt("DISTRICTID", 000000);
+		
+		TVname.setText(name);
+		if(sex == 1){
+			TVsex.setText("男");
+			IVsexImage.setImageResource(R.drawable.sex_blue);
+		}else if(sex == 2){
+			TVsex.setText("女");
+			IVsexImage.setImageResource(R.drawable.sex_red);
+		}
+		TVprovince.setText(province);
+		TVcity.setText(city);
+		TVdistrict.setText(district);
+		TVyear.setText(year);
+		TVmonth.setText(month);
+		TVday.setText(day);
+		TVid.setText(id);
+		
 		SharedPreferences takePic = getSharedPreferences("TAKPIC", 0);
 		if(takePic.getInt("TAKEN", 0) == 1){
 			
@@ -260,7 +326,7 @@ public class ModifyPersonalInfo extends Activity {
 			editor.putInt("TAKEN", 0);
 			editor.commit();
 			
-			List<File> mList = new ArrayList<File>();
+			mList = new ArrayList<File>();
 			String url = Environment.getExternalStorageDirectory().toString()+"/Cloudoor/ImageIcon";
 			File albumdir = new File(url);
 			File[] imgfile = albumdir.listFiles(filefiter);
@@ -275,37 +341,53 @@ public class ModifyPersonalInfo extends Activity {
 			Bitmap bm = BitmapFactory.decodeFile(mList.get(0).getAbsolutePath());
 			showImage.setImageBitmap(bm);
 			
-			//uploading image
-					
-//			HttpClient httpClient = new DefaultHttpClient();
-//			HttpPost postRequest = new HttpPost(HOST + "/user/api/uploadPortrait.do" + "?sid=" + sid);
-//			
-//			MultipartEntityBuilder builder = MultipartEntityBuilder.create(); 
-//			builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-//			FileBody fileBody = new FileBody(new File(mList.get(0).getAbsolutePath()));
-//			builder.addPart("portrait", fileBody); 
-//			HttpEntity entity = builder.build();
-//			postRequest.setEntity(entity);
-//			
-//			try {
-//				HttpResponse response = httpClient.execute(postRequest);
-//				BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-//				String sResponse;
-//				StringBuilder s = new StringBuilder();
-//				while ((sResponse = reader.readLine()) != null) {
-//					s = s.append(sResponse);
-//				}	
-//				Log.e("TEst", s.toString());
-//			} catch (ClientProtocolException e) {
-//				e.printStackTrace();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-
-//			newTakePic = true;
-
-		}	
+			} else {
+				SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", 0);
+				portraitUrl = loginStatus.getString("URL", null);
+				
+				if (mThread == null) {
+					mThread = new Thread(runnable);
+					mThread.start();
+				}
+			}
 	}
+	
+	private Handler mHandler = new Handler() {
+		// 重写handleMessage()方法，此方法在UI线程运行
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case MSG_SUCCESS:
+				showImage.setImageBitmap((Bitmap) msg.obj);
+				break;
+			case MSG_FAILURE:
+				break;
+			}
+		}
+	};
+	
+	Runnable runnable = new Runnable() {
+		// 重写run()方法，此方法在新的线程中运行
+		@Override
+		public void run() {
+			HttpClient httpClient = new DefaultHttpClient();
+			// 从网络上获取图片
+			HttpGet httpGet = new HttpGet(portraitUrl);
+			final Bitmap bitmap;
+			try {
+				org.apache.http.HttpResponse httpResponse = httpClient
+						.execute(httpGet);
+				// 解析为图片
+				bitmap = BitmapFactory.decodeStream(httpResponse.getEntity()
+						.getContent());
+			} catch (Exception e) {
+				mHandler.obtainMessage(MSG_FAILURE).sendToTarget();// 获取图片失败
+				return;
+			}
+			// 获取图片成功，向UI线程发送MSG_SUCCESS标识和bitmap对象
+			mHandler.obtainMessage(MSG_SUCCESS, bitmap).sendToTarget();
+		}
+	};
 	
 	private FileFilter filefiter = new FileFilter(){
 
@@ -347,10 +429,4 @@ public class ModifyPersonalInfo extends Activity {
 		return loadSid.getString("SID", null);
 	}	
 	
-	public String loadUUID(){
-		SharedPreferences loadUUID = getSharedPreferences("SAVEDUUID",
-				MODE_PRIVATE);
-		return loadUUID.getString("UUID", null);
-	}
-
 }

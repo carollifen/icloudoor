@@ -4,6 +4,9 @@ import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,13 +20,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -52,6 +60,15 @@ public class SettingFragment extends Fragment {
 	private int statusCode;
 
 	private int isLogin = 1;
+	
+	private ImageView image;
+	private String portraitUrl;
+	
+	private Bitmap bitmap;
+	private Thread mThread;
+	
+	private static final int MSG_SUCCESS = 0;// 获取图片成功的标识
+	private static final int MSG_FAILURE = 1;// 获取图片失败的标识
 
 	public SettingFragment() {
 		// Required empty public constructor
@@ -73,9 +90,17 @@ public class SettingFragment extends Fragment {
 		showName = (TextView) view.findViewById(R.id.show_name);
 		showPhoneNum = (TextView) view.findViewById(R.id.show_phoneNum);
 		
+		
+		image = (ImageView) view.findViewById(R.id.person_image);
+
+		
+		
 		SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);	
 		phone = loginStatus.getString("PHONENUM", null);	
 		name = loginStatus.getString("NAME", null);
+		portraitUrl = loginStatus.getString("URL", null);
+		
+		
 		changeNum();
 		showPhoneNum.setText(phone);
 		showName.setText(name);
@@ -92,6 +117,52 @@ public class SettingFragment extends Fragment {
 
 		return view;
 	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (mThread == null) {
+			mThread = new Thread(runnable);
+			mThread.start();
+		}
+	}
+	
+	private Handler mHandler = new Handler() {
+		// 重写handleMessage()方法，此方法在UI线程运行
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case MSG_SUCCESS:
+				image.setImageBitmap((Bitmap) msg.obj);
+				break;
+			case MSG_FAILURE:
+				break;
+			}
+		}
+	};
+	
+	Runnable runnable = new Runnable() {
+		// 重写run()方法，此方法在新的线程中运行
+		@Override
+		public void run() {
+			HttpClient httpClient = new DefaultHttpClient();
+			// 从网络上获取图片
+			HttpGet httpGet = new HttpGet(portraitUrl);
+			final Bitmap bitmap;
+			try {
+				org.apache.http.HttpResponse httpResponse = httpClient
+						.execute(httpGet);
+				// 解析为图片
+				bitmap = BitmapFactory.decodeStream(httpResponse.getEntity()
+						.getContent());
+			} catch (Exception e) {
+				mHandler.obtainMessage(MSG_FAILURE).sendToTarget();// 获取图片失败
+				return;
+			}
+			// 获取图片成功，向UI线程发送MSG_SUCCESS标识和bitmap对象
+			mHandler.obtainMessage(MSG_SUCCESS, bitmap).sendToTarget();
+		}
+	};
 
 	public class MyOnClickListener implements OnClickListener {
 

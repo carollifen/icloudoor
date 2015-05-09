@@ -1,10 +1,16 @@
 package com.icloudoor.clouddoor;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,6 +20,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.Request.Method;
 import com.android.volley.toolbox.Volley;
+import com.google.api.client.http.HttpResponse;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -21,7 +28,11 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,6 +66,7 @@ public class ShowPersonalInfo extends Activity {
 	private TextView TVmonth;
 	private TextView TVday;
 	private TextView TVid;
+	private ImageView image;
 	
 	private RelativeLayout back;
 	private RelativeLayout toModifyProfile;
@@ -63,6 +75,14 @@ public class ShowPersonalInfo extends Activity {
 	private SQLiteDatabase mAreaDB;
 	private final String DATABASE_NAME = "area.db";
 	private final String TABLE_NAME = "tb_core_area";
+	
+	private Bitmap bitmap;
+	private Thread mThread;
+	
+	private static final int MSG_SUCCESS = 0;// 获取图片成功的标识
+	private static final int MSG_FAILURE = 1;// 获取图片失败的标识
+	
+	private String portraitUrl;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +94,8 @@ public class ShowPersonalInfo extends Activity {
 		mAreaDB = mAreaDBHelper.getWritableDatabase();	
 		
 		initViews();
+		
+				
 	}
 	
 	public void initViews() {
@@ -89,7 +111,10 @@ public class ShowPersonalInfo extends Activity {
 		TVday = (TextView) findViewById(R.id.personal_info_day);
 		TVid = (TextView) findViewById(R.id.personal_info_ID);
 		back = (RelativeLayout) findViewById(R.id.btn_back);
+		image = (ImageView) findViewById(R.id.personal_info_small_image);
+
 		toModifyProfile = (RelativeLayout) findViewById(R.id.tomodify_person_info);
+			
 		
 		back.setOnClickListener(new OnClickListener(){
 
@@ -111,7 +136,7 @@ public class ShowPersonalInfo extends Activity {
 			
 		});
 	}
-	
+
 	public String getProvinceName(int provinceId) {
 		String provinceName = null;
 		Cursor mCursorP = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
@@ -170,9 +195,18 @@ public class ShowPersonalInfo extends Activity {
 	}
 	
 	@Override
+	public void onStart() {
+		super.onStart();
+		Log.e("TESTTEST", "onStart show");
+		
+		
+	}
+	
+	@Override
 	public void onResume(){
 		super.onResume();
 		Log.e("TESTTEST", "onResume show");
+		
 		mQueue = Volley.newRequestQueue(this);
 		sid = loadSid();
 		try {
@@ -199,6 +233,7 @@ public class ShowPersonalInfo extends Activity {
 						Log.e("TEST", response.toString());
 						
 						if(statusCode == 1){
+							
 							try {
 								data = response.getJSONObject("data");
 								
@@ -210,6 +245,19 @@ public class ShowPersonalInfo extends Activity {
 								provinceid = data.getInt("provinceId");
 								cityid = data.getInt("cityId");
 								districtid = data.getInt("districtId");
+								portraitUrl = data.getString("portraitUrl");
+								
+								SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
+								Editor edit = loginStatus.edit();
+								edit.putString("URL", portraitUrl);
+								edit.commit();
+								
+								// 在新开线程上执行网络请求，在UI主线程上执行刷新UI操作
+								if (mThread == null) {
+									mThread = new Thread(runnable);
+									mThread.start();
+								}
+								
 								
 								province = getProvinceName(provinceid);
 								city = getCityName(cityid);
@@ -276,6 +324,42 @@ public class ShowPersonalInfo extends Activity {
 		mQueue.add(mJsonRequest);
 	}
 	
+	private Handler mHandler = new Handler() {
+		// 重写handleMessage()方法，此方法在UI线程运行
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case MSG_SUCCESS:
+				image.setImageBitmap((Bitmap) msg.obj);
+				break;
+			case MSG_FAILURE:
+				break;
+			}
+		}
+	};
+	
+	Runnable runnable = new Runnable() {
+		// 重写run()方法，此方法在新的线程中运行
+		@Override
+		public void run() {
+			HttpClient httpClient = new DefaultHttpClient();
+			// 从网络上获取图片
+			HttpGet httpGet = new HttpGet(portraitUrl);
+			final Bitmap bitmap;
+			try {
+				org.apache.http.HttpResponse httpResponse = httpClient
+						.execute(httpGet);
+				// 解析为图片
+				bitmap = BitmapFactory.decodeStream(httpResponse.getEntity()
+						.getContent());
+			} catch (Exception e) {
+				mHandler.obtainMessage(MSG_FAILURE).sendToTarget();// 获取图片失败
+				return;
+			}
+			// 获取图片成功，向UI线程发送MSG_SUCCESS标识和bitmap对象
+			mHandler.obtainMessage(MSG_SUCCESS, bitmap).sendToTarget();
+		}
+	};	
 	
 	public void saveSid(String sid) {
 		SharedPreferences savedSid = getSharedPreferences("SAVEDSID",
