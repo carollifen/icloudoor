@@ -191,7 +191,7 @@ public class RegisterActivity extends Activity implements TextWatcher {
 									Intent intent = new Intent();
 									intent.setClass(getApplicationContext(), RegisterComplete.class);
 									Log.e("TEST***", "Button Clicked -- ready to send the intent !!!!");
-									startActivity(intent);
+									startActivityForResult(intent, 0);
 								} else if (ConfirmCertiStatusCode == -30) {
 									Toast.makeText(getApplicationContext(),
 											R.string.input_wrong_certi_code, Toast.LENGTH_SHORT)
@@ -222,6 +222,14 @@ public class RegisterActivity extends Activity implements TextWatcher {
 
 		});
 	}
+	
+	@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+         if(requestCode == 0 && resultCode == RESULT_OK) {
+            finish();
+        }
+    }
 
 	class TimeCount extends CountDownTimer {
 		public TimeCount(long millisInFuture, long countDownInterval) {

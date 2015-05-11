@@ -121,9 +121,12 @@ public class RegisterComplete extends Activity implements TextWatcher {
 									}
 
 									if (statusCode == 1) {
-										Intent intent = new Intent();
-										intent.setClass(getApplicationContext(), Login.class);
-										startActivity(intent);
+//										Intent intent = new Intent();
+//										intent.setClass(getApplicationContext(), Login.class);
+//										startActivity(intent);
+										
+										setResult(RESULT_OK);
+										finish();
 									} else if (statusCode == -40) {
 										Toast.makeText(getApplicationContext(),
 												R.string.phone_num_have_been_registerred,
