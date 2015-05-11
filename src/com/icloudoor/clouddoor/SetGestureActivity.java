@@ -69,6 +69,8 @@ public class SetGestureActivity extends Activity implements OnClickListener {
 						set.putInt("HAVESETSIGN", haveSet);
 						set.commit();
 						
+						setResult(RESULT_OK);
+						
 						SetGestureActivity.this.finish();
 					} else {
 						mGestureContentView.clearDrawlineState(1300L);

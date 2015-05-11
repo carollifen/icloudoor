@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class SettingDetailActivity extends Activity {
-	private TextView TVBtnResetPwd;
+	private RelativeLayout TVBtnResetPwd;
 	private TextView TVBtnChangePhone;
 	
 	private ImageView IVSetDetailShake;
@@ -33,7 +33,7 @@ public class SettingDetailActivity extends Activity {
 		getActionBar().hide();
 		setContentView(R.layout.set_detail);
 		
-		TVBtnResetPwd = (TextView) findViewById(R.id.btn_reset_pwd);
+		TVBtnResetPwd = (RelativeLayout) findViewById(R.id.btn_reset_pwd);
 		TVBtnChangePhone = (TextView) findViewById(R.id.btn_change_phone);
 		
 		IVSetDetailShake = (ImageView) findViewById(R.id.btn_set_detail_shake);

@@ -213,7 +213,6 @@
             android:layout_height="48dp" >
 
             <TextView
-                android:id="@+id/btn_reset_pwd"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
@@ -221,6 +220,13 @@
                 android:text="修改密码"
                 android:textColor="#000000"
                 android:textSize="17sp" />
+            
+            <RelativeLayout
+                android:id="@+id/btn_reset_pwd"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true" >
+            </RelativeLayout>
             
             <ImageView
                 android:layout_width="wrap_content"
