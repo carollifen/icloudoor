@@ -1,16 +1,48 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#116dad" >
 
-    <ImageView
-        android:id="@+id/sign_person_image"
+    <LinearLayout
+        android:id="@+id/gesture_tip_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <com.icloudoor.clouddoor.LockIndicatorView
+            android:id="@+id/lock_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dip" />
+
+        <TextView
+            android:id="@+id/text_tip"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="绘制解锁图案"
+            android:textColor="#F98F12"
+            android:layout_marginTop="10dip" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/gesture_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="57dp"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/icon_boy_110" />
+        android:layout_below="@id/gesture_tip_layout"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dip" >
+    </FrameLayout>
+    
+    
+<!--     <ImageView -->
+<!--         android:id="@+id/sign_person_image" -->
+<!--         android:layout_width="wrap_content" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_marginTop="57dp" -->
+<!--         android:layout_centerHorizontal="true" -->
+<!--         android:background="@drawable/icon_boy_110" /> -->
     
 <!--     <TextView -->
 <!--         android:id="@+id/sign_person_phone" -->
@@ -22,24 +54,24 @@
 <!--         android:layout_marginTop="126dp" -->
 <!--         android:layout_centerHorizontal="true" /> -->
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="绘制解锁图案"
-        android:textSize="17sp"
-        android:textColor="#ffffff"
-        android:layout_marginTop="149dp"
-        android:layout_centerHorizontal="true"
-        />
+<!--     <TextView -->
+<!--         android:layout_width="wrap_content" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:text="绘制解锁图案" -->
+<!--         android:textSize="17sp" -->
+<!--         android:textColor="#ffffff" -->
+<!--         android:layout_marginTop="149dp" -->
+<!--         android:layout_centerHorizontal="true" -->
+<!--         /> -->
     
-    <FrameLayout
-        android:id="@+id/gesture_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="80dp" >
-    </FrameLayout>
+<!--     <FrameLayout -->
+<!--         android:id="@+id/gesture_container" -->
+<!--         android:layout_width="wrap_content" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_centerHorizontal="true" -->
+<!--         android:layout_alignParentBottom="true" -->
+<!--         android:layout_marginBottom="80dp" > -->
+<!--     </FrameLayout> -->
     
 <!--     <RelativeLayout -->
 <!--         android:layout_width="180dp" -->
@@ -67,7 +99,7 @@
 <!--             android:text="账号登陆" -->
 <!--             android:textSize="16sp" -->
 <!--             android:textColor="@drawable/selector_sign_setting_page" -->
-<!--             /> -->"
+<!--             />" -->
         
 <!--     </RelativeLayout> -->
     

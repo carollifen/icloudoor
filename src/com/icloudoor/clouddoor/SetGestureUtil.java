@@ -4,6 +4,12 @@ import android.content.Context;
 import android.view.WindowManager;
 
 public class SetGestureUtil {
+	
+	/**
+     * 获取屏幕分辨率
+     * @param context
+     * @return
+     */
 	 public static int[] getScreenDispaly(Context context) {
 			WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 			int width = windowManager.getDefaultDisplay().getWidth();// 手机屏幕的宽度

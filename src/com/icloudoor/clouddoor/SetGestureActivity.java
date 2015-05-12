@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.icloudoor.clouddoor.SetGestureDrawLineView.SetGestureCallBack;
 
+
 public class SetGestureActivity extends Activity implements OnClickListener {
 
 	private FrameLayout mGestureContainer;
@@ -23,6 +24,7 @@ public class SetGestureActivity extends Activity implements OnClickListener {
 	private boolean mIsFirstInput = true;
 	private String mFirstPassword = null;
 	private String mConfirmPassword = null;
+	private LockIndicatorView mLockIndicator;
 	private int haveSet = 0;
 	
 //	private TextView TVSignManage;
@@ -43,6 +45,7 @@ public class SetGestureActivity extends Activity implements OnClickListener {
 	}
 	
 	private void setUpViews() {
+		mLockIndicator = (LockIndicatorView) findViewById(R.id.lock_indicator);
 		mGestureContainer = (FrameLayout) findViewById(R.id.gesture_container);
 		// 初始化一个显示各个点的viewGroup
 		mGestureContentView = new SetGestureContentView(this, false, "", new SetGestureCallBack() {
@@ -54,6 +57,7 @@ public class SetGestureActivity extends Activity implements OnClickListener {
 				}
 				if (mIsFirstInput) {
 					mFirstPassword = inputCode;
+					updateCodeList(inputCode);
 					Toast.makeText(SetGestureActivity.this, R.string.sign_input_again, Toast.LENGTH_SHORT).show();
 					mGestureContentView.clearDrawlineState(0L);
 				} else {
@@ -91,12 +95,18 @@ public class SetGestureActivity extends Activity implements OnClickListener {
 		});
 		// 设置手势解锁显示到哪个布局里面
 		mGestureContentView.setParentView(mGestureContainer);
+		updateCodeList("");
 	}
 
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	private void updateCodeList(String inputCode) {
+		// 更新选择的图案
+		mLockIndicator.setPath(inputCode);
 	}
 	
 	private boolean isInputPassValidate(String inputPassword) {

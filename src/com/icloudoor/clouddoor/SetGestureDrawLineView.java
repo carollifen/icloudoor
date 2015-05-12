@@ -20,16 +20,13 @@ import android.view.View;
 public class SetGestureDrawLineView extends View {
 	//起点坐标
 	private int mov_x;
-	private int mov_y;
-	
+	private int mov_y;	
 	private Paint paint;
 	private Canvas canvas;
 	private Bitmap bitmap;
-	
 	private List<SetGesturePoint> list;
 	private List<Pair<SetGesturePoint, SetGesturePoint>> linelist;  //记录画过的线
 	private Map<String, SetGesturePoint> autoCheckPointMap;  //自动选中的情况点
-	
 	private boolean isDrawEnable = true;
 	
 	private int[] screenDispaly;
@@ -44,8 +41,7 @@ public class SetGestureDrawLineView extends View {
 	
 	public SetGestureDrawLineView(Context context, List<SetGesturePoint> list, boolean isVerify,
 			String passWord, SetGestureCallBack callBack){
-		super(context);
-		
+		super(context);		
 		screenDispaly = SetGestureUtil.getScreenDispaly(context);
 		paint = new Paint(Paint.DITHER_FLAG);// 创建一个画笔
 		bitmap = Bitmap.createBitmap(screenDispaly[0], screenDispaly[0], Bitmap.Config.ARGB_8888);

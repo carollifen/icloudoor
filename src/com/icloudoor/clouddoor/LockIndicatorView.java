@@ -9,16 +9,15 @@ import android.util.AttributeSet;
 import android.view.View;
 
 public class LockIndicatorView extends View {
-	
 	private int rowNum = 3;
 	private int columnNum = 3;
-	private int patternWidth = 100;
-	private int patternHeight = 100;
+	private int patternWidth = 40;
+	private int patternHeight = 40;
 	private int f = 5;
 	private int g = 5;
 	private int strokeWidth = 3;
 	private Paint paint = null;
-	private Drawable patternNoraml = null;
+	private Drawable patternNormal = null;
 	private Drawable patternPressed = null;
 	private String lockPassStr; 
 	
@@ -32,7 +31,7 @@ public class LockIndicatorView extends View {
 		paint.setAntiAlias(true);
 		paint.setStrokeWidth(strokeWidth);
 		paint.setStyle(Paint.Style.STROKE);
-		patternNoraml = getResources().getDrawable(R.drawable.sign_gray);
+		patternNormal = getResources().getDrawable(R.drawable.sign_gray);
 		patternPressed = getResources().getDrawable(R.drawable.sign_blue);
 		if (patternPressed != null) {
 			patternWidth = patternPressed.getIntrinsicWidth();
@@ -40,13 +39,13 @@ public class LockIndicatorView extends View {
 			this.f = (patternWidth / 4);
 			this.g = (patternHeight / 4);
 			patternPressed.setBounds(0, 0, patternWidth, patternHeight);
-			patternNoraml.setBounds(0, 0, patternWidth, patternHeight);
+			patternNormal.setBounds(0, 0, patternWidth, patternHeight);
 		}
 	}
 	
 	@Override
 	protected void onDraw(Canvas canvas) {
-		if ((patternPressed == null) || (patternNoraml == null)) {
+		if ((patternPressed == null) || (patternNormal == null)) {
 			return;
 		}
 		// 绘制3*3的图标
@@ -61,14 +60,14 @@ public class LockIndicatorView extends View {
 				if (!TextUtils.isEmpty(lockPassStr)) {
 					if (lockPassStr.indexOf(curNum) == -1) {
 						// 未选中
-						patternNoraml.draw(canvas);
+						patternNormal.draw(canvas);
 					} else {
 						// 被选中
 						patternPressed.draw(canvas);
 					}
 				} else {
 					// 重置状态
-					patternNoraml.draw(canvas);
+					patternNormal.draw(canvas);
 				}
 				canvas.restore();
 			}

@@ -4,18 +4,45 @@ import android.widget.ImageView;
 
 public class SetGesturePoint {
 
+	/**
+	 * 左边x的值
+	 */
 	private int leftX;
+	/**
+	 * 右边x的值
+	 */
 	private int rightX;
+	/**
+	 * 上边y的值
+	 */
 	private int topY;
+	/**
+	 * 下边y的值
+	 */
 	private int bottomY;
+	/**
+	 * 这个点对应的ImageView控件
+	 */
 	private ImageView image;
 
-
+	/**
+	 * 中心x值
+	 */
 	private int centerX;
+
+	/**
+	 * 中心y值
+	 */
 	private int centerY;
 
+	/**
+	 * 状态值
+	 */
 	private int pointState;
 
+	/**
+	 * 代表这个Point对象代表的数字，从1开始(直接感觉从1开始)
+	 */
 	private int num;
 
 	public SetGesturePoint(int leftX, int rightX, int topY, int bottomY,
