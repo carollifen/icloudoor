@@ -31,8 +31,8 @@ public class LockIndicatorView extends View {
 		paint.setAntiAlias(true);
 		paint.setStrokeWidth(strokeWidth);
 		paint.setStyle(Paint.Style.STROKE);
-		patternNormal = getResources().getDrawable(R.drawable.sign_gray);
-		patternPressed = getResources().getDrawable(R.drawable.sign_blue);
+		patternNormal = getResources().getDrawable(R.drawable.sign_thumbnail_gray);
+		patternPressed = getResources().getDrawable(R.drawable.sign_thumbnail_blue);
 		if (patternPressed != null) {
 			patternWidth = patternPressed.getIntrinsicWidth();
 			patternHeight = patternPressed.getIntrinsicHeight();
