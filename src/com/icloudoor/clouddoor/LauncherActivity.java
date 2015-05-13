@@ -55,7 +55,7 @@ public class LauncherActivity extends Activity {
 			}
 
 		};
-		jump.schedule(jumpTask, 2000);
+		jump.schedule(jumpTask, 250);
 	}
 	
 	private void addShortcutToDesktop() {
