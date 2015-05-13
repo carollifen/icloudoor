@@ -49,5 +49,7 @@
     <string name="title_activity_modify_personal_info">ModifyPersonalInfo</string>
     <string name="title_activity_take_picture">TakePictureActivity</string>
     <string name="title_activity_test_web_view">TestWebViewActivity</string>
+    <string name="open_door_success">开门成功</string>
+    <string name="open_door_fail">开门失败，请靠近重新连接</string>
 
 </resources>

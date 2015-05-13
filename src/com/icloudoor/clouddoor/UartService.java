@@ -2,6 +2,7 @@ package com.icloudoor.clouddoor;
 
 import java.util.List;
 import java.util.UUID;
+
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
@@ -19,6 +20,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 @SuppressLint("NewApi")
 public class UartService extends Service {
@@ -49,6 +51,11 @@ public class UartService extends Service {
     public final static String DEVICE_DOES_NOT_SUPPORT_UART =
             "com.nordicsemi.nrfUART.DEVICE_DOES_NOT_SUPPORT_UART";
     
+    public final static String ACTION_MAKESURE_DOOROPENED =
+            "com.nordicsemi.nrfUART.ACTION_MAKESURE_DOOROPENED";  // new add for response
+    
+    
+    
     public static final UUID TX_POWER_UUID = UUID.fromString("00001804-0000-1000-8000-00805f9b34fb");
     public static final UUID TX_POWER_LEVEL_UUID = UUID.fromString("00002a07-0000-1000-8000-00805f9b34fb");
     public static final UUID CCCD = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
@@ -58,6 +65,8 @@ public class UartService extends Service {
 
     public static final UUID RX_CHAR_UUID = UUID.fromString("0000fff1-0000-1000-8000-00805f9b34fb");
     public static final UUID TX_CHAR_UUID = UUID.fromString("0000fff4-0000-1000-8000-00805f9b34fb");
+    
+    public static final UUID SIMPLEPROFILE_CHAR2_UUID = UUID.fromString("0000fff2-0000-1000-8000-00805f9b34fb");    // new add for response
     
    
     // Implements callback methods for GATT events that the app cares about.  For example,
@@ -107,7 +116,7 @@ public class UartService extends Service {
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic) {
-            broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+            broadcastUpdate(ACTION_MAKESURE_DOOROPENED, characteristic);
         }
     };
 
@@ -123,8 +132,9 @@ public class UartService extends Service {
         // This is special handling for the Heart Rate Measurement profile.  Data parsing is
         // carried out as per profile specifications:
         // http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
-        if (TX_CHAR_UUID.equals(characteristic.getUuid())) {
-        	
+        if (TX_CHAR_UUID.equals(characteristic.getUuid()) || SIMPLEPROFILE_CHAR2_UUID.equals(characteristic.getUuid())) {     //new modification for response
+//        if (TX_CHAR_UUID.equals(characteristic.getUuid())) { 
+        	Log.e("TEst for response", "broadcastUpdate");
            // Log.d(TAG, String.format("Received TX: %d",characteristic.getValue() ));
             intent.putExtra(EXTRA_DATA, characteristic.getValue());
         } else {
@@ -196,15 +206,15 @@ public class UartService extends Service {
             return false;
         }
 
-        // Previously connected device.  Try to reconnect.
-        if (mBluetoothDeviceAddress != null && address.equals(mBluetoothDeviceAddress)
-                && mBluetoothGatt != null) {
-            Log.d(TAG, "Trying to use an existing mBluetoothGatt for connection.");
-            mBluetoothGatt.connect();
-            mConnectionState = STATE_CONNECTING;
-            return true;
-            
-        }
+//        // Previously connected device.  Try to reconnect.
+//        if (mBluetoothDeviceAddress != null && address.equals(mBluetoothDeviceAddress)
+//                && mBluetoothGatt != null) {
+//            Log.d(TAG, "Trying to use an existing mBluetoothGatt for connection.");
+//            mBluetoothGatt.connect();
+//            mConnectionState = STATE_CONNECTING;
+//            return true;
+//            
+//        }
 
         final BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
         if (device == null) {
@@ -213,6 +223,18 @@ public class UartService extends Service {
         }
         // We want to directly connect to the device, so we are setting the autoConnect
         // parameter to false.
+        
+        
+        //TODO
+        if (device != null) { 
+        	if (mBluetoothGatt != null) {
+        		mBluetoothGatt.close(); 
+        		mBluetoothGatt.disconnect(); 
+        		mBluetoothGatt = null; 
+        		}
+        }
+        
+  
         mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
         Log.d(TAG, "Trying to create a new connection.");
         mBluetoothDeviceAddress = address;
@@ -322,8 +344,9 @@ public class UartService extends Service {
     	
     }
     
-    public void readRXCharacteristic()
+    public void readRXCharacteristic(UUID mUuid)     // new modification for response
     {
+    	Log.e("TEst for response", "readRXCharacteristic(UUID mUuid)");
     	BluetoothGattService RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
     	showMessage("mBluetoothGatt "+ mBluetoothGatt);
     	if (RxService == null) {
@@ -331,12 +354,13 @@ public class UartService extends Service {
             broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
             return;
         }
-    	BluetoothGattCharacteristic RxChar = RxService.getCharacteristic(RX_CHAR_UUID);
+    	BluetoothGattCharacteristic RxChar = RxService.getCharacteristic(mUuid);   // new modification for response
         if (RxChar == null) {
             showMessage("Rx charateristic not found!");
             broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
             return;
-        }
+        }        
+        
         boolean bTrue = mBluetoothGatt.readCharacteristic(RxChar);
     }
     
@@ -363,11 +387,17 @@ public class UartService extends Service {
         RxChar.setValue(checkValue);
     	boolean status = mBluetoothGatt.writeCharacteristic(RxChar);
     	
-        Log.d(TAG, "write TXchar - status=" + status);  
+//    	if(status == true){
+//    		Toast.makeText(this, R.string.open_door_success, Toast.LENGTH_SHORT).show();
+//    	} else{
+//    		Toast.makeText(this, R.string.open_door_fail, Toast.LENGTH_SHORT).show();
+//    	}
+//    	
+        Log.d("test for write", "write TXchar - status=" + status);  
     }
     
     private void showMessage(String msg) {
-//        Log.e(TAG, msg);
+        Log.e(TAG, msg);
     }
     /**
      * Retrieves a list of supported GATT services on the connected device. This should be

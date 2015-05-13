@@ -4,17 +4,23 @@ import com.jauker.widget.BadgeView;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothManager;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -45,11 +51,17 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.Request.Method;
+import com.android.volley.toolbox.Volley;
 import com.icloudoor.clouddoor.ShakeEventManager;
 import com.icloudoor.clouddoor.UartService;
 import com.icloudoor.clouddoor.ShakeEventManager.ShakeListener;
@@ -117,7 +129,16 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	private String IdOfDoorToOpen = null;
 
 	private SoundPool mSoundPool;
-
+	
+//	//for test the new interface
+//	private Button testBtn;
+//	private String HOST = "http://zone.icloudoor.com/icloudoor-web/user/api/getMyAddress.do";
+//	private URL testURL;
+//	private String sid;
+//	private RequestQueue mQueue;
+	
+	private boolean checkForOpenDoor = false;
+	
 	public KeyFragment() {
 		// Required empty public constructor
 	}
@@ -156,6 +177,52 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		mWeatherWidgePager = (ViewPager) view.findViewById(R.id.weather_widge_pager);
 		myPageChangeListener = new MyPageChangeListener();
 
+		//for test the new interface
+//		testBtn = (Button) view.findViewById(R.id.testbtn);
+//		mQueue = Volley.newRequestQueue(getActivity());
+//		testBtn.setOnClickListener(new OnClickListener(){
+
+//			@Override
+//			public void onClick(View v) {
+//				populateDeviceList(); // click for scan again
+//				sid = loadSid();
+//				try {
+//					testURL = new URL(HOST + "?sid=" + sid);
+//				} catch (MalformedURLException e) {
+//					e.printStackTrace();
+//				}
+//				MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
+//						Method.GET, testURL.toString(), null,
+//						new Response.Listener<JSONObject>() {
+//
+//							@Override
+//							public void onResponse(JSONObject response) {
+//								try {
+//									if (response.getString("sid") != null){
+//										sid = response.getString("sid");
+//										saveSid(sid);
+//									}
+//									Log.e("testMyAddr", response.toString());
+//								} catch (JSONException e) {
+//									e.printStackTrace();
+//								}
+//							}
+//						}, new Response.ErrorListener() {
+//
+//							@Override
+//							public void onErrorResponse(VolleyError error) {
+//							}
+//						});
+//				mQueue.add(mJsonRequest);
+//			}
+//			
+//		});
+		
+		
+		
+		
+		
+		
 		InitFragmentViews();
 		InitViewPager();
 		
@@ -172,8 +239,8 @@ public class KeyFragment extends Fragment implements ShakeListener {
 				Toast.makeText(getActivity(), R.string.bt_not_supported, Toast.LENGTH_SHORT).show();
 		}
 
-		checkBlueToothState();
-		service_init();
+//		checkBlueToothState();
+//		service_init();
 
 		mShakeMgr = new ShakeEventManager(getActivity());
 		mShakeMgr.setListener(KeyFragment.this);
@@ -270,6 +337,9 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	public void onResume() {
 		super.onResume();
 		Log.e("TEST", "keyFragment onResume()");
+		
+		checkBlueToothState();
+		service_init();
 		
 		if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
 			if (DBCount() > 0) {
@@ -575,7 +645,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 			}
 		}
 	}
-
+	
 	private void doOpenDoor() {
 		Log.e("BLE", "doOpenDoor");
 		IvOpenDoorLogo.setEnabled(false);
@@ -588,9 +658,28 @@ public class KeyFragment extends Fragment implements ShakeListener {
 				mBluetoothAdapter.stopLeScan(mLeScanCallback);
 				mUartService.connect(mDeviceList.get(deviceIndexToOpen)
 						.getAddress());
-				populateDeviceList();
+//				handler.post(task);   //add for new response
+//				if (mUartService != null) {
+//					mUartService
+//							.readRXCharacteristic(mUartService.SIMPLEPROFILE_CHAR2_UUID);
+//				}
+//				populateDeviceList();
+				
+				new Handler().postDelayed(new Runnable() {
+	                @Override
+	                public void run() {
+	                    if(!checkForOpenDoor) {
+	                    	Toast.makeText(getActivity(), R.string.open_door_fail, Toast.LENGTH_LONG).show();
+	                    	Log.e("test for open door", "fail");
+	                    }else{
+	                    	checkForOpenDoor = true;
+	                    }
+	                }
+	            }, 3000);
 			}
 		}
+		
+
 	}
 
 	private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
@@ -738,9 +827,24 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		intentFilter.addAction(UartService.ACTION_GATT_SERVICES_DISCOVERED);
 		intentFilter.addAction(UartService.ACTION_DATA_AVAILABLE);
 		intentFilter.addAction(UartService.DEVICE_DOES_NOT_SUPPORT_UART);
+		intentFilter.addAction(UartService.ACTION_MAKESURE_DOOROPENED);
 		return intentFilter;
 	}
-
+	
+//	private Handler handler = new Handler();
+//
+//	private Runnable task = new Runnable() {
+//		public void run() {
+//			// TODOAuto-generated method stub
+//			handler.postDelayed(this, 2 * 100);// 设置延迟时间，此处是0.2秒
+//			// 需要执行的代码
+//			if (mUartService != null) {
+//                mUartService.readRXCharacteristic(mUartService.SIMPLEPROFILE_CHAR2_UUID);
+//            }
+//			Log.e("TEst for response", "print");
+//		}
+//	};
+	
 	private final BroadcastReceiver UARTStatusChangeReceiver = new BroadcastReceiver() {
 
 		public void onReceive(Context context, Intent intent) {
@@ -760,7 +864,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 				getActivity().runOnUiThread(new Runnable() {
 					public void run() {
 						if (mUartService != null) {
-							mUartService.readRXCharacteristic();
+							mUartService.readRXCharacteristic(mUartService.RX_CHAR_UUID);
 						}
 					}
 				});
@@ -808,9 +912,29 @@ public class KeyFragment extends Fragment implements ShakeListener {
 				Log.e("BLE", "UartService.DEVICE_DOES_NOT_SUPPORT_UART");
 				mUartService.disconnect();
 			}
+			
+			//new add for response
+			if (action.equals(UartService.ACTION_MAKESURE_DOOROPENED)) {
+                Log.e("BLE", "UartService.ACTION_MAKESURE_DOOROPENED");
+                final byte[] txValue = intent
+                        .getByteArrayExtra(UartService.EXTRA_DATA);
+//                getActivity().runOnUiThread(new Runnable() {
+//					public void run() {
+						if (txValue[0] == 0x10) {
+		                    // door had opened. go on ...
+							
+							checkForOpenDoor = true;
+							Toast.makeText(getActivity(), R.string.open_door_success, Toast.LENGTH_LONG).show();
+		                    Log.e("BLE", "door had opened.");
+		                }
+//					}
+//                });
+            }
 
 		}
 	};
+	
+	
 
 	private ServiceConnection mServiceConnection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName className,
@@ -901,4 +1025,17 @@ public class KeyFragment extends Fragment implements ShakeListener {
         super.onDetach();
 
     }
+	
+	//for test
+	public void saveSid(String sid) {
+		SharedPreferences savedSid = getActivity().getSharedPreferences("SAVEDSID", 0);
+		Editor editor = savedSid.edit();
+		editor.putString("SID", sid);
+		editor.commit();
+	}
+
+	public String loadSid() {
+		SharedPreferences loadSid = getActivity().getSharedPreferences("SAVEDSID", 0);
+		return loadSid.getString("SID", null);
+	}
 }
