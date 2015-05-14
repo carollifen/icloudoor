@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+ xmlns:android="http://schemas.android.com/apk/res/android"
+ android:layout_height="wrap_content" 
+ android:layout_width="match_parent"
+ android:background="#ffffffff" 
+ android:orientation="vertical"
+ android:id="@+id/dialog">
+ 
+ 
+ <EditText android:layout_height="60dp"
+  android:layout_width="match_parent" 
+  android:id="@+id/pswEdit" 
+  android:password="true"
+  android:hint="登陆密码"
+  android:editable="true"
+  android:paddingLeft="15dp"
+  android:background="@null"/>
+ 
+ <LinearLayout 
+     
+     android:orientation="horizontal"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     >
+     <Button 
+         android:id="@+id/cancle"
+         android:layout_width="0dp"
+         android:layout_height="50dp"
+         android:layout_weight="1"
+        android:layout_gravity="center"
+        android:text="取消"/>
+      <Button 
+         android:id="@+id/bound"
+         android:layout_width="0dp"
+         android:layout_height="50dp"
+         android:layout_weight="1"
+        android:layout_gravity="center"
+        android:text="确定"/>
+ </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#116dad" >
+
+   
+    
+    <TextView
+        android:id="@+id/sign_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="验证手势密码"
+        android:textSize="14sp"
+        android:textColor="#ffffff"
+        android:layout_marginTop="80dp"
+        android:layout_centerHorizontal="true" />
+    
+    <FrameLayout
+        android:id="@+id/sign_confirm_gesture_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="100dp" >
+    </FrameLayout>
+    <TextView 
+        android:id="@+id/confirm_with_passw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp"
+        android:layout_alignParentBottom="true"
+         android:text="验证登陆密码"
+        android:textSize="15sp"
+        
+        />
+</RelativeLayout>
