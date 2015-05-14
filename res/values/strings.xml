@@ -51,5 +51,7 @@
     <string name="title_activity_test_web_view">TestWebViewActivity</string>
     <string name="open_door_success">开门成功</string>
     <string name="open_door_fail">开门失败，请靠近重新连接</string>
+    <string name="low_android_version">系统版本过低，无法使用BLE</string>
+    <string name="scanning">正在扫描</string>
 
 </resources>

@@ -57,6 +57,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -69,6 +70,8 @@ import com.icloudoor.clouddoor.ShakeEventManager.ShakeListener;
 @SuppressLint("NewApi")
 public class KeyFragment extends Fragment implements ShakeListener {
 
+	private String TAG = "KeyFragment";
+	
 	private MyDataBaseHelper mKeyDBHelper;
 	private SQLiteDatabase mKeyDB;
 	private final String DATABASE_NAME = "KeyDB.db";
@@ -129,14 +132,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	private String IdOfDoorToOpen = null;
 
 	private SoundPool mSoundPool;
-	
-//	//for test the new interface
-//	private Button testBtn;
-//	private String HOST = "http://zone.icloudoor.com/icloudoor-web/user/api/getMyAddress.do";
-//	private URL testURL;
-//	private String sid;
-//	private RequestQueue mQueue;
-	
+		
 	private boolean checkForOpenDoor = false;
 	
 	public KeyFragment() {
@@ -176,68 +172,22 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		mFragmentManager = getChildFragmentManager();
 		mWeatherWidgePager = (ViewPager) view.findViewById(R.id.weather_widge_pager);
 		myPageChangeListener = new MyPageChangeListener();
-
-		//for test the new interface
-//		testBtn = (Button) view.findViewById(R.id.testbtn);
-//		mQueue = Volley.newRequestQueue(getActivity());
-//		testBtn.setOnClickListener(new OnClickListener(){
-
-//			@Override
-//			public void onClick(View v) {
-//				populateDeviceList(); // click for scan again
-//				sid = loadSid();
-//				try {
-//					testURL = new URL(HOST + "?sid=" + sid);
-//				} catch (MalformedURLException e) {
-//					e.printStackTrace();
-//				}
-//				MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
-//						Method.GET, testURL.toString(), null,
-//						new Response.Listener<JSONObject>() {
-//
-//							@Override
-//							public void onResponse(JSONObject response) {
-//								try {
-//									if (response.getString("sid") != null){
-//										sid = response.getString("sid");
-//										saveSid(sid);
-//									}
-//									Log.e("testMyAddr", response.toString());
-//								} catch (JSONException e) {
-//									e.printStackTrace();
-//								}
-//							}
-//						}, new Response.ErrorListener() {
-//
-//							@Override
-//							public void onErrorResponse(VolleyError error) {
-//							}
-//						});
-//				mQueue.add(mJsonRequest);
-//			}
-//			
-//		});
-		
-		
-		
-		
-		
-		
+	
 		InitFragmentViews();
 		InitViewPager();
 		
-		// BLE
-		if (!getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-			Toast.makeText(getActivity(), R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
-		}
-
-		BluetoothManager mBluetoothManager = (BluetoothManager) getActivity().getSystemService(Context.BLUETOOTH_SERVICE);
-		mBluetoothAdapter = mBluetoothManager.getAdapter();
-
-		if (mBluetoothAdapter == null) {
-			if (getActivity() != null)
-				Toast.makeText(getActivity(), R.string.bt_not_supported, Toast.LENGTH_SHORT).show();
-		}
+//		// BLE
+//		if (!getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+//			Toast.makeText(getActivity(), R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
+//		}
+//
+//		BluetoothManager mBluetoothManager = (BluetoothManager) getActivity().getSystemService(Context.BLUETOOTH_SERVICE);
+//		mBluetoothAdapter = mBluetoothManager.getAdapter();
+//
+//		if (mBluetoothAdapter == null) {
+//			if (getActivity() != null)
+//				Toast.makeText(getActivity(), R.string.bt_not_supported, Toast.LENGTH_SHORT).show();
+//		}
 
 //		checkBlueToothState();
 //		service_init();
@@ -338,8 +288,26 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		super.onResume();
 		Log.e("TEST", "keyFragment onResume()");
 		
-		checkBlueToothState();
-		service_init();
+		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+		if(currentapiVersion >= 18){
+			// BLE
+			if (!getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+				Toast.makeText(getActivity(), R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
+			}
+
+			BluetoothManager mBluetoothManager = (BluetoothManager) getActivity().getSystemService(Context.BLUETOOTH_SERVICE);
+			mBluetoothAdapter = mBluetoothManager.getAdapter();
+
+			if (mBluetoothAdapter == null) {
+				if (getActivity() != null)
+					Toast.makeText(getActivity(), R.string.bt_not_supported, Toast.LENGTH_SHORT).show();
+			}
+			checkBlueToothState();
+			service_init();
+		} else {
+			if(getActivity() != null)
+				Toast.makeText(getActivity(), R.string.low_android_version, Toast.LENGTH_SHORT).show();
+		}
 		
 		if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
 			if (DBCount() > 0) {
@@ -347,7 +315,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 				BadgeView badge = new com.jauker.widget.BadgeView(getActivity());
 				badge.setTargetView(TvOpenKeyList);
 				badge.setBadgeGravity(Gravity.RIGHT);
-				badge.setBadgeCount((int)DBCount());//TODO
+		        badge.setBadgeCount((int)DBCount());//TODO
 				
 				Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME,
 						null);
@@ -530,7 +498,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 			mBluetoothAdapter.startLeScan(mLeScanCallback);
 			channelSwitch.setEnabled(false);
 			if (getActivity() != null)
-				Toast.makeText(getActivity(), "ÕýÔÚÉ¨Ãè", 3000).show();
+				Toast.makeText(getActivity(), R.string.scanning, 3000).show();
 		} else {
 			mBluetoothAdapter.stopLeScan(mLeScanCallback);
 			channelSwitch.setEnabled(true);

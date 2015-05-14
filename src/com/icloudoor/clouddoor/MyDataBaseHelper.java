@@ -31,13 +31,17 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
 		StringBuffer sBuffer = new StringBuffer();
 
 		sBuffer.append("CREATE TABLE [" + TABLE_NAME + "] (");
-		sBuffer.append("[zoneName] TEXT, ");
+//		sBuffer.append("[zoneName] TEXT, ");
 		sBuffer.append("[zoneId] TEXT, ");
 		sBuffer.append("[doorName] TEXT, ");
 		sBuffer.append("[doorId] TEXT,");
 		sBuffer.append("[deviceId] TEXT,");
 		sBuffer.append("[doorType] TEXT,");
-		sBuffer.append("[authType] TEXT,");
+//		sBuffer.append("[authType] TEXT,");
+		sBuffer.append("[plateNum] TEXT, ");
+		sBuffer.append("[direction] TEXT, ");
+		sBuffer.append("[carStatus] TEXT, ");
+		sBuffer.append("[carPosStatus] TEXT, ");
 		sBuffer.append("[authFrom] TEXT,");
 		sBuffer.append("[authTo] TEXT)");
 
