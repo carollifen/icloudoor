@@ -17,16 +17,19 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:orientation="horizontal" >
+        android:layout_height="10dp" >
 
-        <ImageView
+        <RelativeLayout
+            android:layout_width="16dp"
+            android:layout_height="10dp"
+            android:layout_centerHorizontal="true" >
+            
+            <ImageView
             android:id="@+id/Iv_wuye_widge_push1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="4dp"
-            android:layout_marginLeft="172dp"
             android:background="@drawable/push_current" />
 
         <ImageView
@@ -36,8 +39,10 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_marginBottom="4dp"
-            android:layout_marginRight="172dp"
             android:background="@drawable/push_next" />
+        </RelativeLayout>
+        
+        
     </RelativeLayout>
 
 </LinearLayout>

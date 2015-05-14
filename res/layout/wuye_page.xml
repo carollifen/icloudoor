@@ -18,7 +18,7 @@
         layout="@layout/wuye_page_widge" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="215dp"
@@ -26,8 +26,9 @@
         android:orientation="horizontal" >
 
         <RelativeLayout
-            android:layout_width="90dp"
-            android:layout_height="match_parent" >
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" >
 
             <ImageView
                 android:id="@+id/btn_lianxiwuye"
@@ -64,8 +65,9 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="90dp"
-            android:layout_height="match_parent" >
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" >
 
             <ImageView
                 android:id="@+id/btn_notice"
@@ -102,8 +104,9 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="90dp"
-            android:layout_height="match_parent" >
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" >
 
             <ImageView
                 android:id="@+id/btn_fix"
@@ -140,8 +143,9 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="90dp"
-            android:layout_height="match_parent" >
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" >
 
             <ImageView
                 android:id="@+id/btn_bad"
