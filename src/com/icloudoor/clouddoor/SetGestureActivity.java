@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -122,4 +123,16 @@ public class SetGestureActivity extends Activity implements OnClickListener {
 		editor.putString("SIGN", signPwd);
 		editor.commit();
 	}	
+	
+	 @Override
+		public boolean onKeyDown(int keyCode, KeyEvent event) {
+			// TODO Auto-generated method stub
+			 SharedPreferences setting = getSharedPreferences(
+						"SETTING", MODE_PRIVATE);
+				Editor useSigneditor = setting.edit();
+				useSigneditor.putInt("useSign", 0);
+				useSigneditor.commit();
+			return super.onKeyDown(keyCode, event);
+			
+		}
 }
