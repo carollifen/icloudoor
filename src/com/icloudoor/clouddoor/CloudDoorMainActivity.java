@@ -34,6 +34,7 @@ public class CloudDoorMainActivity extends FragmentActivity {
 
 	private MsgFragment mMsgFragment;
 	private KeyFragment mKeyFragment;
+	private KeyFragmentNoBLE mKeyFragmentNoBLE;
 	private SettingFragment mSettingFragment;
 	private WuyeFragment mWuyeFragment;
 
@@ -65,6 +66,8 @@ public class CloudDoorMainActivity extends FragmentActivity {
 	
 	private int homePressed = 0;
 	private int lockScreenBefore = 0;
+	
+	private int currentVersion;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +76,12 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		setContentView(R.layout.new_main);
 
 		mMsgFragment = new MsgFragment();
-		mKeyFragment = new KeyFragment();
+		currentVersion = android.os.Build.VERSION.SDK_INT;
+		if(currentVersion >= 18){
+			mKeyFragment = new KeyFragment();
+		}else{
+			mKeyFragmentNoBLE = new KeyFragmentNoBLE();
+		}
 		mSettingFragment = new SettingFragment();
 		mWuyeFragment = new WuyeFragment();
 		
@@ -135,7 +143,12 @@ public class CloudDoorMainActivity extends FragmentActivity {
 //		mViewPager.setCurrentItem(1);
 		mFragmentManager = getSupportFragmentManager();
 		mFragmenetTransaction = mFragmentManager.beginTransaction();
-		mFragmenetTransaction.replace(R.id.id_content, mKeyFragment).commit();
+		if(currentVersion >= 18){
+			mFragmenetTransaction.replace(R.id.id_content, mKeyFragment).commit();
+		}else{
+			mFragmenetTransaction.replace(R.id.id_content, mKeyFragmentNoBLE).commit();
+		}
+		
 		
 		bottomTvKey.setTextColor(COLOR_BLACK);
 		bottomTvMsg.setTextColor(COLOR_GRAY);
@@ -237,8 +250,12 @@ public class CloudDoorMainActivity extends FragmentActivity {
 			bottomIvSetting.setImageResource(R.drawable.button_207);
 			bottomIvWuye.setImageResource(R.drawable.button_194);
 
-			mFragmenetTransaction.replace(R.id.id_content, mKeyFragment);
-			
+			if(currentVersion >= 18){
+				mFragmenetTransaction.replace(R.id.id_content, mKeyFragment);
+			}else{
+				mFragmenetTransaction.replace(R.id.id_content, mKeyFragmentNoBLE);
+			}
+
 //			mViewPager.setCurrentItem(1);
 			break;
 
@@ -280,7 +297,7 @@ public class CloudDoorMainActivity extends FragmentActivity {
 					Editor editor = homeKeyEvent.edit();
 					editor.putInt("homePressed", homePressed);
 					editor.commit();
-					
+
 				}else if(TextUtils.equals(reason, SYSTEM_DIALOG_REASON_LOCK)){
 					homePressed = 1;
 					
@@ -288,6 +305,7 @@ public class CloudDoorMainActivity extends FragmentActivity {
 					Editor editor = homeKeyEvent.edit();
 					editor.putInt("homePressed", homePressed);
 					editor.commit();
+
 				}
 			}
 		}
