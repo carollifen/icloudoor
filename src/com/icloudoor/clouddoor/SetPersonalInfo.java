@@ -378,6 +378,12 @@ public class SetPersonalInfo extends Activity {
 		});
 	}
 	
+	  @Override
+    protected void onDestroy() {
+        Log.e(TAG, "onDestroy");
+        super.onDestroy();
+    }
+
 	public void initSpinnerData() {
 		Cursor mCursorP = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
 		Cursor mCursorC = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
@@ -548,17 +554,17 @@ public class SetPersonalInfo extends Activity {
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		
-		if (event.getAction() == KeyEvent.ACTION_DOWN
-				&& KeyEvent.KEYCODE_BACK == keyCode) {
-			setPersonal = 0;
-			SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
-			Editor editor = personalInfo.edit();
-			editor.putInt("SETINFO", setPersonal);
-			editor.commit();
-			
-			finish();
-		}
+        if (event.getAction() == KeyEvent.ACTION_DOWN
+                && KeyEvent.KEYCODE_BACK == keyCode) {
+            setPersonal = 0;
+            SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
+            Editor editor = personalInfo.edit();
+            editor.putInt("SETINFO", setPersonal);
+            editor.commit();
+
+            finish();
+            CloudDoorMainActivity.instance.finish();
+        }
 		return super.onKeyDown(keyCode, event);
 
 	}
