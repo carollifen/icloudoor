@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONException;
@@ -28,6 +30,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,10 +50,15 @@ public class SetPersonalInfo extends Activity {
 	private SQLiteDatabase mAreaDB;
 	private final String DATABASE_NAME = "area.db";
 	private final String TABLE_NAME = "tb_core_area";
+//	private final String TABLE_NAME = "core_area";
 	
 	private String[] provinceSet;
 	private String[][] citySet;
 	private String[][][] districtSet;
+	
+	private List<String> provinceList = new ArrayList<String>();  
+	private List<String> cityList = new ArrayList<String>(); 
+	private List<String> districtList = new ArrayList<String>(); 
 	
 	private Spinner provinceSpinner = null; 
 	private Spinner citySpinner = null;
@@ -502,13 +510,15 @@ public class SetPersonalInfo extends Activity {
 				android.R.layout.simple_spinner_item, provinceSet);
 		provinceSpinner.setAdapter(provinceAdapter);
 
-		cityAdapter = new ArrayAdapter<String>(SetPersonalInfo.this,
-				android.R.layout.simple_spinner_item, citySet[0]);
-		citySpinner.setAdapter(cityAdapter);
-
-		districtAdapter = new ArrayAdapter<String>(SetPersonalInfo.this,
-				android.R.layout.simple_spinner_item, districtSet[0][0]);
-		districtSpinner.setAdapter(districtAdapter);
+		// some items in the array may be null, so it will cause the NPE.
+		// so i delete these codes
+//		cityAdapter = new ArrayAdapter<String>(SetPersonalInfo.this,
+//				android.R.layout.simple_spinner_item, citySet[0]);
+//		citySpinner.setAdapter(cityAdapter);
+//
+//		districtAdapter = new ArrayAdapter<String>(SetPersonalInfo.this,
+//				android.R.layout.simple_spinner_item, districtSet[0][0]);
+//		districtSpinner.setAdapter(districtAdapter);
 	}
 	
 	private long DBCount() {  
@@ -529,5 +539,18 @@ public class SetPersonalInfo extends Activity {
 	public String loadSid() {
 		SharedPreferences loadSid = getSharedPreferences("SAVEDSID", 0);
 		return loadSid.getString("SID", null);
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		setPersonal = 0;
+		SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
+		Editor editor = personalInfo.edit();
+		editor.putInt("SETINFO", setPersonal);
+		editor.commit();
+		
+		finish();
+		return super.onKeyDown(keyCode, event);
+
 	}
 }

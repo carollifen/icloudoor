@@ -75,6 +75,14 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		getActionBar().hide();
 		setContentView(R.layout.new_main);
 
+		SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
+		int setPersonal = personalInfo.getInt("SETINFO", 0);
+		if(setPersonal == 0) {
+			Intent  intentSetInfo = new Intent();
+			intentSetInfo.setClass(getApplicationContext(), SetPersonalInfo.class);
+			startActivity(intentSetInfo);
+		}
+
 		mMsgFragment = new MsgFragment();
 		currentVersion = android.os.Build.VERSION.SDK_INT;
 		if(currentVersion >= 18){

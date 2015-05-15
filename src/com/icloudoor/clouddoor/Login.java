@@ -60,11 +60,11 @@ public class Login extends Activity implements TextWatcher {
 	
 	private int setPersonal;
 	
-	private String name;
-	private String nickname;
-	private String id;
-	private String birth;
-	private int sex, provinceId, cityId, districtId;
+	private String name = null;
+	private String nickname = null;
+	private String id = null;
+	private String birth = null;
+	private int sex = 0, provinceId = 0, cityId = 0, districtId = 0;
 	private String portraitUrl, userId;
 	private int userStatus;
 
@@ -204,6 +204,7 @@ public class Login extends Activity implements TextWatcher {
 										editor.putString("NICKNAME", nickname);
 										editor.putString("ID", id);
 										editor.putString("BIRTH", birth);
+										editor.putInt("SEX", sex);
 										editor.putInt("PROVINCE", provinceId);
 										editor.putInt("CITY", cityId);
 										editor.putInt("DIS", districtId);
@@ -216,11 +217,10 @@ public class Login extends Activity implements TextWatcher {
 										e.printStackTrace();
 									}					
 									
-									if(setPersonal == 1 || (!name.equals(null) && !nickname.equals(null) 
-											&& !id.equals(null) && !birth.equals(null))){
-										intent.setClass(getApplicationContext(), CloudDoorMainActivity.class);
-									} else{
+									if(setPersonal == 0 || name.length() == 0 || sex == 0 || provinceId == 0 || cityId == 0 || districtId == 0 || birth.length() == 0 || id.length() == 0){
 										intent.setClass(getApplicationContext(), SetPersonalInfo.class);
+									} else if(setPersonal == 1){
+										intent.setClass(getApplicationContext(), CloudDoorMainActivity.class);
 									}
 									
 									startActivity(intent);
