@@ -647,19 +647,19 @@ public class WeatherWidgeFragment extends Fragment {
 		String week = null;
 		if(i > 7) i = i - 7;
 		if(i == 1){
-			week =getString(R.string.day);
+			week = getString(R.string.sunday);
 		}else if(i == 2){
-			week ="一";
+			week = getString(R.string.monday);
 		}else if(i == 3){
-			week ="二";
+			week = getString(R.string.tuesday);
 		}else if(i == 4){
-			week ="三";
+			week = getString(R.string.wednesday);
 		}else if(i == 5){
-			week ="四";
+			week = getString(R.string.thursday);
 		}else if(i == 6){
-			week ="五";
+			week = getString(R.string.friday);
 		}else if(i == 7){
-			week ="六";
+			week = getString(R.string.saturday);
 		}
 		return week;
 	}
