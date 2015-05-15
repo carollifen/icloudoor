@@ -321,6 +321,11 @@ public class SetPersonalInfo extends Activity {
 									editor.putInt("SETINFO", setPersonal);
 									editor.commit();
 									
+									SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
+									Editor editor1 = loginStatus.edit();
+									editor1.putString("NAME", Name);
+									editor1.commit();
+									
 									Intent intent = new Intent();
 									intent.setClass(SetPersonalInfo.this, CloudDoorMainActivity.class);
 									startActivity(intent);

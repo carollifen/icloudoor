@@ -130,7 +130,13 @@ public class ShowPersonalInfo extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent();
-				intent.setClass(ShowPersonalInfo.this, ModifyPersonalInfo.class);
+				
+				SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
+				if(personalInfo.getInt("SETINFO", 0) == 1){
+					intent.setClass(ShowPersonalInfo.this, ModifyPersonalInfo.class);
+				} else if (personalInfo.getInt("SETINFO", 0) == 0){
+					intent.setClass(ShowPersonalInfo.this, SetPersonalInfo.class);
+				}
 				startActivity(intent);
 			}
 			
@@ -207,7 +213,10 @@ public class ShowPersonalInfo extends Activity {
 		super.onResume();
 		Log.e("TESTTEST", "onResume show");
 		
-		mQueue = Volley.newRequestQueue(this);
+		SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
+		
+		if(personalInfo.getInt("SETINFO", 0) == 1) {
+			mQueue = Volley.newRequestQueue(this);
 		sid = loadSid();
 		try {
 			getInfoURL = new URL(HOST + "/user/manage/getProfile.do" + "?sid=" + sid);
@@ -322,7 +331,20 @@ public class ShowPersonalInfo extends Activity {
 					}
 				});
 		mQueue.add(mJsonRequest);
+	} else {
+		TVName.setText("");
+		TVNickName.setText("");
+		TVSex.setText(R.string.male);
+		IVSexImage.setImageResource(R.drawable.sex_blue);
+		TVprovince.setText("");
+		TVcity.setText("");
+		TVdistrict.setText("");
+		TVid.setText("");
+		TVyear.setText("");
+		TVmonth.setText("");
+		TVday.setText("");
 	}
+}
 	
 	private Handler mHandler = new Handler() {
 
@@ -358,7 +380,11 @@ public class ShowPersonalInfo extends Activity {
 
 			mHandler.obtainMessage(MSG_SUCCESS, bitmap).sendToTarget();
 		}
-	};	
+	};
+		
+		
+		
+		
 	
 	public void saveSid(String sid) {
 		SharedPreferences savedSid = getSharedPreferences("SAVEDSID",

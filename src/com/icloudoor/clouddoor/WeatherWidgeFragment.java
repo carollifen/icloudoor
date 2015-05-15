@@ -187,11 +187,11 @@ public class WeatherWidgeFragment extends Fragment {
 		
 		c.setTimeZone(TimeZone.getTimeZone("GMT+8:00")); 
 	
-		Year.setText(String.valueOf(c.get(Calendar.YEAR)) + "年");
+		Year.setText(String.valueOf(c.get(Calendar.YEAR)) + getString(R.string.year));
 		
-		Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1) + "月"
-				+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)) + "日");	
-		Week.setText("周" + getWeek(c.get(Calendar.DAY_OF_WEEK)));
+		Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1) + getString(R.string.month)
+				+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)) + getString(R.string.day));	
+		Week.setText(getString(R.string.week) + getWeek(c.get(Calendar.DAY_OF_WEEK)));
 		Day1.setText(String.valueOf(c.get(Calendar.DAY_OF_MONTH)));
 		
 		if(isBigMonth(c.get(Calendar.MONTH) + 1)){                
@@ -423,10 +423,10 @@ public class WeatherWidgeFragment extends Fragment {
 				Day2.setTextColor(0xFFffffff);
 				Day3.setTextColor(0xFFffffff);
 				
-				Year.setText(String.valueOf(c.get(Calendar.YEAR)) + "年");
-				Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1) + "月" 
-						+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)) + "日");	
-				Week.setText("周" + getWeek(c.get(Calendar.DAY_OF_WEEK)));
+				Year.setText(String.valueOf(c.get(Calendar.YEAR)) + getString(R.string.year));
+				Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1) + getString(R.string.month) 
+						+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)) + getString(R.string.day));	
+				Week.setText(getString(R.string.week) + getWeek(c.get(Calendar.DAY_OF_WEEK)));
 				
 				Temp.setText(loadWeather.getString("Day1Temp", null) + String.valueOf(centigrade));
 				
@@ -449,52 +449,52 @@ public class WeatherWidgeFragment extends Fragment {
 					if(c.get(Calendar.DAY_OF_MONTH) == 31){
 						if((c.get(Calendar.MONTH) + 1) == 12){   
 							
-							Year.setText(String.valueOf(c.get(Calendar.YEAR) + 1) + "年");
-							Date.setText( String.valueOf(1) + "月"
-									+ String.valueOf(1) + "日");
+							Year.setText(String.valueOf(c.get(Calendar.YEAR) + 1) + getString(R.string.year));
+							Date.setText( String.valueOf(1) + getString(R.string.month)
+									+ String.valueOf(1) + getString(R.string.day));
 						}else{
-							Year.setText(String.valueOf(c.get(Calendar.YEAR)) + "年");
-							Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + "月" 
-									+ String.valueOf(1) + "日");
+							Year.setText(String.valueOf(c.get(Calendar.YEAR)) + getString(R.string.year));
+							Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + getString(R.string.month) 
+									+ String.valueOf(1) + getString(R.string.day));
 						}
 					}else{
-						Year.setText(String.valueOf(c.get(Calendar.YEAR)) + "年");
-						Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1) + "月" 
-								+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)+1) + "日");	
+						Year.setText(String.valueOf(c.get(Calendar.YEAR)) + getString(R.string.year));
+						Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1) + getString(R.string.month) 
+								+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)+1) + getString(R.string.day));	
 					}
 				}else if(isSmallMonth(c.get(Calendar.MONTH) + 1)){     
 					if(c.get(Calendar.DAY_OF_MONTH) == 30){
-						Year.setText(String.valueOf(c.get(Calendar.YEAR)) + "年");
-						Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + "月" 
-								+ String.valueOf(1) + "日");
+						Year.setText(String.valueOf(c.get(Calendar.YEAR)) + getString(R.string.year));
+						Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + getString(R.string.month) 
+								+ String.valueOf(1) + getString(R.string.day));
 					}else{
-						Year.setText(String.valueOf(c.get(Calendar.YEAR)) + "年");
-						Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1) + "月" 
-								+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)+1) + "日");
+						Year.setText(String.valueOf(c.get(Calendar.YEAR)) + getString(R.string.year));
+						Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1) + getString(R.string.month) 
+								+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)+1) + getString(R.string.day));
 					}
 				}else if(isLeapYear(c.get(Calendar.MONTH) + 1)) {        
 					if(c.get(Calendar.DAY_OF_MONTH) == 29){
-						Year.setText(String.valueOf(c.get(Calendar.YEAR)) + "年");
-						Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + "月" 
-								+ String.valueOf(1) + "日");
+						Year.setText(String.valueOf(c.get(Calendar.YEAR)) + getString(R.string.year));
+						Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + getString(R.string.month) 
+								+ String.valueOf(1) + getString(R.string.day));
 					}else{
-						Year.setText(String.valueOf(c.get(Calendar.YEAR)) + "年");
-						Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1) + "月" 
-								+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)+1) + "日");
+						Year.setText(String.valueOf(c.get(Calendar.YEAR)) + getString(R.string.year));
+						Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1) + getString(R.string.month) 
+								+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)+1) + getString(R.string.day));
 					}
 				}else if(!(isLeapYear(c.get(Calendar.MONTH) + 1))){     
 					if(c.get(Calendar.DAY_OF_MONTH) == 28){
-						Year.setText(String.valueOf(c.get(Calendar.YEAR)) + "年");
-						Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + "月" 
-								+ String.valueOf(1) + "日");
+						Year.setText(String.valueOf(c.get(Calendar.YEAR)) + getString(R.string.year));
+						Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + getString(R.string.month) 
+								+ String.valueOf(1) + getString(R.string.day));
 					}else{
-						Year.setText(String.valueOf(c.get(Calendar.YEAR)) + "年");
-						Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1) + "月" 
-								+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)+1) + "日");
+						Year.setText(String.valueOf(c.get(Calendar.YEAR)) + getString(R.string.year));
+						Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1) + getString(R.string.month) 
+								+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)+1) + getString(R.string.day));
 					}
 				}
 				
-				Week.setText("周"  + getWeek(c.get(Calendar.DAY_OF_WEEK)+1));
+				Week.setText(getString(R.string.week)  + getWeek(c.get(Calendar.DAY_OF_WEEK)+1));
 				
 				Temp.setText(loadWeather.getString("Day2TempHigh", null) + String.valueOf(centigrade));
 				
@@ -516,51 +516,51 @@ public class WeatherWidgeFragment extends Fragment {
 				if(isBigMonth(c.get(Calendar.MONTH) + 1)){                 
 					if(c.get(Calendar.DAY_OF_MONTH) == 31 || c.get(Calendar.DAY_OF_MONTH) == 30){
 						if((c.get(Calendar.MONTH) + 1) == 12){  
-							Year.setText(String.valueOf(c.get(Calendar.YEAR) + 1) + "年");
-							Date.setText(String.valueOf(1) + "月"
-									+ String.valueOf((c.get(Calendar.DAY_OF_MONTH)+2)%31) + "日");
+							Year.setText(String.valueOf(c.get(Calendar.YEAR) + 1) + getString(R.string.year));
+							Date.setText(String.valueOf(1) + getString(R.string.month)
+									+ String.valueOf((c.get(Calendar.DAY_OF_MONTH)+2)%31) + getString(R.string.day));
 						}else{
-							Year.setText(String.valueOf(c.get(Calendar.YEAR)) + "年");
-							Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + "月" 
-									+ String.valueOf((c.get(Calendar.DAY_OF_MONTH)+2)%31) + "日");
+							Year.setText(String.valueOf(c.get(Calendar.YEAR)) + getString(R.string.year));
+							Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + getString(R.string.month) 
+									+ String.valueOf((c.get(Calendar.DAY_OF_MONTH)+2)%31) + getString(R.string.day));
 						}
 					}else{
-						Year.setText(String.valueOf(c.get(Calendar.YEAR)) + "年");
-						Date.setText( String.valueOf(c.get(Calendar.MONTH) + 1) + "月" 
-								+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)+2) + "日");	
+						Year.setText(String.valueOf(c.get(Calendar.YEAR)) + getString(R.string.year));
+						Date.setText( String.valueOf(c.get(Calendar.MONTH) + 1) + getString(R.string.month) 
+								+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)+2) + getString(R.string.day));	
 					}
 				}else if(isSmallMonth(c.get(Calendar.MONTH) + 1)){     
 					if(c.get(Calendar.DAY_OF_MONTH) == 30 || c.get(Calendar.DAY_OF_MONTH) == 29){
-						Year.setText(String.valueOf(c.get(Calendar.YEAR)) + "年");
-						Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + "月" 
-								+ String.valueOf((c.get(Calendar.DAY_OF_MONTH)+2)%30) + "日");
+						Year.setText(String.valueOf(c.get(Calendar.YEAR)) + getString(R.string.year));
+						Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + getString(R.string.month) 
+								+ String.valueOf((c.get(Calendar.DAY_OF_MONTH)+2)%30) + getString(R.string.day));
 					}else{
-						Year.setText(String.valueOf(c.get(Calendar.YEAR)) + "年");
-						Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1) + "月" 
-								+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)+2) + "日");
+						Year.setText(String.valueOf(c.get(Calendar.YEAR)) + getString(R.string.year));
+						Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1) + getString(R.string.month) 
+								+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)+2) + getString(R.string.day));
 					}
 				}else if(isLeapYear(c.get(Calendar.MONTH) + 1)) {        
 					if(c.get(Calendar.DAY_OF_MONTH) == 29 || c.get(Calendar.DAY_OF_MONTH) == 28){
-						Year.setText(String.valueOf(c.get(Calendar.YEAR)) + "年");
-						Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + "月" 
-								+ String.valueOf((c.get(Calendar.DAY_OF_MONTH)+2)%29) + "日");
+						Year.setText(String.valueOf(c.get(Calendar.YEAR)) + getString(R.string.year));
+						Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + getString(R.string.month) 
+								+ String.valueOf((c.get(Calendar.DAY_OF_MONTH)+2)%29) + getString(R.string.day));
 					}else{
-						Year.setText(String.valueOf(c.get(Calendar.YEAR)) + "年");
-						Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1) + "月" 
-								+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)+2) + "日");
+						Year.setText(String.valueOf(c.get(Calendar.YEAR)) + getString(R.string.year));
+						Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1) + getString(R.string.month) 
+								+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)+2) + getString(R.string.day));
 					}
 				}else if(!(isLeapYear(c.get(Calendar.MONTH) + 1))){     
 					if(c.get(Calendar.DAY_OF_MONTH) == 28 || c.get(Calendar.DAY_OF_MONTH) == 27){
-						Year.setText(String.valueOf(c.get(Calendar.YEAR)) + "年");
-						Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + "月" 
-								+ String.valueOf((c.get(Calendar.DAY_OF_MONTH)+2)%28) + "日");
+						Year.setText(String.valueOf(c.get(Calendar.YEAR)) + getString(R.string.year));
+						Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + getString(R.string.month) 
+								+ String.valueOf((c.get(Calendar.DAY_OF_MONTH)+2)%28) + getString(R.string.day));
 					}else{
-						Year.setText(String.valueOf(c.get(Calendar.YEAR)) + "年");
-						Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1) + "月" 
-								+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)+2) + "日");
+						Year.setText(String.valueOf(c.get(Calendar.YEAR)) + getString(R.string.year));
+						Date.setText(String.valueOf(c.get(Calendar.MONTH) + 1) + getString(R.string.month) 
+								+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)+2) + getString(R.string.day));
 					}
 				}	
-				Week.setText("周"  + getWeek(c.get(Calendar.DAY_OF_WEEK)+2));
+				Week.setText(getString(R.string.week)  + getWeek(c.get(Calendar.DAY_OF_WEEK)+2));
 				
 				Temp.setText(loadWeather.getString("Day3TempHigh", null) + String.valueOf(centigrade));
 				
@@ -647,7 +647,7 @@ public class WeatherWidgeFragment extends Fragment {
 		String week = null;
 		if(i > 7) i = i - 7;
 		if(i == 1){
-			week ="日";
+			week =getString(R.string.day);
 		}else if(i == 2){
 			week ="一";
 		}else if(i == 3){
