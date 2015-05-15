@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class MyDialog extends Dialog {
-        //定义回调事件，用于dialog的点击事件
         public interface OnCustomDialogListener{
                 public void back(int haveset);
         }
@@ -39,8 +38,7 @@ public class MyDialog extends Dialog {
                  bound=(Button) findViewById(R.id.bound);
                  bound.setOnClickListener(clickListener);
                  cancle.setOnClickListener(clickListener);
-    			
-                //设置标题
+
                 setTitle(name); 
              
                      }
@@ -60,7 +58,7 @@ public class MyDialog extends Dialog {
                 		}
                 		else
                 		{
-                			Toast.makeText(context, "密码输入有误", Toast.LENGTH_SHORT).show();
+                			Toast.makeText(context, R.string.wrong_pwd, Toast.LENGTH_SHORT).show();
                 			pswEditText.setText("");
                 		}
                 	}

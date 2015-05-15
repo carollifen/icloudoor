@@ -22,20 +22,15 @@ public class MyAreaDBHelper extends SQLiteOpenHelper {
 		mContext = context;
 	}
 
-	/**
-	 * 数据库第一次创建时调用
-	 * */
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		executeAssetsSQL(db, "area.sql");
+//		executeAssetsSQL(db, "core_area.sql");
 	}
 
-	/**
-	 * 数据库升级时调用
-	 * */
+
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		//数据库不升级
 		if (newVersion <= oldVersion) {
 			return;
 		}
@@ -43,16 +38,12 @@ public class MyAreaDBHelper extends SQLiteOpenHelper {
 
 		int changeCnt = newVersion - oldVersion;
 		for (int i = 0; i < changeCnt; i++) {
-			// 依次执行updatei_i+1文件      由1更新到2 [1-2]，2更新到3 [2-3]
 			String schemaName = "update" + (oldVersion + i) + "_"
 					+ (oldVersion + i + 1) + ".sql";
 			executeAssetsSQL(db, schemaName);
 		}
 	}
 
-	/**
-	 * 读取数据库文件（.sql），并执行sql语句
-	 * */
 	private void executeAssetsSQL(SQLiteDatabase db, String schemaName) {
 		BufferedReader in = null;
 		try {
@@ -88,7 +79,7 @@ public class MyAreaDBHelper extends SQLiteOpenHelper {
 		SQLiteDatabase db = null;
 		Cursor cursor = null;
 		try {
-			db = this.getWritableDatabase();// 此this是继承SQLiteOpenHelper类得到的
+			db = this.getWritableDatabase();
 			String sql = "select count(*) as c from sqlite_master where type ='table' and name ='"+tabName.trim()+"' ";
 			cursor = db.rawQuery(sql, null);
 			if (cursor.moveToNext()) {

@@ -119,7 +119,7 @@ public class TakePicCamInterface {
 		if(mCamera != null){
 
 			mParams = mCamera.getParameters();
-			mParams.setPictureFormat(ImageFormat.JPEG);//设置拍照后存储的图片格式
+			mParams.setPictureFormat(ImageFormat.JPEG);
 
 			Size pictureSize = TakePicCamParaUtil.getInstance().getPropPictureSize(
 					mParams.getSupportedPictureSizes(),previewRate, 800);
@@ -135,83 +135,77 @@ public class TakePicCamInterface {
 				mParams.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
 			}
 			mCamera.setParameters(mParams);	
-			mCamera.startPreview();//开启预览
+			mCamera.startPreview();
 
 
 
 			isPreviewing = true;
 			mPreviwRate = previewRate;
 
-			mParams = mCamera.getParameters(); //重新get一次
+			mParams = mCamera.getParameters(); 
 
 		}
 	}
 
 
-
-	/*为了实现拍照的快门声音及拍照保存照片需要下面三个回调变量*/
 	ShutterCallback mShutterCallback = new ShutterCallback() 
-	//快门按下的回调，在这里我们可以设置类似播放“咔嚓”声之类的操作。默认的就是咔嚓。
 	{
 		public void onShutter() {
 
 		}
 	};
 	PictureCallback mRawCallback = new PictureCallback() 
-	// 拍摄的未压缩原数据的回调,可以为null
 	{
 
 		public void onPictureTaken(byte[] data, Camera camera) {
 
 		}
 	};
+	
 	/**
-	 * 常规拍照
+	 * normal
 	 */
 	PictureCallback mJpegPictureCallback = new PictureCallback() 
-	//对jpeg图像数据的回调,最重要的一个回调
 	{
 		public void onPictureTaken(byte[] data, Camera camera) {
 			Bitmap b = null;
 			if(null != data){
-				b = BitmapFactory.decodeByteArray(data, 0, data.length);//data是字节数据，将其解析成位图
+				b = BitmapFactory.decodeByteArray(data, 0, data.length);
 				mCamera.stopPreview();
 				isPreviewing = false;
 			}
-			//保存图片到sdcard
+			
 			if(null != b)
 			{
-				//设置FOCUS_MODE_CONTINUOUS_VIDEO)之后，myParam.set("rotation", 90)失效。
-				//图片竟然不能旋转了，故这里要旋转下
+				
 				Bitmap rotaBitmap = TakePicImageUtil.getRotateBitmap(b, 90.0f);
 				TakePicFileUtil.saveBitmap(rotaBitmap);
 			}
-			//再次进入预览
+			
 			mCamera.startPreview();
 			isPreviewing = true;
 		}
 	};
 
 	/**
-	 * 拍摄指定区域的Rect
+	 * Rect
 	 */
 	PictureCallback mRectJpegPictureCallback = new PictureCallback() 
-	//对jpeg图像数据的回调,最重要的一个回调
+
 	{
 		public void onPictureTaken(byte[] data, Camera camera) {
 			// TODO Auto-generated method stub
 
 			Bitmap b = null;
 			if(null != data){
-				b = BitmapFactory.decodeByteArray(data, 0, data.length);//data是字节数据，将其解析成位图
+				b = BitmapFactory.decodeByteArray(data, 0, data.length);
 				mCamera.stopPreview();
 				isPreviewing = false;
 			}
-			//保存图片到sdcard
+			
 			if(null != b)
 			{
-				//设置FOCUS_MODE_CONTINUOUS_VIDEO)之后，myParam.set("rotation", 90)失效。
-				//图片竟然不能旋转了，故这里要旋转下
+
 				Bitmap rotaBitmap = TakePicImageUtil.getRotateBitmap(b, 90.0f);
 				int x = rotaBitmap.getWidth()/2 - DST_RECT_WIDTH/2;
 				int y = rotaBitmap.getHeight()/2 - DST_RECT_HEIGHT/2;
@@ -270,7 +264,7 @@ public class TakePicCamInterface {
 					rectBitmap = null;
 				}
 			}
-			//再次进入预览
+
 			mCamera.startPreview();
 			isPreviewing = true;
 			if(!b.isRecycled()){

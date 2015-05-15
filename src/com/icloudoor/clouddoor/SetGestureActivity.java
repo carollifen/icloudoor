@@ -48,7 +48,7 @@ public class SetGestureActivity extends Activity implements OnClickListener {
 	private void setUpViews() {
 		mLockIndicator = (LockIndicatorView) findViewById(R.id.lock_indicator);
 		mGestureContainer = (FrameLayout) findViewById(R.id.gesture_container);
-		// 初始化一个显示各个点的viewGroup
+		// init the viewGroup
 		mGestureContentView = new SetGestureContentView(this, false, "", new SetGestureCallBack() {
 			@Override
 			public void onGestureCodeInput(String inputCode) {
@@ -66,9 +66,9 @@ public class SetGestureActivity extends Activity implements OnClickListener {
 							Toast.makeText(SetGestureActivity.this, R.string.sign_set_success, Toast.LENGTH_SHORT).show();
 						mGestureContentView.clearDrawlineState(0L);
 						
-						saveSign(mFirstPassword);    //保存设置好的手势密码
+						saveSign(mFirstPassword);  
 						
-						haveSet = 1;  //改变状态，并保存
+						haveSet = 1;  
 						SharedPreferences setSign = getSharedPreferences("SETSIGN", 0);
 						Editor set = setSign.edit();
 						set.putInt("HAVESETSIGN", haveSet);
@@ -94,7 +94,7 @@ public class SetGestureActivity extends Activity implements OnClickListener {
 				
 			}
 		});
-		// 设置手势解锁显示到哪个布局里面
+		// to show the gesture
 		mGestureContentView.setParentView(mGestureContainer);
 		updateCodeList("");
 	}
@@ -106,7 +106,7 @@ public class SetGestureActivity extends Activity implements OnClickListener {
 	}
 	
 	private void updateCodeList(String inputCode) {
-		// 更新选择的图案
+		// update the gesture 
 		mLockIndicator.setPath(inputCode);
 	}
 	
@@ -124,15 +124,15 @@ public class SetGestureActivity extends Activity implements OnClickListener {
 		editor.commit();
 	}	
 	
-	 @Override
-		public boolean onKeyDown(int keyCode, KeyEvent event) {
-			// TODO Auto-generated method stub
-			 SharedPreferences setting = getSharedPreferences(
-						"SETTING", MODE_PRIVATE);
-				Editor useSigneditor = setting.edit();
-				useSigneditor.putInt("useSign", 0);
-				useSigneditor.commit();
-			return super.onKeyDown(keyCode, event);
-			
-		}
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		SharedPreferences setting = getSharedPreferences("SETTING",
+				MODE_PRIVATE);
+		Editor useSigneditor = setting.edit();
+		useSigneditor.putInt("useSign", 0);
+		useSigneditor.commit();
+		return super.onKeyDown(keyCode, event);
+
+	}
 }

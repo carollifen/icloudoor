@@ -48,7 +48,6 @@ public class LockIndicatorView extends View {
 		if ((patternPressed == null) || (patternNormal == null)) {
 			return;
 		}
-		// 绘制3*3的图标
 		for (int i = 0; i < rowNum; i++) {
 			for (int j = 0; j < columnNum; j++) {
 				paint.setColor(-16777216);
@@ -59,14 +58,11 @@ public class LockIndicatorView extends View {
 				String curNum = String.valueOf(columnNum * i + (j + 1));
 				if (!TextUtils.isEmpty(lockPassStr)) {
 					if (lockPassStr.indexOf(curNum) == -1) {
-						// 未选中
 						patternNormal.draw(canvas);
 					} else {
-						// 被选中
 						patternPressed.draw(canvas);
 					}
 				} else {
-					// 重置状态
 					patternNormal.draw(canvas);
 				}
 				canvas.restore();

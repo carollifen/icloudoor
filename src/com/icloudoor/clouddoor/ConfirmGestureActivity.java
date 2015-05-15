@@ -35,7 +35,7 @@ public class ConfirmGestureActivity extends Activity implements OnClickListener 
 		
 		confirmWithPsw.setOnClickListener(this);
 		
-		gesturePwd = loadSign(); //获取保存过的手势密码
+		gesturePwd = loadSign(); //get the saved pws
 		
 		registerReceiver(KillConfirmActivityBroadcast, new IntentFilter("KillConfirmActivity"));
 		
@@ -48,7 +48,7 @@ public class ConfirmGestureActivity extends Activity implements OnClickListener 
 
 			@Override
 			public void checkedSuccess() {
-				Toast.makeText(ConfirmGestureActivity.this, "请重设手势密码", Toast.LENGTH_SHORT).show();
+				Toast.makeText(ConfirmGestureActivity.this, R.string.reset_the_gesture_pwd, Toast.LENGTH_SHORT).show();
 				
 				
 					Intent intent = new Intent();
@@ -94,7 +94,7 @@ public class ConfirmGestureActivity extends Activity implements OnClickListener 
 		// TODO Auto-generated method stub
 		if(v.getId()==R.id.confirm_with_passw)
 		{
-			MyDialog mdialog =new MyDialog(ConfirmGestureActivity.this,"登录密码",new MyDialog.OnCustomDialogListener() {
+			MyDialog mdialog =new MyDialog(ConfirmGestureActivity.this, "登陆密码", new MyDialog.OnCustomDialogListener() {
 				
 				@Override
 				public void back(int haveset) {

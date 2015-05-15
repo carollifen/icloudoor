@@ -105,8 +105,8 @@ public class ModifyPersonalInfo extends Activity {
 	private Bitmap bitmap;
 	private Thread mThread;
 	
-	private static final int MSG_SUCCESS = 0;// 获取图片成功的标识
-	private static final int MSG_FAILURE = 1;// 获取图片失败的标识
+	private static final int MSG_SUCCESS = 0;// get the image success
+	private static final int MSG_FAILURE = 1;// fail
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -305,10 +305,10 @@ public class ModifyPersonalInfo extends Activity {
 		
 		TVname.setText(name);
 		if(sex == 1){
-			TVsex.setText("男");
+			TVsex.setText(R.string.male);
 			IVsexImage.setImageResource(R.drawable.sex_blue);
 		}else if(sex == 2){
-			TVsex.setText("女");
+			TVsex.setText(R.string.female);
 			IVsexImage.setImageResource(R.drawable.sex_red);
 		}
 		TVprovince.setText(province);
@@ -353,7 +353,6 @@ public class ModifyPersonalInfo extends Activity {
 	}
 	
 	private Handler mHandler = new Handler() {
-		// 重写handleMessage()方法，此方法在UI线程运行
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -367,24 +366,20 @@ public class ModifyPersonalInfo extends Activity {
 	};
 	
 	Runnable runnable = new Runnable() {
-		// 重写run()方法，此方法在新的线程中运行
 		@Override
 		public void run() {
 			HttpClient httpClient = new DefaultHttpClient();
-			// 从网络上获取图片
 			HttpGet httpGet = new HttpGet(portraitUrl);
 			final Bitmap bitmap;
 			try {
 				org.apache.http.HttpResponse httpResponse = httpClient
 						.execute(httpGet);
-				// 解析为图片
 				bitmap = BitmapFactory.decodeStream(httpResponse.getEntity()
 						.getContent());
 			} catch (Exception e) {
-				mHandler.obtainMessage(MSG_FAILURE).sendToTarget();// 获取图片失败
+				mHandler.obtainMessage(MSG_FAILURE).sendToTarget();
 				return;
 			}
-			// 获取图片成功，向UI线程发送MSG_SUCCESS标识和bitmap对象
 			mHandler.obtainMessage(MSG_SUCCESS, bitmap).sendToTarget();
 		}
 	};
@@ -408,7 +403,7 @@ public class ModifyPersonalInfo extends Activity {
 		@Override
 		public int compare(File lhs, File rhs) {
 			if(lhs.lastModified()<rhs.lastModified()){
-				return 1;    //最后修改的照片在前
+				return 1;  
 			}else 
 				return -1;
 		}

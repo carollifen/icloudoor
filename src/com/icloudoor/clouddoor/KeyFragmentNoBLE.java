@@ -173,7 +173,6 @@ public class KeyFragmentNoBLE extends Fragment {
         TvOpenKeyList.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-            //钥匙列表
             }
         });
         return view;

@@ -206,21 +206,21 @@ public class ForgetPwdActivity extends Activity implements TextWatcher {
 	
 	class TimeCount extends CountDownTimer {
 		public TimeCount(long millisInFuture, long countDownInterval) {
-		super(millisInFuture, countDownInterval);//参数依次为总时长,和计时的时间间隔
+		super(millisInFuture, countDownInterval);
 		}
 		@Override
-		public void onFinish() {//计时完毕时触发
-			TVGetCertiCode.setText("重新验证");
+		public void onFinish() {
+			TVGetCertiCode.setText(R.string.get_certi_code_again);
 			TVGetCertiCode.setTextSize(17);
 			TVGetCertiCode.setEnabled(true);
 			TVGetCertiCode.setBackgroundResource(R.drawable.btn_certi);
 		}
 		@Override
-		public void onTick(long millisUntilFinished){//计时过程显示
+		public void onTick(long millisUntilFinished){
 			TVGetCertiCode.setEnabled(false);
 			TVGetCertiCode.setBackgroundResource(R.drawable.btn_certi_counter);
 			TVGetCertiCode.setTextSize(16);
-			TVGetCertiCode.setText("已发验证" + '\n' + "(" + millisUntilFinished /1000+")");
+			TVGetCertiCode.setText(R.string.have_send + '\n' + "(" + millisUntilFinished /1000+")");
 		}
 	}
 	

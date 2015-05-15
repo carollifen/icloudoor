@@ -35,7 +35,7 @@ public class TakePicCamParaUtil {
 			i++;
 		}
 		if(i == list.size()){
-			i = 0;//如果没找到，就选最小的size
+			i = 0;
 		}
 		return list.get(i);
 	}
@@ -50,7 +50,7 @@ public class TakePicCamParaUtil {
 			i++;
 		}
 		if(i == list.size()){
-			i = 0;//如果没找到，就选最小的size
+			i = 0;
 		}
 		return list.get(i);
 	}
@@ -82,9 +82,6 @@ public class TakePicCamParaUtil {
 
 	}
 
-	/**打印支持的previewSizes
-	 * @param params
-	 */
 	public  void printSupportPreviewSize(Camera.Parameters params){
 		List<Size> previewSizes = params.getSupportedPreviewSizes();
 		for(int i=0; i< previewSizes.size(); i++){
@@ -93,18 +90,14 @@ public class TakePicCamParaUtil {
 	
 	}
 
-	/**打印支持的pictureSizes
-	 * @param params
-	 */
+
 	public  void printSupportPictureSize(Camera.Parameters params){
 		List<Size> pictureSizes = params.getSupportedPictureSizes();
 		for(int i=0; i< pictureSizes.size(); i++){
 			Size size = pictureSizes.get(i);
 		}
 	}
-	/**打印支持的聚焦模式
-	 * @param params
-	 */
+
 	public void printSupportFocusMode(Camera.Parameters params){
 		List<String> focusModes = params.getSupportedFocusModes();
 		for(String mode : focusModes){

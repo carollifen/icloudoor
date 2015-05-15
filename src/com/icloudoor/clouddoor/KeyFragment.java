@@ -219,11 +219,11 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //						String doorName = mCursor.getString(doorNamemIndex);
 //						String doorType = mCursor.getString(doorTypeIndex);
 //
-//						if (doorType.equals("2")) { // 可通行的车门列表，包括deviceId, doorName
+//						if (doorType.equals("2")) { 
 //							temp.put("CDdeviceid", deviceId);
 //							temp.put("CDdoorName", doorName);
 //							carDoorList.add(temp);
-//						} else if (doorType.equals("1")) { // 可通行的人门列表，包括deviceId, doorName
+//						} else if (doorType.equals("1")) { 
 //							temp.put("MDdeviceid", deviceId);
 //							temp.put("MDdoorName", doorName);
 //							manDoorList.add(temp);
@@ -315,7 +315,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 				BadgeView badge = new com.jauker.widget.BadgeView(getActivity());
 				badge.setTargetView(TvOpenKeyList);
 				badge.setBadgeGravity(Gravity.RIGHT);
-		        badge.setBadgeCount((int)DBCount());//TODO
+		        badge.setBadgeCount((int)DBCount());
 				
 				Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME,
 						null);
@@ -330,11 +330,11 @@ public class KeyFragment extends Fragment implements ShakeListener {
 						String doorName = mCursor.getString(doorNamemIndex);
 						String doorType = mCursor.getString(doorTypeIndex);
 
-						if (doorType.equals("2")) { // 可通行的车门列表，包括deviceId, doorName
+						if (doorType.equals("2")) {
 							temp.put("CDdeviceid", deviceId);
 							temp.put("CDdoorName", doorName);
 							carDoorList.add(temp);
-						} else if (doorType.equals("1")) { // 可通行的人门列表，包括deviceId, doorName
+						} else if (doorType.equals("1")) { 
 							temp.put("MDdeviceid", deviceId);
 							temp.put("MDdoorName", doorName);
 							manDoorList.add(temp);
@@ -804,8 +804,8 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //	private Runnable task = new Runnable() {
 //		public void run() {
 //			// TODOAuto-generated method stub
-//			handler.postDelayed(this, 2 * 100);// 设置延迟时间，此处是0.2秒
-//			// 需要执行的代码
+//			handler.postDelayed(this, 2 * 100);// set the delay time, ms
+//			// do something here!!
 //			if (mUartService != null) {
 //                mUartService.readRXCharacteristic(mUartService.SIMPLEPROFILE_CHAR2_UUID);
 //            }
@@ -971,7 +971,6 @@ public class KeyFragment extends Fragment implements ShakeListener {
 				0, 1);
 	}
 
-	// 返回数据表KeyInfoTable里面记录的数量
 	private long DBCount() {
 		String sql = "SELECT COUNT(*) FROM " + TABLE_NAME;
 		SQLiteStatement statement = mKeyDB.compileStatement(sql);
@@ -994,7 +993,6 @@ public class KeyFragment extends Fragment implements ShakeListener {
 
     }
 	
-	//for test
 	public void saveSid(String sid) {
 		SharedPreferences savedSid = getActivity().getSharedPreferences("SAVEDSID", 0);
 		Editor editor = savedSid.edit();

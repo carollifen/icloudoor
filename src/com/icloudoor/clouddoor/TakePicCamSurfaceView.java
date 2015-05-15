@@ -17,7 +17,7 @@ public class TakePicCamSurfaceView extends SurfaceView implements SurfaceHolder.
 
 		mContext = context;
 		mSurfaceHolder = getHolder();
-		mSurfaceHolder.setFormat(PixelFormat.TRANSPARENT);//translucent°ëÍ¸Ã÷ transparentÍ¸Ã÷
+		mSurfaceHolder.setFormat(PixelFormat.TRANSPARENT);
 		mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		mSurfaceHolder.addCallback(this);
 	}

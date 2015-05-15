@@ -53,5 +53,20 @@
     <string name="open_door_fail">开门失败，请靠近重新连接</string>
     <string name="low_android_version">系统版本过低，无法使用BLE</string>
     <string name="scanning">正在扫描</string>
+    <string name="reset_the_gesture_pwd">请重设手势密码</string>
+    <string name="login_pwd">登陆密码</string>
+    <string name="get_certi_code_again">重新验证</string>
+    <string name="have_send">已发验证</string>
+    <string name="male">男</string>
+    <string name="female">女</string>
+    <string name="wrong_pwd">密码输入有误</string>
+    <string name="week">周</string>
+    <string name="sunday">日</string>
+    <string name="monday">一</string>
+    <string name="tuesday">二</string>
+    <string name="wednesday">三</string>
+    <string name="thursday">四</string>
+    <string name="friday">五</string>
+    <string name="saturday">六</string>
 
 </resources>

@@ -67,8 +67,8 @@ public class SettingFragment extends Fragment {
 	private Bitmap bitmap;
 	private Thread mThread;
 	
-	private static final int MSG_SUCCESS = 0;// 获取图片成功的标识
-	private static final int MSG_FAILURE = 1;// 获取图片失败的标识
+	private static final int MSG_SUCCESS = 0;//get the image success
+	private static final int MSG_FAILURE = 1;// fail
 
 	public SettingFragment() {
 		// Required empty public constructor
@@ -128,7 +128,6 @@ public class SettingFragment extends Fragment {
 	}
 	
 	private Handler mHandler = new Handler() {
-		// 重写handleMessage()方法，此方法在UI线程运行
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -142,24 +141,23 @@ public class SettingFragment extends Fragment {
 	};
 	
 	Runnable runnable = new Runnable() {
-		// 重写run()方法，此方法在新的线程中运行
+
 		@Override
 		public void run() {
 			HttpClient httpClient = new DefaultHttpClient();
-			// 从网络上获取图片
 			HttpGet httpGet = new HttpGet(portraitUrl);
 			final Bitmap bitmap;
 			try {
 				org.apache.http.HttpResponse httpResponse = httpClient
 						.execute(httpGet);
-				// 解析为图片
+
 				bitmap = BitmapFactory.decodeStream(httpResponse.getEntity()
 						.getContent());
 			} catch (Exception e) {
-				mHandler.obtainMessage(MSG_FAILURE).sendToTarget();// 获取图片失败
+				mHandler.obtainMessage(MSG_FAILURE).sendToTarget();
 				return;
 			}
-			// 获取图片成功，向UI线程发送MSG_SUCCESS标识和bitmap对象
+	
 			mHandler.obtainMessage(MSG_SUCCESS, bitmap).sendToTarget();
 		}
 	};

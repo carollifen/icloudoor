@@ -40,7 +40,7 @@ public class VerifyGestureActivity extends Activity implements OnClickListener {
 		
 		mGestureContainer = (FrameLayout) findViewById(R.id.sign_verify_gesture_container);
 		
-		gesturePwd = loadSign();  //获取保存过的手势密码
+		gesturePwd = loadSign(); 
 		
 		mGestureContentView = new SetGestureContentView(this, true, gesturePwd, new SetGestureCallBack() {
 

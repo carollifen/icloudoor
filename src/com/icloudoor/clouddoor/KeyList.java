@@ -447,12 +447,12 @@ public class KeyList extends Activity{
 	}
 
 	/*
-	 * 钥匙参数说明
-	 * authType: 	1 - 永久		  // the authtype is cancelled in the new key download interface
-	 *                	2 - 长久	
-	 *                	3 - 临时
-	 * doorType: 	1 - 人行门	
-	 *                	2 - 车门
+	 * key params:
+	 * authType: 	1 - forever		  // the authtype is cancelled in the new key download interface
+	 *                	2 - long time
+	 *                	3 - temp
+	 * doorType: 	1 - man	
+	 *                	2 - car
 	 */
 	public void parseKeyData(JSONObject response) throws JSONException {
 		Log.e("test for new interface", "parseKeyData func");
@@ -496,13 +496,13 @@ public class KeyList extends Activity{
 		
 		// for old keydownload interface
 //		try {
-//			JSONArray dataArray = response.getJSONArray("data"); // 得到"data"这个array
+//			JSONArray dataArray = response.getJSONArray("data"); // 
 //			
 //			for (int indexL1 = 0; indexL1 < dataArray.length(); indexL1++) {
-//				JSONObject L1Data = (JSONObject) dataArray.get(indexL1); // 得到里面的具体object--第i层的具体数据
+//				JSONObject L1Data = (JSONObject) dataArray.get(indexL1); // 
 //
 //				/*
-//				 * 第一层L1：小区级别钥匙信息
+//				 * L1 info
 //				 */
 //				L1ZoneName = L1Data.getString("zoneName"); 
 //				L1ZoneID = L1Data.getString("zoneId");
@@ -532,7 +532,7 @@ public class KeyList extends Activity{
 //				}
 //				
 //				/*
-//				 * 第二层L2：园区级别钥匙信息
+//				 * L2 info
 //				 */
 //				JSONArray L2DataArray = L1Data.getJSONArray("zones"); 
 //				for(int indexL2 = 0; indexL2 < L2DataArray.length(); indexL2++){
@@ -564,7 +564,7 @@ public class KeyList extends Activity{
 //					}
 //					
 //					/*
-//					 * 第三层L3：楼栋级别钥匙信息
+//					 * L3 info
 //					 */
 //					JSONArray L3DataArray = L2Data.getJSONArray("zones");
 //					for(int indexL3 = 0; indexL3 < L3DataArray.length(); indexL3++){
@@ -700,8 +700,6 @@ public class KeyList extends Activity{
 		return loadUUID.getString("UUID", null);
 	}
 	
-	
-	//返回数据表KeyInfoTable里面记录的数量
 	private long DBCount() {  
 	    String sql = "SELECT COUNT(*) FROM " + TABLE_NAME;
 	    SQLiteStatement statement = mKeyDB.compileStatement(sql);

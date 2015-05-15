@@ -31,14 +31,14 @@ public class TakePicMaskView extends ImageView {
 	}
 
 	private void initPaint(){
-		//绘制中间透明区域矩形边界的Paint
+		
 		mLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mLinePaint.setColor(Color.RED);
 		mLinePaint.setStyle(Style.STROKE);
 		mLinePaint.setStrokeWidth(100f);
 		mLinePaint.setAlpha(0);
 
-		//绘制四周阴影区域
+		
 		mAreaPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mAreaPaint.setColor(Color.GRAY);
 		mAreaPaint.setStyle(Style.FILL);
@@ -49,7 +49,7 @@ public class TakePicMaskView extends ImageView {
 	}
 	public void setCenterRect(Rect r){
 		this.mCenterRect = r;
-		postInvalidate();  //界面刷新
+		postInvalidate();  
 	}
 	public void clearCenterRect(Rect r){
 		this.mCenterRect = null;
@@ -61,13 +61,13 @@ public class TakePicMaskView extends ImageView {
 		// TODO Auto-generated method stub
 		if(mCenterRect == null)
 			return;
-		//绘制四周阴影区域
-		canvas.drawRect(0, 0, widthScreen, mCenterRect.top, mAreaPaint);    //上方阴影区域
-		canvas.drawRect(0, mCenterRect.bottom + 1, widthScreen, heightScreen, mAreaPaint);  //下方阴影区域
-		canvas.drawRect(0, mCenterRect.top, mCenterRect.left - 1, mCenterRect.bottom  + 1, mAreaPaint);  //左侧阴影区域
-		canvas.drawRect(mCenterRect.right + 1, mCenterRect.top, widthScreen, mCenterRect.bottom + 1, mAreaPaint);  //右侧阴影区域 
+		
+		canvas.drawRect(0, 0, widthScreen, mCenterRect.top, mAreaPaint);    // top
+		canvas.drawRect(0, mCenterRect.bottom + 1, widthScreen, heightScreen, mAreaPaint);  //bottom
+		canvas.drawRect(0, mCenterRect.top, mCenterRect.left - 1, mCenterRect.bottom  + 1, mAreaPaint);  // left side
+		canvas.drawRect(mCenterRect.right + 1, mCenterRect.top, widthScreen, mCenterRect.bottom + 1, mAreaPaint);  // right side
 
-		//绘制目标透明区域
+		
 		canvas.drawRect(mCenterRect, mLinePaint);
 		super.onDraw(canvas);
 	}

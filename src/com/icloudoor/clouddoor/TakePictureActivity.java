@@ -20,8 +20,8 @@ public class TakePictureActivity extends Activity implements CamOpenOverCallback
 	TakePicCamSurfaceView surfaceView = null;
 	TakePicMaskView maskView = null;
 	float previewRate = -1f;
-//	int DST_CENTER_RECT_WIDTH = 125; //单位是dip
-//	int DST_CENTER_RECT_HEIGHT = 125;//单位是dip
+//	int DST_CENTER_RECT_WIDTH = 125; //dip
+//	int DST_CENTER_RECT_HEIGHT = 125;//dip
 	Point rectPictureSize = null;
 	
 	private RelativeLayout btnCancel, btnConfirm;
@@ -57,7 +57,7 @@ public class TakePictureActivity extends Activity implements CamOpenOverCallback
 		Point p = TakePicDisplayUtil.getScreenMetrics(this);
 		params.width = p.x;
 		params.height = p.y;
-		previewRate = TakePicDisplayUtil.getScreenRate(this); //默认全屏的比例预览
+		previewRate = TakePicDisplayUtil.getScreenRate(this); 
 		surfaceView.setLayoutParams(params);
 
 	}
@@ -103,20 +103,20 @@ public class TakePictureActivity extends Activity implements CamOpenOverCallback
 
 	}
 //	
-//	/**生成拍照后图片的中间矩形的宽度和高度
-//	 * @param w 屏幕上的矩形宽度，单位px
-//	 * @param h 屏幕上的矩形高度，单位px
+//	/**
+//	 * @param w px
+//	 * @param h px
 //	 * @return
 //	 */
 //	private Point createCenterPictureRect(int w, int h){
 //		
 //		int wScreen = TakePicDisplayUtil.getScreenMetrics(this).x;
 //		int hScreen = TakePicDisplayUtil.getScreenMetrics(this).y;
-//		int wSavePicture = TakePicCamInterface.getInstance().doGetPrictureSize().y; //因为图片旋转了，所以此处宽高换位
-//		int hSavePicture = TakePicCamInterface.getInstance().doGetPrictureSize().x; //因为图片旋转了，所以此处宽高换位
+//		int wSavePicture = TakePicCamInterface.getInstance().doGetPrictureSize().y; 
+//		int hSavePicture = TakePicCamInterface.getInstance().doGetPrictureSize().x;
 //		float wRate = (float)(wSavePicture) / (float)(wScreen);
 //		float hRate = (float)(hSavePicture) / (float)(hScreen);
-//		float rate = (wRate <= hRate) ? wRate : hRate;//也可以按照最小比率计算
+//		float rate = (wRate <= hRate) ? wRate : hRate;
 //		
 //		int wRectPicture = (int)( w * wRate);
 //		int hRectPicture = (int)( h * hRate);
@@ -124,9 +124,9 @@ public class TakePictureActivity extends Activity implements CamOpenOverCallback
 //		
 //	}
 	/**
-	 * 生成屏幕中间的矩形
-	 * @param w 目标矩形的宽度,单位px
-	 * @param h	目标矩形的高度,单位px
+	 * 
+	 * @param w px
+	 * @param h	px
 	 * @return
 	 */
 	private Rect createCenterScreenRect(int w, int h){
