@@ -94,7 +94,7 @@ public class ConfirmGestureActivity extends Activity implements OnClickListener 
 		// TODO Auto-generated method stub
 		if(v.getId()==R.id.confirm_with_passw)
 		{
-			MyDialog mdialog =new MyDialog(ConfirmGestureActivity.this, "µÇÂ½ÃÜÂë", new MyDialog.OnCustomDialogListener() {
+			MyDialog mdialog =new MyDialog(ConfirmGestureActivity.this, getString(R.string.login_pwd) , new MyDialog.OnCustomDialogListener() {
 				
 				@Override
 				public void back(int haveset) {

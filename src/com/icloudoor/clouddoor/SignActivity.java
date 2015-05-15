@@ -214,7 +214,7 @@ public class SignActivity extends Activity{
 				@Override
 				public void onClick(View v) {
 					Log.e("TEsT", "forgetSign clicked!");
-					MyDialog myDialog = new MyDialog(SignActivity.this, "µÇÂ¼ÃÜÂë",
+					MyDialog myDialog = new MyDialog(SignActivity.this, getString(R.string.login_pwd),
 							new MyDialog.OnCustomDialogListener() {
 
 								@Override
