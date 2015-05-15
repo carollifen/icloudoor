@@ -548,13 +548,17 @@ public class SetPersonalInfo extends Activity {
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		setPersonal = 0;
-		SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
-		Editor editor = personalInfo.edit();
-		editor.putInt("SETINFO", setPersonal);
-		editor.commit();
 		
-		finish();
+		if (event.getAction() == KeyEvent.ACTION_DOWN
+				&& KeyEvent.KEYCODE_BACK == keyCode) {
+			setPersonal = 0;
+			SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
+			Editor editor = personalInfo.edit();
+			editor.putInt("SETINFO", setPersonal);
+			editor.commit();
+			
+			finish();
+		}
 		return super.onKeyDown(keyCode, event);
 
 	}
