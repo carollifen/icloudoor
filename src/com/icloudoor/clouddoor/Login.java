@@ -16,10 +16,16 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
@@ -74,6 +80,8 @@ public class Login extends Activity implements TextWatcher {
 		getActionBar().hide();
 		setContentView(R.layout.login);
 
+		registerReceiver(mConnectionStatusReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+		
 		mQueue = Volley.newRequestQueue(this);
 
 		ETInputPhoneNum = (EditText) findViewById(R.id.login_input_phone_num);
@@ -164,10 +172,7 @@ public class Login extends Activity implements TextWatcher {
 								}
 								Log.e("TEST", response.toString());
 								
-								if (loginStatusCode == -71) {
-									Toast.makeText(getApplicationContext(), R.string.login_fail,
-											Toast.LENGTH_SHORT).show();
-								} else if (loginStatusCode == 1) {
+								if (loginStatusCode == 1) {
 
 									isLogin = 1;
 									SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
@@ -175,13 +180,7 @@ public class Login extends Activity implements TextWatcher {
 									editor.putInt("LOGIN", isLogin);
 									editor.putString("PHONENUM", phoneNum);
 									editor.putString("PASSWARD", password);
-									editor.commit();
-
-									Intent intent = new Intent();
-									
-									SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
-									setPersonal = personalInfo.getInt("SETINFO", 0);
-									
+									editor.commit();								
 									
 									try {
 										JSONObject data = response.getJSONObject("data");
@@ -215,17 +214,46 @@ public class Login extends Activity implements TextWatcher {
 										
 									} catch (JSONException e) {
 										e.printStackTrace();
-									}					
+									}		
 									
-									if(setPersonal == 0 || name.length() == 0 || sex == 0 || provinceId == 0 || cityId == 0 || districtId == 0 || birth.length() == 0 || id.length() == 0){
-										intent.setClass(getApplicationContext(), SetPersonalInfo.class);
-									} else if(setPersonal == 1){
-										intent.setClass(getApplicationContext(), CloudDoorMainActivity.class);
-									}
-									
-									startActivity(intent);
+									new Handler().postDelayed(new Runnable() {
+						                @Override
+						                public void run() {
+											Intent intent = new Intent();
+											
+											SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
+											setPersonal = personalInfo.getInt("SETINFO", 0);
+											
+											if(name.length() == 0 || sex == 0 || provinceId == 0 || cityId == 0 || districtId == 0 || birth.length() == 0 || id.length() == 0){
+												intent.setClass(getApplicationContext(), SetPersonalInfo.class);
+											} else {
+												intent.setClass(getApplicationContext(), CloudDoorMainActivity.class);
+											}
+											
+											startActivity(intent);
+		
+											finish();
+						                }
+						            }, 1000);
 
-									finish();
+//									Intent intent = new Intent();
+//									
+//									SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
+//									setPersonal = personalInfo.getInt("SETINFO", 0);
+//									
+//									if(name.length() == 0 || sex == 0 || provinceId == 0 || cityId == 0 || districtId == 0 || birth.length() == 0 || id.length() == 0){
+//										intent.setClass(getApplicationContext(), SetPersonalInfo.class);
+//									} else {
+//										intent.setClass(getApplicationContext(), CloudDoorMainActivity.class);
+//									}
+//									
+//									startActivity(intent);
+//
+//									finish();
+									
+								} else if (loginStatusCode == -71) {
+									Toast.makeText(getApplicationContext(), R.string.login_fail,
+											Toast.LENGTH_SHORT).show();
 								}
 							}
 						}, new Response.ErrorListener() {
@@ -257,6 +285,11 @@ public class Login extends Activity implements TextWatcher {
 	    ETInputPwd.setText("");
 	}
 
+	protected void onDestroyed() {
+		super.onDestroy();
+		unregisterReceiver(mConnectionStatusReceiver);
+	}
+	
 	public void saveSid(String sid) {
 		SharedPreferences savedSid = getSharedPreferences("SAVEDSID",
 				MODE_PRIVATE);
@@ -293,5 +326,21 @@ public class Login extends Activity implements TextWatcher {
 			TVLogin.setEnabled(false);
 		}
 	}
+	
+	public BroadcastReceiver mConnectionStatusReceiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO: This method is called when the BroadcastReceiver is receiving
+			// an Intent broadcast.
+			
+			ConnectivityManager connectivityManager=(ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+	        NetworkInfo  mobNetInfo=connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+	        NetworkInfo  wifiNetInfo=connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+	        
+	        if (!mobNetInfo.isConnected() && !wifiNetInfo.isConnected())
+	        	Toast.makeText(context, R.string.no_network, Toast.LENGTH_LONG).show();
+		}
+	};
 
 }
