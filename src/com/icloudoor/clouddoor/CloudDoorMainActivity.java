@@ -32,6 +32,8 @@ public class CloudDoorMainActivity extends FragmentActivity {
 //	private ArrayList<Fragment> mFragmentsList;
 //	private MyFragmentPagerAadpter mFragmentAdapter;
 
+	private String TAG = "MianActivity";
+	
 	private MsgFragment mMsgFragment;
 	private KeyFragment mKeyFragment;
 	private KeyFragmentNoBLE mKeyFragmentNoBLE;
@@ -74,6 +76,8 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		getActionBar().hide();
 		setContentView(R.layout.new_main);
+		
+		Log.e(TAG, "onCreate");
 
 		SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
 		int setPersonal = personalInfo.getInt("SETINFO", 0);
@@ -171,7 +175,7 @@ public class CloudDoorMainActivity extends FragmentActivity {
 
 	public void onResume() {
 		super.onResume();
-		Log.e("TEST", "onResume");
+		Log.e(TAG, "onResume");
 		
 		SharedPreferences homeKeyEvent = getSharedPreferences("HOMEKEY", 0);
 		homePressed = homeKeyEvent.getInt("homePressed", 0);
@@ -185,6 +189,11 @@ public class CloudDoorMainActivity extends FragmentActivity {
 			intent.setClass(getApplicationContext(), VerifyGestureActivity.class);
 			startActivity(intent);
 		}
+	}
+	
+	public void onDestroy() {
+		super.onDestroy();
+		unregisterReceiver(mHomeKeyEventReceiver);
 	}
  
 	public class MyOnClickListener implements OnClickListener {
