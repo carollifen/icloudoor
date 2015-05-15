@@ -27,13 +27,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class CloudDoorMainActivity extends FragmentActivity {
-
+    private final String TAG = this.getClass().getSimpleName();
 //	private ViewPager mViewPager;
 //	private ArrayList<Fragment> mFragmentsList;
 //	private MyFragmentPagerAadpter mFragmentAdapter;
-
-	private String TAG = "MianActivity";
-	
+    public static CloudDoorMainActivity instance = null;
 	private MsgFragment mMsgFragment;
 	private KeyFragment mKeyFragment;
 	private KeyFragmentNoBLE mKeyFragmentNoBLE;
@@ -76,9 +74,8 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		getActionBar().hide();
 		setContentView(R.layout.new_main);
-		
-		Log.e(TAG, "onCreate");
 
+        instance = this;
 		SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
 		int setPersonal = personalInfo.getInt("SETINFO", 0);
 		if(setPersonal == 0) {

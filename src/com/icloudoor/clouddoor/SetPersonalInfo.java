@@ -380,7 +380,6 @@ public class SetPersonalInfo extends Activity {
 	
 	  @Override
     protected void onDestroy() {
-        Log.e(TAG, "onDestroy");
         super.onDestroy();
     }
 
