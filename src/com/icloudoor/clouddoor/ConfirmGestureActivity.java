@@ -69,6 +69,11 @@ public class ConfirmGestureActivity extends Activity implements OnClickListener 
 		mGestureContentView.setParentView(mGestureContainer);
 	}
 	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		unregisterReceiver(KillConfirmActivityBroadcast);
+	}
 	
 	public String loadSign(){
 		SharedPreferences loadSign = getSharedPreferences("SAVESIGN", 0);

@@ -91,6 +91,21 @@ public class SettingDetailActivity extends Activity {
 		IVSwitchMan.setOnClickListener(mMyBtnOnClickListener);
 	}
 	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		SharedPreferences homeKeyEvent = getSharedPreferences("HOMEKEY", 0);
+		int homePressed = homeKeyEvent.getInt("homePressed", 0);
+		SharedPreferences setSign = getSharedPreferences("SETTING", 0);
+		int useSign = setSign.getInt("useSign", 0);
+		if (homePressed == 1 && useSign == 1) {
+			Intent intent = new Intent();
+			intent.setClass(SettingDetailActivity.this,
+					VerifyGestureActivity.class);
+			startActivity(intent);
+		}
+	}
+
 	public void InitBtns(){
 		
 		SharedPreferences setting = getSharedPreferences("SETTING", 0);		

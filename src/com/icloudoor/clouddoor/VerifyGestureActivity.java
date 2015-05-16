@@ -3,7 +3,10 @@ package com.icloudoor.clouddoor;
 import com.icloudoor.clouddoor.SetGestureDrawLineView.SetGestureCallBack;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -25,11 +28,20 @@ public class VerifyGestureActivity extends Activity implements OnClickListener {
 	private TextView phoneNum;
 	private String phone;
 	
+	private TextView IVmanageGesture;
+ 	private TextView IVpswLogin;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getActionBar().hide();
 		setContentView(R.layout.activity_verify_gesture);
+		
+		registerReceiver(KillVerifyActivityBroadcast, new IntentFilter("KillVerifyActivity"));
+		IVmanageGesture = (TextView) findViewById(R.id.sign_set_manage);
+		IVpswLogin = (TextView) findViewById(R.id.sign_set_account);
+		// IVmanageGesture.setOnClickListener(this);
+		IVpswLogin.setOnClickListener(this);
 		
 		phoneNum = (TextView) findViewById(R.id.sign_verify_person_phone);
 		SharedPreferences loginStatus = getSharedPreferences(
@@ -89,9 +101,43 @@ public class VerifyGestureActivity extends Activity implements OnClickListener {
 	}
 
 	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		unregisterReceiver(KillVerifyActivityBroadcast);
+	}
+	
+	
+	private BroadcastReceiver KillVerifyActivityBroadcast = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			if (action.equals("KillVerifyActivity")) {
+				VerifyGestureActivity.this.finish();
+			}
+		}
+	};	
+	
+	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		
+		if (v.getId() == R.id.sign_set_manage) {
+			Intent signIntent = new Intent(VerifyGestureActivity.this,
+					SignActivity.class);
+			startActivity(signIntent);
+			finish();
+		} else if (v.getId() == R.id.sign_set_account) {
+			MyDialog dialog = new MyDialog(VerifyGestureActivity.this,
+					getString(R.string.login_pwd), new MyDialog.OnCustomDialogListener() {
+						@Override
+						public void back(int haveset) {
+							Intent cloudIntent = new Intent(
+									VerifyGestureActivity.this,
+									CloudDoorMainActivity.class);
+							startActivity(cloudIntent);
+							VerifyGestureActivity.this.finish();
+						}
+					});
+			dialog.show();
+		}
 	}
 	
 	public void changeNum(){

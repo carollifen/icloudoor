@@ -143,6 +143,16 @@ public class SignActivity extends Activity{
 	public void onResume() {
 		super.onResume();
 		
+		SharedPreferences homeKeyEvent = getSharedPreferences("HOMEKEY", 0);
+		int homePressed = homeKeyEvent.getInt("homePressed", 0);
+		SharedPreferences Sign = getSharedPreferences("SETTING", 0);
+		int usesign = Sign.getInt("useSign", 0);
+		if (homePressed == 1 && usesign == 1) {
+			Intent intent = new Intent();
+			intent.setClass(SignActivity.this, VerifyGestureActivity.class);
+			startActivity(intent);
+		}
+		
 		Log.e("Test Sign", "onResume");
 
 		
