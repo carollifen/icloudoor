@@ -285,7 +285,7 @@ public class Login extends Activity implements TextWatcher {
 	    ETInputPwd.setText("");
 	}
 
-	protected void onDestroyed() {
+	protected void onDestroy() {
 		super.onDestroy();
 		unregisterReceiver(mConnectionStatusReceiver);
 	}

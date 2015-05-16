@@ -646,8 +646,6 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	            }, 3000);
 			}
 		}
-		
-
 	}
 
 	private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
