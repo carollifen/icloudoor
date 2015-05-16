@@ -102,7 +102,7 @@ public class Login extends Activity implements TextWatcher {
 		ETInputPhoneNum.addTextChangedListener(this); 
 		ETInputPwd.addTextChangedListener(this);
 		
-		sid = loadSid();
+		sid = loadSid("SID");
 
 		ShowPwd.setOnClickListener(new OnClickListener() {
 
@@ -147,99 +147,99 @@ public class Login extends Activity implements TextWatcher {
 
 			@Override
 			public void onClick(View v) {
-				
-				Toast.makeText(getApplicationContext(), R.string.login_ing, Toast.LENGTH_SHORT).show();
-				
-				try {
-					loginURL = new URL(HOST + "/user/manage/login.do" + "?sid="
-							+ sid);
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-				}
-				phoneNum = ETInputPhoneNum.getText().toString();
-				password = ETInputPwd.getText().toString();
-				MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
-						Method.POST, loginURL.toString(), null,
-						new Response.Listener<JSONObject>() {
+                if ("NET_WORKS".equals(loadSid("NETSTATE"))) {
+                    Toast.makeText(getApplicationContext(), R.string.login_ing, Toast.LENGTH_SHORT).show();
 
-							@Override
-							public void onResponse(JSONObject response) {
-								try {
-									if (response.getString("sid") != null) {
-										sid = response.getString("sid");
-										saveSid(sid);
-									}
-									loginStatusCode = response.getInt("code");
-								} catch (JSONException e) {
-									e.printStackTrace();
-								}
-								Log.e("TEST", response.toString());
-								
-								if (loginStatusCode == 1) {
+                    try {
+                        loginURL = new URL(HOST + "/user/manage/login.do" + "?sid="
+                                + sid);
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                    phoneNum = ETInputPhoneNum.getText().toString();
+                    password = ETInputPwd.getText().toString();
+                    MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
+                            Method.POST, loginURL.toString(), null,
+                            new Response.Listener<JSONObject>() {
 
-									isLogin = 1;
-									SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
-									Editor editor = loginStatus.edit();
-									editor.putInt("LOGIN", isLogin);
-									editor.putString("PHONENUM", phoneNum);
-									editor.putString("PASSWARD", password);
-									editor.commit();								
-									
-									try {
-										JSONObject data = response.getJSONObject("data");
-										JSONObject info = data.getJSONObject("info");
-										
-										name = info.getString("userName");
-										nickname = info.getString("nickname");
-										id = info.getString("idCardNo");
-										birth = info.getString("birthday");
-										sex = info.getInt("sex");
-										provinceId = info.getInt("provinceId");
-										cityId = info.getInt("cityId");
-										districtId = info.getInt("districtId");
-										
-										portraitUrl = info.getString("portraitUrl");
-										userId = info.getString("userId");
-										userStatus = info.getInt("userStatus");
-										
-										editor.putString("NAME", name);
-										editor.putString("NICKNAME", nickname);
-										editor.putString("ID", id);
-										editor.putString("BIRTH", birth);
-										editor.putInt("SEX", sex);
-										editor.putInt("PROVINCE", provinceId);
-										editor.putInt("CITY", cityId);
-										editor.putInt("DIS", districtId);
-										editor.putString("URL", portraitUrl);
-										editor.putString("USERID", userId);
-										editor.putInt("STATUS", userStatus);
-										editor.commit();
-										
-									} catch (JSONException e) {
-										e.printStackTrace();
-									}		
-									
-									new Handler().postDelayed(new Runnable() {
-						                @Override
-						                public void run() {
-											Intent intent = new Intent();
-											
-											SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
-											setPersonal = personalInfo.getInt("SETINFO", 1);
-											
-											Log.e(TAG, "setPersonal : " + String.valueOf(setPersonal));
-											
-											if(setPersonal == 0 || name.length() == 0 || sex == 0 || provinceId == 0 || cityId == 0 || districtId == 0 || birth.length() == 0 || id.length() == 0){
-												intent.setClass(getApplicationContext(), SetPersonalInfo.class);
-											} else if (setPersonal == 1) {
-												intent.setClass(getApplicationContext(), CloudDoorMainActivity.class);
-											}
-											
-											startActivity(intent);
-		
-											finish();
-						                }
-						            }, 1000);
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        if (response.getString("sid") != null) {
+                                            sid = response.getString("sid");
+                                            saveSid("SID", sid);
+                                        }
+                                        loginStatusCode = response.getInt("code");
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    Log.e("TEST", response.toString());
+
+                                    if (loginStatusCode == 1) {
+
+                                        isLogin = 1;
+                                        SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
+                                        Editor editor = loginStatus.edit();
+                                        editor.putInt("LOGIN", isLogin);
+                                        editor.putString("PHONENUM", phoneNum);
+                                        editor.putString("PASSWARD", password);
+                                        editor.commit();
+
+                                        try {
+                                            JSONObject data = response.getJSONObject("data");
+                                            JSONObject info = data.getJSONObject("info");
+
+                                            name = info.getString("userName");
+                                            nickname = info.getString("nickname");
+                                            id = info.getString("idCardNo");
+                                            birth = info.getString("birthday");
+                                            sex = info.getInt("sex");
+                                            provinceId = info.getInt("provinceId");
+                                            cityId = info.getInt("cityId");
+                                            districtId = info.getInt("districtId");
+
+                                            portraitUrl = info.getString("portraitUrl");
+                                            userId = info.getString("userId");
+                                            userStatus = info.getInt("userStatus");
+
+                                            editor.putString("NAME", name);
+                                            editor.putString("NICKNAME", nickname);
+                                            editor.putString("ID", id);
+                                            editor.putString("BIRTH", birth);
+                                            editor.putInt("SEX", sex);
+                                            editor.putInt("PROVINCE", provinceId);
+                                            editor.putInt("CITY", cityId);
+                                            editor.putInt("DIS", districtId);
+                                            editor.putString("URL", portraitUrl);
+                                            editor.putString("USERID", userId);
+                                            editor.putInt("STATUS", userStatus);
+                                            editor.commit();
+
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                        new Handler().postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Intent intent = new Intent();
+
+                                                SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
+                                                setPersonal = personalInfo.getInt("SETINFO", 1);
+
+                                                Log.e(TAG, "setPersonal : " + String.valueOf(setPersonal));
+
+                                                if (setPersonal == 0 || name.length() == 0 || sex == 0 || provinceId == 0 || cityId == 0 || districtId == 0 || birth.length() == 0 || id.length() == 0) {
+                                                    intent.setClass(getApplicationContext(), SetPersonalInfo.class);
+                                                } else if (setPersonal == 1) {
+                                                    intent.setClass(getApplicationContext(), CloudDoorMainActivity.class);
+                                                }
+
+                                                startActivity(intent);
+
+                                                finish();
+                                            }
+                                        }, 1000);
 
 //									Intent intent = new Intent();
 //									
@@ -255,31 +255,35 @@ public class Login extends Activity implements TextWatcher {
 //									startActivity(intent);
 //
 //									finish();
-									
-								} else if (loginStatusCode == -71) {
-									Toast.makeText(getApplicationContext(), R.string.login_fail,
-											Toast.LENGTH_SHORT).show();
-								}
-							}
-						}, new Response.ErrorListener() {
 
-							@Override
-							public void onErrorResponse(VolleyError error) {
+                                    } else if (loginStatusCode == -71) {
+                                        Toast.makeText(getApplicationContext(), R.string.login_fail,
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }, new Response.ErrorListener() {
 
-							}
-						}) {
-					@Override
-					protected Map<String, String> getParams()
-							throws AuthFailureError {
-						Map<String, String> map = new HashMap<String, String>();
-						map.put("mobile", phoneNum);
-						map.put("password", password);
-						return map;
-					}
-				};
-				mQueue.add(mJsonRequest);
-			}
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
 
+                        }
+                    }) {
+                        @Override
+                        protected Map<String, String> getParams()
+                                throws AuthFailureError {
+                            Map<String, String> map = new HashMap<String, String>();
+                            map.put("mobile", phoneNum);
+                            map.put("password", password);
+                            return map;
+                        }
+                    };
+                    mQueue.add(mJsonRequest);
+                }else {
+                    if (getApplicationContext() != null) {
+                        Toast.makeText(getApplicationContext(), R.string.no_network, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
 		});
 	}
 
@@ -295,17 +299,17 @@ public class Login extends Activity implements TextWatcher {
 		unregisterReceiver(mConnectionStatusReceiver);
 	}
 	
-	public void saveSid(String sid) {
+	public void saveSid(String key, String value) {
 		SharedPreferences savedSid = getSharedPreferences("SAVEDSID",
 				MODE_PRIVATE);
 		Editor editor = savedSid.edit();
-		editor.putString("SID", sid);
+		editor.putString(key, value);
 		editor.commit();
 	}
 
-	public String loadSid() {
+	public String loadSid(String key) {
 		SharedPreferences loadSid = getSharedPreferences("SAVEDSID", 0);
-		return loadSid.getString("SID", null);
+		return loadSid.getString(key, null);
 	}
 
 	@Override
@@ -336,16 +340,31 @@ public class Login extends Activity implements TextWatcher {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			// TODO: This method is called when the BroadcastReceiver is receiving
-			// an Intent broadcast.
-			
-			ConnectivityManager connectivityManager=(ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-	        NetworkInfo  mobNetInfo=connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-	        NetworkInfo  wifiNetInfo=connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-	        
-	        if (!mobNetInfo.isConnected() && !wifiNetInfo.isConnected())
-	        	Toast.makeText(context, R.string.no_network, Toast.LENGTH_LONG).show();
-		}
+            // TODO: This method is called when the BroadcastReceiver is receiving
+            // an Intent broadcast.
+
+            ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+            if (networkInfo != null) {
+                if (networkInfo.isAvailable()) {
+                    saveSid("NETSTATE", "NET_WORKS");
+                    Log.i("NOTICE", "The Net is available!");
+                }
+                NetworkInfo.State state = connectivityManager.getNetworkInfo(connectivityManager.TYPE_MOBILE).getState();
+                if (NetworkInfo.State.CONNECTED == state) {
+                    Log.i("NOTICE", "GPRS is OK!");
+                    NetworkInfo mobNetInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+                }
+                state = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+                if (NetworkInfo.State.CONNECTED == state) {
+                    Log.i("NOTICE", "WIFI is OK!");
+                    NetworkInfo wifiNetInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+                }
+            } else {
+                saveSid("NETSTATE", "NET_NOT_WORK");
+//                Toast.makeText(context, R.string.no_network, Toast.LENGTH_LONG).show();
+            }
+        }
 	};
 
 }

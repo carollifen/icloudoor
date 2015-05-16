@@ -696,11 +696,13 @@ public class WeatherWidgeFragment extends Fragment {
 	}
 	
 	public void saveSid(String sid) {
-		SharedPreferences savedSid = getActivity().getSharedPreferences("SAVEDSID",
-				0);
-		Editor editor = savedSid.edit();
-		editor.putString("SID", sid);
-		editor.commit();
+        if (getActivity() != null) {
+            SharedPreferences savedSid = getActivity().getSharedPreferences("SAVEDSID",
+                    0);
+            Editor editor = savedSid.edit();
+            editor.putString("SID", sid);
+            editor.commit();
+        }
 	}
 
 	public String loadSid() {

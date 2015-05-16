@@ -34,6 +34,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SettingFragment extends Fragment {
 	public Context context;
@@ -186,52 +187,57 @@ public class SettingFragment extends Fragment {
 				break;
 			case R.id.btn_update:
 				break;
-			case R.id.btn_logout:			
-				sid = loadSid();
-				
-				try {
-					logOutURL = new URL(HOST + "/user/manage/logout.do"
-							+ "?sid=" + sid);
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-				}
-				MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
-						Method.POST, logOutURL.toString(), null,
-						new Response.Listener<JSONObject>() {
+			case R.id.btn_logout:
+                if ("NET_WORKS".equals(loadSid("NETSTATE"))) {
+                    sid = loadSid("SID");
 
-							@Override
-							public void onResponse(JSONObject response) {
-								try {
-									if (response.getString("sid") != null){
-										sid = response.getString("sid");
-										saveSid(sid);
-									}
-									statusCode = response.getInt("code");
-									
-									isLogin = 0;
-									SharedPreferences loginStatus = getActivity()
-											.getSharedPreferences("LOGINSTATUS", 0);
-									Editor editor1 = loginStatus.edit();
-									editor1.putInt("LOGIN", isLogin);
-									editor1.commit();
-									Intent intent3 = new Intent();
-									intent3.setClass(getActivity(), Login.class);
-									startActivity(intent3);
-									
-									CloudDoorMainActivity mainActivity = (CloudDoorMainActivity) getActivity();
-									mainActivity.finish();
-								} catch (JSONException e) {
-									e.printStackTrace();
-								}
-							}
-						}, new Response.ErrorListener() {
+                    try {
+                        logOutURL = new URL(HOST + "/user/manage/logout.do"
+                                + "?sid=" + sid);
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                    MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
+                            Method.POST, logOutURL.toString(), null,
+                            new Response.Listener<JSONObject>() {
 
-							@Override
-							public void onErrorResponse(VolleyError error) {
-							}
-						});
-				mQueue.add(mJsonRequest);
-	
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        if (response.getString("sid") != null) {
+                                            sid = response.getString("sid");
+                                            saveSid("SID", sid);
+                                        }
+                                        statusCode = response.getInt("code");
+
+                                        isLogin = 0;
+                                        SharedPreferences loginStatus = getActivity()
+                                                .getSharedPreferences("LOGINSTATUS", 0);
+                                        Editor editor1 = loginStatus.edit();
+                                        editor1.putInt("LOGIN", isLogin);
+                                        editor1.commit();
+                                        Intent intent3 = new Intent();
+                                        intent3.setClass(getActivity(), Login.class);
+                                        startActivity(intent3);
+
+                                        CloudDoorMainActivity mainActivity = (CloudDoorMainActivity) getActivity();
+                                        mainActivity.finish();
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }, new Response.ErrorListener() {
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                        }
+                    });
+                    mQueue.add(mJsonRequest);
+                }else {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity().getApplicationContext(), R.string.no_network, Toast.LENGTH_SHORT).show();
+                    }
+                }
 				break;
 			}
 		}
@@ -249,18 +255,18 @@ public class SettingFragment extends Fragment {
 		}
 	}
 	
-	public void saveSid(String sid) {
+	public void saveSid(String key, String value) {
 		SharedPreferences savedSid = getActivity().getSharedPreferences(
 				"SAVEDSID", 0);
 		Editor editor = savedSid.edit();
-		editor.putString("SID", sid);
+		editor.putString(key, value);
 		editor.commit();
 	}
 
-	public String loadSid() {
+	public String loadSid(String key) {
 		SharedPreferences loadSid = getActivity().getSharedPreferences(
 				"SAVEDSID", 0);
-		return loadSid.getString("SID", null);
+		return loadSid.getString(key, null);
 	}
 
 	@Override

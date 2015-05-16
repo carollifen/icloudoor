@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -25,6 +27,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class CloudDoorMainActivity extends FragmentActivity {
     private final String TAG = this.getClass().getSimpleName();
@@ -74,7 +77,7 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		getActionBar().hide();
 		setContentView(R.layout.new_main);
-
+        registerReceiver(mConnectionStatusReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         instance = this;
 		SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
 		int setPersonal = personalInfo.getInt("SETINFO", 1);
@@ -189,9 +192,11 @@ public class CloudDoorMainActivity extends FragmentActivity {
 	}
 	
 	public void onDestroy() {
-		super.onDestroy();
+        Log.e(TAG, "onDestroy");
 		unregisterReceiver(mHomeKeyEventReceiver);
-	}
+        unregisterReceiver(mConnectionStatusReceiver);
+        super.onDestroy();
+    }
  
 	public class MyOnClickListener implements OnClickListener {
 		@Override
@@ -326,4 +331,42 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		
 	};
 
+    public BroadcastReceiver mConnectionStatusReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // TODO: This method is called when the BroadcastReceiver is receiving
+            // an Intent broadcast.
+
+            ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+            if (networkInfo != null) {
+                if (networkInfo.isAvailable()) {
+                    saveSid("NETSTATE", "NET_WORKS");
+                    Log.i("NOTICE", "The net is available!");
+                }
+                NetworkInfo.State state = connectivityManager.getNetworkInfo(connectivityManager.TYPE_MOBILE).getState();
+                if (NetworkInfo.State.CONNECTED == state) {
+                    Log.i("NOTICE", "GPRS is OK!");
+                    NetworkInfo mobNetInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+                }
+                state = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+                if (NetworkInfo.State.CONNECTED == state) {
+                    Log.i("NOTICE", "WIFI is OK!");
+                    NetworkInfo wifiNetInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+                }
+            } else {
+                saveSid("NETSTATE", "NET_NOT_WORK");
+//                Toast.makeText(context, R.string.no_network, Toast.LENGTH_LONG).show();
+            }
+        }
+    };
+
+    public void saveSid(String key, String value) {
+        SharedPreferences savedSid = this.getSharedPreferences(
+                "SAVEDSID", 0);
+        Editor editor = savedSid.edit();
+        editor.putString(key, value);
+        editor.commit();
+    }
 }
