@@ -77,7 +77,7 @@ public class CloudDoorMainActivity extends FragmentActivity {
 
         instance = this;
 		SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
-		int setPersonal = personalInfo.getInt("SETINFO", 0);
+		int setPersonal = personalInfo.getInt("SETINFO", 1);
 		if(setPersonal == 0) {
 			Intent  intentSetInfo = new Intent();
 			intentSetInfo.setClass(getApplicationContext(), SetPersonalInfo.class);

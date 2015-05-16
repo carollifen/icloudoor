@@ -215,7 +215,7 @@ public class ShowPersonalInfo extends Activity {
 		
 		SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
 		
-		if(personalInfo.getInt("SETINFO", 0) == 1) {
+		if(personalInfo.getInt("SETINFO", 1) == 1) {
 			mQueue = Volley.newRequestQueue(this);
 		sid = loadSid();
 		try {

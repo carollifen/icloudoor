@@ -207,7 +207,7 @@
                 android:layout_width="46dp"
                 android:layout_height="46dp"
                 android:layout_centerHorizontal="true"
-                android:background="@drawable/testest" />
+                 />
 
             <TextView
                 android:id="@+id/weather_temperature"
@@ -215,7 +215,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:gravity="right"
-                android:text="-24"
+                
                 android:textColor="#2db9e5"
                 android:textSize="30sp" />
         </RelativeLayout>

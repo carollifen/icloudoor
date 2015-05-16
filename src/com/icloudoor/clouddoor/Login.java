@@ -40,6 +40,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class Login extends Activity implements TextWatcher {
+	
+	private final String TAG = this.getClass().getSimpleName();
+	
 	private EditText ETInputPhoneNum;
 	private EditText ETInputPwd;
 	private TextView TVLogin;
@@ -222,11 +225,13 @@ public class Login extends Activity implements TextWatcher {
 											Intent intent = new Intent();
 											
 											SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
-											setPersonal = personalInfo.getInt("SETINFO", 0);
+											setPersonal = personalInfo.getInt("SETINFO", 1);
 											
-											if(name.length() == 0 || sex == 0 || provinceId == 0 || cityId == 0 || districtId == 0 || birth.length() == 0 || id.length() == 0){
+											Log.e(TAG, "setPersonal : " + String.valueOf(setPersonal));
+											
+											if(setPersonal == 0 || name.length() == 0 || sex == 0 || provinceId == 0 || cityId == 0 || districtId == 0 || birth.length() == 0 || id.length() == 0){
 												intent.setClass(getApplicationContext(), SetPersonalInfo.class);
-											} else {
+											} else if (setPersonal == 1) {
 												intent.setClass(getApplicationContext(), CloudDoorMainActivity.class);
 											}
 											
