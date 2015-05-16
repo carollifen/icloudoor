@@ -132,9 +132,9 @@ public class ShowPersonalInfo extends Activity {
 				Intent intent = new Intent();
 				
 				SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
-				if(personalInfo.getInt("SETINFO", 0) == 1){
+				if(personalInfo.getInt("SETINFO", 1) == 1){
 					intent.setClass(ShowPersonalInfo.this, ModifyPersonalInfo.class);
-				} else if (personalInfo.getInt("SETINFO", 0) == 0){
+				} else if (personalInfo.getInt("SETINFO", 1) == 0){
 					intent.setClass(ShowPersonalInfo.this, SetPersonalInfo.class);
 				}
 				startActivity(intent);
@@ -212,6 +212,18 @@ public class ShowPersonalInfo extends Activity {
 	public void onResume(){
 		super.onResume();
 		Log.e("TESTTEST", "onResume show");
+		
+		SharedPreferences homeKeyEvent = getSharedPreferences("HOMEKEY", 0);
+		int homePressed = homeKeyEvent.getInt("homePressed", 0);
+
+		SharedPreferences setSign = getSharedPreferences("SETTING", 0);
+		int useSign = setSign.getInt("useSign", 0);
+
+		if (homePressed == 1 && useSign == 1) {
+			Intent intent = new Intent();
+			intent.setClass(ShowPersonalInfo.this, VerifyGestureActivity.class);
+			startActivity(intent);
+		}
 		
 		SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
 		

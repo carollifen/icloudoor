@@ -56,7 +56,7 @@ public class MyDialog extends Dialog {
                 			
                 			Intent verifybroadcastIntent=new Intent("KillVerifyActivity");
                 		 	MyDialog.this.context.sendBroadcast(verifybroadcastIntent);
-                			
+                		 	
                 			customDialogListener.back(0);
                 			MyDialog.this.dismiss();
                 		}

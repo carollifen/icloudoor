@@ -77,11 +77,14 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		getActionBar().hide();
 		setContentView(R.layout.new_main);
+		
         registerReceiver(mConnectionStatusReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         instance = this;
+        
 		SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
 		int setPersonal = personalInfo.getInt("SETINFO", 1);
 		if(setPersonal == 0) {
+			Log.e("jump to set", "in main activity");
 			Intent  intentSetInfo = new Intent();
 			intentSetInfo.setClass(getApplicationContext(), SetPersonalInfo.class);
 			startActivity(intentSetInfo);

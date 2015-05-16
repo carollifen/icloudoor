@@ -164,6 +164,23 @@ public class ResetPwdActivity extends Activity implements TextWatcher {
 
 	}
 	
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		SharedPreferences homeKeyEvent = getSharedPreferences("HOMEKEY", 0);
+		int homePressed = homeKeyEvent.getInt("homePressed", 0);
+
+		SharedPreferences setSign = getSharedPreferences("SETTING", 0);
+		int useSign = setSign.getInt("useSign", 0);
+
+		if (homePressed == 1 && useSign == 1) {
+			Intent intent = new Intent();
+			intent.setClass(ResetPwdActivity.this, VerifyGestureActivity.class);
+			startActivity(intent);
+		}
+	}
+	
 	public void saveSid(String sid) {
 		SharedPreferences savedSid = getSharedPreferences("SAVEDSID",
 				MODE_PRIVATE);

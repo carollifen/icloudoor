@@ -69,11 +69,6 @@ public class ConfirmGestureActivity extends Activity implements OnClickListener 
 		mGestureContentView.setParentView(mGestureContainer);
 	}
 	
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		unregisterReceiver(KillConfirmActivityBroadcast);
-	}
 	
 	public String loadSign(){
 		SharedPreferences loadSign = getSharedPreferences("SAVESIGN", 0);
@@ -94,6 +89,25 @@ public class ConfirmGestureActivity extends Activity implements OnClickListener 
 		}
 		
 	};
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		SharedPreferences homeKeyEvent = getSharedPreferences("HOMEKEY", 0);
+		int homePressed = homeKeyEvent.getInt("homePressed", 0);
+
+		SharedPreferences setSign = getSharedPreferences("SETTING", 0);
+		int useSign = setSign.getInt("useSign", 0);
+
+		if (homePressed == 1 && useSign == 1) {
+			Intent intent = new Intent();
+			intent.setClass(ConfirmGestureActivity.this,
+					VerifyGestureActivity.class);
+			startActivity(intent);
+		}
+	}
+	
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub

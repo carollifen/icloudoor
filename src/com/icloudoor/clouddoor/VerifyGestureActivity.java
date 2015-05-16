@@ -37,11 +37,11 @@ public class VerifyGestureActivity extends Activity implements OnClickListener {
 		getActionBar().hide();
 		setContentView(R.layout.activity_verify_gesture);
 		
-		registerReceiver(KillVerifyActivityBroadcast, new IntentFilter("KillVerifyActivity"));
-		IVmanageGesture = (TextView) findViewById(R.id.sign_set_manage);
-		IVpswLogin = (TextView) findViewById(R.id.sign_set_account);
-		// IVmanageGesture.setOnClickListener(this);
-		IVpswLogin.setOnClickListener(this);
+		registerReceiver(KillVerifyActivityBroadcast,new IntentFilter("KillVerifyActivity"));
+	 	IVmanageGesture=(TextView) findViewById(R.id.sign_set_manage);
+	 	IVpswLogin=(TextView) findViewById(R.id.sign_set_account);
+	 	//IVmanageGesture.setOnClickListener(this);
+	 	IVpswLogin.setOnClickListener(this);
 		
 		phoneNum = (TextView) findViewById(R.id.sign_verify_person_phone);
 		SharedPreferences loginStatus = getSharedPreferences(
@@ -100,13 +100,6 @@ public class VerifyGestureActivity extends Activity implements OnClickListener {
 		mGestureContentView.setParentView(mGestureContainer);
 	}
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		unregisterReceiver(KillVerifyActivityBroadcast);
-	}
-	
-	
 	private BroadcastReceiver KillVerifyActivityBroadcast = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -115,10 +108,11 @@ public class VerifyGestureActivity extends Activity implements OnClickListener {
 				VerifyGestureActivity.this.finish();
 			}
 		}
-	};	
+	};
 	
 	@Override
 	public void onClick(View v) {
+		// TODO Auto-generated method stub
 		if (v.getId() == R.id.sign_set_manage) {
 			Intent signIntent = new Intent(VerifyGestureActivity.this,
 					SignActivity.class);

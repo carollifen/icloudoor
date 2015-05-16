@@ -288,6 +288,19 @@ public class ModifyPersonalInfo extends Activity {
 	public void onResume() {
 		super.onResume();
 		
+		SharedPreferences homeKeyEvent = getSharedPreferences("HOMEKEY", 0);
+	    int 	homePressed = homeKeyEvent.getInt("homePressed", 0);
+		
+	    SharedPreferences Sign = getSharedPreferences("SETTING", 0);
+		int usesign = Sign.getInt("useSign", 0);
+		
+		if(homePressed == 1 && usesign ==1 ) {
+
+			Intent intent = new Intent();
+			intent.setClass(ModifyPersonalInfo.this, VerifyGestureActivity.class);
+			startActivity(intent);
+		}
+		
 		SharedPreferences loadProfile = getSharedPreferences("PROFILE", MODE_PRIVATE);
 		name = loadProfile.getString("NAME", null);
 		sex = loadProfile.getInt("SEX", 1);

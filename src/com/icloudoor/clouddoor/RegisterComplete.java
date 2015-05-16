@@ -125,6 +125,11 @@ public class RegisterComplete extends Activity implements TextWatcher {
 //										intent.setClass(getApplicationContext(), Login.class);
 //										startActivity(intent);
 										
+										SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
+										Editor editor = personalInfo.edit();
+										editor.putInt("SETINFO", 0);
+										editor.commit();
+										
 										setResult(RESULT_OK);
 										finish();
 									} else if (statusCode == -40) {
