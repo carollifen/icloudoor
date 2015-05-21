@@ -25,7 +25,7 @@ public class SignActivity extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getActionBar().hide();
+//		getActionBar().hide();
 		setContentView(R.layout.set_detail_set_sign);
 		
 		inflater = LayoutInflater.from(this);

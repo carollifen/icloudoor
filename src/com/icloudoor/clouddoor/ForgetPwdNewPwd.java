@@ -42,7 +42,7 @@ public class ForgetPwdNewPwd extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getActionBar().hide();
+//		getActionBar().hide();
 		setContentView(R.layout.reset_pwd);
 
 		mQueue = Volley.newRequestQueue(this);

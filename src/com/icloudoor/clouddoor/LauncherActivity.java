@@ -19,7 +19,7 @@ public class LauncherActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getActionBar().hide();
+//		getActionBar().hide();
 		setContentView(R.layout.activity_launcher);
 		
 		final Intent intent = new Intent();
@@ -55,7 +55,7 @@ public class LauncherActivity extends Activity {
 			}
 
 		};
-		jump.schedule(jumpTask, 250);
+		jump.schedule(jumpTask, 1000);
 	}
 	
 	private void addShortcutToDesktop() {

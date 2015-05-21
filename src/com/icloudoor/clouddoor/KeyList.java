@@ -107,7 +107,7 @@ public class KeyList extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getActionBar().hide();
+//		getActionBar().hide();
 		setContentView(R.layout.key_list);
 		
 		mKeyList = (ListView) findViewById(R.id.key_listview);

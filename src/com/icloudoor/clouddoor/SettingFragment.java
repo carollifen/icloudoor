@@ -16,16 +16,21 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +43,9 @@ import android.widget.Toast;
 
 public class SettingFragment extends Fragment {
 	public Context context;
+
+    private ProgressDialog updateProgressDialog;
+    private UpdateManager updateMan;
 
 	private RelativeLayout RLSet;
 	private RelativeLayout RLSig;
@@ -62,7 +70,7 @@ public class SettingFragment extends Fragment {
 
 	private int isLogin = 1;
 	
-	private ImageView image;
+	private CircularImage image;
 	private String portraitUrl;
 	
 	private Bitmap bitmap;
@@ -89,21 +97,21 @@ public class SettingFragment extends Fragment {
 		RLShare = (RelativeLayout) view.findViewById(R.id.btn_share);
 		RLUpdate = (RelativeLayout) view.findViewById(R.id.btn_update);
 		showName = (TextView) view.findViewById(R.id.show_name);
-		showPhoneNum = (TextView) view.findViewById(R.id.show_phoneNum);
+//		showPhoneNum = (TextView) view.findViewById(R.id.show_phoneNum);
 		
 		
-		image = (ImageView) view.findViewById(R.id.person_image);
-
+		image = (CircularImage) view.findViewById(R.id.person_image);
+		image.setImageResource(R.drawable.logo_deep144);
 		
 		
 		SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);	
-		phone = loginStatus.getString("PHONENUM", null);	
+//		phone = loginStatus.getString("PHONENUM", null);	
 		name = loginStatus.getString("NAME", null);
 		portraitUrl = loginStatus.getString("URL", null);
 		
 		
-		changeNum();
-		showPhoneNum.setText(phone);
+//		changeNum();
+//		showPhoneNum.setText(phone);
 		showName.setText(name);
 		
 		logOut = (TextView) view.findViewById(R.id.btn_logout);
@@ -184,8 +192,27 @@ public class SettingFragment extends Fragment {
 				startActivity(intent2);
 				break;
 			case R.id.btn_share:
+//                if ("NET_WORKS".equals(loadSid("NETSTATE"))) {
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, "Welcome using Cloudoor.");
+                    sendIntent.setType("text/plain");
+                    startActivity(Intent.createChooser(sendIntent, "Shared"));
+//                }else {
+//                    if (getActivity() != null) {
+//                        Toast.makeText(getActivity().getApplicationContext(), R.string.no_network, Toast.LENGTH_SHORT).show();
+//                    }
+//                }
 				break;
 			case R.id.btn_update:
+                if ("NET_WORKS".equals(loadSid("NETSTATE"))) {
+                    updateMan = new UpdateManager(getActivity().getApplicationContext(), appUpdateCb);
+                    updateMan.checkUpdate();
+                }else {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity().getApplicationContext(), R.string.no_network, Toast.LENGTH_SHORT).show();
+                    }
+                }
 				break;
 			case R.id.btn_logout:
                 if ("NET_WORKS".equals(loadSid("NETSTATE"))) {
@@ -244,16 +271,16 @@ public class SettingFragment extends Fragment {
 
 	}
 
-	public void changeNum(){
-		if(phone != null){	
-			StringBuilder sb = new StringBuilder(phone); 
-			sb.setCharAt(3, '*');
-			sb.setCharAt(4, '*');
-			sb.setCharAt(5, '*'); 
-			sb.setCharAt(6, '*');
-			phone = sb.toString();
-		}
-	}
+//	public void changeNum(){
+//		if(phone != null){	
+//			StringBuilder sb = new StringBuilder(phone); 
+//			sb.setCharAt(3, '*');
+//			sb.setCharAt(4, '*');
+//			sb.setCharAt(5, '*'); 
+//			sb.setCharAt(6, '*');
+//			phone = sb.toString();
+//		}
+//	}
 	
 	public void saveSid(String key, String value) {
 		SharedPreferences savedSid = getActivity().getSharedPreferences(
@@ -281,6 +308,71 @@ public class SettingFragment extends Fragment {
             e.printStackTrace();
         }
         super.onDetach();
-
     }
+
+    UpdateManager.UpdateCallback appUpdateCb = new UpdateManager.UpdateCallback() {
+        @Override
+        public void checkUpdateCompleted(Boolean hasUpdate, CharSequence updateInfo) {
+            if (hasUpdate) {
+                DialogHelper.Confirm(getActivity(),
+                        getText(R.string.dialog_update_title),
+                        getText(R.string.dialog_update_msg).toString() + updateInfo +
+                                getText(R.string.dialog_update_msg2).toString(),
+                        getText(R.string.dialog_update_btnupdate),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                updateProgressDialog = new ProgressDialog(getActivity());
+                                updateProgressDialog
+                                        .setMessage(getText(R.string.dialog_downloading_msg));
+                                updateProgressDialog.setIndeterminate(false);
+                                updateProgressDialog
+                                        .setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                                updateProgressDialog.setMax(100);
+                                updateProgressDialog.setProgress(0);
+                                updateProgressDialog.show();
+
+                                updateMan.downloadPackage();
+                            }
+                        },getText( R.string.dialog_update_btnnext), null);
+            }
+        }
+
+        @Override
+        public void downloadProgressChanged(int progress) {
+            if (updateProgressDialog != null
+                    && updateProgressDialog.isShowing()) {
+                updateProgressDialog.setProgress(progress);
+            }
+        }
+
+        @Override
+        public void downloadCanceled() {
+
+        }
+
+        @Override
+        public void downloadCompleted(Boolean sucess, CharSequence errorMsg) {
+            if (updateProgressDialog != null
+                    && updateProgressDialog.isShowing()) {
+                updateProgressDialog.dismiss();
+            }
+            if (sucess) {
+                updateMan.update();
+            } else {
+                DialogHelper.Confirm(getActivity(),
+                        R.string.dialog_error_title,
+                        R.string.dialog_downfailed_msg,
+                        R.string.dialog_downfailed_btnnext,
+                        new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog,
+                                                int which) {
+                                updateMan.downloadPackage();
+
+                            }
+                        }, R.string.dialog_update_btnnext, null);
+            }
+        }
+    };
 }

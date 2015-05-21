@@ -34,7 +34,7 @@ public class VerifyGestureActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getActionBar().hide();
+//		getActionBar().hide();
 		setContentView(R.layout.activity_verify_gesture);
 		
 		registerReceiver(KillVerifyActivityBroadcast,new IntentFilter("KillVerifyActivity"));

@@ -2,112 +2,250 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ecf0f7" >
+    android:background="#0065a1" >
 
     <include
         android:id="@+id/title_bar"
         android:layout_width="fill_parent"
-        android:layout_height="40dp"
+        android:layout_height="44dp"
         layout="@layout/title_bar_key_page" />
 
-    <include
-        android:id="@+id/weather_widge"
-        android:layout_width="fill_parent"
-        android:layout_height="175dp"
-        android:layout_below="@+id/title_bar"
-        layout="@layout/weather" />
-
-    <include
-        android:id="@+id/channel_widge"
-        android:layout_width="fill_parent"
-        android:layout_height="69dp"
-        android:layout_below="@+id/weather_widge"
-        layout="@layout/channel_switch" />
-
-    <TextView
-        android:id="@+id/blank_tv_below_channel_widge"
+    <RelativeLayout 
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@+id/channel_widge"
-        android:background="#ecf0f7" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="44dp"
+        android:background="@drawable/backgroud_halo"
+        >
+        
+        <com.icloudoor.clouddoor.animationUtils.MyAnimationLine
+            android:id="@+id/myAnimationLine"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.icloudoor.clouddoor.animationUtils.MyAnimationView
+            android:id="@+id/myAnimationView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <RelativeLayout
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_centerInParent="true" >
+
+			<ImageView
+			    android:id="@+id/halo"
+			    android:layout_width="match_parent"
+			    android:layout_height="match_parent"
+			    android:layout_centerInParent="true"
+			    android:background="@drawable/halo_shape" />
+			
+        </RelativeLayout>
+ 
+        <ImageView
+            android:id="@+id/btn_open_door"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/selector_open_door" />
+        
+        <TextView
+            android:id="@+id/scan_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="165dp"
+            android:textColor="#ffffff"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:id="@+id/channel_switch_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="105dp" >
+        </LinearLayout>
+</RelativeLayout>
+    
+    <LinearLayout
+        android:id="@+id/weather_widge"
+        android:layout_width="match_parent"
+        android:layout_height="69dp"
+        android:layout_below="@+id/title_bar"
+        android:background="#0065a1"
+        android:orientation="vertical" >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#267caf" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="68dp"
+            android:background="#0cffffff"
+            android:orientation="horizontal" >
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" >
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" >
+                    
+                    <ImageView
+                        android:id="@+id/weather_btn_left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:background="@drawable/select_new_left" />
+
+                    <TextView
+                        android:id="@+id/weather_temp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="40dp"
+                        android:gravity="center_vertical"
+                        android:text="1 "
+                        android:textColor="#ffffff"
+                        android:textSize="35sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="12dp" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/divide_bar" />
+
+                    <TextView
+                        android:id="@+id/weather_status"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="13dp"
+                        android:maxLines="2"
+                        android:text="中雨/雷阵雨"
+                        android:textColor="#ffffff"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" >
+                
+                <ImageView
+                    android:id="@+id/weather_btn_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/select_new_right" />
+
+                <RelativeLayout
+                    android:layout_width="135dp"
+                    android:layout_height="33dp"
+                    android:layout_centerVertical="true" >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="宜    "
+                            android:textColor="#ffffff"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/weather_yi"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="marquee"
+                            android:focusable="true"
+                            android:marqueeRepeatLimit="marquee_forever"
+                            android:scrollHorizontally="true"
+                            android:singleLine="true"
+                            android:text="内容 "
+                            android:textColor="#ffffff"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="忌    "
+                            android:textColor="#ffffff"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/weather_ji"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="marquee"
+                            android:focusable="true"
+                            android:marqueeRepeatLimit="marquee_forever"
+                            android:scrollHorizontally="true"
+                            android:singleLine="true"
+                            android:text="内容 "
+                            android:textColor="#ffffff"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#267caf" />
+    </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/key_widge"
-        android:layout_width="match_parent"
-        android:layout_height="140dp"
-        android:layout_below="@+id/blank_tv_below_channel_widge"
-        android:background="#ecf0f7" >
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="144dp" >
         
+        <ImageView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@drawable/locale"
+            />
         
-        <RelativeLayout
-            android:id="@+id/Iv_search_key"
-            android:layout_width="343dp"
-            android:layout_height="140dp"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/btn_gray" >
-            
-            <ImageView
-                android:id="@+id/Iv_open_door_logo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="5dp"
-                android:src="@drawable/btn_serch_1" />
-            
-            
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="31dp"
-                android:orientation="vertical"
-                >
-                
-                <TextView
-                    android:id="@+id/district_door"
-                    android:layout_width="160dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="4dp"
-                    android:ellipsize="marquee"
-                    android:focusable="true"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:scrollHorizontally="true"
-                    android:singleLine="true"
-                    android:text="@string/searching_key"
-                    android:textColor="#ffffff"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/car_number"
-                    android:layout_width="160dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="6dp"
-                    android:ellipsize="marquee"
-                    android:focusable="true"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:scrollHorizontally="true"
-                    android:singleLine="true"
-                    android:text="@string/can_shake_to_open_door"
-                    android:textColor="#ffffff"
-                    android:textSize="16sp" />
-                
-            </LinearLayout>
-            
-            
-            
-
-        </RelativeLayout>
-
+        <com.icloudoor.clouddoor.StrokeTextView
+            android:id="@+id/door_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="19dp"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:text="广州市番禺区锦绣香江牡丹园北门"
+            android:textSize="14sp"
+            android:textColor="#ffffff"
+            />
+        
     </RelativeLayout>
-
-    <!-- <include -->
-    <!-- android:layout_width="fill_parent" -->
-    <!-- android:layout_height="114dp" -->
-    <!-- android:layout_below="@+id/blank_tv_below_channel_widge" -->
-    <!-- layout="@layout/got_key" -->
-    <!-- /> -->
 
 </RelativeLayout>

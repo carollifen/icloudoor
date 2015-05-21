@@ -30,7 +30,7 @@ public class SettingDetailActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getActionBar().hide();
+//		getActionBar().hide();
 		setContentView(R.layout.set_detail);
 		
 		TVBtnResetPwd = (RelativeLayout) findViewById(R.id.btn_reset_pwd);

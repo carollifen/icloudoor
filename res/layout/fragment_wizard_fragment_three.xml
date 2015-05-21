@@ -2,12 +2,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.icloudoor.clouddoor.WizardFragmentThree" >
+    tools:context="com.icloudoor.clouddoor.WizardFragmentThree"
+    android:background="@drawable/wizard3" >
 
-    <TextView
+    <ImageView
+        android:id="@+id/btn_startApp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="引导页面三" />
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="27dp"
+        android:background="@drawable/btn_startapp" />
 
 </RelativeLayout>

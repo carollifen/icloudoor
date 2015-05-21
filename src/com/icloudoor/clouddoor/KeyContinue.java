@@ -29,7 +29,7 @@ public class KeyContinue extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getActionBar().hide();
+//		getActionBar().hide();
 		setContentView(R.layout.key_continue);
 
 		mDatePicker = (MyDatePickerUtilView) findViewById(R.id.numberpicker);

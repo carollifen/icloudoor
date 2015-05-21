@@ -58,7 +58,7 @@ public class ShowPersonalInfo extends Activity {
 	private TextView TVName;
 	private TextView TVNickName;
 	private TextView TVSex;
-	private ImageView IVSexImage;
+//	private ImageView IVSexImage;
 	private TextView TVprovince;
 	private TextView TVcity;
 	private TextView TVdistrict;
@@ -87,7 +87,7 @@ public class ShowPersonalInfo extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getActionBar().hide();
+		//getActionBar().hide();
 		setContentView(R.layout.show_personal_info);
 		
 		mAreaDBHelper = new MyAreaDBHelper(ShowPersonalInfo.this, DATABASE_NAME, null, 1);
@@ -102,7 +102,7 @@ public class ShowPersonalInfo extends Activity {
 		TVName = (TextView) findViewById(R.id.personal_info_name);
 		TVNickName = (TextView) findViewById(R.id.personal_info_NickName);
 		TVSex = (TextView) findViewById(R.id.personal_info_sexName);
-		IVSexImage = (ImageView) findViewById(R.id.personal_info_sexImage);
+//		IVSexImage = (ImageView) findViewById(R.id.personal_info_sexImage);
 		TVprovince = (TextView) findViewById(R.id.personal_info_province);
 		TVcity = (TextView) findViewById(R.id.personal_info_city);
 		TVdistrict = (TextView) findViewById(R.id.personal_info_district);
@@ -310,10 +310,10 @@ public class ShowPersonalInfo extends Activity {
 								
 								if(sex == 1){
 									TVSex.setText(R.string.male);
-									IVSexImage.setImageResource(R.drawable.sex_blue);
+//									IVSexImage.setImageResource(R.drawable.sex_blue);
 								}else if(sex == 2){
 									TVSex.setText(R.string.female);
-									IVSexImage.setImageResource(R.drawable.sex_red);
+//									IVSexImage.setImageResource(R.drawable.sex_red);
 								}
 								
 								TVprovince.setText(province);
@@ -347,7 +347,7 @@ public class ShowPersonalInfo extends Activity {
 		TVName.setText("");
 		TVNickName.setText("");
 		TVSex.setText(R.string.male);
-		IVSexImage.setImageResource(R.drawable.sex_blue);
+//		IVSexImage.setImageResource(R.drawable.sex_blue);
 		TVprovince.setText("");
 		TVcity.setText("");
 		TVdistrict.setText("");

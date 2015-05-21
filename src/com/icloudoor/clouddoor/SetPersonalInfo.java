@@ -90,7 +90,7 @@ public class SetPersonalInfo extends Activity {
 	private int Sex, provinceId, cityId, districtId;
 	
 	private RelativeLayout back;
-	private TextView save;
+	private RelativeLayout  save;
 	
 	private RequestQueue mQueue;
 	private URL setInfoURL;
@@ -103,7 +103,7 @@ public class SetPersonalInfo extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getActionBar().hide();
+//		getActionBar().hide();
 		setContentView(R.layout.set_person_info);
 		
 		mAreaDBHelper = new MyAreaDBHelper(SetPersonalInfo.this, DATABASE_NAME, null, 1);
@@ -264,12 +264,12 @@ public class SetPersonalInfo extends Activity {
 			public void onClick(View v) {
 				if(Sex == 1){
 					Sex = 2;
-					sexMan.setImageResource(R.drawable.sex_gray);
-					sexWoman.setImageResource(R.drawable.sex_red);
+					sexMan.setImageResource(R.drawable.not_select);
+					sexWoman.setImageResource(R.drawable.select);
 				}else if(Sex == 2){
 					Sex = 1;
-					sexMan.setImageResource(R.drawable.sex_blue);
-					sexWoman.setImageResource(R.drawable.sex_gray);
+					sexMan.setImageResource(R.drawable.select);
+					sexWoman.setImageResource(R.drawable.not_select);
 				}
 				
 			}
@@ -499,16 +499,16 @@ public class SetPersonalInfo extends Activity {
 		setSex = (RelativeLayout) findViewById(R.id.personal_sex);
 		sexMan = (ImageView) findViewById(R.id.personal_SexMan);
 		sexWoman = (ImageView) findViewById(R.id.personal_SexWoman);
-		birthYear = (EditText) findViewById(R.id.personal_Year);
-		birthMonth = (EditText) findViewById(R.id.personal_Month);
-		birthDay = (EditText) findViewById(R.id.personal_Day);
+		birthYear = (EditText) findViewById(R.id.personal_year);
+		birthMonth = (EditText) findViewById(R.id.personal_month);
+		birthDay = (EditText) findViewById(R.id.personal_day);
 		personalID = (EditText) findViewById(R.id.personal_ID);
 		back = (RelativeLayout) findViewById(R.id.btn_back);
-		save = (TextView) findViewById(R.id.save_person_info);
+		save = (RelativeLayout) findViewById(R.id.save_person_info);
 		
-		Sex = 1;
-		sexMan.setImageResource(R.drawable.sex_blue);
-		sexWoman.setImageResource(R.drawable.sex_gray);
+		Sex = 2;
+		sexMan.setImageResource(R.drawable.not_select);
+		sexWoman.setImageResource(R.drawable.select);
 	}
 	
 	private void setSpinner(){
@@ -562,7 +562,6 @@ public class SetPersonalInfo extends Activity {
             editor.commit();
 
             finish();
-            CloudDoorMainActivity.instance.finish();
         }
 		return super.onKeyDown(keyCode, event);
 

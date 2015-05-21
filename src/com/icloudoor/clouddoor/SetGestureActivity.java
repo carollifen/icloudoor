@@ -34,7 +34,7 @@ public class SetGestureActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getActionBar().hide();
+//		getActionBar().hide();
 		setContentView(R.layout.activity_set_gesture);
 		
 //		TVSignManage = (TextView) findViewById(R.id.sign_set_manage);

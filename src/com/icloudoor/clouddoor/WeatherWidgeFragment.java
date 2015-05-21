@@ -352,29 +352,30 @@ public class WeatherWidgeFragment extends Fragment {
 								JSONObject tomorrow= (JSONObject)future.get(0);	
 								JSONObject tomorrow2= (JSONObject)future.get(1);	
 								
-							
-								SharedPreferences savedWeather = getActivity().getSharedPreferences("SAVEDWEATHER",
-										0);
-								Editor editor = savedWeather.edit();
-								editor.putString("City", data.getString("city_name"));
-								editor.putString("Day1Temp", now.getString("temperature"));
-								editor.putString("Day1Weather", now.getString("text"));
-								editor.putString("Day1IconIndex", now.getString("code"));
-								editor.putString("Day2TempLow", tomorrow.getString("low"));
-								editor.putString("Day2TempHigh", tomorrow.getString("high"));
-								editor.putString("Day2Weather", tomorrow.getString("text"));
-								editor.putString("Day2IconIndexDay", tomorrow.getString("code1"));
-								editor.putString("Day2IconIndexNight", tomorrow.getString("code2"));
-								editor.putString("Day3TempLow", tomorrow2.getString("low"));
-								editor.putString("Day3TempHigh", tomorrow2.getString("high"));
-								editor.putString("Day3Weather", tomorrow2.getString("text"));
-								editor.putString("Day3IconIndexDay", tomorrow2.getString("code1"));
-								editor.putString("Day3IconIndexNight", tomorrow2.getString("code2"));
-								editor.commit();
-								
-								City.setText(data.getString("city_name"));
-								Temp.setText(now.getString("temperature") + String.valueOf(centigrade));
-								WeatherIcon.setImageResource(weatherIcons[Integer.parseInt(now.getString("code"))]);													
+							    if (getActivity() != null) {
+                                    SharedPreferences savedWeather = getActivity().getSharedPreferences("SAVEDWEATHER",
+                                            0);
+                                    Editor editor = savedWeather.edit();
+                                    editor.putString("City", data.getString("city_name"));
+                                    editor.putString("Day1Temp", now.getString("temperature"));
+                                    editor.putString("Day1Weather", now.getString("text"));
+                                    editor.putString("Day1IconIndex", now.getString("code"));
+                                    editor.putString("Day2TempLow", tomorrow.getString("low"));
+                                    editor.putString("Day2TempHigh", tomorrow.getString("high"));
+                                    editor.putString("Day2Weather", tomorrow.getString("text"));
+                                    editor.putString("Day2IconIndexDay", tomorrow.getString("code1"));
+                                    editor.putString("Day2IconIndexNight", tomorrow.getString("code2"));
+                                    editor.putString("Day3TempLow", tomorrow2.getString("low"));
+                                    editor.putString("Day3TempHigh", tomorrow2.getString("high"));
+                                    editor.putString("Day3Weather", tomorrow2.getString("text"));
+                                    editor.putString("Day3IconIndexDay", tomorrow2.getString("code1"));
+                                    editor.putString("Day3IconIndexNight", tomorrow2.getString("code2"));
+                                    editor.commit();
+
+                                    City.setText(data.getString("city_name"));
+                                    Temp.setText(now.getString("temperature") + String.valueOf(centigrade));
+                                    WeatherIcon.setImageResource(weatherIcons[Integer.parseInt(now.getString("code"))]);
+                                }
 							} 
 						} catch (JSONException e) {
 							e.printStackTrace();

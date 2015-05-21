@@ -2,6 +2,9 @@ package com.icloudoor.clouddoor;
 
 import java.util.ArrayList;
 
+import com.umeng.message.PushAgent;
+import com.umeng.message.UmengRegistrar;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -61,8 +64,8 @@ public class CloudDoorMainActivity extends FragmentActivity {
 	public FragmentTransaction mFragmenetTransaction;
 //	public MyPageChangeListener myPageChangeListener;
 
-	private int COLOR_GRAY = 0xFF747f8d;
-	private int COLOR_BLACK = 0xFF000000;
+	private int COLOR_GRAY = 0xFF999999;
+	private int COLOR_BLACK = 0xFF0065a1;
 
 	private float alpha_half_transparent = 0.2f;
 	private float alpha_opaque = 1.0f;
@@ -75,7 +78,7 @@ public class CloudDoorMainActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getActionBar().hide();
+//		getActionBar().hide();
 		setContentView(R.layout.new_main);
 		
         registerReceiver(mConnectionStatusReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
@@ -107,8 +110,48 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		InitState();
 		
 		registerReceiver(mHomeKeyEventReceiver, new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
+		
+		PushAgent mPushAgent = PushAgent.getInstance(this);
+		mPushAgent.enable();
+		getDeviceInfo(this);
 	}
 
+
+	public static String getDeviceInfo(Context context) {
+		try {
+			org.json.JSONObject json = new org.json.JSONObject();
+			android.telephony.TelephonyManager tm = (android.telephony.TelephonyManager) context
+					.getSystemService(Context.TELEPHONY_SERVICE);
+
+			String device_id = tm.getDeviceId();
+
+			android.net.wifi.WifiManager wifi = (android.net.wifi.WifiManager) context
+					.getSystemService(Context.WIFI_SERVICE);
+
+			String mac = wifi.getConnectionInfo().getMacAddress();
+			json.put("mac", mac);
+
+			if (TextUtils.isEmpty(device_id)) {
+				device_id = mac;
+			}
+
+			if (TextUtils.isEmpty(device_id)) {
+				device_id = android.provider.Settings.Secure.getString(
+						context.getContentResolver(),
+						android.provider.Settings.Secure.ANDROID_ID);
+			}
+
+			json.put("device_id", device_id);
+
+			return json.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+                  
+	
 	public void InitViews() {
 		myClickListener = new MyOnClickListener();
 //		myPageChangeListener = new MyPageChangeListener();
@@ -170,10 +213,10 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		bottomTvSetting.setTextColor(COLOR_GRAY);
 		bottomTvWuye.setTextColor(COLOR_GRAY);
 
-		bottomIvMsg.setImageResource(R.drawable.button_199);
-		bottomIvKey.setImageResource(R.drawable.button_201);
-		bottomIvSetting.setImageResource(R.drawable.button_207);
-		bottomIvWuye.setImageResource(R.drawable.button_194);
+		bottomIvMsg.setImageResource(R.drawable.msg_normal);
+		bottomIvKey.setImageResource(R.drawable.key_pressed);
+		bottomIvSetting.setImageResource(R.drawable.my_normal);
+		bottomIvWuye.setImageResource(R.drawable.wuye_normal);
 	}
 
 	public void onResume() {
@@ -238,10 +281,10 @@ public class CloudDoorMainActivity extends FragmentActivity {
 			bottomTvSetting.setTextColor(COLOR_GRAY);
 			bottomTvWuye.setTextColor(COLOR_BLACK);
 
-			bottomIvMsg.setImageResource(R.drawable.button_199);
-			bottomIvKey.setImageResource(R.drawable.button_203);
-			bottomIvSetting.setImageResource(R.drawable.button_207);
-			bottomIvWuye.setImageResource(R.drawable.button_192);
+			bottomIvMsg.setImageResource(R.drawable.msg_normal);
+			bottomIvKey.setImageResource(R.drawable.key_normal);
+			bottomIvSetting.setImageResource(R.drawable.my_normal);
+			bottomIvWuye.setImageResource(R.drawable.wuye_selected);
 			
 			mFragmenetTransaction.replace(R.id.id_content, mWuyeFragment);
 			break;
@@ -251,10 +294,10 @@ public class CloudDoorMainActivity extends FragmentActivity {
 			bottomTvSetting.setTextColor(COLOR_GRAY);
 			bottomTvWuye.setTextColor(COLOR_GRAY);
 
-			bottomIvMsg.setImageResource(R.drawable.button_196);
-			bottomIvKey.setImageResource(R.drawable.button_203);
-			bottomIvSetting.setImageResource(R.drawable.button_207);
-			bottomIvWuye.setImageResource(R.drawable.button_194);
+			bottomIvMsg.setImageResource(R.drawable.msg_selected);
+			bottomIvKey.setImageResource(R.drawable.key_normal);
+			bottomIvSetting.setImageResource(R.drawable.my_normal);
+			bottomIvWuye.setImageResource(R.drawable.wuye_normal);
 
 			mFragmenetTransaction.replace(R.id.id_content, mMsgFragment);
 			
@@ -267,10 +310,10 @@ public class CloudDoorMainActivity extends FragmentActivity {
 			bottomTvSetting.setTextColor(COLOR_GRAY);
 			bottomTvWuye.setTextColor(COLOR_GRAY);
 
-			bottomIvMsg.setImageResource(R.drawable.button_199);
-			bottomIvKey.setImageResource(R.drawable.button_201);
-			bottomIvSetting.setImageResource(R.drawable.button_207);
-			bottomIvWuye.setImageResource(R.drawable.button_194);
+			bottomIvMsg.setImageResource(R.drawable.msg_normal);
+			bottomIvKey.setImageResource(R.drawable.key_pressed);
+			bottomIvSetting.setImageResource(R.drawable.my_normal);
+			bottomIvWuye.setImageResource(R.drawable.wuye_normal);
 
 			if(currentVersion >= 18){
 				mFragmenetTransaction.replace(R.id.id_content, mKeyFragment);
@@ -287,10 +330,10 @@ public class CloudDoorMainActivity extends FragmentActivity {
 			bottomTvSetting.setTextColor(COLOR_BLACK);
 			bottomTvWuye.setTextColor(COLOR_GRAY);
 
-			bottomIvMsg.setImageResource(R.drawable.button_199);
-			bottomIvKey.setImageResource(R.drawable.button_203);
-			bottomIvSetting.setImageResource(R.drawable.button_205);
-			bottomIvWuye.setImageResource(R.drawable.button_194);
+			bottomIvMsg.setImageResource(R.drawable.msg_normal);
+			bottomIvKey.setImageResource(R.drawable.key_normal);
+			bottomIvSetting.setImageResource(R.drawable.my_selected);
+			bottomIvWuye.setImageResource(R.drawable.wuye_normal);
 
 			mFragmenetTransaction.replace(R.id.id_content, mSettingFragment);
 			

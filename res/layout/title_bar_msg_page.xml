@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
-    android:background="#aec5e8">
+    android:layout_height="44dp"
+    android:background="#0065a1">
     
     <TextView 
         android:layout_width="wrap_content"
@@ -11,7 +11,7 @@
         android:layout_centerHorizontal="true"
         android:text="消息"
         android:textSize="18sp"
-        android:textColor="#000000"/>
+        android:textColor="#ffffff"/>
     
     <TextView
         android:id="@+id/btn_msg_popup"

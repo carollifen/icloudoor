@@ -51,7 +51,7 @@ public class RegisterActivity extends Activity implements TextWatcher {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getActionBar().hide();
+//		getActionBar().hide();
 		setContentView(R.layout.register);
 
 		mQueue = Volley.newRequestQueue(this);

@@ -2,12 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" 
-    android:background="#ecf0f7">
+    android:background="#f8f8f8">
 
     <include
         android:id="@+id/title_bar_msg_page"
         android:layout_width="fill_parent"
-        android:layout_height="40dp"
+        android:layout_height="44dp"
         layout="@layout/title_bar_msg_page" />
     
     <com.icloudoor.clouddoor.MsgListView
@@ -17,7 +17,7 @@
         android:divider="#bdc7d4"
         android:dividerHeight="1.0px"
         android:scrollbars="none" 
-        android:layout_below="@id/title_bar_msg_page">"
+        android:layout_below="@id/title_bar_msg_page">
     </com.icloudoor.clouddoor.MsgListView>
 
 </RelativeLayout>

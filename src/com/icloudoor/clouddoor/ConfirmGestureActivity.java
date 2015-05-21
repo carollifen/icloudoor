@@ -25,7 +25,7 @@ public class ConfirmGestureActivity extends Activity implements OnClickListener 
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		getActionBar().hide();
+//		getActionBar().hide();
 		
 		setContentView(R.layout.activity_confirmgesture);
 		

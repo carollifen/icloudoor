@@ -46,7 +46,7 @@ public class ForgetPwdComplete extends Activity implements TextWatcher{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getActionBar().hide();
+//		getActionBar().hide();
 		setContentView(R.layout.find_pwd_complete);
 		
 		ETInputPwd = (EditText) findViewById(R.id.forget_pwd_input_new_pwd);

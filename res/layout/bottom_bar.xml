@@ -37,7 +37,7 @@
                 android:text="物业服务"
                 android:textSize="10sp"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="34.5dp"
+                android:layout_marginTop="34dp"
                 />
 
         </RelativeLayout>
@@ -63,9 +63,8 @@
                 android:layout_height="wrap_content"
                 android:text="消息"
                 android:textSize="10sp"
-                android:textColor="#747f8d"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="34.5dp"
+                android:layout_marginTop="34dp"
                 />
 
         </RelativeLayout>
@@ -92,9 +91,8 @@
                 android:layout_height="wrap_content"
                 android:text="钥匙"
                 android:textSize="10sp"
-                android:textColor="#747f8d"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="34.5dp"
+                android:layout_marginTop="34dp"
                 />
 
         </RelativeLayout>
@@ -121,9 +119,8 @@
                 android:layout_height="wrap_content"
                 android:text="我的"
                 android:textSize="10sp"
-                android:textColor="#747f8d"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="34.5dp"
+                android:layout_marginTop="34dp"
                 />
 
         </RelativeLayout>

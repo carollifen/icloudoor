@@ -16,7 +16,7 @@ public class ChangePhoneActivityNewNum extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getActionBar().hide();
+//		getActionBar().hide();
 		setContentView(R.layout.set_detail_change_phone2);
 		
 		IVBack = (RelativeLayout) findViewById(R.id.btn_back_change_phone);

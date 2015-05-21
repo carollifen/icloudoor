@@ -71,12 +71,12 @@ import android.widget.Toast;
 public class ModifyPersonalInfo extends Activity {
 	
 	private RelativeLayout back;
-	private TextView saveModify;
+	private RelativeLayout saveModify;
 	
 	private EditText ETnickname;
 	
 	private TextView TVname;
-	private ImageView IVsexImage;
+//	private ImageView IVsexImage;
 	private TextView TVsex;
 	private TextView TVprovince;
 	private TextView TVcity;
@@ -111,12 +111,12 @@ public class ModifyPersonalInfo extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getActionBar().hide();
+//		getActionBar().hide();
 		setContentView(R.layout.modify_personal_info);
 		
 		ETnickname = (EditText) findViewById(R.id.personal_modify_NickName);
 		TVname = (TextView) findViewById(R.id.personal_info_name);
-		IVsexImage = (ImageView) findViewById(R.id.personal_info_sexImage);
+//		IVsexImage = (ImageView) findViewById(R.id.personal_info_sexImage);
 		TVsex = (TextView) findViewById(R.id.personal_info_sexName);
 		TVprovince = (TextView) findViewById(R.id.personal_info_province);
 		TVcity = (TextView) findViewById(R.id.personal_info_city);
@@ -149,7 +149,7 @@ public class ModifyPersonalInfo extends Activity {
 			
 		});
 		
-		saveModify = (TextView) findViewById(R.id.save_person_info_modify);
+		saveModify = (RelativeLayout) findViewById(R.id.save_person_info_modify);
 		
 		sid = loadSid();
 		
@@ -319,10 +319,10 @@ public class ModifyPersonalInfo extends Activity {
 		TVname.setText(name);
 		if(sex == 1){
 			TVsex.setText(R.string.male);
-			IVsexImage.setImageResource(R.drawable.sex_blue);
+//			IVsexImage.setImageResource(R.drawable.sex_blue);
 		}else if(sex == 2){
 			TVsex.setText(R.string.female);
-			IVsexImage.setImageResource(R.drawable.sex_red);
+//			IVsexImage.setImageResource(R.drawable.sex_red);
 		}
 		TVprovince.setText(province);
 		TVcity.setText(city);

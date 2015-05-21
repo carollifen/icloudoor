@@ -20,7 +20,7 @@ public class ChangePhoneActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getActionBar().hide();
+//		getActionBar().hide();
 		setContentView(R.layout.set_detail_change_phone);
 		
 		SharedPreferences loginStatus = getSharedPreferences(

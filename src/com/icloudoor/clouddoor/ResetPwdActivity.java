@@ -35,7 +35,7 @@ public class ResetPwdActivity extends Activity implements TextWatcher {
 	private EditText ETInputOldPwd;
 	private EditText ETInputNewPwd;
 	private EditText ETConfirmNewPwd;
-	private TextView TVResetDone;
+	private RelativeLayout TVResetDone;
 	private RelativeLayout IVBack;
 	private URL resetPwdURL;
 	private RequestQueue mQueue;
@@ -48,7 +48,7 @@ public class ResetPwdActivity extends Activity implements TextWatcher {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getActionBar().hide();
+//		getActionBar().hide();
 		setContentView(R.layout.set_detail_reset_pwd);
 
 		mQueue = Volley.newRequestQueue(this);
@@ -57,9 +57,9 @@ public class ResetPwdActivity extends Activity implements TextWatcher {
 		ETInputOldPwd = (EditText) findViewById(R.id.input_old_pwd);
 		ETInputNewPwd = (EditText) findViewById(R.id.input_new_pwd);
 		ETConfirmNewPwd = (EditText) findViewById(R.id.confirm_new_pwd);
-		TVResetDone = (TextView) findViewById(R.id.reset_pwd_done);
+		TVResetDone = (RelativeLayout) findViewById(R.id.reset_pwd_done);
 		
-		TVResetDone.setTextColor(0xFFcccccc);
+//		TVResetDone.setTextColor(0xFFcccccc);
 		TVResetDone.setEnabled(false);
 		
 		ETInputNewPwd.addTextChangedListener(this);
@@ -210,10 +210,10 @@ public class ResetPwdActivity extends Activity implements TextWatcher {
 	@Override
 	public void afterTextChanged(Editable s) {
 		if(ETInputNewPwd.getText().toString().length() > 7 && ETConfirmNewPwd.getText().toString().length() > 7){
-			TVResetDone.setTextColor(0xFFffffff);
+//			TVResetDone.setTextColor(0xFFffffff);
 			TVResetDone.setEnabled(true);
 		} else {
-			TVResetDone.setTextColor(0xFFcccccc);
+//			TVResetDone.setTextColor(0xFFcccccc);
 			TVResetDone.setEnabled(false);
 		}
 	}	

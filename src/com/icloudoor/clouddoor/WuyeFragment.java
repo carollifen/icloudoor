@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,8 +18,11 @@ import android.widget.ImageView;
 
 public class WuyeFragment extends Fragment {
 	
+	private String TAG = this.getClass().getSimpleName();
+	
 	private ImageView WuyeWidgePush1;
 	private ImageView WuyeWidgePush2;
+	private ImageView WuyeWidgePush3;
 	
 	private ImageView BtnLianxiwuye;
 	private ImageView BtnNotice;
@@ -29,14 +33,16 @@ public class WuyeFragment extends Fragment {
 	private ImageView BtnBill;
 	private ImageView BtnPay;
 	
-	private MyClickListener myClick;
+	public MyClickListener myClick;
 	
-	private ViewPager mWuyeWidgePager;
+	private AutoScrollViewPager viewPager;
+//	private ViewPager mWuyeWidgePager;
 	private ArrayList<Fragment> mWuyePageFragmentList;
 	private WuyePageAdapter mWuyePageAdapter;
 	public FragmentManager mFragmentManager;
 	private WuyeWidgeFragment mWuyeWidgeFragment;
 	private WuyeWidgeFragment2 mWuyeWidgeFragment2;
+	private WuyeWidgeFragment3 mWuyeWidgeFragment3;
 	public MyPageChangeListener myPageChangeListener;
 
 	public WuyeFragment() {
@@ -50,6 +56,7 @@ public class WuyeFragment extends Fragment {
 		
 		WuyeWidgePush1 = (ImageView) view.findViewById(R.id.Iv_wuye_widge_push1);
 		WuyeWidgePush2 = (ImageView) view.findViewById(R.id.Iv_wuye_widge_push2);
+		WuyeWidgePush3 = (ImageView) view.findViewById(R.id.Iv_wuye_widge_push3);
 		
 		BtnLianxiwuye = (ImageView) view.findViewById(R.id.btn_lianxiwuye);
 		BtnNotice = (ImageView) view.findViewById(R.id.btn_notice);
@@ -60,26 +67,21 @@ public class WuyeFragment extends Fragment {
 		BtnBill = (ImageView) view.findViewById(R.id.btn_bill);
 		BtnPay = (ImageView) view.findViewById(R.id.btn_pay);
 		
+		myClick = new MyClickListener();
+		
 		BtnLianxiwuye.setOnClickListener(myClick);
 		BtnNotice.setOnClickListener(myClick);
 		BtnFix.setOnClickListener(myClick);
-		BtnBad.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent();
-				intent.setClass(getActivity(), TestWebViewActivity.class);
-				startActivity(intent);
-			}
-			
-		});
+		BtnBad.setOnClickListener(myClick);
 		BtnGood.setOnClickListener(myClick);
 		BtnQuery.setOnClickListener(myClick);
 		BtnBill.setOnClickListener(myClick);
 		BtnPay.setOnClickListener(myClick);
 		
+
 		mFragmentManager = getChildFragmentManager();
-		mWuyeWidgePager = (ViewPager) view.findViewById(R.id.wuye_widge_pager);
+		viewPager = (AutoScrollViewPager) view.findViewById(R.id.wuye_widge_pager);
+//		mWuyeWidgePager = (ViewPager) view.findViewById(R.id.wuye_widge_pager);
 		myPageChangeListener = new MyPageChangeListener();
 		
 		InitFragmentViews();
@@ -89,8 +91,9 @@ public class WuyeFragment extends Fragment {
 	}
 	
 	public void InitFragmentViews() {
-		WuyeWidgePush1.setImageResource(R.drawable.push_current);
-		WuyeWidgePush2.setImageResource(R.drawable.push_next);
+		WuyeWidgePush1.setImageResource(R.drawable.wuye_push_current);
+		WuyeWidgePush2.setImageResource(R.drawable.wuye_push_next);
+		WuyeWidgePush3.setImageResource(R.drawable.wuye_push_next);
 	}
 	
 	public void InitViewPager(){
@@ -98,31 +101,38 @@ public class WuyeFragment extends Fragment {
 		
 		mWuyeWidgeFragment = new WuyeWidgeFragment();
 		mWuyeWidgeFragment2 = new WuyeWidgeFragment2();
+		mWuyeWidgeFragment3 = new WuyeWidgeFragment3();
 		
 		mWuyePageFragmentList.add(mWuyeWidgeFragment);
 		mWuyePageFragmentList.add(mWuyeWidgeFragment2);
+		mWuyePageFragmentList.add(mWuyeWidgeFragment3);
 		
 		mWuyePageAdapter = new WuyePageAdapter(mFragmentManager, mWuyePageFragmentList);
-		mWuyeWidgePager.setAdapter(mWuyePageAdapter);
-		mWuyeWidgePager.setCurrentItem(0);
-		mWuyeWidgePager.setOnPageChangeListener(myPageChangeListener);
+		viewPager.setAdapter(mWuyePageAdapter);
+		viewPager.setOnPageChangeListener(myPageChangeListener);
+		viewPager.setInterval(4000);
+        viewPager.startAutoScroll();
+        viewPager.setCurrentItem(0);
+//		mWuyeWidgePager.setAdapter(mWuyePageAdapter);
+//		mWuyeWidgePager.setCurrentItem(0);
+//		mWuyeWidgePager.setOnPageChangeListener(myPageChangeListener);
 	}
 
 	public class MyPageChangeListener implements OnPageChangeListener {
 
 		@Override
 		public void onPageScrollStateChanged(int arg0) {
-			if (arg0 == 2) {
-				int index = mWuyeWidgePager.getCurrentItem();
-				mWuyeWidgePager.setCurrentItem(index);
-				if(index == 0){
-					WuyeWidgePush1.setImageResource(R.drawable.push_current);
-					WuyeWidgePush2.setImageResource(R.drawable.push_next);
-				}else if(index == 1){
-					WuyeWidgePush2.setImageResource(R.drawable.push_current);
-					WuyeWidgePush1.setImageResource(R.drawable.push_next);
-				}
-			}
+//			if (arg0 == 2) {
+//				int index = mWuyeWidgePager.getCurrentItem();
+//				mWuyeWidgePager.setCurrentItem(index);
+//				if(index == 0){
+//					WuyeWidgePush1.setImageResource(R.drawable.wuye_push_current);
+//					WuyeWidgePush2.setImageResource(R.drawable.wuye_push_next);
+//				}else if(index == 1){
+//					WuyeWidgePush2.setImageResource(R.drawable.wuye_push_current);
+//					WuyeWidgePush1.setImageResource(R.drawable.wuye_push_next);
+//				}
+//			}
 		}
 
 		@Override
@@ -131,11 +141,39 @@ public class WuyeFragment extends Fragment {
 		}
 
 		@Override
-		public void onPageSelected(int arg0) {
+		public void onPageSelected(int position) {
+			Log.e(TAG, String.valueOf(position));
 			
+			if(position == 0){
+				WuyeWidgePush1.setImageResource(R.drawable.wuye_push_current);
+				WuyeWidgePush2.setImageResource(R.drawable.wuye_push_next);
+				WuyeWidgePush3.setImageResource(R.drawable.wuye_push_next);
+			} else if(position == 1){
+				WuyeWidgePush2.setImageResource(R.drawable.wuye_push_current);
+				WuyeWidgePush1.setImageResource(R.drawable.wuye_push_next);
+				WuyeWidgePush3.setImageResource(R.drawable.wuye_push_next);
+			} else if(position == 2){
+				WuyeWidgePush3.setImageResource(R.drawable.wuye_push_current);
+				WuyeWidgePush1.setImageResource(R.drawable.wuye_push_next);
+				WuyeWidgePush2.setImageResource(R.drawable.wuye_push_next);
+			}
 		}
 		
 	}
+	
+    @Override
+	public void onPause() {
+        super.onPause();
+        // stop auto scroll when onPause
+        viewPager.stopAutoScroll();
+    }
+
+    @Override
+	public void onResume() {
+        super.onResume();
+        // start auto scroll when onResume
+        viewPager.startAutoScroll();
+    }
 	
 	public class MyClickListener implements OnClickListener {
 
@@ -143,13 +181,16 @@ public class WuyeFragment extends Fragment {
 		public void onClick(View v) {
 			switch(v.getId()){
 			case R.id.btn_lianxiwuye:
+				Intent intent = new Intent();
+				intent.setClass(getActivity(), ContactWuyeActivity.class);
+				startActivity(intent);
 				break;
 			case R.id.btn_notice:
 				break;
 			case R.id.btn_fix:
 				break;
-//			case R.id.btn_bad:
-//				break;
+			case R.id.btn_bad:
+				break;
 			case R.id.btn_good:
 				break;
 			case R.id.btn_query:
@@ -164,8 +205,8 @@ public class WuyeFragment extends Fragment {
 		
 	}
 	
-	@Override
-    public void onDetach() {
+	public void onDetach() {
+		super.onDetach();
         try {
             Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
             childFragmentManager.setAccessible(true);
@@ -175,8 +216,6 @@ public class WuyeFragment extends Fragment {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-        super.onDetach();
-
     }
 	
 }

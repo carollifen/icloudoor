@@ -1,103 +1,173 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#ecf0f7" >
+    android:background="#ffffff"
+    android:orientation="vertical" >
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#dddddd" />
 
     <RelativeLayout
-        android:id="@+id/btn_set"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp" >
+        android:layout_width="match_parent"
+        android:layout_height="47dp" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:background="@drawable/new_setting" />
 
         <TextView
-            android:layout_width="135dp"
-            android:layout_height="55dp"
-            android:background="@drawable/selector_in_set_items"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:gravity="center"
-            android:paddingLeft="10dp"
+            android:paddingLeft="56dp"
             android:text="设置"
-            android:textSize="17sp" />
+            android:textColor="#333333"
+            android:textSize="15sp" />
+
+        <RelativeLayout
+            android:id="@+id/btn_set"
+            android:layout_width="42dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/new_right" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#dddddd" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="47dp" >
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="30.5dp"
-            android:background="@drawable/bar_set" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/btn_sig"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="30dp" >
+            android:layout_marginLeft="16dp"
+            android:background="@drawable/new_gesture" />
 
         <TextView
-            android:layout_width="135dp"
-            android:layout_height="55dp"
-            android:background="@drawable/selector_in_set_items"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:gravity="center"
-            android:paddingLeft="10dp"
+            android:paddingLeft="56dp"
             android:text="手势"
-            android:textSize="17sp" />
+            android:textColor="#333333"
+            android:textSize="15sp" />
+
+        <RelativeLayout
+            android:id="@+id/btn_sig"
+            android:layout_width="42dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/new_right" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#dddddd" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="47dp" >
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="30.5dp"
-            android:background="@drawable/bar_sign" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/btn_share"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="66.5dp" >
+            android:layout_marginLeft="16dp"
+            android:background="@drawable/new_share" />
 
         <TextView
-            android:layout_width="135dp"
-            android:layout_height="55dp"
-            android:background="@drawable/selector_in_set_items"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:gravity="center"
-            android:paddingLeft="10dp"
+            android:paddingLeft="56dp"
             android:text="分享"
-            android:textSize="17sp" />
+            android:textColor="#333333"
+            android:textSize="15sp" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="30.5dp"
-            android:background="@drawable/bar_share" />
+        <RelativeLayout
+            android:id="@+id/btn_share"
+            android:layout_width="42dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/new_right" />
+        </RelativeLayout>
     </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#dddddd" />
 
     <RelativeLayout
-        android:id="@+id/btn_update"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="66.5dp" >
-
-        <TextView
-            android:layout_width="135dp"
-            android:layout_height="55dp"
-            android:background="@drawable/selector_in_set_items"
-            android:gravity="center"
-            android:paddingLeft="40dp"
-            android:text="版本更新"
-            android:textSize="17sp" />
+        android:layout_width="match_parent"
+        android:layout_height="47dp" >
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="30.5dp"
-            android:background="@drawable/bar_renew" />
+            android:layout_marginLeft="16dp"
+            android:background="@drawable/new_update" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:paddingLeft="56dp"
+            android:text="版本更新"
+            android:textColor="#333333"
+            android:textSize="15sp" />
+
+        <RelativeLayout
+            android:id="@+id/btn_update"
+            android:layout_width="42dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/new_right" />
+        </RelativeLayout>
     </RelativeLayout>
 
-</RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#dddddd" />
+
+</LinearLayout>

@@ -29,6 +29,7 @@ public class WizardPageAdapter extends FragmentPagerAdapter{
 	public int getCount() {
 		// TODO Auto-generated method stub
 		return mWizardFragmentList.size();
+//		return Integer.MAX_VALUE;
 	}
 	
 }
