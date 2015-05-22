@@ -1373,20 +1373,22 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		public void onLeScan(final BluetoothDevice device, final int rssi,
 				byte[] scanRecord) {
 			Log.e("BLE", "onLeScan");
-			getActivity().runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					if (getActivity() != null) {
-						getActivity().runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								addDevice(device, rssi);
-							}
-						});
-					}
+			if(getActivity() != null) {
+				getActivity().runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						if (getActivity() != null) {
+							getActivity().runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									addDevice(device, rssi);
+								}
+							});
+						}
 
-				}
-			});
+					}
+				});
+			}
 		}
 	};
 

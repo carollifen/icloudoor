@@ -354,23 +354,28 @@ public class KeyListListFragment extends Fragment {
 
 	}
 	
-	public void saveSid(String sid) {
-		SharedPreferences savedSid = getActivity().getSharedPreferences("SAVEDSID", 0);
-		Editor editor = savedSid.edit();
-		editor.putString("SID", sid);
-		editor.commit();
+	public void saveSid(String sid) {	
+		if(getActivity() != null) {
+			SharedPreferences savedSid = getActivity().getSharedPreferences("SAVEDSID", 0);
+			Editor editor = savedSid.edit();
+			editor.putString("SID", sid);
+			editor.commit();
+		}
 	}
 
 	public String loadSid() {
+		
 		SharedPreferences loadSid = getActivity().getSharedPreferences("SAVEDSID", 0);
 		return loadSid.getString("SID", null);
 	}
 
-	public void saveUUID(String uuid){
-		SharedPreferences savedUUID = getActivity().getSharedPreferences("SAVEDUUID", 0);
-		Editor editor = savedUUID.edit();
-		editor.putString("UUID", uuid);
-		editor.commit();
+	public void saveUUID(String uuid){	
+		if(getActivity() != null) {
+			SharedPreferences savedUUID = getActivity().getSharedPreferences("SAVEDUUID", 0);
+			Editor editor = savedUUID.edit();
+			editor.putString("UUID", uuid);
+			editor.commit();
+		}		
 	}
 	
 	public String loadUUID(){

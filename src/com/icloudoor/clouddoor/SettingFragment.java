@@ -283,11 +283,13 @@ public class SettingFragment extends Fragment {
 //	}
 	
 	public void saveSid(String key, String value) {
-		SharedPreferences savedSid = getActivity().getSharedPreferences(
-				"SAVEDSID", 0);
-		Editor editor = savedSid.edit();
-		editor.putString(key, value);
-		editor.commit();
+		if(getActivity() != null){
+			SharedPreferences savedSid = getActivity().getSharedPreferences(
+					"SAVEDSID", 0);
+			Editor editor = savedSid.edit();
+			editor.putString(key, value);
+			editor.commit();
+		}
 	}
 
 	public String loadSid(String key) {
