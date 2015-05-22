@@ -39,6 +39,10 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -47,6 +51,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -56,7 +61,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 @SuppressLint("NewApi")
-public class KeyList extends Activity{
+public class KeyList extends FragmentActivity{
 
 	private String TAG = "KeyList";
 	
@@ -78,7 +83,9 @@ public class KeyList extends Activity{
 
 	// Door info variable
 	private ListView mKeyList;
+	/*
 	private KeyListAdapter mAdapter;
+	*/
 	private ArrayList<HashMap<String, String>> doorNameList;
 	
 	
@@ -103,17 +110,66 @@ public class KeyList extends Activity{
 	private String AUTHTO;
 	private String CARSTATUS;    //1. own car  2.borrow car  3.lend car
 	private String CARPOSSTATUS;    //1.init   2.inside   3.outside
-
+	
+	// for new ui
+	private RelativeLayout keyListSwitch;
+	private ImageView switchAuth;
+	private ImageView switchList;
+	private TextView switchAuthText;
+	private TextView switchListText;
+	private boolean chooseList;
+	
+	private KeyListAuthFragment mAuthFragment;
+	private KeyListListFragment mListFragment;
+	public FragmentManager mFragmentManager;
+	public FragmentTransaction mFragmenetTransaction;
+	public MyOnClickListener myClickListener;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 //		getActionBar().hide();
 		setContentView(R.layout.key_list);
 		
+		/*
 		mKeyList = (ListView) findViewById(R.id.key_listview);
+		*/
 
 		mKeyDBHelper = new MyDataBaseHelper(KeyList.this, DATABASE_NAME);
 		mKeyDB = mKeyDBHelper.getWritableDatabase();
+		
+		//for new ui
+		chooseList = true;
+		
+		keyListSwitch = (RelativeLayout) findViewById(R.id.key_list_switch);
+		switchAuth = (ImageView) findViewById(R.id.select_auth);
+		switchList = (ImageView) findViewById(R.id.select_list);
+		switchAuthText = (TextView) findViewById(R.id.select_auth_text);
+		switchListText = (TextView) findViewById(R.id.select_list_text);
+		
+		DisplayMetrics dm = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
+		int screenWidth = dm.widthPixels;
+		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) keyListSwitch.getLayoutParams();
+		params.width = screenWidth - 105*2;
+		keyListSwitch.setLayoutParams(params);
+		
+		switchAuth.setImageResource(R.drawable.key_list_normal_left);
+		switchList.setImageResource(R.drawable.key_list_select_right);
+		switchAuthText.setTextColor(0xFF666666);	
+		switchListText.setTextColor(0xFFffffff);	
+		
+		mAuthFragment = new KeyListAuthFragment();
+		mListFragment = new KeyListListFragment();
+		mFragmentManager = getSupportFragmentManager();
+		mFragmenetTransaction = mFragmentManager.beginTransaction();
+		mFragmenetTransaction.replace(R.id.key_list_content, mListFragment).commit();
+
+		myClickListener = new MyOnClickListener();
+
+		switchAuth.setOnClickListener(myClickListener);		
+		switchList.setOnClickListener(myClickListener);
+		
 		
 //		mQueue = Volley.newRequestQueue(this);
 //		
@@ -277,7 +333,37 @@ public class KeyList extends Activity{
 			}
 
 		});
+		
 
+	}
+	
+	public class MyOnClickListener implements OnClickListener {
+		@Override
+		public void onClick(View view) {
+			mFragmenetTransaction = mFragmentManager.beginTransaction();
+			if(view.getId() == R.id.select_auth){
+				if(chooseList){
+					switchAuth.setImageResource(R.drawable.key_list_select_left);
+					switchList.setImageResource(R.drawable.key_list_normal_right);
+					switchAuthText.setTextColor(0xFFffffff);	
+					switchListText.setTextColor(0xFF666666);
+					chooseList = false;
+					
+					mFragmenetTransaction.replace(R.id.key_list_content, mAuthFragment);
+				}
+			}else if(view.getId() == R.id.select_list){
+				if(!chooseList){
+					switchAuth.setImageResource(R.drawable.key_list_normal_left);
+					switchList.setImageResource(R.drawable.key_list_select_right);
+					switchAuthText.setTextColor(0xFF666666);	
+					switchListText.setTextColor(0xFFffffff);	
+					chooseList = true;
+					
+					mFragmenetTransaction.replace(R.id.key_list_content, mListFragment);
+				}
+			}
+			mFragmenetTransaction.commit();
+		}
 	}
 	
 	@Override
@@ -285,6 +371,7 @@ public class KeyList extends Activity{
 		super.onResume();
 		Log.e(TAG, "onResume");
 		
+		/*
 		mQueue = Volley.newRequestQueue(this);
 		
 		sid = loadSid();
@@ -444,6 +531,7 @@ public class KeyList extends Activity{
 				mCursor.close();
 			}
 		}
+		*/
 	}
 
 	/*
@@ -601,7 +689,7 @@ public class KeyList extends Activity{
 //			e.printStackTrace();
 //		}
 	}
-
+/*
 	private class KeyListAdapter extends BaseAdapter {
 		private LayoutInflater mInflater;
 		private ArrayList<HashMap<String, String>> doorNameList;
@@ -671,7 +759,7 @@ public class KeyList extends Activity{
 		}
 
 	}
-
+*/
 	
 	public void saveSid(String sid) {
 		SharedPreferences savedSid = getSharedPreferences("SAVEDSID",
@@ -725,5 +813,6 @@ public class KeyList extends Activity{
 		}
 		return hasData;
 	}
+	
 	
 }
