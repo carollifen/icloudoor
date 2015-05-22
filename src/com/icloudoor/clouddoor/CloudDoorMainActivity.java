@@ -2,6 +2,10 @@ package com.icloudoor.clouddoor;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengRegistrar;
 
@@ -13,6 +17,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -31,6 +36,15 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.umeng.message.PushAgent;
+import com.umeng.message.UmengRegistrar;
+import com.umeng.message.tag.TagManager;
 
 public class CloudDoorMainActivity extends FragmentActivity {
     private final String TAG = this.getClass().getSimpleName();
@@ -74,12 +88,60 @@ public class CloudDoorMainActivity extends FragmentActivity {
 	private int lockScreenBefore = 0;
 	
 	private int currentVersion;
+	
+	// for Umeng Push Service
+	private RequestQueue mRequestQueue;
+ 	private String url="http://zone.icloudoor.com/icloudoor-web/user/api/getTags.do";
+ 	private String tag;
+ 	private String sid;
+ 	private PushAgent mPushAgent;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 //		getActionBar().hide();
 		setContentView(R.layout.new_main);
+		
+		// for Umeng Push Service
+		mPushAgent = PushAgent.getInstance(getApplicationContext());
+		mPushAgent.enable();
+		String device_token = UmengRegistrar
+				.getRegistrationId(getApplicationContext());
+		Log.e("devicetoken", device_token);
+		// mPushAgent.setDebugMode(true);
+		mRequestQueue = Volley.newRequestQueue(getApplicationContext());
+		sid = loadSid();
+		JsonObjectRequest mJsonObjectRequest = new JsonObjectRequest(url
+				+ "?sid=" + sid, null, new Response.Listener<JSONObject>() {
+			@Override
+			public void onResponse(JSONObject response) {
+				Log.e("response", response.toString());
+				try {
+					
+					if(response.getString("sid") != null)
+						saveSid("SID", sid);
+					
+					if(response.getInt("code") == 1){
+						JSONArray tagJson = response.getJSONArray("data");
+						for (int i = 0; i < tagJson.length(); i++) {
+							tag = (String) tagJson.get(i);
+							Log.e("response", tag);
+							new AddTagTask(tag).execute();
+						}
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}, new Response.ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				// TODO Auto-generated method stub
+			}
+		});
+		mRequestQueue.add(mJsonObjectRequest);
+
 		
         registerReceiver(mConnectionStatusReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         instance = this;
@@ -111,47 +173,10 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		
 		registerReceiver(mHomeKeyEventReceiver, new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
-		
-		PushAgent mPushAgent = PushAgent.getInstance(this);
-		mPushAgent.enable();
-		getDeviceInfo(this);
+
 	}
 
 
-	public static String getDeviceInfo(Context context) {
-		try {
-			org.json.JSONObject json = new org.json.JSONObject();
-			android.telephony.TelephonyManager tm = (android.telephony.TelephonyManager) context
-					.getSystemService(Context.TELEPHONY_SERVICE);
-
-			String device_id = tm.getDeviceId();
-
-			android.net.wifi.WifiManager wifi = (android.net.wifi.WifiManager) context
-					.getSystemService(Context.WIFI_SERVICE);
-
-			String mac = wifi.getConnectionInfo().getMacAddress();
-			json.put("mac", mac);
-
-			if (TextUtils.isEmpty(device_id)) {
-				device_id = mac;
-			}
-
-			if (TextUtils.isEmpty(device_id)) {
-				device_id = android.provider.Settings.Secure.getString(
-						context.getContentResolver(),
-						android.provider.Settings.Secure.ANDROID_ID);
-			}
-
-			json.put("device_id", device_id);
-
-			return json.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-                  
-	
 	public void InitViews() {
 		myClickListener = new MyOnClickListener();
 //		myPageChangeListener = new MyPageChangeListener();
@@ -407,6 +432,40 @@ public class CloudDoorMainActivity extends FragmentActivity {
             }
         }
     };
+    
+    class AddTagTask extends AsyncTask<Void, Void, String>{
+    	
+    	String tagString;
+    	String[] tags;
+
+    	public AddTagTask(String tag) {
+    	 	tagString = tag;
+    	 }
+    	
+		@Override
+		protected String doInBackground(Void... params) {
+			try {
+				TagManager.Result result = mPushAgent.getTagManager().add(
+						tagString);
+				Log.e("result", result.toString());
+				return result.toString();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return "Fail";
+		}
+		
+		@Override
+		protected void onPostExecute(String result) {
+			
+		}
+    }
+    
+	public String loadSid() {
+		SharedPreferences loadSid = CloudDoorMainActivity.this
+				.getSharedPreferences("SAVEDSID", 0);
+		return loadSid.getString("SID", null);
+	}
 
     public void saveSid(String key, String value) {
         SharedPreferences savedSid = this.getSharedPreferences(

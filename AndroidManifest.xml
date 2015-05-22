@@ -36,6 +36,14 @@
 
     <!-- 【可选】如果需要设置前台是否显示通知，需要设置这个权限 -->
     <uses-permission android:name="android.permission.GET_TASKS" />
+    
+    <!-- 可选 -->
+ 	<uses-permission android:name="android.permission.BROADCAST_PACKAGE_ADDED" />
+ 	<uses-permission android:name="android.permission.BROADCAST_PACKAGE_CHANGED" />
+ 	<uses-permission android:name="android.permission.BROADCAST_PACKAGE_INSTALL" />
+ 	<uses-permission android:name="android.permission.BROADCAST_PACKAGE_REPLACED" />
+ 	<uses-permission android:name="android.permission.RESTART_PACKAGES" />
+ 	<uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <!-- 友盟推送 结束 -->
 
     <uses-feature android:name="android.hardware.camera" />
@@ -45,6 +53,38 @@
         android:icon="@drawable/logo_deep144"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.NoTitleBar" >
+<service
+    android:name="com.umeng.message.UmengService"
+   android:label="PushService" 
+    android:exported="true" 
+    android:process=":push" >
+
+<intent-filter>
+        <action android:name="com.icloudoor.clouddoor.intent.action.START" />
+    </intent-filter>
+    <intent-filter>
+        <action android:name="com.icloudoor.clouddoor.intent.action.COCKROACH" />
+    </intent-filter>
+    <intent-filter>
+        <action android:name="org.agoo.android.intent.action.PING_V4" />
+    <category android:name="umeng" />
+    </intent-filter>
+</service>
+<service android:name="com.umeng.message.UmengIntentService" 
+    android:process=":push" />
+<service 
+    android:name="com.umeng.message.UmengMessageIntentReceiverService"
+    android:process=":push" 
+    android:exported="true" >
+    <intent-filter>
+        <action android:name="org.android.agoo.client.MessageReceiverService" />
+    </intent-filter>
+    <intent-filter>
+        <action android:name="org.android.agoo.client.ElectionReceiverService" />
+    </intent-filter>
+</service>
+<!-- V1.3.0添加的service，负责下载通知的资源 -->
+<service android:name="com.umeng.message.UmengDownloadResourceService" />
         <activity
             android:name=".CloudDoorMainActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -129,6 +169,12 @@
             android:name=".KeyList"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait" >
+            
+<!--                         <intent-filter> -->
+<!--                 <action android:name="android.intent.action.MAIN" /> -->
+
+<!--                 <category android:name="android.intent.category.LAUNCHER" /> -->
+<!--             </intent-filter> -->
         </activity>
 
         <service
@@ -141,11 +187,6 @@
             android:name=".SetPersonalInfo"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait" >
-<!--             <intent-filter> -->
-<!--                 <action android:name="android.intent.action.MAIN" /> -->
-
-<!--                 <category android:name="android.intent.category.LAUNCHER" /> -->
-<!--             </intent-filter> -->
         </activity>
         <activity
             android:name=".PersonalInfoDetail"
@@ -267,11 +308,16 @@
             android:name="UMENG_MESSAGE_SECRET"
             android:value="cef31b26569093506b4ee7bbec0beaa3" >
         </meta-data>
-        <!-- 友盟推送 -->
+        
         <service
-            android:name=".MyPushIntentService"
-            android:exported="false" >
+            android:name="com.umeng.message.UmengService"
+            android:exported="true"
+            android:label="PushService"
+            android:process=":push" >
         </service>
-    </application>
+
+        <!-- 友盟推送 -->
+
+</application>
 
 </manifest>
