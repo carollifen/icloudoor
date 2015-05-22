@@ -143,12 +143,12 @@
                 android:layout_width="60dp"
                 android:layout_height="match_parent" />
 
-            <RelativeLayout
-                android:id="@+id/personal_sex"
+            <RelativeLayout     
                 android:layout_width="130dp"
                 android:layout_height="match_parent" >
 
                 <RelativeLayout
+                    android:id="@+id/personal_sex_man"
                     android:layout_width="50dp"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true" >
@@ -170,6 +170,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/personal_sex_woman"
                     android:layout_width="50dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -228,19 +229,38 @@
                     android:id="@+id/Addr_provice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical" />"
+                    android:layout_gravity="center_vertical"
+                    android:background="@null" />
+                
+                <TextView
+                    android:layout_width="10dp"
+                    android:layout_height="48dp"
+                    android:gravity="center"
+                    android:text="@string/dot"
+                    android:textColor="#666666"
+                    android:textSize="15sp" />
 
                 <Spinner
                     android:id="@+id/Addr_city"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical" />
+                    android:layout_gravity="center_vertical"
+                    android:background="@null" />
+                
+                <TextView
+                    android:layout_width="10dp"
+                    android:layout_height="48dp"
+                    android:gravity="center"
+                    android:text="@string/dot"
+                    android:textColor="#666666"
+                    android:textSize="15sp" />
 
                 <Spinner
                     android:id="@+id/Addr_disctrict"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical" />
+                    android:layout_gravity="center_vertical"
+                    android:background="@null" />
             </LinearLayout>
         </LinearLayout>
 

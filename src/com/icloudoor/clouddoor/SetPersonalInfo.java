@@ -78,7 +78,8 @@ public class SetPersonalInfo extends Activity {
 	private TextView addImage;
 	private EditText realName;
 	private EditText nickName;
-	private RelativeLayout setSex;
+	private RelativeLayout setSexMan;
+	private RelativeLayout setSexWoman;
 	private ImageView sexMan;
 	private ImageView sexWoman;
 	private EditText birthYear;
@@ -258,7 +259,21 @@ public class SetPersonalInfo extends Activity {
 			
 		});
 		
-		setSex.setOnClickListener(new OnClickListener(){
+		setSexMan.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				if(Sex == 2){
+					Sex = 1;
+					sexMan.setImageResource(R.drawable.select);
+					sexWoman.setImageResource(R.drawable.not_select);
+				}
+				
+			}
+			
+		});
+		
+		setSexWoman.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
@@ -266,10 +281,6 @@ public class SetPersonalInfo extends Activity {
 					Sex = 2;
 					sexMan.setImageResource(R.drawable.not_select);
 					sexWoman.setImageResource(R.drawable.select);
-				}else if(Sex == 2){
-					Sex = 1;
-					sexMan.setImageResource(R.drawable.select);
-					sexWoman.setImageResource(R.drawable.not_select);
 				}
 				
 			}
@@ -496,7 +507,8 @@ public class SetPersonalInfo extends Activity {
 		addImage = (TextView) findViewById(R.id.add_image);
 		realName = (EditText) findViewById(R.id.personal_RealName);
 		nickName = (EditText) findViewById(R.id.personal_NickName);
-		setSex = (RelativeLayout) findViewById(R.id.personal_sex);
+		setSexMan = (RelativeLayout) findViewById(R.id.personal_sex_man);
+		setSexWoman = (RelativeLayout) findViewById(R.id.personal_sex_woman);
 		sexMan = (ImageView) findViewById(R.id.personal_SexMan);
 		sexWoman = (ImageView) findViewById(R.id.personal_SexWoman);
 		birthYear = (EditText) findViewById(R.id.personal_year);
