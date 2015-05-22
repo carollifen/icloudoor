@@ -48,6 +48,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -165,6 +166,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	private String day1;
 	private String lastRequestLHL;
 	private boolean haveRequestLHL = false;
+    private boolean mBTScanning = false;
 	
 	private long mLastRequestTime;
 	private long mCurrentRequestTime;
@@ -176,8 +178,10 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	private LinearLayout channelSwitchLayout;
 	private ChannelSwitchView csv;
 	private int isChooseCarChannel = 1;
+    private int mOpenDoorState;
 	private boolean onlyOneDoor = false;
 	private StrokeTextView doorName;
+    private ImageView doorNameFlag;
 	private TextView scanStatus;
 	private ImageView BtnOpenDoor;
 //	private OpenDoorRingView ringView;
@@ -204,7 +208,10 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	private boolean checkForOpenDoor = false;
 	
 	private String tempDeviceAddr = null;
-	
+    private Handler mHandler;
+    private volatile boolean stopThread = false;
+
+    private MyThread  myThread;
 	public KeyFragment() {
 		// Required empty public constructor
 	}
@@ -282,11 +289,12 @@ public class KeyFragment extends Fragment implements ShakeListener {
 				Log.e(TAG, "channel: " + String.valueOf(isChooseCarChannel));
 				Log.e(TAG, String.valueOf(onlyOneDoor));
 								
-				if(!onlyOneDoor){
+				if(!mBTScanning){
 					populateDeviceList();
+                    Log.e(TAG, "start scanning");
 				}
 					
-				onlyOneDoor = !onlyOneDoor;
+				//onlyOneDoor = !onlyOneDoor;
 			}
 			
 		});
@@ -315,7 +323,11 @@ public class KeyFragment extends Fragment implements ShakeListener {
 
 			@Override
 			public void onClick(View v) {
-				doOpenDoor(); //ONLY FOR TEST
+                if (mOpenDoorState == 0) {
+                    mOpenDoorState = 1; // doing opendoor
+                    Log.i("test", "doOpenDoor");
+                    doOpenDoor(); //ONLY FOR TEST
+                }
 			}
 			
 		});
@@ -338,6 +350,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		});
 		
 		doorName = (StrokeTextView) view.findViewById(R.id.door_name);
+        doorNameFlag = (ImageView) view.findViewById(R.id.door_name_flag);
 		scanStatus = (TextView) view.findViewById(R.id.scan_status);
 		scanStatus.setText(R.string.can_shake_to_open_door);
 	
@@ -800,6 +813,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	
 	@Override
 	public void onStart() {
+        stopThread = false;
 		super.onStart();
 		IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
 		filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
@@ -861,13 +875,71 @@ public class KeyFragment extends Fragment implements ShakeListener {
 				}
 			}
 		}
+        mHandler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                switch(msg.what) {
+                    case 10:
+                        if (mOpenDoorState == 0) {
+                            Log.i(TAG, "Thread handler");
+                            populateDeviceList();
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                super.handleMessage(msg);
+            }
+        };
+            Log.i(TAG, "myThread111");
+
+                 myThread = new MyThread();
+                myThread.start();
+
+
+//        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
+//            @Override
+//            public void run() {
+//                Message msg = new Message();
+//                msg.what = 10;
+//                mHandler.sendMessage(msg);
+//                Log.i(TAG, "myThread");
+//            }
+//        }   , 0,
+//         6,
+//                TimeUnit.SECONDS) ;
 	}
-	
+
+    private  class MyThread extends Thread {
+
+        private volatile boolean stopThread = false;
+
+        public void stopThread() {
+            this.stopThread = true;
+        }
+
+        @Override
+        public void run() {
+            while (!Thread.currentThread().isInterrupted() && !stopThread) {
+                Message msg = new Message();
+                msg.what = 10;
+                mHandler.sendMessage(msg);
+                Log.i("ThreadTest", Thread.currentThread().getId() + "myThread");
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
 	@Override
 	public void onPause() {
 		super.onPause();
 		if(mBluetoothAdapter.isEnabled())
 			scanLeDevice(false);
+        myThread.stopThread();
 	}
 
 	@Override
@@ -930,6 +1002,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //		IvOpenDoorLogo.setImageResource(R.drawable.btn_serch_1);
 		
 		doorName.setText("");
+        doorNameFlag.setVisibility(View.INVISIBLE);
 		
 		mDeviceList = new ArrayList<BluetoothDevice>();
 		mDeviceAdapter = new DeviceAdapter(getActivity(), mDeviceList);
@@ -946,7 +1019,9 @@ public class KeyFragment extends Fragment implements ShakeListener {
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                    boolean findKey = false;
+                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                    mBTScanning = false;
 //					channelSwitch.setEnabled(true);
 					
 					Log.e(TAG, "mDeviceList.size() =" + String.valueOf(mDeviceList.size()));
@@ -982,29 +1057,31 @@ public class KeyFragment extends Fragment implements ShakeListener {
 								BtnOpenDoor.setEnabled(true);
 								
 								doorName.setText(carDoorList.get(i).get("CDdoorName"));
+                                doorNameFlag.setVisibility(View.VISIBLE);
 								
 								csv.changeChecked(true);
 //								onlyOneDoor = false;
-								
+                                findKey = true;
 								isChooseCarChannel = 1;
 								
 								break;
 							}
 						}
-						
-						for (int i = 0; i < manDoorList.size(); i++) {
-							String tempDID = manDoorList.get(i).get("MDdeviceid");
-							tempDID = tempDID.toUpperCase();
-							char[] data = tempDID.toCharArray();
-							String formatDeviceId = String.valueOf(data[0]) + String.valueOf(data[1]) + ":"
-									+ String.valueOf(data[2]) + String.valueOf(data[3]) + ":"
-									+ String.valueOf(data[4]) + String.valueOf(data[5]) + ":"
-									+ String.valueOf(data[6]) + String.valueOf(data[7]) + ":"
-									+ String.valueOf(data[8]) + String.valueOf(data[9]) + ":"
-									+ String.valueOf(data[10]) + String.valueOf(data[11]);
-							Log.e("TEST", "MDdeviceID:" + formatDeviceId);
 
-							if (mDeviceList.get(0).getAddress().equals(formatDeviceId)) {
+                        /*if (!findKey)*/ {
+                            for (int i = 0; i < manDoorList.size(); i++) {
+                                String tempDID = manDoorList.get(i).get("MDdeviceid");
+                                tempDID = tempDID.toUpperCase();
+                                char[] data = tempDID.toCharArray();
+                                String formatDeviceId = String.valueOf(data[0]) + String.valueOf(data[1]) + ":"
+                                        + String.valueOf(data[2]) + String.valueOf(data[3]) + ":"
+                                        + String.valueOf(data[4]) + String.valueOf(data[5]) + ":"
+                                        + String.valueOf(data[6]) + String.valueOf(data[7]) + ":"
+                                        + String.valueOf(data[8]) + String.valueOf(data[9]) + ":"
+                                        + String.valueOf(data[10]) + String.valueOf(data[11]);
+                                Log.e("TEST", "MDdeviceID:" + formatDeviceId);
+
+                                if (mDeviceList.get(0).getAddress().equals(formatDeviceId)) {
 //								IvOpenDoorLogo.setEnabled(true);
 //								IvOpenDoorLogo.setImageResource(R.drawable.selector_pressed);
 //								IvSearchKey.setBackgroundResource(R.drawable.btn_background_blue);
@@ -1013,20 +1090,22 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //								TvDistrictDoor.setTextColor(0xFFffffff);
 //								TvCarNumber.setText(manDoorList.get(i).get("MDdeviceid"));
 //								TvCarNumber.setTextColor(0xFFffffff);
-								
-								BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
-								BtnOpenDoor.setEnabled(true);
-								
-								doorName.setText(manDoorList.get(i).get("MDdoorName"));
 
-								csv.changeChecked(false);
+                                    BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
+                                    BtnOpenDoor.setEnabled(true);
+
+                                    doorName.setText(manDoorList.get(i).get("MDdoorName"));
+                                    doorNameFlag.setVisibility(View.VISIBLE);
+
+                                    csv.changeChecked(false);
 //								onlyOneDoor = false;
-								
-								isChooseCarChannel = 0;
-								
-								break;
-							}
-						}
+
+                                    isChooseCarChannel = 0;
+
+                                    break;
+                                }
+                            }
+                        }
 					}
 					// add for the case of only one door -- END		
 					
@@ -1076,6 +1155,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 									BtnOpenDoor.setEnabled(true);
 									
 									doorName.setText(carDoorList.get(i).get("CDdoorName"));
+                                    doorNameFlag.setVisibility(View.VISIBLE);
 								}
 							}
 						} else {
@@ -1105,13 +1185,17 @@ public class KeyFragment extends Fragment implements ShakeListener {
 									BtnOpenDoor.setEnabled(true);
 									
 									doorName.setText(manDoorList.get(i).get("MDdoorName"));
+                                    doorNameFlag.setVisibility(View.VISIBLE);
 								}
 							}
 						}
 					}
 				}
 			}, SCAN_PERIOD);
-			mBluetoothAdapter.startLeScan(mLeScanCallback);
+			if (mBluetoothAdapter.startLeScan(mLeScanCallback)){
+                mBTScanning = true;
+                Log.i(TAG, "mBTScanning is true");
+            }
 //			channelSwitch.setEnabled(false);
 //			if (getActivity() != null)
 //				Toast.makeText(getActivity(), R.string.scanning, 3000).show();
@@ -1150,6 +1234,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 						BtnOpenDoor.setEnabled(true);
 						
 						doorName.setText(carDoorList.get(i).get("CDdoorName"));
+                        doorNameFlag.setVisibility(View.VISIBLE);
 						
 						csv.changeChecked(true);
 //						onlyOneDoor = false;
@@ -1186,6 +1271,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 						BtnOpenDoor.setEnabled(true);
 						
 						doorName.setText(manDoorList.get(i).get("MDdoorName"));
+                        doorNameFlag.setVisibility(View.VISIBLE);
 
 						csv.changeChecked(false);
 //						onlyOneDoor = false;
@@ -1227,6 +1313,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 							BtnOpenDoor.setEnabled(true);
 							
 							doorName.setText(carDoorList.get(i).get("CDdoorName"));
+                            doorNameFlag.setVisibility(View.VISIBLE);
 						}
 					}
 				} else {
@@ -1256,6 +1343,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 							BtnOpenDoor.setEnabled(true);
 							
 							doorName.setText(manDoorList.get(i).get("MDdoorName"));
+                            doorNameFlag.setVisibility(View.VISIBLE);
 						}
 					}
 				}
@@ -1341,28 +1429,34 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		
 		if (mDeviceList != null && mDeviceList.size() > 0) {
 			if (mDeviceList.get(deviceIndexToOpen).getAddress() != null) {
-				mBluetoothAdapter.stopLeScan(mLeScanCallback);
-				mUartService.connect(mDeviceList.get(deviceIndexToOpen)
-						.getAddress());
+                if (mBTScanning) {
+                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                }
+				if (!mUartService.connect(mDeviceList.get(deviceIndexToOpen).getAddress())){
+                    mOpenDoorState = 2;
+                    Log.i("test", "connect failed!");
+                }
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(mOpenDoorState != 0) {
+//                            Toast.makeText(getActivity(), R.string.open_door_fail, Toast.LENGTH_SHORT).show();
+                            Log.e("test for open door", "fail");
+                            mOpenDoorState = 0;
+                        }
+                    }
+                }, 5000);
+
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        if (mOpenDoorState == 0) {
+//                            populateDeviceList();
+//                        }
+//                    }
+//                }, 10000);
+
 //				populateDeviceList();				
-				new Handler().postDelayed(new Runnable() {
-	                @Override
-	                public void run() {
-	                    if(!checkForOpenDoor) {
-	                    	Toast.makeText(getActivity(), R.string.open_door_fail, Toast.LENGTH_LONG).show();
-	                    	Log.e("test for open door", "fail");
-	                    }else{
-	                    	checkForOpenDoor = true;
-	                    }
-	                }
-	            }, 3000);
-				
-				new Handler().postDelayed(new Runnable() {
-	                @Override
-	                public void run() {
-	                	populateDeviceList();
-	                }
-	            }, 10000);
 			}
 		}
 	}
@@ -1539,85 +1633,87 @@ public class KeyFragment extends Fragment implements ShakeListener {
 			String action = intent.getAction();
 
 			if (action.equals(UartService.ACTION_GATT_CONNECTED)) {
-				Log.e("BLE", "UartService.ACTION_GATT_CONNECTED");
-				getActivity().runOnUiThread(new Runnable() {
-					public void run() {
-					}
-				});
+				Log.e("test", "UartService.ACTION_GATT_CONNECTED");
+//				getActivity().runOnUiThread(new Runnable() {
+//					public void run() {
+//					}
+//				});
 			}
-
-			if (action.equals(UartService.ACTION_GATT_SERVICES_DISCOVERED)) {
-				Log.e("BLE", "UartService.ACTION_GATT_SERVICES_DISCOVERED");
-				getActivity().runOnUiThread(new Runnable() {
-					public void run() {
-						if (mUartService != null) {
-							mUartService.readRXCharacteristic(mUartService.RX_CHAR_UUID);
-						}
-					}
-				});
-			}
-
-			if (action.equals(UartService.ACTION_GATT_DISCONNECTED)) {
-				Log.e("BLE", "UartService.ACTION_GATT_DISCONNECTED");
-				getActivity().runOnUiThread(new Runnable() {
-					public void run() {
+            if (action.equals(UartService.ACTION_GATT_SERVICES_DISCOVERED)) {
+                Log.e("test", "UartService.ACTION_GATT_SERVICES_DISCOVERED");
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        if (mUartService != null) {
+                            mUartService.readRXCharacteristic(mUartService.RX_CHAR_UUID);
+                        }
+                    }
+                });
+            }
+            if (action.equals(UartService.ACTION_GATT_DISCONNECTED)) {
+                Log.e("BLE", "UartService.ACTION_GATT_DISCONNECTED");
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
 //						IvOpenDoorLogo.setEnabled(true);
-						// mUartService.disconnect();
-						mUartService.close();
-					}
-				});
-			}
+                        // mUartService.disconnect();
+                        mUartService.close();
+                        if (mOpenDoorState != 0) {
+                            Toast.makeText(getActivity(), R.string.open_door_fail, Toast.LENGTH_SHORT).show();
+                            Log.e("test for open door", "fail");
+                            mOpenDoorState = 0;
+                        }
+                    }
+                });
+            }
+            if (action.equals(UartService.ACTION_GATT_SERVICES_DISCOVERED)) {
+                Log.e("test", "UartService.ACTION_GATT_SERVICES_DISCOVERED");
+                mUartService.enableTXNotification();
+            }
+            if (action.equals(UartService.ACTION_DATA_AVAILABLE)) {
+                Log.e("test", "UartService.ACTION_DATA_AVAILABLE");
 
-			if (action.equals(UartService.ACTION_GATT_SERVICES_DISCOVERED)) {
-				Log.e("BLE", "UartService.ACTION_GATT_SERVICES_DISCOVERED");
-				mUartService.enableTXNotification();
-			}
-
-			if (action.equals(UartService.ACTION_DATA_AVAILABLE)) {
-				Log.e("BLE", "UartService.ACTION_DATA_AVAILABLE");
-
-				@SuppressWarnings("unused")
-				final byte[] txValue = intent
-						.getByteArrayExtra(UartService.EXTRA_DATA);
-				getActivity().runOnUiThread(new Runnable() {
-					public void run() {
-						if (mUartService != null) {
-							String message = new String(
-									Character.toChars(new Random()
-											.nextInt(90 - 65) + 65));
-							try {
-								byte[] value = message.getBytes("UTF-8");
-								mUartService.writeRXCharacteristic(value);
-							} catch (Exception e) {
-							}
-						}
-					}
-				});
-			}
-
-			if (action.equals(UartService.DEVICE_DOES_NOT_SUPPORT_UART)) {
-				Log.e("BLE", "UartService.DEVICE_DOES_NOT_SUPPORT_UART");
-				mUartService.disconnect();
-			}
-			
-			//new add for response
-			if (action.equals(UartService.ACTION_MAKESURE_DOOROPENED)) {
-                Log.e("BLE", "UartService.ACTION_MAKESURE_DOOROPENED");
+                @SuppressWarnings("unused")
+                final byte[] txValue = intent
+                        .getByteArrayExtra(UartService.EXTRA_DATA);
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        if (mUartService != null) {
+                            String message = new String(
+                                    Character.toChars(new Random()
+                                            .nextInt(90 - 65) + 65));
+                            try {
+                                byte[] value = message.getBytes("UTF-8");
+                                mUartService.writeRXCharacteristic(value);
+                            } catch (Exception e) {
+                            }
+                        }
+                    }
+                });
+            }
+            if (action.equals(UartService.ACTION_MAKESURE_DOOROPENED)) {//new add for response
+                Log.e("test", "UartService.ACTION_MAKESURE_DOOROPENED");
                 final byte[] txValue = intent
                         .getByteArrayExtra(UartService.EXTRA_DATA);
 //                getActivity().runOnUiThread(new Runnable() {
 //					public void run() {
-						if (txValue[0] == 0x10) {
-		                    // door had opened. go on ...
-							
-							checkForOpenDoor = true;
-							Toast.makeText(getActivity(), R.string.open_door_success, Toast.LENGTH_LONG).show();
-		                    Log.e("BLE", "door had opened.");
-		                }
+                if (txValue[0] == 0x10) {
+                    // door had opened. go on ...
+                    Toast.makeText(getActivity(), R.string.open_door_success, Toast.LENGTH_SHORT).show();
+                    mOpenDoorState = 0;
+//                                        new Handler().postDelayed(new Runnable() {
+//                                            @Override
+//                                            public void run() {
+//                                                Log.e("BLE", "door can open again");
+//                                                mOpenDoorState = 0;
+//                                            }
+//                                        }, 3000);
+                }
 //					}
 //                });
             }
-
+            if (action.equals(UartService.DEVICE_DOES_NOT_SUPPORT_UART)) {
+                Log.e("BLE", "UartService.DEVICE_DOES_NOT_SUPPORT_UART");
+                mUartService.disconnect();
+            }
 		}
 	};
 	

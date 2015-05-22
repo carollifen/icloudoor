@@ -308,13 +308,13 @@
             android:name="UMENG_MESSAGE_SECRET"
             android:value="cef31b26569093506b4ee7bbec0beaa3" >
         </meta-data>
-        
-        <service
-            android:name="com.umeng.message.UmengService"
-            android:exported="true"
-            android:label="PushService"
-            android:process=":push" >
-        </service>
+
+<!--         <service -->
+<!--             android:name="com.umeng.message.UmengService" -->
+<!--             android:exported="true" -->
+<!--             android:label="PushService" -->
+<!--             android:process=":push" > -->
+<!--         </service> -->
 
         <!-- 友盟推送 -->
 
