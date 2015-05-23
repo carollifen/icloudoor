@@ -22,23 +22,24 @@
             android:layout_height="36dp"
             android:layout_centerInParent="true" >
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal" >
 
-                <ImageView
+                <RelativeLayout
                     android:id="@+id/select_auth"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                     />
 
-                <ImageView
+                <RelativeLayout
                     android:id="@+id/select_list"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1" />
-            </LinearLayout>
+                    android:layout_alignParentRight="true"
+                     />
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

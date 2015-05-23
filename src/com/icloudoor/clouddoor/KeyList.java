@@ -113,8 +113,8 @@ public class KeyList extends FragmentActivity{
 	
 	// for new ui
 	private RelativeLayout keyListSwitch;
-	private ImageView switchAuth;
-	private ImageView switchList;
+	private RelativeLayout switchAuth;
+	private RelativeLayout switchList;
 	private TextView switchAuthText;
 	private TextView switchListText;
 	private boolean chooseList;
@@ -142,8 +142,8 @@ public class KeyList extends FragmentActivity{
 		chooseList = true;
 		
 		keyListSwitch = (RelativeLayout) findViewById(R.id.key_list_switch);
-		switchAuth = (ImageView) findViewById(R.id.select_auth);
-		switchList = (ImageView) findViewById(R.id.select_list);
+		switchAuth = (RelativeLayout) findViewById(R.id.select_auth);
+		switchList = (RelativeLayout) findViewById(R.id.select_list);
 		switchAuthText = (TextView) findViewById(R.id.select_auth_text);
 		switchListText = (TextView) findViewById(R.id.select_list_text);
 		
@@ -151,11 +151,19 @@ public class KeyList extends FragmentActivity{
 		getWindowManager().getDefaultDisplay().getMetrics(dm);
 		int screenWidth = dm.widthPixels;
 		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) keyListSwitch.getLayoutParams();
+		RelativeLayout.LayoutParams paramsAuth = (RelativeLayout.LayoutParams) switchAuth.getLayoutParams();
+		RelativeLayout.LayoutParams paramsList = (RelativeLayout.LayoutParams) switchList.getLayoutParams();
 		params.width = screenWidth - 105*2;
+		paramsAuth.width = screenWidth/2 - 105;
+		paramsList.width = screenWidth/2 - 105;
 		keyListSwitch.setLayoutParams(params);
+		switchAuth.setLayoutParams(paramsAuth);
+		switchList.setLayoutParams(paramsList);
 		
-		switchAuth.setImageResource(R.drawable.key_list_normal_left);
-		switchList.setImageResource(R.drawable.key_list_select_right);
+		
+		
+		switchAuth.setBackgroundResource(R.drawable.key_list_normal_left);
+		switchList.setBackgroundResource(R.drawable.key_list_select_right);
 		switchAuthText.setTextColor(0xFF666666);	
 		switchListText.setTextColor(0xFFffffff);	
 		
@@ -343,8 +351,8 @@ public class KeyList extends FragmentActivity{
 			mFragmenetTransaction = mFragmentManager.beginTransaction();
 			if(view.getId() == R.id.select_auth){
 				if(chooseList){
-					switchAuth.setImageResource(R.drawable.key_list_select_left);
-					switchList.setImageResource(R.drawable.key_list_normal_right);
+					switchAuth.setBackgroundResource(R.drawable.key_list_select_left);
+					switchList.setBackgroundResource(R.drawable.key_list_normal_right);
 					switchAuthText.setTextColor(0xFFffffff);	
 					switchListText.setTextColor(0xFF666666);
 					chooseList = false;
@@ -353,8 +361,8 @@ public class KeyList extends FragmentActivity{
 				}
 			}else if(view.getId() == R.id.select_list){
 				if(!chooseList){
-					switchAuth.setImageResource(R.drawable.key_list_normal_left);
-					switchList.setImageResource(R.drawable.key_list_select_right);
+					switchAuth.setBackgroundResource(R.drawable.key_list_normal_left);
+					switchList.setBackgroundResource(R.drawable.key_list_select_right);
 					switchAuthText.setTextColor(0xFF666666);	
 					switchListText.setTextColor(0xFFffffff);	
 					chooseList = true;
