@@ -60,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="张家界"
+                android:text=""
                 android:textColor="#666666"
                 android:textSize="15sp" />
         </LinearLayout>
@@ -96,7 +96,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="张家界"
+                android:text=""
                 android:textColor="#666666"
                 android:textSize="15sp" />
         </LinearLayout>
@@ -132,7 +132,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="女"
+                android:text=""
                 android:textColor="#666666"
                 android:textSize="15sp" />
         </LinearLayout>
@@ -249,7 +249,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical|center"
-                    android:text="yyyy"
+                    android:text="    "
                     android:textColor="#666666"
                     android:textSize="15sp" />
 
@@ -266,7 +266,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical|center"
-                    android:text="mm"
+                    android:text="  "
                     android:textColor="#666666"
                     android:textSize="15sp" />
 
@@ -283,7 +283,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical|center"
-                    android:text="dd"
+                    android:text="  "
                     android:textColor="#666666"
                     android:textSize="15sp" />
 
@@ -328,7 +328,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="123456789789456123"
+                android:text=""
                 android:textColor="#666666"
                 android:textSize="15sp" />
         </LinearLayout>

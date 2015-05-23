@@ -52,8 +52,9 @@ public class ShowPersonalInfo extends Activity {
 	private String sid;
 	private JSONObject data;
 	
-	private String name, nickname, birthday, id, province, city, district;
-	private int sex, provinceid, cityid, districtid;
+	private String name = null, nickname = null, birthday = null, id = null;
+	private String province = null, city = null, district = null;
+	private int sex = 0, provinceid = 0, cityid = 0, districtid = 0;
 	
 	private TextView TVName;
 	private TextView TVNickName;
@@ -273,19 +274,6 @@ public class ShowPersonalInfo extends Activity {
 								edit.putString("URL", portraitUrl);
 								edit.commit();
 								
-								// request bitmap in the new thread
-								if (mThread == null) {
-									mThread = new Thread(runnable);
-									mThread.start();
-								}
-								
-								
-								province = getProvinceName(provinceid);
-								city = getCityName(cityid);
-								district = getDistrictName(districtid);
-										
-								
-								
 								SharedPreferences saveProfile = getSharedPreferences("PROFILE",
 										MODE_PRIVATE);
 								Editor editor = saveProfile.edit();
@@ -304,9 +292,33 @@ public class ShowPersonalInfo extends Activity {
 								editor.putString("DAY", birthday.substring(8));
 								editor.commit();
 								
-								
-								TVName.setText(name);
-								TVNickName.setText(nickname);
+								// request bitmap in the new thread
+								if(portraitUrl != null){
+									if (mThread == null) {
+										mThread = new Thread(runnable);
+										mThread.start();
+									}
+								}
+						
+								if(provinceid != 0){
+									province = getProvinceName(provinceid);
+									TVprovince.setText(province);
+								}
+									
+								if(cityid != 0){
+									city = getCityName(cityid);
+									TVcity.setText(city);
+								}
+									
+								if(districtid != 0){
+									district = getDistrictName(districtid);
+									TVdistrict.setText(district);
+								}
+												
+								if(name != null)
+									TVName.setText(name);
+								if(nickname != null)
+									TVNickName.setText(nickname);
 								
 								if(sex == 1){
 									TVSex.setText(R.string.male);
@@ -316,14 +328,15 @@ public class ShowPersonalInfo extends Activity {
 //									IVSexImage.setImageResource(R.drawable.sex_red);
 								}
 								
-								TVprovince.setText(province);
-								TVcity.setText(city);
-								TVdistrict.setText(district);
-								TVid.setText(id);
-								TVyear.setText(birthday.substring(0, 4));
-								TVmonth.setText(birthday.substring(5, 7));
-								TVday.setText(birthday.substring(8));
+								if(id != null)
+									TVid.setText(id);
 								
+								if(birthday != null){
+									TVyear.setText(birthday.substring(0, 4));
+									TVmonth.setText(birthday.substring(5, 7));
+									TVday.setText(birthday.substring(8));
+								}
+									
 							} catch (JSONException e) {
 								e.printStackTrace();
 							}
