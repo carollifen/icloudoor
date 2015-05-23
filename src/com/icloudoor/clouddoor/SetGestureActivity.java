@@ -1,6 +1,7 @@
 package com.icloudoor.clouddoor;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -115,6 +116,24 @@ public class SetGestureActivity extends Activity implements OnClickListener {
 			return false;
 		}
 		return true;
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		SharedPreferences homeKeyEvent = getSharedPreferences("HOMEKEY", 0);
+		int homePressed = homeKeyEvent.getInt("homePressed", 0);
+
+		SharedPreferences Sign = getSharedPreferences("SETTING", 0);
+		int usesign = Sign.getInt("useSign", 0);
+
+		if (homePressed == 1 && usesign == 1) {
+			Intent intent = new Intent();
+			intent.setClass(SetGestureActivity.this,
+					VerifyGestureActivity.class);
+			startActivity(intent);
+		}
 	}
 	
 	public void saveSign(String signPwd) {
