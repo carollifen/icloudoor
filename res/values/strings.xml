@@ -80,5 +80,12 @@
     <string name="dialog_update_btnupdate">开始下载</string>
     <string name="dialog_downloading_msg">正在下载新版本</string>
     <string name="dialog_update_btnnext">取消下载</string>
+    <string name="title_activity_notice">NoticeActivity</string>
+    <string name="title_activity_report_to_repair">ReportToRepairActivity</string>
+    <string name="title_activity_complain">ComplainActivity</string>
+    <string name="title_activity_commend">CommendActivity</string>
+    <string name="title_activity_query">QueryActivity</string>
+    <string name="title_activity_bill">BillActivity</string>
+    <string name="title_activity_pay">PayActivity</string>
 
 </resources>

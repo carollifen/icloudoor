@@ -179,28 +179,39 @@ public class WuyeFragment extends Fragment {
 
 		@Override
 		public void onClick(View v) {
+			Intent intent = new Intent();
 			switch(v.getId()){
 			case R.id.btn_lianxiwuye:
-				Intent intent = new Intent();
 				intent.setClass(getActivity(), ContactWuyeActivity.class);
 				startActivity(intent);
 				break;
 			case R.id.btn_notice:
+				intent.setClass(getActivity(), NoticeActivity.class);
+				startActivity(intent);
 				break;
 			case R.id.btn_fix:
+				intent.setClass(getActivity(), ReportToRepairActivity.class);
+				startActivity(intent);
 				break;
 			case R.id.btn_bad:
+				intent.setClass(getActivity(), ComplainActivity.class);
+				startActivity(intent);
 				break;
 			case R.id.btn_good:
+				intent.setClass(getActivity(), CommendActivity.class);
+				startActivity(intent);
 				break;
 			case R.id.btn_query:
+				intent.setClass(getActivity(), QueryActivity.class);
+				startActivity(intent);
 				break;
 			case R.id.btn_bill:
+//				intent.setClass(getActivity(), BillActivity.class);
 				break;
 			case R.id.btn_pay:
+//				intent.setClass(getActivity(), PayActivity.class);
 				break;
-			}
-			
+			}		
 		}
 		
 	}
