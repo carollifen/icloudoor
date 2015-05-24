@@ -2,91 +2,175 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ecf0f7" >
+    android:background="#f8f8f8" >
 
     <include
         android:id="@+id/title_find_pwd"
         android:layout_width="fill_parent"
-        android:layout_height="40dp"
+        android:layout_height="44dp"
         layout="@layout/title_register" />
     
-    
     <RelativeLayout
-        android:layout_width="300dp"
+        android:id="@+id/phone_input_get_certi_layout"
+        android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="155dp" >
-
-        <EditText
-            android:id="@+id/regi_input_phone_num"
-            android:layout_width="match_parent"
+        android:layout_marginTop="156dp" >
+        
+        <RelativeLayout
+            android:id="@+id/phone_input_layout"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@drawable/shape_confirm"
-            android:hint="输入11位手机号码"
+            android:layout_alignParentLeft="true" >
+            
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:background="@drawable/login_phone_new" />
+            
+            <EditText
+                android:id="@+id/regi_input_phone_num"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="28.5dp"
+                android:hint="请输入你的手机号码"
+                android:inputType="number"
+                android:textColor="#333333"
+                android:textColorHint="#999999"
+                android:textSize="15sp"
+				android:background="@null"/>
+            
+        </RelativeLayout>
+        
+        <RelativeLayout
+            android:id="@+id/get_certi_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true" >
+
+            <TextView
+                android:id="@+id/btn_regi_get_certi_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="获取验证码"
+                android:textColor="#333333"
+                android:textSize="15sp" />
+        </RelativeLayout>
+        
+    </RelativeLayout>
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginTop="204dp"
+        android:layout_marginLeft="12dp"
+        android:gravity="center_vertical"
+        android:text="我们会把短信验证码发到你使用的手机中，请注意查收"
+        android:textSize="12sp"
+        android:textColor="#333333" />
+    
+    <RelativeLayout
+        android:id="@+id/input_certi_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="236dp">
+        
+        
+        <EditText
+            android:id="@+id/regi_input_certi_code"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginLeft="28.5dp"
+            android:hint="请输入验证码"
             android:inputType="number"
-            android:padding="10dp"
-            android:textColor="#000000"
-            android:textColorHint="#bdc7d4"
-            android:textSize="17sp" />
+            android:textColor="#333333"
+            android:textColorHint="#999999"
+            android:textSize="15sp"
+            android:background="@null" />
+        
+    </RelativeLayout>
+    
+    <RelativeLayout
+        android:id="@+id/next_step_btn_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="358dp" >
 
         <TextView
-            android:id="@+id/btn_regi_get_certi_code"
-            android:layout_width="100dp"
-            android:layout_height="48dp"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/btn_certi"
-            android:gravity="center"
-            android:text="获取验证码"
-            android:textColor="#ffffff"
+            android:id="@+id/btn_regi_next_step"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="下一步"
+            android:textColor="#999999"
             android:textSize="17sp" />
     </RelativeLayout>
     
-    <EditText
-        android:id="@+id/regi_input_certi_code"
-        android:layout_width="300dp"
-        android:layout_height="48dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="215dp"
-        android:hint="输入验证码"
-        android:textColorHint="#bdc7d4"
-        android:textSize="17sp"
-        android:textColor="#000000"
-        android:background="@drawable/shape_confirm"
-        android:inputType="number"
-        android:padding="10dp" />
-
-    <TextView
-        android:id="@+id/btn_regi_next_step"
-        android:layout_width="300dp"
-        android:layout_height="48dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="287dp"
-        android:background="@drawable/selector_blue_nextstep_confirm"
-        android:gravity="center"
-        android:text="下一步"
-        android:textColor="#cccccc"
-        android:textSize="17sp" />
     
-    <TextView
-        android:layout_width="251dp"
-        android:layout_height="34.5dp"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="177dp"
-        android:text="为了验证你的身份，我们会把短信验证码发到你使用的手机中，请注意查收" 
-        android:textSize="14sp"
-        android:textColor="#2ab0db"
-        />
-        
-    <TextView
-        android:layout_width="196dp"
-        android:layout_height="34.5dp"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="72dp"
-        android:text="注册代表你同意云门的使用协议和隐私条款" 
-        android:textSize="14sp"
-        android:textColor="#bdc7d4"
-        />
+    
+    
+    
+    
+    
+<!--     <RelativeLayout -->
+<!--         android:layout_width="300dp" -->
+<!--         android:layout_height="48dp" -->
+<!--         android:layout_centerHorizontal="true" -->
+<!--         android:layout_marginTop="155dp" > -->
+
+<!--         <EditText -->
+<!--             android:id="@+id/regi_input_phone_num" -->
+<!--             android:layout_width="match_parent" -->
+<!--             android:layout_height="match_parent" -->
+<!--             android:background="@drawable/shape_confirm" -->
+<!--             android:hint="输入11位手机号码" -->
+<!--             android:inputType="number" -->
+<!--             android:padding="10dp" -->
+<!--             android:textColor="#000000" -->
+<!--             android:textColorHint="#bdc7d4" -->
+<!--             android:textSize="17sp" /> -->
+
+<!--         <TextView -->
+<!--             android:id="@+id/btn_regi_get_certi_code" -->
+<!--             android:layout_width="100dp" -->
+<!--             android:layout_height="48dp" -->
+<!--             android:layout_alignParentRight="true" -->
+<!--             android:background="@drawable/btn_certi" -->
+<!--             android:gravity="center" -->
+<!--             android:text="获取验证码" -->
+<!--             android:textColor="#ffffff" -->
+<!--             android:textSize="17sp" /> -->
+<!--     </RelativeLayout> -->
+    
+<!--     <EditText -->
+<!--         android:id="@+id/regi_input_certi_code" -->
+<!--         android:layout_width="300dp" -->
+<!--         android:layout_height="48dp" -->
+<!--         android:layout_centerHorizontal="true" -->
+<!--         android:layout_marginTop="215dp" -->
+<!--         android:hint="输入验证码" -->
+<!--         android:textColorHint="#bdc7d4" -->
+<!--         android:textSize="17sp" -->
+<!--         android:textColor="#000000" -->
+<!--         android:background="@drawable/shape_confirm" -->
+<!--         android:inputType="number" -->
+<!--         android:padding="10dp" /> -->
+
+<!--     <TextView -->
+<!--         android:id="@+id/btn_regi_next_step" -->
+<!--         android:layout_width="300dp" -->
+<!--         android:layout_height="48dp" -->
+<!--         android:layout_centerHorizontal="true" -->
+<!--         android:layout_marginTop="287dp" -->
+<!--         android:background="@drawable/selector_blue_nextstep_confirm" -->
+<!--         android:gravity="center" -->
+<!--         android:text="下一步" -->
+<!--         android:textColor="#cccccc" -->
+<!--         android:textSize="17sp" /> -->
 
 </RelativeLayout>

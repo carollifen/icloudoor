@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -50,6 +51,13 @@ public class ForgetPwdActivity extends Activity implements TextWatcher {
 
 	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
 	
+	// for new ui
+	private RelativeLayout phoneLayout;
+	private RelativeLayout phoneInputLayout;
+	private RelativeLayout getCertiCodeLayout;
+	private RelativeLayout inputCertiCodeLayout;
+	private RelativeLayout nextLayout;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -58,13 +66,51 @@ public class ForgetPwdActivity extends Activity implements TextWatcher {
 		
 		mQueue = Volley.newRequestQueue(this);
 		
-		ETInputPhoneNum = (EditText) findViewById(R.id.forget_pwd_input_phone_num);
-		ETInputCertiCode = (EditText) findViewById(R.id.forget_pwd_input_certi_code);
-		TVGotoNext = (TextView) findViewById(R.id.forget_pwd_goto_next);
-		TVGetCertiCode = (TextView) findViewById(R.id.forget_pwd_get_certi_code);
+		ETInputPhoneNum = (EditText) findViewById(R.id.regi_input_phone_num);
+		ETInputCertiCode = (EditText) findViewById(R.id.regi_input_certi_code);
+		TVGotoNext = (TextView) findViewById(R.id.btn_regi_next_step);
+		TVGetCertiCode = (TextView) findViewById(R.id.btn_regi_get_certi_code);
 		
-		TVGotoNext.setTextColor(0xFFcccccc);
-		TVGotoNext.setEnabled(false);
+		// for new ui
+		DisplayMetrics dm = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
+		int screenWidth = dm.widthPixels;
+		
+		phoneLayout = (RelativeLayout) findViewById(R.id.phone_input_get_certi_layout);
+		phoneInputLayout = (RelativeLayout) findViewById(R.id.phone_input_layout);
+		getCertiCodeLayout = (RelativeLayout) findViewById(R.id.get_certi_layout);
+		inputCertiCodeLayout = (RelativeLayout) findViewById(R.id.input_certi_layout);
+		nextLayout = (RelativeLayout) findViewById(R.id.next_step_btn_layout);
+		
+		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) phoneLayout.getLayoutParams();
+		RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) phoneInputLayout.getLayoutParams();
+		RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) getCertiCodeLayout.getLayoutParams();
+		RelativeLayout.LayoutParams params3 = (RelativeLayout.LayoutParams) inputCertiCodeLayout.getLayoutParams();
+		RelativeLayout.LayoutParams params4 = (RelativeLayout.LayoutParams) nextLayout.getLayoutParams();
+		params.width = screenWidth - 48*2;
+		params1.width = (screenWidth - 48*2 - 8)*2/3;
+		params2.width = (screenWidth - 48*2 - 8)*1/3;
+		params3.width = screenWidth - 48*2;
+		params4.width = screenWidth - 48*2;
+		
+		phoneLayout.setLayoutParams(params);
+		phoneInputLayout.setLayoutParams(params1);
+		getCertiCodeLayout.setLayoutParams(params2);
+		inputCertiCodeLayout.setLayoutParams(params3);
+		nextLayout.setLayoutParams(params4);
+		
+		phoneInputLayout.setBackgroundResource(R.drawable.shape_left_corner);
+		inputCertiCodeLayout.setBackgroundResource(R.drawable.shape_input_certi_code);
+		
+		getCertiCodeLayout.setBackgroundResource(R.drawable.shape_right_corner);
+		getCertiCodeLayout.setEnabled(false);
+		
+		nextLayout.setEnabled(false);
+		nextLayout.setBackgroundResource(R.drawable.shape_next_disable);
+		//
+		
+		TVGotoNext.setTextColor(0xFF999999);
+//		TVGotoNext.setEnabled(false);
 		
 		ETInputPhoneNum.addTextChangedListener(this);
 		ETInputCertiCode.addTextChangedListener(this);		
@@ -82,7 +128,7 @@ public class ForgetPwdActivity extends Activity implements TextWatcher {
 		sid = loadSid();
 		
 		counter = new TimeCount(60000, 1000);
-		TVGetCertiCode.setOnClickListener(new OnClickListener(){
+		getCertiCodeLayout.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
@@ -136,7 +182,7 @@ public class ForgetPwdActivity extends Activity implements TextWatcher {
 			}
 			
 		});
-		TVGotoNext.setOnClickListener(new OnClickListener(){
+		nextLayout.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
@@ -210,17 +256,21 @@ public class ForgetPwdActivity extends Activity implements TextWatcher {
 		}
 		@Override
 		public void onFinish() {
-			TVGetCertiCode.setText(R.string.get_certi_code_again);
-			TVGetCertiCode.setTextSize(17);
-			TVGetCertiCode.setEnabled(true);
-			TVGetCertiCode.setBackgroundResource(R.drawable.btn_certi);
+			getCertiCodeLayout.setEnabled(true);
+			getCertiCodeLayout.setBackgroundResource(R.drawable.shape_right_corner);
+			TVGetCertiCode.setText(getString(R.string.get_certi_code_again));
+//			TVGetCertiCode.setTextSize(17);
+//			TVGetCertiCode.setEnabled(true);
+//			TVGetCertiCode.setBackgroundResource(R.drawable.btn_certi);
 		}
 		@Override
 		public void onTick(long millisUntilFinished){
-			TVGetCertiCode.setEnabled(false);
-			TVGetCertiCode.setBackgroundResource(R.drawable.btn_certi_counter);
-			TVGetCertiCode.setTextSize(16);
-			TVGetCertiCode.setText(R.string.have_send + '\n' + "(" + millisUntilFinished /1000+")");
+			getCertiCodeLayout.setEnabled(false);
+			getCertiCodeLayout.setBackgroundResource(R.drawable.shape_right_corner_pressed);
+//			TVGetCertiCode.setEnabled(false);
+//			TVGetCertiCode.setBackgroundResource(R.drawable.btn_certi_counter);
+//			TVGetCertiCode.setTextSize(16);
+			TVGetCertiCode.setText(getString(R.string.have_send) + '\n' + "(" + millisUntilFinished /1000+")");
 		}
 	}
 	
@@ -258,12 +308,22 @@ public class ForgetPwdActivity extends Activity implements TextWatcher {
 
 	@Override
 	public void afterTextChanged(Editable s) {
+		if(ETInputPhoneNum.getText().toString().length() > 10){
+			getCertiCodeLayout.setEnabled(true);
+		}else{
+			getCertiCodeLayout.setEnabled(false);
+		}
+		
 		if(ETInputPhoneNum.getText().toString().length() > 10 && ETInputCertiCode.getText().toString().length() > 4){
-			TVGotoNext.setTextColor(0xFFffffff);
-			TVGotoNext.setEnabled(true);
+			nextLayout.setEnabled(true);
+			nextLayout.setBackgroundResource(R.drawable.selector_next_step);
+			TVGotoNext.setTextColor(0xFF0065a1);
+//			TVGotoNext.setEnabled(true);
 		} else {
-			TVGotoNext.setTextColor(0xFFcccccc);
-			TVGotoNext.setEnabled(false);
+			nextLayout.setEnabled(false);
+			nextLayout.setBackgroundResource(R.drawable.shape_next_disable);
+			TVGotoNext.setTextColor(0xFF999999);
+//			TVGotoNext.setEnabled(false);
 		}
 	}
 }

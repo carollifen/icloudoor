@@ -1,29 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
-    android:background="#aec5e8" >
+    android:layout_height="44dp"
+    android:background="#0065a1" >
 
     <RelativeLayout
         android:id="@+id/btn_back"
-        android:layout_width="51dp"
-        android:layout_height="40dp"
-        android:background="#aec5e8"
-        android:layout_marginLeft="16dp" >
+        android:layout_width="56dp"
+        android:layout_height="match_parent" >
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/back" />
-        
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="返回"
-            android:textColor="#000000"
-        	android:textSize="18sp"
-        	android:layout_alignParentRight="true"
-        	android:gravity="center_vertical" />
+            android:layout_centerInParent="true"
+            android:background="@drawable/new_back" />
+
     </RelativeLayout>
 
     <TextView
@@ -32,7 +23,7 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:text="注册"
-        android:textColor="#000000"
+        android:textColor="#ffffff"
         android:textSize="18sp" />
 
 </RelativeLayout>

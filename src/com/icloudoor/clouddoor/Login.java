@@ -30,9 +30,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -73,6 +75,11 @@ public class Login extends Activity implements TextWatcher {
 	private int sex = 0, provinceId = 0, cityId = 0, districtId = 0;
 	private String portraitUrl, userId;
 	private int userStatus;
+	
+	// for new ui
+	private RelativeLayout phoneLayout;
+	private RelativeLayout pwdLayout;
+	private RelativeLayout loginLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -93,14 +100,68 @@ public class Login extends Activity implements TextWatcher {
 		IVPwdIcon = (ImageView) findViewById(R.id.btn_show_pwd);
 		IVPwdIcon.setImageResource(R.drawable.hide_pwd);
 		
+		// for new ui
+		DisplayMetrics dm = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
+		int screenWidth = dm.widthPixels;
+		
+		phoneLayout = (RelativeLayout) findViewById(R.id.phone_input_layout);
+		pwdLayout = (RelativeLayout) findViewById(R.id.pwd_input_layout);
+		loginLayout = (RelativeLayout) findViewById(R.id.login_btn_layout);
+		
+		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) phoneLayout.getLayoutParams();
+		RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) pwdLayout.getLayoutParams();
+		RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) loginLayout.getLayoutParams();
+		params.width = screenWidth - 48*2;
+		params1.width = screenWidth - 48*2;
+		params2.width = screenWidth - 48*2;
+		phoneLayout.setLayoutParams(params);
+		pwdLayout.setLayoutParams(params1);
+		loginLayout.setLayoutParams(params2);
+		
+		phoneLayout.setBackgroundResource(R.drawable.shape_login_input_normal);
+		pwdLayout.setBackgroundResource(R.drawable.shape_login_input_normal);
+		loginLayout.setBackgroundResource(R.drawable.shape_login_btn_disable);
+		
+		ETInputPhoneNum.setOnFocusChangeListener(new OnFocusChangeListener(){
+
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus){
+					phoneLayout.setBackgroundResource(R.drawable.shape_login_input);
+				}else{
+					phoneLayout.setBackgroundResource(R.drawable.shape_login_input_normal);
+				}
+			}
+			
+		});
+		ETInputPwd.setOnFocusChangeListener(new OnFocusChangeListener(){
+
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus){
+					pwdLayout.setBackgroundResource(R.drawable.shape_login_input);
+				}else{
+					pwdLayout.setBackgroundResource(R.drawable.shape_login_input_normal);
+				}
+			}
+			
+		});
+		
+		//
+		
+		
 		TVLogin.setTextColor(0xFF999999);
-		TVLogin.setEnabled(false);
+		loginLayout.setEnabled(false);
+//		TVLogin.setEnabled(false);
 		
 		ETInputPhoneNum.addTextChangedListener(this); 
 		ETInputPwd.addTextChangedListener(this);
 		
 		sid = loadSid("SID");
 
+		isHiddenPwd = true;
+		IVPwdIcon.setImageResource(R.drawable.hide_pwd_new);
 		ShowPwd.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -108,11 +169,11 @@ public class Login extends Activity implements TextWatcher {
 				if (isHiddenPwd) {
 					isHiddenPwd = false;
 					ETInputPwd.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-					IVPwdIcon.setImageResource(R.drawable.show_pwd);
+					IVPwdIcon.setImageResource(R.drawable.show_pwd_new);
 				} else {
 					isHiddenPwd = true;
 					ETInputPwd.setTransformationMethod(PasswordTransformationMethod.getInstance());
-					IVPwdIcon.setImageResource(R.drawable.hide_pwd);
+					IVPwdIcon.setImageResource(R.drawable.hide_pwd_new);
 				}
 
 			}
@@ -140,7 +201,7 @@ public class Login extends Activity implements TextWatcher {
 
 		});
 
-		TVLogin.setOnClickListener(new OnClickListener() {
+		loginLayout.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -369,11 +430,15 @@ public class Login extends Activity implements TextWatcher {
 	@Override
 	public void afterTextChanged(Editable s) {
 		if(ETInputPhoneNum.getText().toString().length() > 10 && ETInputPwd.getText().toString().length() > 7){
-			TVLogin.setTextColor(0xFF000000);
-			TVLogin.setEnabled(true);
+			TVLogin.setTextColor(0xFF0065a1);
+			loginLayout.setEnabled(true);
+			loginLayout.setBackgroundResource(R.drawable.shape_login_btn_enable);
+//			TVLogin.setEnabled(true);
 		} else {
 			TVLogin.setTextColor(0xFF999999);
-			TVLogin.setEnabled(false);
+			loginLayout.setEnabled(false);
+			loginLayout.setBackgroundResource(R.drawable.shape_login_btn_disable);
+//			TVLogin.setEnabled(false);
 		}
 	}
 	
