@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 public class SettingDetailActivity extends Activity {
 	private RelativeLayout TVBtnResetPwd;
-	private TextView TVBtnChangePhone;
+//	private TextView TVBtnChangePhone;
 	
 	private ImageView IVSetDetailShake;
 	private ImageView IVSetDetailSound;
@@ -34,7 +34,7 @@ public class SettingDetailActivity extends Activity {
 		setContentView(R.layout.set_detail);
 		
 		TVBtnResetPwd = (RelativeLayout) findViewById(R.id.btn_reset_pwd);
-		TVBtnChangePhone = (TextView) findViewById(R.id.btn_change_phone);
+//		TVBtnChangePhone = (TextView) findViewById(R.id.btn_change_phone);
 		
 		IVSetDetailShake = (ImageView) findViewById(R.id.btn_set_detail_shake);
 		IVSetDetailSound = (ImageView) findViewById(R.id.btn_set_detail_sound);
@@ -132,11 +132,11 @@ public class SettingDetailActivity extends Activity {
 			IVSetDetailDisturb.setImageResource(R.drawable.btn_no);
 		
 		if(switchToCar == 1){
-			IVSwitchCar.setImageResource(R.drawable.icon_car);
-			IVSwitchMan.setImageResource(R.drawable.icon_ren_gray);
+			IVSwitchCar.setImageResource(R.drawable.select);
+			IVSwitchMan.setImageResource(R.drawable.not_select);
 		}else{
-			IVSwitchCar.setImageResource(R.drawable.icon_car_gray);
-			IVSwitchMan.setImageResource(R.drawable.icon_ren);
+			IVSwitchCar.setImageResource(R.drawable.not_select);
+			IVSwitchMan.setImageResource(R.drawable.select);
 		}		
 	}
 	
@@ -176,12 +176,12 @@ public class SettingDetailActivity extends Activity {
 			case R.id.btn_switch_man:
 				if(switchToCar == 1){
 					switchToCar = 0;
-					IVSwitchCar.setImageResource(R.drawable.icon_car_gray);
-					IVSwitchMan.setImageResource(R.drawable.icon_ren);
+					IVSwitchCar.setImageResource(R.drawable.not_select);
+					IVSwitchMan.setImageResource(R.drawable.select);
 				}else{
 					switchToCar = 1;
-					IVSwitchCar.setImageResource(R.drawable.icon_car);
-					IVSwitchMan.setImageResource(R.drawable.icon_ren_gray);
+					IVSwitchCar.setImageResource(R.drawable.select);
+					IVSwitchMan.setImageResource(R.drawable.not_select);
 				}
 				break;
 			}

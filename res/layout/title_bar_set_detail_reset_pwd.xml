@@ -4,10 +4,16 @@
     android:layout_height="44dp"
     android:background="#0065a1" >
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/btn_back_reset_pwd"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:orientation="horizontal">"
+
+		<View
+		    android:layout_width="16dp"
+		    android:layout_height="match_parent" 
+		    />
 
 		<TextView
             android:layout_width="wrap_content"
@@ -15,9 +21,13 @@
             android:text="取消"
             android:textColor="#ffffff"
         	android:textSize="15sp"
-        	android:layout_marginLeft="16dp"
         	android:gravity="center_vertical" />
-    </RelativeLayout>
+		
+		<View
+		    android:layout_width="16dp"
+		    android:layout_height="match_parent" 
+		    />
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
@@ -28,12 +38,18 @@
         android:textColor="#ffffff"
         android:textSize="18sp" />
     
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/reset_pwd_done"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true" 
+        android:orientation="horizontal"
         >
+		
+        <View
+		    android:layout_width="16dp"
+		    android:layout_height="match_parent" 
+		    />
         
         <TextView
             android:layout_width="wrap_content"
@@ -41,10 +57,13 @@
             android:text="保存"
             android:textColor="#30ff00"
         	android:textSize="15sp"
-        	android:layout_alignParentRight="true"
-        	android:layout_marginRight="16dp"
         	android:gravity="center_vertical" />
         
-    </RelativeLayout>
+        <View
+		    android:layout_width="16dp"
+		    android:layout_height="match_parent" 
+		    />
+        
+    </LinearLayout>
 
 </RelativeLayout>

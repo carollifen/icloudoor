@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,8 +36,8 @@ public class ResetPwdActivity extends Activity implements TextWatcher {
 	private EditText ETInputOldPwd;
 	private EditText ETInputNewPwd;
 	private EditText ETConfirmNewPwd;
-	private RelativeLayout TVResetDone;
-	private RelativeLayout IVBack;
+	private LinearLayout TVResetDone;
+	private LinearLayout IVBack;
 	private URL resetPwdURL;
 	private RequestQueue mQueue;
 	private String oldPwd, newPwd, confirmPwd;
@@ -53,11 +54,11 @@ public class ResetPwdActivity extends Activity implements TextWatcher {
 
 		mQueue = Volley.newRequestQueue(this);
 
-		IVBack = (RelativeLayout) findViewById(R.id.btn_back_reset_pwd);
+		IVBack = (LinearLayout) findViewById(R.id.btn_back_reset_pwd);
 		ETInputOldPwd = (EditText) findViewById(R.id.input_old_pwd);
 		ETInputNewPwd = (EditText) findViewById(R.id.input_new_pwd);
 		ETConfirmNewPwd = (EditText) findViewById(R.id.confirm_new_pwd);
-		TVResetDone = (RelativeLayout) findViewById(R.id.reset_pwd_done);
+		TVResetDone = (LinearLayout) findViewById(R.id.reset_pwd_done);
 		
 //		TVResetDone.setTextColor(0xFFcccccc);
 		TVResetDone.setEnabled(false);
@@ -209,7 +210,7 @@ public class ResetPwdActivity extends Activity implements TextWatcher {
 
 	@Override
 	public void afterTextChanged(Editable s) {
-		if(ETInputNewPwd.getText().toString().length() > 7 && ETConfirmNewPwd.getText().toString().length() > 7){
+		if(ETInputNewPwd.getText().toString().length() > 7 && ETConfirmNewPwd.getText().toString().length() > 7 && ETInputOldPwd.getText().toString().length() > 7){
 //			TVResetDone.setTextColor(0xFFffffff);
 			TVResetDone.setEnabled(true);
 		} else {
