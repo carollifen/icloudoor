@@ -3,17 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#116dad" >
+    android:background="#f8f8f8" >
 
-   
+   <include 
+       android:layout_width="match_parent"
+       android:layout_height="44dp"
+       layout="@layout/titlebar_confirmgesture"/>
     
     <TextView
         android:id="@+id/sign_confirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="验证手势密码"
-        android:textSize="14sp"
-        android:textColor="#ffffff"
+        android:text="请输入原手势密码"
+        android:textSize="17sp"
+        android:textColor="#666666"
         android:layout_marginTop="80dp"
         android:layout_centerHorizontal="true" />
     
@@ -33,7 +36,8 @@
         android:layout_marginBottom="40dp"
         android:layout_alignParentBottom="true"
          android:text="验证登陆密码"
-        android:textSize="15sp"
+          android:textColor="#333333"
+        android:textSize="18sp"
         
         />
 </RelativeLayout>

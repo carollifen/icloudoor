@@ -11,15 +11,14 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class VerifyGestureActivity extends Activity implements OnClickListener {
+public class VerifyGestureActivity extends Activity {
 
 	private FrameLayout mGestureContainer;
 	private SetGestureContentView mGestureContentView;
@@ -31,24 +30,58 @@ public class VerifyGestureActivity extends Activity implements OnClickListener {
 	private TextView IVmanageGesture;
  	private TextView IVpswLogin;
 	
+ 	private int times=3;
+ 	
+ 	private TextView textTip;
+ 	
+ 	private RelativeLayout mback;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 //		getActionBar().hide();
 		setContentView(R.layout.activity_verify_gesture);
 		
+//		mback=(RelativeLayout) findViewById(R.id.verify_gesture_btn_back);
+		
+		textTip=(TextView) findViewById(R.id.tip_text);
+		
+		textTip.setText(getString(R.string.input_gesture));
+		textTip.setTextColor(0xFF666666);
+		textTip.setTextSize(17);
+		
+//		mback.setOnClickListener(this);
+		
 		registerReceiver(KillVerifyActivityBroadcast,new IntentFilter("KillVerifyActivity"));
-	 	IVmanageGesture=(TextView) findViewById(R.id.sign_set_manage);
+	 //	IVmanageGesture=(TextView) findViewById(R.id.sign_set_manage);
 	 	IVpswLogin=(TextView) findViewById(R.id.sign_set_account);
 	 	//IVmanageGesture.setOnClickListener(this);
-	 	IVpswLogin.setOnClickListener(this);
+	 	IVpswLogin.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				MyDialog dialog = new MyDialog(VerifyGestureActivity.this,R.style.add_dialog,
+						getString(R.string.login_pwd), new MyDialog.OnCustomDialogListener() {
+							@Override
+							public void back(int haveset) {
+								Intent cloudIntent = new Intent(
+										VerifyGestureActivity.this,
+										CloudDoorMainActivity.class);
+								startActivity(cloudIntent);
+								VerifyGestureActivity.this.finish();
+							}
+						});
+				dialog.show();
+			}
+	 		
+	 	});
 		
-		phoneNum = (TextView) findViewById(R.id.sign_verify_person_phone);
-		SharedPreferences loginStatus = getSharedPreferences(
-				"LOGINSTATUS", MODE_PRIVATE);
-		phone = loginStatus.getString("PHONENUM", null);
-		changeNum();
-		phoneNum.setText(phone);
+//		phoneNum = (TextView) findViewById(R.id.sign_verify_person_phone);
+//		SharedPreferences loginStatus = getSharedPreferences(
+//				"LOGINSTATUS", MODE_PRIVATE);
+//		phone = loginStatus.getString("PHONENUM", null);
+//		changeNum();
+//		phoneNum.setText(phone);
 		
 		mGestureContainer = (FrameLayout) findViewById(R.id.sign_verify_gesture_container);
 		
@@ -93,7 +126,20 @@ public class VerifyGestureActivity extends Activity implements OnClickListener {
 			@Override
 			public void checkedFail() {
 				Toast.makeText(VerifyGestureActivity.this, R.string.sign_verify_fail, Toast.LENGTH_SHORT).show();
-				mGestureContentView.clearDrawlineState(1500L);
+				times--;
+				if(times>0)
+				{
+					textTip.setText(getString(R.string.wrong_gesture)+times+getString(R.string.times));
+					textTip.setTextColor(0xFFEE2C2C);
+					textTip.setTextSize(17);
+				}
+				else{
+					textTip.setText(getString(R.string.no_more_try_input_pwd));
+					textTip.setTextColor(0xFFEE2C2C);
+					textTip.setTextSize(17);
+				
+				}
+				mGestureContentView.clearDrawlineState(1000L);
 			}
 			
 		});
@@ -110,39 +156,45 @@ public class VerifyGestureActivity extends Activity implements OnClickListener {
 		}
 	};
 	
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		if (v.getId() == R.id.sign_set_manage) {
-			Intent signIntent = new Intent(VerifyGestureActivity.this,
-					SignActivity.class);
-			startActivity(signIntent);
-			finish();
-		} else if (v.getId() == R.id.sign_set_account) {
-			MyDialog dialog = new MyDialog(VerifyGestureActivity.this,
-					getString(R.string.login_pwd), new MyDialog.OnCustomDialogListener() {
-						@Override
-						public void back(int haveset) {
-							Intent cloudIntent = new Intent(
-									VerifyGestureActivity.this,
-									CloudDoorMainActivity.class);
-							startActivity(cloudIntent);
-							VerifyGestureActivity.this.finish();
-						}
-					});
-			dialog.show();
-		}
-	}
+//	@Override
+//	public void onClick(View v) {
+//		// TODO Auto-generated method stub
+//		if (v.getId() == R.id.verify_gesture_btn_back) {
+//		
+//			VerifyGestureActivity.this.finish();
+//		} 
+//		
+//		if (v.getId() == R.id.sign_set_account) {
+//			MyDialog dialog = new MyDialog(VerifyGestureActivity.this,R.style.add_dialog,
+//					getString(R.string.login_pwd), new MyDialog.OnCustomDialogListener() {
+//						@Override
+//						public void back(int haveset) {
+//							Intent cloudIntent = new Intent(
+//									VerifyGestureActivity.this,
+//									CloudDoorMainActivity.class);
+//							startActivity(cloudIntent);
+//							VerifyGestureActivity.this.finish();
+//						}
+//					});
+//			dialog.show();
+//		}
+//	}
 	
-	public void changeNum(){
-		if(phone != null){	
-			StringBuilder sb = new StringBuilder(phone); 
-			sb.setCharAt(3, '*');
-			sb.setCharAt(4, '*');
-			sb.setCharAt(5, '*'); 
-			sb.setCharAt(6, '*');
-			phone = sb.toString();
-		}
+//	public void changeNum(){
+//		if(phone != null){	
+//			StringBuilder sb = new StringBuilder(phone); 
+//			sb.setCharAt(3, '*');
+//			sb.setCharAt(4, '*');
+//			sb.setCharAt(5, '*'); 
+//			sb.setCharAt(6, '*');
+//			phone = sb.toString();
+//		}
+//	}
+	
+	
+	public void onDestroy() {
+		super.onDestroy();
+		unregisterReceiver(KillVerifyActivityBroadcast);
 	}
 	
 	public String loadSign(){
@@ -154,12 +206,12 @@ public class VerifyGestureActivity extends Activity implements OnClickListener {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (event.getAction() == KeyEvent.ACTION_DOWN
 				&& KeyEvent.KEYCODE_BACK == keyCode) {
-			Intent intent = new Intent();
-			intent.addCategory(Intent.CATEGORY_HOME);
-			intent.setAction(Intent.ACTION_MAIN);
-			startActivity(intent);
+//			Intent intent = new Intent();
+//			intent.addCategory(Intent.CATEGORY_HOME);
+//			intent.setAction(Intent.ACTION_MAIN);
+//			startActivity(intent);
+			finish();
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-
 }

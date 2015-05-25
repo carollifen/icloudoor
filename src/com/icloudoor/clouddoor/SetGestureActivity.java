@@ -7,14 +7,14 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.icloudoor.clouddoor.R.id;
 import com.icloudoor.clouddoor.SetGestureDrawLineView.SetGestureCallBack;
 
 
@@ -29,6 +29,9 @@ public class SetGestureActivity extends Activity implements OnClickListener {
 	private LockIndicatorView mLockIndicator;
 	private int haveSet = 0;
 	
+	private RelativeLayout mback;
+	
+	private TextView textTip;
 //	private TextView TVSignManage;
 //	private TextView TVAccount;
 	
@@ -38,11 +41,14 @@ public class SetGestureActivity extends Activity implements OnClickListener {
 //		getActionBar().hide();
 		setContentView(R.layout.activity_set_gesture);
 		
+		mback=(RelativeLayout) findViewById(R.id.set_gesture_btn_back);
+		mback.setOnClickListener(this);
+		
 //		TVSignManage = (TextView) findViewById(R.id.sign_set_manage);
 //		TVAccount = (TextView) findViewById(R.id.sign_set_account);
 //		TVSignManage.setOnClickListener(this);
 //		TVAccount.setOnClickListener(this);
-		
+		textTip=(TextView) findViewById(R.id.text_tip);
 		setUpViews();
 	}
 	
@@ -60,7 +66,10 @@ public class SetGestureActivity extends Activity implements OnClickListener {
 				if (mIsFirstInput) {
 					mFirstPassword = inputCode;
 					updateCodeList(inputCode);
-					Toast.makeText(SetGestureActivity.this, R.string.sign_input_again, Toast.LENGTH_SHORT).show();
+					textTip.setText(getString(R.string.draw_gesture_again));
+					textTip.setTextColor(0xFF666666);
+					textTip.setTextSize(17);
+					//Toast.makeText(SetGestureActivity.this, R.string.sign_input_again, Toast.LENGTH_SHORT).show();
 					mGestureContentView.clearDrawlineState(0L);
 				} else {
 					if (inputCode.equals(mFirstPassword)) {
@@ -79,7 +88,11 @@ public class SetGestureActivity extends Activity implements OnClickListener {
 						
 						SetGestureActivity.this.finish();
 					} else {
-						mGestureContentView.clearDrawlineState(1300L);
+						
+						textTip.setText(getString(R.string.draw_diff_gesture));
+						textTip.setTextColor(0xFFEE2C2C);
+						textTip.setTextSize(17);
+						mGestureContentView.clearDrawlineState(1000L);
 					}
 				}
 				mIsFirstInput = false;
@@ -103,7 +116,10 @@ public class SetGestureActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
-		
+		if(v.getId()==R.id.set_gesture_btn_back)
+		{
+			SetGestureActivity.this.finish();
+		}
 	}
 	
 	private void updateCodeList(String inputCode) {
@@ -113,8 +129,16 @@ public class SetGestureActivity extends Activity implements OnClickListener {
 	
 	private boolean isInputPassValidate(String inputPassword) {
 		if (TextUtils.isEmpty(inputPassword) || inputPassword.length() < 4) {
+			
+			textTip.setText(getString(R.string.at_least_four_points));
+			textTip.setTextColor(0xFFEE2C2C);
+			textTip.setTextSize(17);
 			return false;
 		}
+		
+		textTip.setText(getString(R.string.draw_gesture));
+		textTip.setTextColor(0xFF666666);
+		textTip.setTextSize(17);
 		return true;
 	}
 	

@@ -48,7 +48,7 @@ public class SetGestureDrawLineView extends View {
 		canvas = new Canvas();
 		canvas.setBitmap(bitmap);
 		paint.setStyle(Style.STROKE);
-		paint.setStrokeWidth(10);
+		paint.setStrokeWidth(8);
 		paint.setColor(Color.rgb(245, 142, 33));
 		paint.setAntiAlias(true);
 		
@@ -97,7 +97,7 @@ public class SetGestureDrawLineView extends View {
 			
 			return true;
 		}
-		paint.setColor(Color.rgb(245, 142, 33));
+		paint.setColor(Color.rgb(2, 139, 201));
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			mov_x = (int) event.getX();

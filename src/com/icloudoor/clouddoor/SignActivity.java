@@ -7,8 +7,10 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -21,13 +23,17 @@ public class SignActivity extends Activity{
 	private int haveSet;
 	
 	LayoutInflater inflater;
+	private int COLOROLD=0xFF000000;
+	private int COLORNEW=0xFFF3F3F3;
+	
+	private RelativeLayout mlayout;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 //		getActionBar().hide();
 		setContentView(R.layout.set_detail_set_sign);
-		
+		mlayout=(RelativeLayout) findViewById(R.id.forget_layout);
 		inflater = LayoutInflater.from(this);
 		
 		SharedPreferences setSign = getSharedPreferences("SETSIGN", 0);
@@ -221,12 +227,36 @@ public class SignActivity extends Activity{
 				
 			});
 			
+			
+			
+			forgetSign.setOnTouchListener(new OnTouchListener() {
+				
+				@Override
+				public boolean onTouch(View v, MotionEvent event) {
+					switch(event.getAction())
+					{
+					case MotionEvent.ACTION_DOWN:
+//						mlayout.setBackgroundColor(COLORNEW);
+						break;
+					case MotionEvent.ACTION_MOVE:
+//						mlayout.setBackgroundColor(COLOROLD);
+						break;
+					}
+					 
+					return false;
+				}
+			});
+			
+			
+			
 			forgetSign.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
 					Log.e("TEsT", "forgetSign clicked!");
-					MyDialog myDialog = new MyDialog(SignActivity.this, getString(R.string.login_pwd),
+					
+					
+					MyDialog myDialog = new MyDialog(SignActivity.this,R.style.add_dialog, getString(R.string.login_pwd),
 							new MyDialog.OnCustomDialogListener() {
 
 								@Override

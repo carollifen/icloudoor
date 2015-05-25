@@ -6,9 +6,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MyDialog extends Dialog {
@@ -19,10 +22,10 @@ public class MyDialog extends Dialog {
         private String name;
         private OnCustomDialogListener customDialogListener;
        private EditText pswEditText;
-        private Button cancle,bound;
+        private TextView cancle,bound;
       private  Context context;
-        public MyDialog(Context context,String name,OnCustomDialogListener customDialogListener) {
-                super(context);
+        public MyDialog(Context context,int theme,String name,OnCustomDialogListener customDialogListener) {
+                super(context,theme);
                 this.name = name;
                 this.context=context;
                 this.customDialogListener = customDialogListener;
@@ -34,12 +37,40 @@ public class MyDialog extends Dialog {
                 super.onCreate(savedInstanceState);
                 setContentView(R.layout.forget_gesture_dialog);
                 pswEditText=(EditText) findViewById(R.id.pswEdit);
-                 cancle=(Button) findViewById(R.id.cancle);
-                 bound=(Button) findViewById(R.id.bound);
+                 cancle=(TextView) findViewById(R.id.cancle);
+                 bound=(TextView) findViewById(R.id.bound);
                  bound.setOnClickListener(clickListener);
                  cancle.setOnClickListener(clickListener);
-
-                setTitle(name); 
+                 bound.setTextColor(0x7FFFFFFF);
+                 bound.setEnabled(false);
+                 cancle.setTextColor(0xff000000);
+                 pswEditText.addTextChangedListener(new TextWatcher() {
+					
+					@Override
+					public void onTextChanged(CharSequence s, int start, int before, int count) {
+						// TODO Auto-generated method stub
+						
+					}
+					
+					@Override
+					public void beforeTextChanged(CharSequence s, int start, int count,
+							int after) {
+						// TODO Auto-generated method stub
+						
+					}
+					
+					@Override
+					public void afterTextChanged(Editable s) {
+						if(pswEditText.getText().toString().length() > 7){
+							bound.setTextColor(0xFFFFFFFF);
+							bound.setEnabled(true);
+						} else {
+							bound.setTextColor(0x7fffffff);
+							bound.setEnabled(false);
+						}
+					}
+				});
+               // setTitle(name); 
              
                      }
         

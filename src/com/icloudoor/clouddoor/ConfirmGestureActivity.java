@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,8 @@ public class ConfirmGestureActivity extends Activity implements OnClickListener 
 	private SetGestureContentView mGestureContentView;
 	private String gesturePwd;
 	private TextView confirmWithPsw;
+	
+	private RelativeLayout mback;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -28,6 +31,10 @@ public class ConfirmGestureActivity extends Activity implements OnClickListener 
 //		getActionBar().hide();
 		
 		setContentView(R.layout.activity_confirmgesture);
+		
+		mback=(RelativeLayout) findViewById(R.id.confirm_gesture_btn_back);
+		
+		mback.setOnClickListener(this);
 		
 		mGestureContainer = (FrameLayout) findViewById(R.id.sign_confirm_gesture_container);
 		
@@ -108,12 +115,22 @@ public class ConfirmGestureActivity extends Activity implements OnClickListener 
 		}
 	}
 	
+	public void onDestroy() {
+		super.onDestroy();
+		unregisterReceiver(KillConfirmActivityBroadcast);
+	}
+	
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
+		
+		if(v.getId()==R.id.confirm_gesture_btn_back)
+		{
+			ConfirmGestureActivity.this.finish();
+		}
 		if(v.getId()==R.id.confirm_with_passw)
 		{
-			MyDialog mdialog =new MyDialog(ConfirmGestureActivity.this, getString(R.string.login_pwd) , new MyDialog.OnCustomDialogListener() {
+			MyDialog mdialog =new MyDialog(ConfirmGestureActivity.this,R.style.add_dialog, getString(R.string.login_pwd) , new MyDialog.OnCustomDialogListener() {
 				
 				@Override
 				public void back(int haveset) {
