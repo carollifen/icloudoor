@@ -1,5 +1,6 @@
 package com.icloudoor.clouddoor;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -27,6 +28,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
@@ -42,6 +44,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class SettingFragment extends Fragment {
+	private String TAG = this.getClass().getSimpleName();
 	public Context context;
 
     private ProgressDialog updateProgressDialog;
@@ -79,6 +82,12 @@ public class SettingFragment extends Fragment {
 	private static final int MSG_SUCCESS = 0;//get the image success
 	private static final int MSG_FAILURE = 1;// fail
 
+	//
+	private String PATH = Environment.getExternalStorageDirectory().getAbsolutePath()
+			+ "/Cloudoor/CacheImage/";
+	private String imageName = "myImage.jpg";
+	
+	
 	public SettingFragment() {
 		// Required empty public constructor
 	}
@@ -130,9 +139,22 @@ public class SettingFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (mThread == null) {
-			mThread = new Thread(runnable);
-			mThread.start();
+		
+		File f = new File(PATH + imageName);
+		Log.e(TAG, PATH + imageName);
+		if(f.exists()){
+			Log.e(TAG, "use local");
+			Bitmap bm = BitmapFactory.decodeFile(PATH + imageName);
+			image.setImageBitmap(bm);
+		}else{
+			// request bitmap in the new thread
+			if(portraitUrl != null){
+				Log.e(TAG, "use net");
+				if (mThread == null) {
+					mThread = new Thread(runnable);
+					mThread.start();
+				}
+			}
 		}
 	}
 	

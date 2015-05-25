@@ -48,6 +48,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
@@ -70,6 +72,8 @@ import android.widget.Toast;
 
 public class ModifyPersonalInfo extends Activity {
 	
+	private String TAG = this.getClass().getSimpleName();
+	
 	private RelativeLayout back;
 	private RelativeLayout saveModify;
 	
@@ -86,17 +90,24 @@ public class ModifyPersonalInfo extends Activity {
 	private TextView TVday;
 	private TextView TVid;
 	
+	
 	private TextView addImage;
 	private ImageView showImage;
 	
 	private String name, province, city, district, year, month, day, id, nickname, birthday;
 	private int sex, provinceId, cityId, districtId;
+	private String portrailUrl;
 	
 	private RequestQueue mQueue;
 	private URL updateInfoURL;
 	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
 	private String sid;
 	private int statusCode;
+	
+	private MyAreaDBHelper mAreaDBHelper;
+	private SQLiteDatabase mAreaDB;
+	private final String DATABASE_NAME = "area.db";
+	private final String TABLE_NAME = "tb_core_area";
 	
 	private List<File> mList;
 	
@@ -107,12 +118,20 @@ public class ModifyPersonalInfo extends Activity {
 	
 	private static final int MSG_SUCCESS = 0;// get the image success
 	private static final int MSG_FAILURE = 1;// fail
+	
+	//
+	private String PATH = Environment.getExternalStorageDirectory().getAbsolutePath()
+			+ "/Cloudoor/CacheImage/";
+	private String imageName = "myImage.jpg";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 //		getActionBar().hide();
 		setContentView(R.layout.modify_personal_info);
+		
+		mAreaDBHelper = new MyAreaDBHelper(ModifyPersonalInfo.this, DATABASE_NAME, null, 1);
+		mAreaDB = mAreaDBHelper.getWritableDatabase();	
 		
 		ETnickname = (EditText) findViewById(R.id.personal_modify_NickName);
 		TVname = (TextView) findViewById(R.id.personal_info_name);
@@ -144,7 +163,7 @@ public class ModifyPersonalInfo extends Activity {
 			public void onClick(View v) {
 				Intent intent = new Intent();
 				intent.setClass(ModifyPersonalInfo.this, TakePictureActivity.class);	
-				startActivity(intent);
+				startActivityForResult(intent, 0);
 			}
 			
 		});
@@ -218,6 +237,7 @@ public class ModifyPersonalInfo extends Activity {
 						map.put("provinceId", String.valueOf(provinceId));
 						map.put("cityId", String.valueOf(cityId));
 						map.put("districtId", String.valueOf(districtId));
+						map.put("portraitUrl", portrailUrl);
 						return map;
 					}
 				};
@@ -229,7 +249,22 @@ public class ModifyPersonalInfo extends Activity {
 				}
 				 
 				// uploading image with a new thread
-				new Thread() {
+				
+				 
+			}	
+			
+		});
+	}
+	
+	@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+         if(requestCode == 0 && resultCode == RESULT_OK) {
+        	 
+        	 Toast.makeText(this, R.string.uploading_image, Toast.LENGTH_LONG).show();
+        	 
+            // upload image
+        	 new Thread() {
 
 					@Override
 					public void run() {
@@ -239,12 +274,7 @@ public class ModifyPersonalInfo extends Activity {
 								+ "/user/api/uploadPortrait.do" + "?sid=" + sid);
 
 						File file = null;
-						if (URLUtil.isFileUrl(mList.get(0).getAbsolutePath())) {
-							file = new File(URI.create(mList.get(0)
-									.getAbsolutePath()));
-						} else {
-							file = new File(mList.get(0).getAbsolutePath());
-						}
+						file = new File(PATH + imageName);
 						Part[] parts = null;
 						FilePart filePart = null;
 						try {
@@ -269,19 +299,27 @@ public class ModifyPersonalInfo extends Activity {
 								s = s.append(sResponse);
 							}
 							Log.e("TEst StringBuilder", s.toString());
+							
+							//
+							JSONObject jsObj = new JSONObject(s.toString());
+							JSONObject data = jsObj.getJSONObject("data");
+							portraitUrl = data.getString("portraitUrl");
+							Log.e(TAG, portraitUrl);
+							
 						} catch (ClientProtocolException e) {
 							e.printStackTrace();
 						} catch (IOException e) {
+							e.printStackTrace();
+						} catch (JSONException e) {
 							e.printStackTrace();
 						}
 					}
 
 				}.start();
-				 
-			}	
-			
-		});
-	}
+        }
+    }
+	
+	
 	
 	//TODO
 	@Override
@@ -304,14 +342,13 @@ public class ModifyPersonalInfo extends Activity {
 		SharedPreferences loadProfile = getSharedPreferences("PROFILE", MODE_PRIVATE);
 		name = loadProfile.getString("NAME", null);
 		sex = loadProfile.getInt("SEX", 1);
-		province = loadProfile.getString("PROVINCE", null);
-		city = loadProfile.getString("CITY", null);
-		district = loadProfile.getString("DISTRICT", null);
+//		province = loadProfile.getString("PROVINCE", null);
+//		city = loadProfile.getString("CITY", null);
+//		district = loadProfile.getString("DISTRICT", null);
 		year = loadProfile.getString("YEAR", "2015");
 		month = loadProfile.getString("MONTH", "03");
 		day = loadProfile.getString("DAY", "30");
-		id = loadProfile.getString("ID", null);
-		
+		id = loadProfile.getString("ID", null);		
 		provinceId = loadProfile.getInt("PROVINCEID", 000000);
 		cityId = loadProfile.getInt("CITYID", 000000);
 		districtId = loadProfile.getInt("DISTRICTID", 000000);
@@ -324,45 +361,68 @@ public class ModifyPersonalInfo extends Activity {
 			TVsex.setText(R.string.female);
 //			IVsexImage.setImageResource(R.drawable.sex_red);
 		}
-		TVprovince.setText(province);
-		TVcity.setText(city);
-		TVdistrict.setText(district);
+		if(provinceId != 0){
+			province = getProvinceName(provinceId);
+			TVprovince.setText(province);
+		}
+			
+		if(cityId != 0){
+			city = getCityName(cityId);
+			TVcity.setText(city);
+		}
+			
+		if(districtId != 0){
+			district = getDistrictName(districtId);
+			TVdistrict.setText(district);
+		}
 		TVyear.setText(year);
 		TVmonth.setText(month);
 		TVday.setText(day);
 		TVid.setText(id);
 		
-		SharedPreferences takePic = getSharedPreferences("TAKPIC", 0);
-		if(takePic.getInt("TAKEN", 0) == 1){
+//		SharedPreferences takePic = getSharedPreferences("TAKPIC", 0);
+//		if(takePic.getInt("TAKEN", 0) == 1){
+//			
+//			Editor editor = takePic.edit();
+//			editor.putInt("TAKEN", 0);
+//			editor.commit();
 			
-			Editor editor = takePic.edit();
-			editor.putInt("TAKEN", 0);
-			editor.commit();
+//			mList = new ArrayList<File>();
+//			String url = Environment.getExternalStorageDirectory().toString()+"/Cloudoor/ImageIcon";
+//			File albumdir = new File(url);
+//			File[] imgfile = albumdir.listFiles(filefiter);
+//			int len = imgfile.length;
+//			for(int i=0;i<len;i++){
+//				mList.add(imgfile[i]);
+//			}
+//			Collections.sort(mList, new FileComparator());
+//			
+//			Log.e("TESt", mList.get(0).getAbsolutePath());
+//			
+//			Bitmap bm = BitmapFactory.decodeFile(mList.get(0).getAbsolutePath());
+//			showImage.setImageBitmap(bm);
 			
-			mList = new ArrayList<File>();
-			String url = Environment.getExternalStorageDirectory().toString()+"/Cloudoor/ImageIcon";
-			File albumdir = new File(url);
-			File[] imgfile = albumdir.listFiles(filefiter);
-			int len = imgfile.length;
-			for(int i=0;i<len;i++){
-				mList.add(imgfile[i]);
-			}
-			Collections.sort(mList, new FileComparator());
-			
-			Log.e("TESt", mList.get(0).getAbsolutePath());
-			
-			Bitmap bm = BitmapFactory.decodeFile(mList.get(0).getAbsolutePath());
-			showImage.setImageBitmap(bm);
-			
-			} else {
+//			} else {
 				SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", 0);
-				portraitUrl = loginStatus.getString("URL", null);
+				portrailUrl = loginStatus.getString("URL", null);
 				
-				if (mThread == null) {
-					mThread = new Thread(runnable);
-					mThread.start();
+				File f = new File(PATH + imageName);
+				Log.e(TAG, PATH + imageName);
+				if(f.exists()){
+					Log.e(TAG, "use local");
+					Bitmap bm = BitmapFactory.decodeFile(PATH + imageName);
+					showImage.setImageBitmap(bm);
+				}else{
+					// request bitmap in the new thread
+					if(portraitUrl != null){
+						Log.e(TAG, "use net");
+						if (mThread == null) {
+							mThread = new Thread(runnable);
+							mThread.start();
+						}
+					}
 				}
-			}
+//			}
 	}
 	
 	private Handler mHandler = new Handler() {
@@ -423,6 +483,62 @@ public class ModifyPersonalInfo extends Activity {
 		
 	};
 	
+	public String getProvinceName(int provinceId) {
+		String provinceName = null;
+		Cursor mCursorP = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
+		if (mCursorP.moveToFirst()) {
+			int provinceIndex = mCursorP.getColumnIndex("province_short_name");
+			int provinceIdIndex = mCursorP.getColumnIndex("province_id");
+			do{
+				int tempPID = mCursorP.getInt(provinceIdIndex);
+			    String tempPName = mCursorP.getString(provinceIndex);
+				if(tempPID == provinceId){
+					provinceName = tempPName;
+					break;
+				}		
+			}while(mCursorP.moveToNext());		
+		}
+		mCursorP.close();
+		return provinceName;
+	}
+	
+	public String getCityName(int cityId) {
+		String cityName = null;
+		Cursor mCursorC = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
+		if (mCursorC.moveToFirst()) {
+			int cityIndex = mCursorC.getColumnIndex("city_short_name");
+			int cityIdIndex = mCursorC.getColumnIndex("city_id");
+			do{
+				int tempCID = mCursorC.getInt(cityIdIndex);
+			    String tempCName = mCursorC.getString(cityIndex);
+				if(tempCID == cityId){
+					cityName = tempCName;
+					break;
+				}		
+			}while(mCursorC.moveToNext());		
+		}
+		mCursorC.close();
+		return cityName;
+	}
+	
+	public String getDistrictName(int districtId) {
+		String districtName = null;
+		Cursor mCursorD = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
+		if (mCursorD.moveToFirst()) {
+			int districtIndex = mCursorD.getColumnIndex("district_short_name");
+			int districtIdIndex = mCursorD.getColumnIndex("district_id");
+			do{
+				int tempDID = mCursorD.getInt(districtIdIndex);
+			    String tempDName = mCursorD.getString(districtIndex);
+				if(tempDID == districtId){
+					districtName = tempDName;
+					break;
+				}		
+			}while(mCursorD.moveToNext());		
+		}
+		mCursorD.close();
+		return districtName;
+	}
 	
 	public void saveSid(String sid) {
 		SharedPreferences savedSid = getSharedPreferences("SAVEDSID",

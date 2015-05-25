@@ -91,6 +91,7 @@ public class TakePictureActivity extends Activity implements CamOpenOverCallback
 				editor.putInt("TAKEN", 1);
 				editor.commit();
 
+				setResult(RESULT_OK);
 				TakePictureActivity.this.finish();
 				break;
 			case R.id.take_pic_cancel:

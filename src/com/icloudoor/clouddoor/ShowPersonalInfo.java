@@ -1,5 +1,6 @@
 package com.icloudoor.clouddoor;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -31,6 +32,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -44,6 +46,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ShowPersonalInfo extends Activity {
+	
+	private String TAG = this.getClass().getSimpleName();
 
 	private RequestQueue mQueue;
 	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
@@ -84,6 +88,12 @@ public class ShowPersonalInfo extends Activity {
 	private static final int MSG_FAILURE = 1;// fail
 	
 	private String portraitUrl;
+	
+	//
+	private String PATH = Environment.getExternalStorageDirectory().getAbsolutePath()
+			+ "/Cloudoor/CacheImage/";
+	private String imageName = "myImage.jpg";
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -292,11 +302,21 @@ public class ShowPersonalInfo extends Activity {
 								editor.putString("DAY", birthday.substring(8));
 								editor.commit();
 								
-								// request bitmap in the new thread
-								if(portraitUrl != null){
-									if (mThread == null) {
-										mThread = new Thread(runnable);
-										mThread.start();
+								//
+								File f = new File(PATH + imageName);
+								Log.e(TAG, PATH + imageName);
+								if(f.exists()){
+									Log.e(TAG, "use local");
+									Bitmap bm = BitmapFactory.decodeFile(PATH + imageName);
+									image.setImageBitmap(bm);
+								}else{
+									// request bitmap in the new thread
+									if(portraitUrl != null){
+										Log.e(TAG, "use net");
+										if (mThread == null) {
+											mThread = new Thread(runnable);
+											mThread.start();
+										}
 									}
 								}
 						
@@ -407,10 +427,6 @@ public class ShowPersonalInfo extends Activity {
 		}
 	};
 		
-		
-		
-		
-	
 	public void saveSid(String sid) {
 		SharedPreferences savedSid = getSharedPreferences("SAVEDSID",
 				MODE_PRIVATE);

@@ -95,5 +95,6 @@
     <string name="wrong_gesture">密码错了，还可输入</string>
     <string name="times">次</string>
     <string name="no_more_try_input_pwd">解锁次数已达上限，请验证登录密码</string>
+    <string name="uploading_image">正在上传头像</string>
 
 </resources>

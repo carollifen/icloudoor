@@ -254,31 +254,24 @@ public class Login extends Activity implements TextWatcher {
 													.getJSONObject("info");
 
 											name = info.getString("userName");
-											nickname = info
-													.getString("nickname");
+											nickname = info.getString("nickname");
 											id = info.getString("idCardNo");
 											birth = info.getString("birthday");
 											sex = info.getInt("sex");
-											provinceId = info
-													.getInt("provinceId");
+											provinceId = info.getInt("provinceId");
 											cityId = info.getInt("cityId");
-											districtId = info
-													.getInt("districtId");
+											districtId = info.getInt("districtId");
 
-											portraitUrl = info
-													.getString("portraitUrl");
+											portraitUrl = info.getString("portraitUrl");
 											userId = info.getString("userId");
-											userStatus = info
-													.getInt("userStatus");
+											userStatus = info.getInt("userStatus");
 
 											editor.putString("NAME", name);
-											editor.putString("NICKNAME",
-													nickname);
+											editor.putString("NICKNAME",nickname);
 											editor.putString("ID", id);
 											editor.putString("BIRTH", birth);
 											editor.putInt("SEX", sex);
-											editor.putInt("PROVINCE",
-													provinceId);
+											editor.putInt("PROVINCE",provinceId);
 											editor.putInt("CITY", cityId);
 											editor.putInt("DIS", districtId);
 											editor.putString("URL", portraitUrl);
@@ -353,6 +346,11 @@ public class Login extends Activity implements TextWatcher {
 										//
 										// finish();
 
+										SharedPreferences downPic = getSharedPreferences("DOWNPIC", 0);
+										Editor editor1 = downPic.edit();
+										editor1.putInt("PIC", 0);
+										editor1.commit();
+										
 									} else if (loginStatusCode == -71) {
 										Toast.makeText(getApplicationContext(),
 												R.string.login_fail,

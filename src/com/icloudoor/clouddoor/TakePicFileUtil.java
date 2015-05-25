@@ -13,10 +13,12 @@ import android.util.Log;
 
 public class TakePicFileUtil {
 
+	private static String TAG = "TakePicFileUtil";
+	
 	private static final File parentPath = Environment.getExternalStorageDirectory();
 	private static String storagePath = "";
 	private static final String FIRSTLAYER_FOLDER_NAME = "Cloudoor";
-	private static final String DST_FOLDER_NAME = "ImageIcon";
+	private static final String DST_FOLDER_NAME = "CacheImage";
 	private static String picName;
 	private static TakePicFileUtil mFileUtil = null;
 
@@ -50,9 +52,11 @@ public class TakePicFileUtil {
 		SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyyMMdd-hhmmss");
 		String dataTake = sDateFormat.format(System.currentTimeMillis());
 		
-		String jpegName = path + "/" + dataTake +".jpg";
+		String jpegName = path + "/" + "myImage.jpg";
 		
 		try {
+			Log.e(TAG, "save pic");
+			
 			FileOutputStream fout = new FileOutputStream(jpegName);
 			BufferedOutputStream bos = new BufferedOutputStream(fout);
 			b.compress(Bitmap.CompressFormat.JPEG, 100, bos);
@@ -60,6 +64,7 @@ public class TakePicFileUtil {
 			bos.close();
 		} catch (IOException e) {
 			e.printStackTrace();
+			Log.e(TAG, e.toString());
 		}
 
 		

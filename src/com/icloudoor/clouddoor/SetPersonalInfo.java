@@ -1,6 +1,8 @@
 package com.icloudoor.clouddoor;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -10,6 +12,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,6 +26,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.Request.Method;
 import com.android.volley.toolbox.Volley;
+import com.icloudoor.clouddoor.Entities.FilePart;
+import com.icloudoor.clouddoor.Entities.MultipartEntity;
+import com.icloudoor.clouddoor.Entities.Part;
 
 import android.app.Activity;
 import android.content.Context;
@@ -28,7 +38,10 @@ import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -45,6 +58,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class SetPersonalInfo extends Activity {
+	
+	private String TAG = this.getClass().getSimpleName();
 	
 	private MyAreaDBHelper mAreaDBHelper;
 	private SQLiteDatabase mAreaDB;
@@ -89,6 +104,7 @@ public class SetPersonalInfo extends Activity {
 	
 	private String Name, Nickname, Age, PersonalID, province, city, district, year, month, day, BirthDay;
 	private int Sex, provinceId, cityId, districtId;
+	private String portraitUrl;
 	
 	private RelativeLayout back;
 	private RelativeLayout  save;
@@ -100,6 +116,11 @@ public class SetPersonalInfo extends Activity {
 	private int statusCode;
 	
 	private int setPersonal = 0;
+	
+	//
+	private String PATH = Environment.getExternalStorageDirectory().getAbsolutePath()
+			+ "/Cloudoor/CacheImage/";
+	private String imageName = "myImage.jpg";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -253,8 +274,9 @@ public class SetPersonalInfo extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				// TODO to add the personal image
-				
+				Intent intent = new Intent();
+				intent.setClass(SetPersonalInfo.this, TakePictureActivity.class);	
+				startActivityForResult(intent, 0);
 			}
 			
 		});
@@ -370,6 +392,7 @@ public class SetPersonalInfo extends Activity {
 						map.put("provinceId", String.valueOf(provinceId));
 						map.put("cityId", String.valueOf(cityId));
 						map.put("districtId", String.valueOf(districtId));
+						map.put("portraitUrl", portraitUrl);
 						return map;
 					}
 				};
@@ -388,6 +411,83 @@ public class SetPersonalInfo extends Activity {
 			}			
 		});
 	}
+	
+	@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+         if(requestCode == 0 && resultCode == RESULT_OK) {
+        	 
+        	 Toast.makeText(this, R.string.uploading_image, Toast.LENGTH_LONG).show();
+        	 
+        	 File f = new File(PATH + imageName);
+        	 if(f.exists()){
+        		 Log.e(TAG, "use local");
+        		 Bitmap bm = BitmapFactory.decodeFile(PATH + imageName);
+        		 personImage.setImageBitmap(bm);
+        	 }
+        	 
+        	 
+            // upload image
+        	 new Thread() {
+
+					@Override
+					public void run() {
+						
+						try {
+							sleep(1000);
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						}
+
+						HttpClient httpClient = new DefaultHttpClient();
+						HttpPost postRequest = new HttpPost(HOST
+								+ "/user/api/uploadPortrait.do" + "?sid=" + sid);
+
+						File file = null;
+						file = new File(PATH + imageName);
+						Part[] parts = null;
+						FilePart filePart = null;
+						try {
+							filePart = new FilePart("portrait", file);
+						} catch (FileNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+						parts = new Part[] { filePart };
+
+						postRequest.setEntity(new MultipartEntity(parts));
+						try {
+							HttpResponse response = httpClient
+									.execute(postRequest);
+							BufferedReader reader = new BufferedReader(
+									new InputStreamReader(response.getEntity()
+											.getContent(), "UTF-8"));
+							String sResponse;
+							StringBuilder s = new StringBuilder();
+							while ((sResponse = reader.readLine()) != null) {
+								s = s.append(sResponse);
+							}
+							Log.e("TEst StringBuilder", s.toString());
+							
+							//
+							JSONObject jsObj = new JSONObject(s.toString());
+							JSONObject data = jsObj.getJSONObject("data");
+							portraitUrl = data.getString("portraitUrl");
+							Log.e(TAG, portraitUrl);
+							
+						} catch (ClientProtocolException e) {
+							e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+
+				}.start();
+        }
+    }
 	
 	  @Override
     protected void onDestroy() {
