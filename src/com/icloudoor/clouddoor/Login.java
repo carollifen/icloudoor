@@ -98,7 +98,7 @@ public class Login extends Activity implements TextWatcher {
 		TVGoToRegi = (TextView) findViewById(R.id.login_go_to_regi);
 		ShowPwd = (RelativeLayout) findViewById(R.id.show_pwd);
 		IVPwdIcon = (ImageView) findViewById(R.id.btn_show_pwd);
-		IVPwdIcon.setImageResource(R.drawable.hide_pwd);
+		IVPwdIcon.setImageResource(R.drawable.hide_pwd_new);
 		
 		// for new ui
 		DisplayMetrics dm = new DisplayMetrics();

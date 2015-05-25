@@ -22,10 +22,14 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,7 +37,7 @@ import android.widget.Toast;
 public class RegisterComplete extends Activity implements TextWatcher {
 	private TextView TVRegiComplete;
 	private EditText ETInputPwd;
-	private EditText ETConfirmPwd;
+//	private EditText ETConfirmPwd;
 	private URL registerURL;
 	private RequestQueue mQueue;
 	private String inputPwd, confirmPwd;
@@ -42,6 +46,13 @@ public class RegisterComplete extends Activity implements TextWatcher {
 	private int statusCode;
 	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
 	private String sid = null;
+	
+	//for new ui
+	private RelativeLayout pwdLayout;
+	private RelativeLayout regiCompleteLayout;
+	private RelativeLayout ShowPwd;
+	private ImageView IVPwdIcon;
+	private boolean isHiddenPwd;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +63,60 @@ public class RegisterComplete extends Activity implements TextWatcher {
 		mQueue = Volley.newRequestQueue(this);
 
 		ETInputPwd = (EditText) findViewById(R.id.regi_input_pwd);
-		ETConfirmPwd = (EditText) findViewById(R.id.regi_input_pwd_again);
+//		ETConfirmPwd = (EditText) findViewById(R.id.regi_input_pwd_again);
 		TVRegiComplete = (TextView) findViewById(R.id.btn_regi_complete);
 		
-		TVRegiComplete.setTextColor(0xFFcccccc);
-		TVRegiComplete.setEnabled(false);
+		//for new ui
+		DisplayMetrics dm = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
+		int screenWidth = dm.widthPixels;
+		
+		ShowPwd = (RelativeLayout) findViewById(R.id.show_pwd);
+		IVPwdIcon = (ImageView) findViewById(R.id.btn_show_pwd);
+		pwdLayout = (RelativeLayout) findViewById(R.id.regi_input_pwd_layout);
+		regiCompleteLayout = (RelativeLayout) findViewById(R.id.regi_complete_layout);
+		
+		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) pwdLayout.getLayoutParams();
+		RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) regiCompleteLayout.getLayoutParams();
+		params.width = screenWidth - 48*2;
+		params1.width = screenWidth - 48*2;
+		pwdLayout.setLayoutParams(params);
+		regiCompleteLayout.setLayoutParams(params1);
+		
+		pwdLayout.setBackgroundResource(R.drawable.shape_input_certi_code);
+		regiCompleteLayout.setBackgroundResource(R.drawable.shape_regi_complete_disable);
+		
+		TVRegiComplete.setTextColor(0xFF999999);
+		regiCompleteLayout.setEnabled(false);
+		
+		isHiddenPwd = true;
+		IVPwdIcon.setImageResource(R.drawable.hide_pwd_new);
+		ShowPwd.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (isHiddenPwd) {
+					isHiddenPwd = false;
+					ETInputPwd.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+					IVPwdIcon.setImageResource(R.drawable.show_pwd_new);
+				} else {
+					isHiddenPwd = true;
+					ETInputPwd.setTransformationMethod(PasswordTransformationMethod.getInstance());
+					IVPwdIcon.setImageResource(R.drawable.hide_pwd_new);
+				}
+
+			}
+
+		});
+		
+		//
+		
+		
+//		TVRegiComplete.setTextColor(0xFFcccccc);
+//		TVRegiComplete.setEnabled(false);
 		
 		ETInputPwd.addTextChangedListener(this);
-		ETConfirmPwd.addTextChangedListener(this);
+//		ETConfirmPwd.addTextChangedListener(this);
 		
 		BtnBack = (RelativeLayout) findViewById(R.id.btn_back);
 		BtnBack.setOnClickListener(new OnClickListener(){
@@ -77,7 +134,7 @@ public class RegisterComplete extends Activity implements TextWatcher {
 				
 		sid = loadSid();
 		
-		TVRegiComplete.setOnClickListener(new OnClickListener() {
+		regiCompleteLayout.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -89,8 +146,8 @@ public class RegisterComplete extends Activity implements TextWatcher {
 				}
 
 				inputPwd = ETInputPwd.getText().toString();
-				confirmPwd = ETConfirmPwd.getText().toString();
-				if (inputPwd.equals(confirmPwd)) {
+//				confirmPwd = ETConfirmPwd.getText().toString();
+//				if (inputPwd.equals(confirmPwd)) {
 					MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
 							Method.POST, registerURL.toString(), null,
 							new Response.Listener<JSONObject>() {
@@ -152,15 +209,15 @@ public class RegisterComplete extends Activity implements TextWatcher {
 						protected Map<String, String> getParams()
 								throws AuthFailureError {
 							Map<String, String> map = new HashMap<String, String>();
-							map.put("password", confirmPwd);
+							map.put("password", inputPwd);
 							return map;
 						}
 					};
 					mQueue.add(mJsonRequest);
-				} else {
-					Toast.makeText(v.getContext(), R.string.diff_pwd,
-							Toast.LENGTH_SHORT).show();
-				}
+//				} else {
+//					Toast.makeText(v.getContext(), R.string.diff_pwd,
+//							Toast.LENGTH_SHORT).show();
+//				}
 			}
 
 		});
@@ -193,12 +250,14 @@ public class RegisterComplete extends Activity implements TextWatcher {
 
 	@Override
 	public void afterTextChanged(Editable s) {
-		if(ETInputPwd.getText().toString().length() > 7 && ETConfirmPwd.getText().toString().length() > 7){
-			TVRegiComplete.setTextColor(0xFFffffff);
-			TVRegiComplete.setEnabled(true);
+		if(ETInputPwd.getText().toString().length() > 7){
+			TVRegiComplete.setTextColor(0xFF0065a1);
+			regiCompleteLayout.setEnabled(true);
+			regiCompleteLayout.setBackgroundResource(R.drawable.selector_next_step);
 		} else {
-			TVRegiComplete.setTextColor(0xFFcccccc);
-			TVRegiComplete.setEnabled(false);
+			TVRegiComplete.setTextColor(0xFF999999);
+			regiCompleteLayout.setEnabled(false);
+			regiCompleteLayout.setBackgroundResource(R.drawable.shape_regi_complete_disable);
 		}
 	}
 }

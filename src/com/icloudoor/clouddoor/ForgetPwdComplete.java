@@ -22,17 +22,21 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class ForgetPwdComplete extends Activity implements TextWatcher{
 	private EditText ETInputPwd;
-	private EditText ETConfirmPwd;
+//	private EditText ETConfirmPwd;
 	private TextView TVConfirm;
 	private String inputPwd, confirmPwd;
 	private RelativeLayout BtnBack;
@@ -43,6 +47,13 @@ public class ForgetPwdComplete extends Activity implements TextWatcher{
 	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
 	private String sid = null;
 	
+	// for new ui
+	private RelativeLayout pwdLayout;
+	private RelativeLayout forgetCompleteLayout;
+	private RelativeLayout ShowPwd;
+	private ImageView IVPwdIcon;
+	private boolean isHiddenPwd;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -50,14 +61,59 @@ public class ForgetPwdComplete extends Activity implements TextWatcher{
 		setContentView(R.layout.find_pwd_complete);
 		
 		ETInputPwd = (EditText) findViewById(R.id.forget_pwd_input_new_pwd);
-		ETConfirmPwd = (EditText) findViewById(R.id.forget_pwd_confirm_pwd);
+//		ETConfirmPwd = (EditText) findViewById(R.id.forget_pwd_confirm_pwd);
 		TVConfirm = (TextView) findViewById(R.id.forget_pwd_confirm);
 		
-		TVConfirm.setTextColor(0xFFcccccc);
-		TVConfirm.setEnabled(false);
+		//for new ui
+				DisplayMetrics dm = new DisplayMetrics();
+				getWindowManager().getDefaultDisplay().getMetrics(dm);
+				int screenWidth = dm.widthPixels;
+				
+				ShowPwd = (RelativeLayout) findViewById(R.id.show_pwd);
+				IVPwdIcon = (ImageView) findViewById(R.id.btn_show_pwd);
+				pwdLayout = (RelativeLayout) findViewById(R.id.regi_input_pwd_layout);
+				forgetCompleteLayout = (RelativeLayout) findViewById(R.id.regi_complete_layout);
+				
+				RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) pwdLayout.getLayoutParams();
+				RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) forgetCompleteLayout.getLayoutParams();
+				params.width = screenWidth - 48*2;
+				params1.width = screenWidth - 48*2;
+				pwdLayout.setLayoutParams(params);
+				forgetCompleteLayout.setLayoutParams(params1);
+				
+				pwdLayout.setBackgroundResource(R.drawable.shape_input_certi_code);
+				forgetCompleteLayout.setBackgroundResource(R.drawable.shape_regi_complete_disable);
+				
+				TVConfirm.setTextColor(0xFF999999);
+				forgetCompleteLayout.setEnabled(false);
+				
+				isHiddenPwd = true;
+				IVPwdIcon.setImageResource(R.drawable.hide_pwd_new);
+				ShowPwd.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						if (isHiddenPwd) {
+							isHiddenPwd = false;
+							ETInputPwd.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+							IVPwdIcon.setImageResource(R.drawable.show_pwd_new);
+						} else {
+							isHiddenPwd = true;
+							ETInputPwd.setTransformationMethod(PasswordTransformationMethod.getInstance());
+							IVPwdIcon.setImageResource(R.drawable.hide_pwd_new);
+						}
+
+					}
+
+				});
+				
+				//
+		
+//		TVConfirm.setTextColor(0xFFcccccc);
+//		TVConfirm.setEnabled(false);
 		
 		ETInputPwd.addTextChangedListener(this);
-		ETConfirmPwd.addTextChangedListener(this);
+//		ETConfirmPwd.addTextChangedListener(this);
 		
 		BtnBack = (RelativeLayout) findViewById(R.id.btn_back);
 		BtnBack.setOnClickListener(new OnClickListener(){
@@ -76,7 +132,7 @@ public class ForgetPwdComplete extends Activity implements TextWatcher{
 		mQueue = Volley.newRequestQueue(this);
 		sid = loadSid();
 		
-		TVConfirm.setOnClickListener(new OnClickListener(){
+		forgetCompleteLayout.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
@@ -88,8 +144,8 @@ public class ForgetPwdComplete extends Activity implements TextWatcher{
 				}
 				
 				inputPwd = ETInputPwd.getText().toString();
-				confirmPwd = ETConfirmPwd.getText().toString();
-				if(inputPwd.equals(confirmPwd)){
+//				confirmPwd = ETConfirmPwd.getText().toString();
+//				if(inputPwd.equals(confirmPwd)){
 					MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
 							Method.POST, registerURL.toString(), null,
 							new Response.Listener<JSONObject>() {
@@ -141,8 +197,8 @@ public class ForgetPwdComplete extends Activity implements TextWatcher{
 						}
 					};
 					mQueue.add(mJsonRequest);
-				}else
-					Toast.makeText(v.getContext(), R.string.diff_pwd, Toast.LENGTH_SHORT).show();
+//				}else
+//					Toast.makeText(v.getContext(), R.string.diff_pwd, Toast.LENGTH_SHORT).show();
 			}
 			
 		});
@@ -172,15 +228,17 @@ public class ForgetPwdComplete extends Activity implements TextWatcher{
 		// TODO Auto-generated method stub
 		
 	}
-
+	   
 	@Override
 	public void afterTextChanged(Editable s) {
-		if(ETConfirmPwd.getText().toString().length() > 7 && ETInputPwd.getText().toString().length() > 7){
-			TVConfirm.setTextColor(0xFFffffff);
-			TVConfirm.setEnabled(true);
+		if(ETInputPwd.getText().toString().length() > 7){
+			TVConfirm.setTextColor(0xFF0065a1);
+			forgetCompleteLayout.setEnabled(true);
+			forgetCompleteLayout.setBackgroundResource(R.drawable.selector_next_step);
 		} else {
-			TVConfirm.setTextColor(0xFFcccccc);
-			TVConfirm.setEnabled(false);
+			TVConfirm.setTextColor(0xFF999999);
+			forgetCompleteLayout.setEnabled(false);
+			forgetCompleteLayout.setBackgroundResource(R.drawable.shape_regi_complete_disable);
 		}
 	}
 	

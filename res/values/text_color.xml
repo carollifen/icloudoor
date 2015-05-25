@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="enable">#ff333333</color>
-    <color name="pressed">#ffffffff</color>
+    <color name="enable">#333333</color>
+    <color name="pressed">#ffffff</color>
 </resources>
