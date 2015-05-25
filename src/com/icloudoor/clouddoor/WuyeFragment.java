@@ -1,9 +1,23 @@
 package com.icloudoor.clouddoor;
 
 import java.lang.reflect.Field;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.Request.Method;
+import com.android.volley.toolbox.Volley;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,6 +29,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class WuyeFragment extends Fragment {
 	
@@ -33,6 +49,12 @@ public class WuyeFragment extends Fragment {
 	private ImageView BtnBill;
 	private ImageView BtnPay;
 	
+	private RelativeLayout unreadNoticeLayout;
+	private RelativeLayout unreadQueryLayout;
+	private TextView unreadNoticeCount;
+	private TextView unreadQueryCount;
+	private int unreadNotice, unreadQuery;
+	
 	public MyClickListener myClick;
 	
 	private AutoScrollViewPager viewPager;
@@ -45,6 +67,12 @@ public class WuyeFragment extends Fragment {
 	private WuyeWidgeFragment3 mWuyeWidgeFragment3;
 	public MyPageChangeListener myPageChangeListener;
 
+	private URL unReadURL;
+	private RequestQueue mQueue;
+	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
+	private String sid;
+	
+	
 	public WuyeFragment() {
 
 	}
@@ -67,6 +95,16 @@ public class WuyeFragment extends Fragment {
 		BtnBill = (ImageView) view.findViewById(R.id.btn_bill);
 		BtnPay = (ImageView) view.findViewById(R.id.btn_pay);
 		
+		unreadNoticeLayout = (RelativeLayout) view.findViewById(R.id.unread_notice_layout);
+		unreadQueryLayout = (RelativeLayout) view.findViewById(R.id.unread_query_layout);
+		unreadNoticeCount = (TextView) view.findViewById(R.id.unread_notice);
+		unreadQueryCount = (TextView) view.findViewById(R.id.unread_query);
+		
+		unreadNoticeLayout.setVisibility(View.INVISIBLE);
+		unreadQueryLayout.setVisibility(View.INVISIBLE);
+		unreadNoticeCount.setText("");
+		unreadQueryCount.setText("");
+		
 		myClick = new MyClickListener();
 		
 		BtnLianxiwuye.setOnClickListener(myClick);
@@ -86,6 +124,51 @@ public class WuyeFragment extends Fragment {
 		
 		InitFragmentViews();
 		InitViewPager();
+		
+		 mQueue = Volley.newRequestQueue(getActivity());
+			sid = loadSid();
+			
+			try {
+				unReadURL = new URL(HOST + "/user/prop/zone/getGridCount.do"+ "?sid=" + sid);
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+			MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(Method.GET,
+					unReadURL.toString(), null,
+					new Response.Listener<JSONObject>() {
+
+						@Override
+						public void onResponse(JSONObject response) {
+							Log.e(TAG, response.toString());
+							
+							try {
+								JSONArray data = response.getJSONArray("data");
+								
+								if (data.getInt(0) != 0) {
+									unreadNotice = data.getInt(0);
+									unreadNoticeLayout.setVisibility(View.VISIBLE);
+									unreadNoticeCount.setText(String.valueOf(unreadNotice));
+								}
+
+								if (data.getInt(1) != 0) {
+									unreadQuery = data.getInt(0);
+									unreadQueryLayout.setVisibility(View.VISIBLE);
+									unreadQueryCount.setText(String.valueOf(unreadQuery));
+								}
+								
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
+							
+						}
+					}, new Response.ErrorListener() {
+
+						@Override
+						public void onErrorResponse(VolleyError error) {
+							Log.e(TAG, error.toString());
+						}
+					});
+			mQueue.add(mJsonRequest);
 		
 		return view;
 	}
@@ -172,7 +255,7 @@ public class WuyeFragment extends Fragment {
 	public void onResume() {
         super.onResume();
         // start auto scroll when onResume
-        viewPager.startAutoScroll();
+        viewPager.startAutoScroll();  
     }
 	
 	public class MyClickListener implements OnClickListener {
@@ -186,6 +269,11 @@ public class WuyeFragment extends Fragment {
 				startActivity(intent);
 				break;
 			case R.id.btn_notice:
+				
+				unreadNoticeLayout.setVisibility(View.INVISIBLE);
+				unreadNoticeCount.setText("");
+				unreadNotice = 0;
+				
 				intent.setClass(getActivity(), NoticeActivity.class);
 				startActivity(intent);
 				break;
@@ -202,6 +290,11 @@ public class WuyeFragment extends Fragment {
 				startActivity(intent);
 				break;
 			case R.id.btn_query:
+				
+				unreadQueryLayout.setVisibility(View.INVISIBLE);
+				unreadQueryCount.setText("");
+				unreadQuery = 0;
+				
 				intent.setClass(getActivity(), QueryActivity.class);
 				startActivity(intent);
 				break;
@@ -228,5 +321,17 @@ public class WuyeFragment extends Fragment {
             e.printStackTrace();
         }
     }
+	
+	public void saveSid(String sid) {
+		SharedPreferences savedSid = getActivity().getSharedPreferences("SAVEDSID", 0);
+		Editor editor = savedSid.edit();
+		editor.putString("SID", sid);
+		editor.commit();
+	}
+
+	public String loadSid() {
+		SharedPreferences loadSid = getActivity().getSharedPreferences("SAVEDSID", 0);
+		return loadSid.getString("SID", null);
+	}
 	
 }

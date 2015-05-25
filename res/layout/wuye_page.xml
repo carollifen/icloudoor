@@ -121,12 +121,47 @@
                         android:layout_height="0dp"
                         android:layout_weight="1" >
 
-                        <ImageView
+                        
+                        <RelativeLayout
+                            android:layout_width="44dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true" 
+                            >
+                            
+                            <ImageView
                             android:id="@+id/btn_notice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
                             android:background="@drawable/selector_notice" />
+                            
+                            <RelativeLayout
+                                 android:id="@+id/unread_notice_layout"
+                                 android:layout_width="wrap_content"
+                           		 android:layout_height="wrap_content"
+                           		 android:layout_alignParentRight="true"
+                                >
+                                
+                                <ImageView
+                                    android:id="@+id/red_dot_notice"
+                                    android:layout_width="wrap_content"
+                            		android:layout_height="wrap_content" 
+                            		android:layout_centerHorizontal="true"
+                                    android:background="@drawable/red_dot" />
+                                
+                                <TextView
+                                    android:id="@+id/unread_notice"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:layout_centerInParent="true"
+                                    android:textSize="14sp"
+                                    android:textColor="#ffffff"
+                                    />
+                                
+                            </RelativeLayout>
+                            
+                        </RelativeLayout>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -144,12 +179,49 @@
                         android:layout_height="0dp"
                         android:layout_weight="1" >
 
-                        <ImageView
-                            android:id="@+id/btn_query"
-                            android:layout_width="wrap_content"
+                        <RelativeLayout
+                            android:layout_width="44dp"
                             android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:background="@drawable/selector_query" />
+                            android:layout_centerHorizontal="true" >
+                            
+                            <ImageView
+                                android:id="@+id/btn_query"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:background="@drawable/selector_query" />
+                            
+                            <RelativeLayout
+                                android:id="@+id/unread_query_layout"
+                                 android:layout_width="wrap_content"
+                           		 android:layout_height="wrap_content"
+                           		 android:layout_alignParentRight="true"
+                                >
+                                
+                                <ImageView
+                                    android:id="@+id/red_dot_query"
+                                    android:layout_width="wrap_content"
+                            		android:layout_height="wrap_content" 
+                            		android:layout_centerHorizontal="true"
+                                    android:background="@drawable/red_dot" />
+                                
+                                <TextView
+                                    android:id="@+id/unread_query"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:layout_centerInParent="true"
+                                    android:textSize="14sp"
+                                    android:textColor="#ffffff"
+                                    />
+                                
+                            </RelativeLayout>
+                            
+                            
+                        </RelativeLayout>
+                            
+                        
+                        
 
                         <TextView
                             android:layout_width="wrap_content"
