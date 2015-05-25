@@ -1,7 +1,15 @@
 package com.icloudoor.clouddoor;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,10 +23,15 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -95,6 +108,13 @@ public class CloudDoorMainActivity extends FragmentActivity {
  	private String tag;
  	private String sid;
  	private PushAgent mPushAgent;
+ 	
+ 	//
+ 	private Bitmap bitmap;
+	private Thread mThread;
+	private String imageURL;
+	private String PATH = Environment.getExternalStorageDirectory().getAbsolutePath()
+			+ "/Cloudoor/CacheImage";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +148,13 @@ public class CloudDoorMainActivity extends FragmentActivity {
 							Log.e("response", tag);
 							new AddTagTask(tag).execute();
 						}
-					}
+					}else if (response.getInt("code") == -2){
+                        Toast.makeText(getApplicationContext(), R.string.not_login, Toast.LENGTH_SHORT).show();
+                        final Intent intent = new Intent();
+                        intent.setClass(getApplicationContext(), Login.class);
+                        startActivity(intent);
+                        finish();
+                    }
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -172,11 +198,8 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		InitState();
 		
 		registerReceiver(mHomeKeyEventReceiver, new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
-
-
 	}
-
-
+	
 	public void InitViews() {
 		myClickListener = new MyOnClickListener();
 //		myPageChangeListener = new MyPageChangeListener();
@@ -260,7 +283,80 @@ public class CloudDoorMainActivity extends FragmentActivity {
 			intent.setClass(getApplicationContext(), VerifyGestureActivity.class);
 			startActivity(intent);
 		}
+		
+		// save image to file
+		SharedPreferences downPic = getSharedPreferences("DOWNPIC", 0);
+		if (downPic.getInt("PIC", 0) == 0) {
+			SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS",
+					MODE_PRIVATE);
+			imageURL = loginStatus.getString("URL", null);
+			if (imageURL != null) {
+				Log.e(TAG, imageURL);
+				if (mThread == null) {
+					mThread = new Thread(runnable);
+					mThread.start();
+				}
+			}
+		}	
 	}
+	
+
+	private Handler mHandler = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case 1:
+				File f = null;
+				f = new File(PATH);
+				if(!f.exists())
+					f.mkdirs();
+				
+				String jpegName = PATH + "/" + "myImage.jpg";
+				
+				try {
+					FileOutputStream fout = new FileOutputStream(jpegName);
+					BufferedOutputStream bos = new BufferedOutputStream(fout);
+					bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+					bos.flush();
+					bos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+				SharedPreferences downPic = getSharedPreferences("DOWNPIC", 0);
+				Editor editor = downPic.edit();
+				editor.putInt("PIC", 1);
+				editor.commit();
+				
+				break;
+			case 2:
+				break;
+			}
+		}
+	};
+	
+	Runnable runnable = new Runnable() {
+
+		@Override
+		public void run() {
+			HttpClient httpClient = new DefaultHttpClient();
+			HttpGet httpGet = new HttpGet(imageURL);
+//			final Bitmap bitmap;
+			try {
+				org.apache.http.HttpResponse httpResponse = httpClient
+						.execute(httpGet);
+
+				bitmap = BitmapFactory.decodeStream(httpResponse.getEntity()
+						.getContent());
+			} catch (Exception e) {
+				mHandler.obtainMessage(2).sendToTarget();
+				return;
+			}
+
+			mHandler.obtainMessage(1, bitmap).sendToTarget();
+		}
+	};
 	
 	public void onDestroy() {
         Log.e(TAG, "onDestroy");
@@ -445,8 +541,7 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		@Override
 		protected String doInBackground(Void... params) {
 			try {
-				TagManager.Result result = mPushAgent.getTagManager().add(
-						tagString);
+				TagManager.Result result = mPushAgent.getTagManager().add(tagString);
 				Log.e("result", result.toString());
 				return result.toString();
 			} catch (Exception e) {
