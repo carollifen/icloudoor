@@ -23,6 +23,8 @@ public class QueryActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_query);
 
+		sid = loadSid();
+		
 		PushAgent.getInstance(this).onAppStart();
 		surveyWebView = (WebView) findViewById(R.id.id_survey);
 
