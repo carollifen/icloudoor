@@ -206,11 +206,11 @@ public class VerifyGestureActivity extends Activity {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (event.getAction() == KeyEvent.ACTION_DOWN
 				&& KeyEvent.KEYCODE_BACK == keyCode) {
-//			Intent intent = new Intent();
-//			intent.addCategory(Intent.CATEGORY_HOME);
-//			intent.setAction(Intent.ACTION_MAIN);
-//			startActivity(intent);
-			finish();
+			Intent intent = new Intent();
+			intent.addCategory(Intent.CATEGORY_HOME);
+			intent.setAction(Intent.ACTION_MAIN);
+			startActivity(intent);
+//			finish();
 		}
 		return super.onKeyDown(keyCode, event);
 	}
