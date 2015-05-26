@@ -110,7 +110,7 @@ public class SettingFragment extends Fragment {
 		
 		
 		image = (CircularImage) view.findViewById(R.id.person_image);
-//		image.setImageResource(R.drawable.logo_deep144);
+		image.setImageResource(R.drawable.default_image);
 		
 		
 		SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);	
