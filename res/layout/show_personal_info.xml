@@ -15,12 +15,43 @@
         android:layout_height="120dp"
         android:background="#ffffff" >
 
-        <ImageView
-            android:id="@+id/personal_info_small_image"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_centerInParent="true"
-            android:background="@drawable/default_image" />
+        <RelativeLayout
+            android:layout_width="100dp"
+            android:layout_height="120dp"
+            android:layout_centerHorizontal="true" 
+            >
+            
+            <ImageView
+                android:id="@+id/personal_info_small_image"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/default_image" />
+            
+            <ImageView
+                android:id="@+id/certi_or_not_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="6dp" />
+            
+            <TextView
+                android:id="@+id/certi_or_not_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="8dp"
+                android:text=""
+                android:textSize="13sp"
+                android:textColor="#333333"
+                />
+            
+        </RelativeLayout>
+        
+        
+        
     </RelativeLayout>
 
     <LinearLayout
@@ -34,41 +65,7 @@
             android:layout_height="0.5dp"
             android:background="#dddddd" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal" >
-
-            <View
-                android:layout_width="20dp"
-                android:layout_height="match_parent" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="名字"
-                android:textColor="#333333"
-                android:textSize="15sp" />
-
-            <View
-                android:layout_width="60dp"
-                android:layout_height="match_parent" />
-
-            <TextView
-                android:id="@+id/personal_info_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text=""
-                android:textColor="#666666"
-                android:textSize="15sp" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#dddddd" />
+        
         
         <LinearLayout
             android:layout_width="match_parent"
@@ -305,7 +302,45 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:background="#eeeeee" >
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="真实名字"
+                android:textColor="#333333"
+                android:textSize="15sp" />
+
+            <View
+                android:layout_width="30dp"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/personal_info_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text=""
+                android:textColor="#666666"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#dddddd" />
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:background="#eeeeee" >
 
             <View
                 android:layout_width="20dp"

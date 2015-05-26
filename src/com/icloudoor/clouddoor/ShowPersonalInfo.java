@@ -90,16 +90,25 @@ public class ShowPersonalInfo extends Activity {
 	private String portraitUrl;
 	
 	//
+	private int userStatus;
+	private ImageView certiImage;
+	private TextView certiText;
+	
+	//
 	private String PATH = Environment.getExternalStorageDirectory().getAbsolutePath()
 			+ "/Cloudoor/CacheImage/";
 	private String imageName = "myImage.jpg";
 	
+	private  String formatID;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//getActionBar().hide();
 		setContentView(R.layout.show_personal_info);
+		
+		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
+		userStatus = loginStatus.getInt("STATUS", 1);
 		
 		mAreaDBHelper = new MyAreaDBHelper(ShowPersonalInfo.this, DATABASE_NAME, null, 1);
 		mAreaDB = mAreaDBHelper.getWritableDatabase();	
@@ -123,6 +132,9 @@ public class ShowPersonalInfo extends Activity {
 		TVid = (TextView) findViewById(R.id.personal_info_ID);
 		back = (RelativeLayout) findViewById(R.id.btn_back);
 		image = (ImageView) findViewById(R.id.personal_info_small_image);
+		//
+		certiImage = (ImageView) findViewById(R.id.certi_or_not_image);
+		certiText = (TextView) findViewById(R.id.certi_or_not_text);
 
 		toModifyProfile = (RelativeLayout) findViewById(R.id.tomodify_person_info);
 			
@@ -144,7 +156,14 @@ public class ShowPersonalInfo extends Activity {
 				
 				SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
 				if(personalInfo.getInt("SETINFO", 1) == 1){
-					intent.setClass(ShowPersonalInfo.this, ModifyPersonalInfo.class);
+					
+					if(userStatus == 1) {
+						intent.setClass(ShowPersonalInfo.this, SetPersonalInfoNotCerti.class);
+					} else if(userStatus == 2){
+						intent.setClass(ShowPersonalInfo.this, SetPersonalInfo.class);
+					}
+//					intent.setClass(ShowPersonalInfo.this, ModifyPersonalInfo.class);
+					
 				} else if (personalInfo.getInt("SETINFO", 1) == 0){
 					intent.setClass(ShowPersonalInfo.this, SetPersonalInfo.class);
 				}
@@ -235,6 +254,15 @@ public class ShowPersonalInfo extends Activity {
 			intent.setClass(ShowPersonalInfo.this, VerifyGestureActivity.class);
 			startActivity(intent);
 		}
+		
+		if(userStatus == 1) {
+			certiImage.setImageResource(R.drawable.not_certi_user);
+			certiText.setText(R.string.not_certi);
+		} else if(userStatus == 2) {
+			certiImage.setImageResource(R.drawable.certi_user);
+			certiText.setText(R.string.certi);
+		}
+		
 		
 		SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
 		
@@ -348,8 +376,11 @@ public class ShowPersonalInfo extends Activity {
 //									IVSexImage.setImageResource(R.drawable.sex_red);
 								}
 								
-								if(id != null)
-									TVid.setText(id);
+								if(id != null){
+									formatID = changeNum(id);
+									TVid.setText(formatID);
+								}
+									
 								
 								if(birthday != null){
 									TVyear.setText(birthday.substring(0, 4));
@@ -426,6 +457,18 @@ public class ShowPersonalInfo extends Activity {
 			mHandler.obtainMessage(MSG_SUCCESS, bitmap).sendToTarget();
 		}
 	};
+	
+	public String changeNum(String str) {
+		if (str != null) {
+			StringBuilder sb = new StringBuilder(str);
+
+			for (int i = 3; i < 14; i++) {
+				sb.setCharAt(i, '*');
+			}
+			str = sb.toString();
+		}
+		return str;
+	}
 		
 	public void saveSid(String sid) {
 		SharedPreferences savedSid = getSharedPreferences("SAVEDSID",

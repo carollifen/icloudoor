@@ -349,6 +349,21 @@
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name=".SetPersonalInfoNotCerti"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".ShowPersonalInfoNotCerti"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"  >
+        </activity>
+        <activity
+            android:name=".ModifyPersonalInfoNotCerti"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"  >
+        </activity>
     </application>
 
 </manifest>

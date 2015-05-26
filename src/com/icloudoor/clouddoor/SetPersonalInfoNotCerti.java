@@ -15,6 +15,7 @@ import java.util.Map;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
@@ -42,6 +43,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -57,7 +60,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class SetPersonalInfo extends Activity {
+public class SetPersonalInfoNotCerti extends Activity {
 	
 	private String TAG = this.getClass().getSimpleName();
 	
@@ -91,6 +94,7 @@ public class SetPersonalInfo extends Activity {
 
 	private ImageView personImage;
 	private TextView addImage;
+	private EditText realName;
 	private EditText nickName;
 	private RelativeLayout setSexMan;
 	private RelativeLayout setSexWoman;
@@ -99,11 +103,7 @@ public class SetPersonalInfo extends Activity {
 	private EditText birthYear;
 	private EditText birthMonth;
 	private EditText birthDay;
-	private TextView personalID;
-	private TextView realName;
-	
-	private String NAME;
-	private String ID;
+	private EditText personalID;
 	
 	private String Name, Nickname, Age, PersonalID, province, city, district, year, month, day, BirthDay;
 	private int Sex, provinceId, cityId, districtId;
@@ -121,6 +121,9 @@ public class SetPersonalInfo extends Activity {
 	private int setPersonal = 0;
 	
 	//
+	private Thread mThread;
+	private static final int MSG_SUCCESS = 0;// get the image success
+	private static final int MSG_FAILURE = 1;// fail
 	private String PATH = Environment.getExternalStorageDirectory().getAbsolutePath()
 			+ "/Cloudoor/CacheImage/";
 	private String imageName = "myImage.jpg";
@@ -129,7 +132,7 @@ public class SetPersonalInfo extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 //		getActionBar().hide();
-		setContentView(R.layout.set_person_info);
+		setContentView(R.layout.set_person_info_not_certi);
 		
 		back = (RelativeLayout) findViewById(R.id.btn_back);
 		back.setOnClickListener(new OnClickListener(){
@@ -141,30 +144,10 @@ public class SetPersonalInfo extends Activity {
 			
 		});
 		
-		// the ID and realname of certi user cannot be modified
-		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
-		NAME = loginStatus.getString("NAME", null);
-		ID = loginStatus.getString("ID", null);
-		portraitUrl = loginStatus.getString("URL", null);
-		
-		realName = (TextView) findViewById(R.id.personal_RealName);
-		personalID = (TextView) findViewById(R.id.personal_ID);
-		
-		realName.setText(NAME);
-		
-		if(ID != null){
-			StringBuilder sb = new StringBuilder(ID);
-			for(int i = 3; i < 14; i++){
-				sb.setCharAt(i, '*');
-			}
-			personalID.setText(sb.toString());
-		}	
-		//
-		
-		mAreaDBHelper = new MyAreaDBHelper(SetPersonalInfo.this, DATABASE_NAME, null, 1);
+		mAreaDBHelper = new MyAreaDBHelper(SetPersonalInfoNotCerti.this, DATABASE_NAME, null, 1);
 		mAreaDB = mAreaDBHelper.getWritableDatabase();	
 		
-		initViews();
+		initViews();	
 		
 		//
 		File f = new File(PATH + imageName);
@@ -174,8 +157,6 @@ public class SetPersonalInfo extends Activity {
 			personImage.setImageBitmap(bm);
 		}
 		//
-		
-		
 		
 		initSpinnerData();
 		
@@ -200,7 +181,7 @@ public class SetPersonalInfo extends Activity {
 				}
 						
 				cityAdapter = new ArrayAdapter<String>(
-						SetPersonalInfo.this, android.R.layout.simple_spinner_item, tempCitySet);
+						SetPersonalInfoNotCerti.this, android.R.layout.simple_spinner_item, tempCitySet);
 				citySpinner.setAdapter(cityAdapter);
 				provincePosition = position;
  
@@ -249,7 +230,7 @@ public class SetPersonalInfo extends Activity {
 					tempDistrictSet[aa] = districtSet[provincePosition][position][aa];
 				}
 						
-				districtAdapter = new ArrayAdapter<String>(SetPersonalInfo.this,
+				districtAdapter = new ArrayAdapter<String>(SetPersonalInfoNotCerti.this,
                         android.R.layout.simple_spinner_item, tempDistrictSet);
 				districtSpinner.setAdapter(districtAdapter);
 				cityPosition = position;
@@ -319,7 +300,7 @@ public class SetPersonalInfo extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent();
-				intent.setClass(SetPersonalInfo.this, TakePictureActivity.class);	
+				intent.setClass(SetPersonalInfoNotCerti.this, TakePictureActivity.class);	
 				startActivityForResult(intent, 0);
 			}
 			
@@ -365,9 +346,9 @@ public class SetPersonalInfo extends Activity {
 
 			@Override
 			public void onClick(View v) {
-//				Name = realName.getText().toString();				
+				Name = realName.getText().toString();				
 				Nickname = nickName.getText().toString();
-//				PersonalID = personalID.getText().toString();
+				PersonalID = personalID.getText().toString();
 				BirthDay = birthYear.getText().toString() + "-" 
 						+ (birthMonth.getText().toString().length() == 1 ? ("0" + birthMonth.getText().toString()) : birthMonth.getText().toString()) + "-" 
 						+ (birthDay.getText().toString().length() == 1 ? ("0" + birthDay.getText().toString()) : birthDay.getText().toString());		
@@ -398,16 +379,16 @@ public class SetPersonalInfo extends Activity {
 									editor.putInt("SETINFO", setPersonal);
 									editor.commit();
 									
-//									SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
-//									Editor editor1 = loginStatus.edit();
-//									editor1.putString("NAME", Name);
-//									editor1.commit();
+									SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
+									Editor editor1 = loginStatus.edit();
+									editor1.putString("NAME", Name);
+									editor1.commit();
 									
 									Intent intent = new Intent();
-									intent.setClass(SetPersonalInfo.this, CloudDoorMainActivity.class);
+									intent.setClass(SetPersonalInfoNotCerti.this, CloudDoorMainActivity.class);
 									startActivity(intent);
 									
-									SetPersonalInfo.this.finish();
+									SetPersonalInfoNotCerti.this.finish();
 								} else if (statusCode == -1) {
 									Toast.makeText(getApplicationContext(), R.string.wrong_params, Toast.LENGTH_SHORT).show();
 								} else if (statusCode == -2) {
@@ -428,9 +409,9 @@ public class SetPersonalInfo extends Activity {
 					protected Map<String, String> getParams()
 							throws AuthFailureError {
 						Map<String, String> map = new HashMap<String, String>();
-						map.put("userName", NAME);
+						map.put("userName", Name);
 						map.put("nickname", Nickname);
-						map.put("idCardNo", ID);
+						map.put("idCardNo", PersonalID);
 						map.put("sex", String.valueOf(Sex));
 						map.put("birthday", BirthDay);
 						map.put("provinceId", String.valueOf(provinceId));
@@ -441,11 +422,11 @@ public class SetPersonalInfo extends Activity {
 					}
 				};
 				
-				if(NAME.equals(null)){
+				if(Name.equals(null)){
 					Toast.makeText(getApplicationContext(), R.string.plz_input_name, Toast.LENGTH_SHORT).show();
 				}else if(Nickname.equals(null)){
 					Toast.makeText(getApplicationContext(), R.string.plz_input_nickname, Toast.LENGTH_SHORT).show();
-				}else if(ID.equals(null)){
+				}else if(PersonalID.equals(null)){
 					Toast.makeText(getApplicationContext(), R.string.plz_input_id, Toast.LENGTH_SHORT).show();
 				}else if(birthYear.getText().toString().equals(null) || birthMonth.getText().toString().equals(null) || birthDay.getText().toString().equals(null)){
 					Toast.makeText(getApplicationContext(), R.string.plz_input_birthday, Toast.LENGTH_SHORT).show();
@@ -534,6 +515,61 @@ public class SetPersonalInfo extends Activity {
 				}.start();
         }
     }
+	
+	public void onResume() {
+		super.onResume();
+		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", 0);
+		portraitUrl = loginStatus.getString("URL", null);
+		
+		File f = new File(PATH + imageName);
+		Log.e(TAG, PATH + imageName);
+		if(f.exists()){
+			Log.e(TAG, "use local");
+			Bitmap bm = BitmapFactory.decodeFile(PATH + imageName);
+			personImage.setImageBitmap(bm);
+		}else{
+			// request bitmap in the new thread
+			if(portraitUrl != null){
+				Log.e(TAG, "use net");
+				if (mThread == null) {
+					mThread = new Thread(runnable);
+					mThread.start();
+				}
+			}
+		}
+	}
+	
+	private Handler mHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case MSG_SUCCESS:
+				personImage.setImageBitmap((Bitmap) msg.obj);
+				break;
+			case MSG_FAILURE:
+				break;
+			}
+		}
+	};
+	
+	Runnable runnable = new Runnable() {
+		@Override
+		public void run() {
+			HttpClient httpClient = new DefaultHttpClient();
+			HttpGet httpGet = new HttpGet(portraitUrl);
+			final Bitmap bitmap;
+			try {
+				org.apache.http.HttpResponse httpResponse = httpClient
+						.execute(httpGet);
+				bitmap = BitmapFactory.decodeStream(httpResponse.getEntity()
+						.getContent());
+			} catch (Exception e) {
+				mHandler.obtainMessage(MSG_FAILURE).sendToTarget();
+				return;
+			}
+			mHandler.obtainMessage(MSG_SUCCESS, bitmap).sendToTarget();
+		}
+	};
 	
 	  @Override
     protected void onDestroy() {
@@ -651,7 +687,7 @@ public class SetPersonalInfo extends Activity {
 	public void initViews() {
 		personImage =  (ImageView) findViewById(R.id.personal_AddPhoto);
 		addImage = (TextView) findViewById(R.id.add_image);
-		realName = (TextView) findViewById(R.id.personal_RealName);
+		realName = (EditText) findViewById(R.id.personal_RealName);
 		nickName = (EditText) findViewById(R.id.personal_NickName);
 		setSexMan = (RelativeLayout) findViewById(R.id.personal_sex_man);
 		setSexWoman = (RelativeLayout) findViewById(R.id.personal_sex_woman);
@@ -660,7 +696,7 @@ public class SetPersonalInfo extends Activity {
 		birthYear = (EditText) findViewById(R.id.personal_year);
 		birthMonth = (EditText) findViewById(R.id.personal_month);
 		birthDay = (EditText) findViewById(R.id.personal_day);
-		personalID = (TextView) findViewById(R.id.personal_ID);
+		personalID = (EditText) findViewById(R.id.personal_ID);
 		back = (RelativeLayout) findViewById(R.id.btn_back);
 		save = (RelativeLayout) findViewById(R.id.save_person_info);
 		
@@ -674,7 +710,7 @@ public class SetPersonalInfo extends Activity {
 		citySpinner = (Spinner) findViewById(R.id.Addr_city);
 		districtSpinner = (Spinner) findViewById(R.id.Addr_disctrict);
 
-		provinceAdapter = new ArrayAdapter<String>(SetPersonalInfo.this,
+		provinceAdapter = new ArrayAdapter<String>(SetPersonalInfoNotCerti.this,
 				android.R.layout.simple_spinner_item, provinceSet);
 		provinceSpinner.setAdapter(provinceAdapter);
 

@@ -96,5 +96,10 @@
     <string name="times">次</string>
     <string name="no_more_try_input_pwd">解锁次数已达上限，请验证登录密码</string>
     <string name="uploading_image">正在上传头像</string>
-
+    <string name="title_activity_show_personal_info_not_certi">ShowPersonalInfoNotCerti</string>
+    <string name="certi">已认证</string>
+    <string name="not_certi">未认证</string>
+    <string name="title_activity_modify_personal_info_not_certi">ModifyPersonalInfoNotCerti</string>
+	<string name="plz_upload_image">请上传头像</string>
+    
 </resources>

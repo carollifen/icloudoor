@@ -239,8 +239,7 @@ public class Login extends Activity implements TextWatcher {
 									if (loginStatusCode == 1) {
 
 										isLogin = 1;
-										SharedPreferences loginStatus = getSharedPreferences(
-												"LOGINSTATUS", MODE_PRIVATE);
+										SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
 										Editor editor = loginStatus.edit();
 										editor.putInt("LOGIN", isLogin);
 										editor.putString("PHONENUM", phoneNum);
@@ -264,7 +263,7 @@ public class Login extends Activity implements TextWatcher {
 
 											portraitUrl = info.getString("portraitUrl");
 											userId = info.getString("userId");
-											userStatus = info.getInt("userStatus");
+											userStatus = info.getInt("userStatus");     //1 for not approved user; 2 for approved user
 
 											editor.putString("NAME", name);
 											editor.putString("NICKNAME",nickname);
@@ -306,15 +305,17 @@ public class Login extends Activity implements TextWatcher {
 																|| id.length() == 0) {
 															Log.e("jump to set",
 																	"in login activity");
-															intent.setClass(
-																	getApplicationContext(),
-																	SetPersonalInfo.class);
+															
+															if(userStatus == 2) {
+																intent.setClass(getApplicationContext(), SetPersonalInfo.class);
+															} else if(userStatus == 1) {
+																intent.setClass(getApplicationContext(), SetPersonalInfoNotCerti.class);
+															}
+																
 														}
 
 														if (setPersonal == 1) {
-															intent.setClass(
-																	getApplicationContext(),
-																	CloudDoorMainActivity.class);
+															intent.setClass(getApplicationContext(), CloudDoorMainActivity.class);
 														}
 
 														startActivity(intent);

@@ -46,6 +46,8 @@
             android:layout_height="0.5dp"
             android:background="#dddddd" />
 
+       
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -280,7 +282,7 @@
             android:layout_height="0.5dp"
             android:background="#dddddd" />
         
-        <LinearLayout
+         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:orientation="horizontal" >
@@ -293,12 +295,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="名字"
+                android:text="真实名字"
                 android:textColor="#333333"
                 android:textSize="15sp" />
 
             <View
-                android:layout_width="60dp"
+                android:layout_width="30dp"
                 android:layout_height="match_parent" />
 
             <TextView
@@ -306,7 +308,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="显示名字"
+                android:text="(请先由物业进行认证)"
                 android:textColor="#666666"
                 android:textSize="15sp" />
         </LinearLayout>
@@ -342,7 +344,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="123456789789456123"
+                android:text="(请先由物业进行认证)"
                 android:textColor="#666666"
                 android:textSize="15sp" />
         </LinearLayout>
