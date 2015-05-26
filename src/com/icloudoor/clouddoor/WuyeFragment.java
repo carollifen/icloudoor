@@ -150,18 +150,19 @@ public class WuyeFragment extends Fragment {
 									unreadNoticeCount.setText(String.valueOf(unreadNotice));
 								}
 
-								if (data.getInt(1) != 0) {
-									unreadQuery = data.getInt(0);
-									unreadQueryLayout.setVisibility(View.VISIBLE);
-									unreadQueryCount.setText(String.valueOf(unreadQuery));
-								}
-								
-							} catch (JSONException e) {
-								e.printStackTrace();
+							if (data.getInt(1) != 0) {
+								unreadQuery = data.getInt(1);
+								unreadQueryLayout.setVisibility(View.VISIBLE);
+								unreadQueryCount.setText(String
+										.valueOf(unreadQuery));
 							}
-							
+
+						} catch (JSONException e) {
+							e.printStackTrace();
 						}
-					}, new Response.ErrorListener() {
+
+					}
+				}, new Response.ErrorListener() {
 
 						@Override
 						public void onErrorResponse(VolleyError error) {
