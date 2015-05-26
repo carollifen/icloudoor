@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import org.apache.http.client.HttpClient;
@@ -53,6 +55,7 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.Request.Method;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.umeng.message.PushAgent;
@@ -115,7 +118,7 @@ public class CloudDoorMainActivity extends FragmentActivity {
 	private String imageURL;
 	private String PATH = Environment.getExternalStorageDirectory().getAbsolutePath()
 			+ "/Cloudoor/CacheImage";
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -168,7 +171,6 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		});
 		mRequestQueue.add(mJsonObjectRequest);
 
-		
         registerReceiver(mConnectionStatusReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         instance = this;
         

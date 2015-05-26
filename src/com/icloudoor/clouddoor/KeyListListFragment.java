@@ -296,7 +296,8 @@ public class KeyListListFragment extends Fragment {
 	}
 	
 	private class KeyListAdapter extends BaseAdapter {
-		private LayoutInflater mInflater;
+		Context context;
+//		private LayoutInflater mInflater;
 		private ArrayList<HashMap<String, String>> doorNameList;
 
 		// public void setDataList(ArrayList<HashMap<String, String>> list) {
@@ -306,7 +307,8 @@ public class KeyListListFragment extends Fragment {
 
 		public KeyListAdapter(Context context, ArrayList<HashMap<String, String>> list) {
 			this.doorNameList = list;
-			this.mInflater = LayoutInflater.from(context);
+			this.context = context;
+//			this.mInflater = LayoutInflater.from(context);
 		}
 
 		@Override
@@ -328,7 +330,7 @@ public class KeyListListFragment extends Fragment {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			ViewHolder holder;
 			if (convertView == null) {
-				convertView = mInflater.inflate(R.layout.key_list_item, null);
+				convertView = LayoutInflater.from(context).inflate(R.layout.key_list_item, null);
 				holder = new ViewHolder();
 				holder.doorname = (TextView) convertView.findViewById(R.id.door_name);
 				holder.beginday = (TextView) convertView.findViewById(R.id.door_time_from);

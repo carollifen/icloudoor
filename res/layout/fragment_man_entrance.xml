@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical" >
+   <RelativeLayout 
+       android:layout_width="match_parent"
+       android:layout_height="68dp">
+       <TextView 
+           android:id="@+id/txt"
+           android:layout_width="wrap_content"
+           android:layout_height="match_parent"
+           android:layout_marginLeft="16dp"
+           android:text="手机号码"
+           android:gravity="center_vertical"
+            android:textSize="15sp"
+            android:textColor="#333333" 
+           android:layout_centerVertical="true"/>
+
+       <EditText 
+           android:id="@+id/id_manentrance_phonenum"
+           android:layout_width="wrap_content"
+           android:layout_height="match_parent"
+          android:layout_marginRight="70dp"
+            android:textSize="15sp"
+            android:layout_toRightOf="@id/txt"
+            android:layout_marginLeft="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:hint="请输入手机号码"
+            android:textColor="#999999" 
+            android:background="@null"
+           />
+       <RelativeLayout 
+           android:id="@+id/id_call_contacts"
+           android:layout_width="50dp"
+           android:layout_alignParentRight="true"
+           android:layout_marginRight="12dp"
+           android:layout_height="68dp">
+           <ImageView 
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_alignParentRight="true"
+               android:layout_centerVertical="true"
+               
+               android:src="@drawable/icon_call_contact"/>
+       </RelativeLayout>
+       </RelativeLayout> 
+  <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#dddddd" 
+            />
+  
+   <RelativeLayout 
+       android:layout_width="match_parent"
+       android:layout_height="68dp">
+       <TextView 
+           android:id="@+id/id_date"
+           android:layout_width="wrap_content"
+           android:layout_height="match_parent"
+           android:layout_marginLeft="16dp"
+           android:text="授权日期"
+           android:gravity="center_vertical"
+            android:textSize="15sp"
+            android:textColor="#333333" 
+           android:layout_centerVertical="true"/>
+       
+       <TextView 
+           android:id="@+id/date_show_textview"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:layout_toRightOf="@id/id_date"
+            android:layout_marginLeft="20dp"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+             android:text="2015/05/21"
+            android:textColor="#999999" 
+           
+           />
+         <RelativeLayout 
+           android:id="@+id/icon_dateshow"
+           android:layout_width="50dp"
+           android:layout_alignParentRight="true"
+           android:layout_marginRight="12dp"
+           android:layout_height="68dp">
+           <ImageView 
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_alignParentRight="true"
+               android:layout_centerVertical="true"
+               
+               android:src="@drawable/icon_dateselect"/>
+       </RelativeLayout>
+       
+        </RelativeLayout>
+         <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#dddddd" 
+            />
+  
+</LinearLayout> 
+

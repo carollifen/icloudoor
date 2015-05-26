@@ -3,19 +3,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.icloudoor.clouddoor.KeyListAuthFragment"
-    android:background="#f8f8f8" >
+    android:background="#f8f8f8" 
+    >
+     
     
-    <LinearLayout
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        
+        >
+         <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#ffffff"
         android:orientation="vertical" >
-        
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="68dp" 
             >
-            
+   
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -39,7 +46,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text=""
+                    
                     android:textSize="15sp"
                     android:textColor="#333333" />
                 
@@ -63,6 +70,23 @@
             
             
         </RelativeLayout>
+        
+        
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#dddddd" 
+            />
+        
+        
+        
+       
+        <ListView 
+            android:id="@+id/doorname_listview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            
+           />
         
         <View
             android:layout_width="match_parent"
@@ -139,10 +163,38 @@
             android:layout_height="0.5dp"
             android:background="#dddddd" 
             />
-        
+       
+        <FrameLayout
+        android:id="@+id/id_entrancecontent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+         />
+
     </LinearLayout>
     
+  
+    
     <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        
+        <TextView
+        android:id="@+id/btn_submit_text"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+       android:layout_marginBottom="50dp"
+        android:gravity="center"
+        android:text="提 交"
+        android:textSize="17sp" />
+        
+    </RelativeLayout>
+    
+    </LinearLayout>
+   
+     <RelativeLayout
         android:id="@+id/show_tip"
         android:layout_width="match_parent"
         android:layout_height="22dp"
@@ -159,17 +211,5 @@
             />
         
     </RelativeLayout>
-    
-    <TextView
-        android:id="@+id/btn_submit_text"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="84dp"
-        android:background="@drawable/btn_submit_big_disable"
-        android:gravity="center"
-        android:text="提 交"
-        android:textSize="17sp" />
 
 </RelativeLayout>
