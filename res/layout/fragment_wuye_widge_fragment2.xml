@@ -1,15 +1,56 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.icloudoor.clouddoor.WuyeWidgeFragment2" >
+    android:layout_height="152dp"
+    android:orientation="vertical"
+    android:id="@+id/big_layout">
 
-    <!-- TODO: Update blank fragment layout -->
+	<RelativeLayout
+	    android:id="@+id/content_layout"
+	    android:layout_width="wrap_content"
+	    android:layout_height="match_parent"
+	    android:layout_centerInParent="true"
+	    >
+	    
+	    <ImageView
+	        android:id="@+id/image_bg"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent" />
+	    
+	    <TextView
+	        android:id="@+id/title"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_centerHorizontal="true"
+	        android:layout_marginTop="12dp"
+	        android:text=""
+	        android:textSize="20sp"
+	        android:textColor="#ffffff" />
+	    
+	    <TextView
+	        android:id="@+id/content"
+	        android:layout_width="match_parent"
+	        android:layout_height="68dp"
+	        android:layout_marginTop="40dp"
+	        android:ellipsize="end"
+	        android:maxLines="3"
+	        android:text=""
+	        android:textSize="16sp"
+	        android:textColor="#ffffff"
+	         />
+	    
+	    <TextView
+	        android:id="@+id/name_date"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentRight="true"
+	        android:layout_alignParentBottom="true"
+	        android:layout_marginBottom="5dp"
+	        android:text=""
+	        android:textSize="16sp"
+	        android:textColor="#ffffff"
+	        android:gravity="right" />
+	    
+	</RelativeLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="1"
-        android:gravity="center" />
-
-</FrameLayout>
+</RelativeLayout>
