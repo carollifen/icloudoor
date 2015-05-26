@@ -282,6 +282,7 @@
                     android:background="@null"
                     android:gravity="center_vertical|center"
                     android:hint="yyyy"
+                    android:inputType="number"
                     android:textColor="#666666"
                     android:textColorHint="#666666"
                     android:textSize="15sp" />
@@ -301,6 +302,7 @@
                     android:background="@null"
                     android:gravity="center_vertical|center"
                     android:hint="mm"
+                    android:inputType="number"
                     android:textColor="#666666"
                     android:textColorHint="#666666"
                     android:textSize="15sp" />
@@ -320,6 +322,7 @@
                     android:background="@null"
                     android:gravity="center_vertical|center"
                     android:hint="dd"
+                    android:inputType="number"
                     android:textColor="#666666"
                     android:textColorHint="#666666"
                     android:textSize="15sp" />
