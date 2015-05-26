@@ -6,11 +6,16 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.RelativeLayout;
 
 public class CommendActivity extends Activity {
 
+	private RelativeLayout back;
+	
 	private  WebView praiseWebView;
 	private String sid;
 	
@@ -24,6 +29,16 @@ public class CommendActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_commend);
 
+		back = (RelativeLayout) findViewById(R.id.btn_back);
+		back.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+			
+		});
+		
 		PushAgent.getInstance(this).onAppStart();
 		sid = loadSid();
 		praiseWebView = (WebView) findViewById(R.id.id_praise);

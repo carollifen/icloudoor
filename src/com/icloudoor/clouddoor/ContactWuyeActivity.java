@@ -13,14 +13,18 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.RelativeLayout;
 
 public class ContactWuyeActivity extends Activity {
 
 	private WebView webview;
+	private RelativeLayout back;
 	
 	private String sid;
 	private URL newurl;
@@ -36,6 +40,16 @@ public class ContactWuyeActivity extends Activity {
 //		getActionBar().hide();
 		setContentView(R.layout.activity_contact_wuye);
 
+		back = (RelativeLayout) findViewById(R.id.btn_back);
+		back.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+			
+		});
+		
 		webview = (WebView) findViewById(R.id.webview);
 
 		sid = loadSid();

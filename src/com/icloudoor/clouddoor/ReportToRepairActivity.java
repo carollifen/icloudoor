@@ -37,12 +37,15 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.webkit.JavascriptInterface;
 import android.webkit.URLUtil;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.RelativeLayout;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -59,6 +62,8 @@ import com.umeng.message.PushAgent;
 public class ReportToRepairActivity extends Activity {
 
 	private String TAG = this.getClass().getSimpleName();
+
+	private RelativeLayout back;
 
 	private WebView fixwebview;
 	private String sid;
@@ -97,6 +102,16 @@ public class ReportToRepairActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_report_to_repair);
 
+		back = (RelativeLayout) findViewById(R.id.btn_back);
+		back.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+			
+		});
+		
 		PushAgent.getInstance(this).onAppStart();
 		fixwebview = (WebView) findViewById(R.id.repair_webview);
 		webSetting = fixwebview.getSettings();

@@ -6,11 +6,16 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.RelativeLayout;
 
 public class QueryActivity extends Activity {
 
+	private RelativeLayout back;
+	
 	private WebView surveyWebView;
 	private String sid;
 	private String url = "http://zone.icloudoor.com/icloudoor-web/user/prop/zone/survey/page.do";
@@ -24,6 +29,16 @@ public class QueryActivity extends Activity {
 		setContentView(R.layout.activity_query);
 
 		sid = loadSid();
+		
+		back = (RelativeLayout) findViewById(R.id.btn_back);
+		back.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+			
+		});
 		
 		PushAgent.getInstance(this).onAppStart();
 		surveyWebView = (WebView) findViewById(R.id.id_survey);

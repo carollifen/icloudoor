@@ -4,11 +4,16 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.RelativeLayout;
 
 public class ComplainActivity extends Activity {
 
+	private RelativeLayout back;
+	
 	private WebView complainWebView;
 	private String sid;
 
@@ -22,6 +27,16 @@ public class ComplainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_complain);
 
+		back = (RelativeLayout) findViewById(R.id.btn_back);
+		back.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+			
+		});
+		
 		complainWebView = (WebView) findViewById(R.id.id_complain);
 		webSetting = complainWebView.getSettings();
 
