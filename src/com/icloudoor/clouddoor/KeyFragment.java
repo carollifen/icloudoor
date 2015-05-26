@@ -85,6 +85,7 @@ import com.icloudoor.clouddoor.ShakeEventManager;
 import com.icloudoor.clouddoor.UartService;
 import com.icloudoor.clouddoor.ShakeEventManager.ShakeListener;
 import com.icloudoor.clouddoor.animationUtils.MyAnimationLine;
+import com.icloudoor.clouddoor.animationUtils.MyAnimationView;
 
 @SuppressLint("NewApi")
 public class KeyFragment extends Fragment implements ShakeListener {
@@ -106,7 +107,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	private TextView TvChooseMan;
 	private TextView TvDistrictDoor;
 	private TextView TvCarNumber;
-	private RelativeLayout TvOpenKeyList;
+	private RelativeLayout RlOpenKeyList;
 
 	private ImageView IvChooseCar;
 	private ImageView IvChooseMan;
@@ -135,11 +136,11 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //	public MyPageChangeListener myPageChangeListener;
 	
 	// for new UI weather
-	private WeatherClick mClick;
+	private WeatherClick mWeatherClick;
 	
 	private ImageView weatherBtnLeft;
 	private ImageView weatherBtnRight;
-	private TextView weatherTemp;
+	private TextView weatherTemperature;
 	private TextView weatherStatus;
 	private TextView contentYi;
 	private TextView contentJi;
@@ -187,6 +188,8 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //	private OpenDoorRingView ringView;
 	private ImageView halo;
 	private MyAnimationLine myline;
+    private MyAnimationView myAnimationView;
+    private Animation animation1;
 
 	// for BLE
 	private static final int REQUEST_ENABLE_BT = 0;
@@ -206,7 +209,8 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	private SoundPool mSoundPool;
 		
 	private boolean checkForOpenDoor = false;
-	
+    private boolean bHadFindDoor = false;
+
 	private String tempDeviceAddr = null;
     private Handler mHandler;
     private volatile boolean stopThread = false;
@@ -237,7 +241,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //		TvCarNumber = (TextView) view.findViewById(R.id.car_number);
 //		TvDistrictDoor.setSelected(true);
 //		TvCarNumber.setSelected(true);	
-		TvOpenKeyList = (RelativeLayout) view.findViewById(R.id.open_key_list);
+		RlOpenKeyList = (RelativeLayout) view.findViewById(R.id.open_key_list);
 //
 //		IvChooseCar = (ImageView) view.findViewById(R.id.Iv_choose_car);
 //		IvChooseMan = (ImageView) view.findViewById(R.id.Iv_choose_man);
@@ -253,16 +257,16 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		// for new UI weather
 		weatherBtnLeft = (ImageView) view.findViewById(R.id.weather_btn_left);
 		weatherBtnRight = (ImageView) view.findViewById(R.id.weather_btn_right);
-		
-		mClick = new WeatherClick();
-		weatherBtnLeft.setOnClickListener(mClick);
-		weatherBtnRight.setOnClickListener(mClick);
+
+        mWeatherClick = new WeatherClick();
+		weatherBtnLeft.setOnClickListener(mWeatherClick);
+		weatherBtnRight.setOnClickListener(mWeatherClick);
 		showDay = 0; // defaul to show today's weather status
 		
 		weatherBtnLeft.setVisibility(View.INVISIBLE);
-		
-		
-		weatherTemp = (TextView) view.findViewById(R.id.weather_temp);
+
+
+        weatherTemperature = (TextView) view.findViewById(R.id.weather_temp);
 		weatherStatus = (TextView) view.findViewById(R.id.weather_status);
 		weatherStatus.setGravity(Gravity.RIGHT);
 		contentYi = (TextView) view.findViewById(R.id.weather_yi);
@@ -308,7 +312,8 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		halo.startAnimation(animation);
 		
 		myline=(MyAnimationLine) view.findViewById(R.id.myAnimationLine);
-		Animation animation1 = AnimationUtils.loadAnimation(getActivity(), R.anim.run);
+        myAnimationView = (MyAnimationView)view.findViewById(R.id.myAnimationView);
+		animation1 = AnimationUtils.loadAnimation(getActivity(), R.anim.run);
 		LinearInterpolator lin1 = new LinearInterpolator();
 		animation1.setInterpolator(lin1);
 		myline.startAnimation(animation1);
@@ -445,7 +450,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //			}
 //		});
 
-		TvOpenKeyList.setOnClickListener(new OnClickListener() {
+		RlOpenKeyList.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent();
@@ -724,8 +729,8 @@ public class KeyFragment extends Fragment implements ShakeListener {
 								editor.putString("Day3IconIndexNight", tomorrow2.getString("code2"));
 								
 								editor.commit();
-								
-								weatherTemp.setText(now.getString("temperature") + String.valueOf(centigrade));
+
+                                weatherTemperature.setText(now.getString("temperature") + String.valueOf(centigrade));
 								weatherStatus.setText(now.getString("text"));
 							}
 						} catch (JSONException e) {
@@ -747,7 +752,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 			mQueue.add(mWeatherRequest);
 		} else {
 			SharedPreferences loadWeather = getActivity().getSharedPreferences("SAVEDWEATHER", 0);
-			weatherTemp.setText(loadWeather.getString("Day1Temp", "N/A") + String.valueOf(centigrade)); //TODO
+            weatherTemperature.setText(loadWeather.getString("Day1Temp", "N/A") + String.valueOf(centigrade)); //TODO
 			weatherStatus.setText(loadWeather.getString("Day1Weather", "N/A"));
 		}
 
@@ -764,7 +769,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 				Log.e(TAG, "click left");
 				if(showDay == 1) {    // now the day two weather, to show the day one weather
 					showDay--;
-					weatherTemp.setText(loadWeather.getString("Day1Temp", "N/A") + String.valueOf(centigrade));
+                    weatherTemperature.setText(loadWeather.getString("Day1Temp", "N/A") + String.valueOf(centigrade));
 					weatherStatus.setText(loadWeather.getString("Day1Weather", "N/A"));
 					
 					contentYi.setText(loadLHL.getString("D1YI", null));
@@ -774,7 +779,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 					weatherBtnRight.setVisibility(View.VISIBLE);
 				} else if(showDay == 2) {   // now the day three weather, to show the day two weather
 					showDay--;
-					weatherTemp.setText(loadWeather.getString("Day2TempHigh", "N/A") + String.valueOf(centigrade));
+                    weatherTemperature.setText(loadWeather.getString("Day2TempHigh", "N/A") + String.valueOf(centigrade));
 					weatherStatus.setText(loadWeather.getString("Day2Weather", "N/A"));
 
 					contentYi.setText(loadLHL.getString("D2YI", null));
@@ -787,7 +792,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 				Log.e(TAG, "click right");
 				if(showDay == 0) {    // now the day one weather, to show the day two weather
 					showDay++;
-					weatherTemp.setText(loadWeather.getString("Day2TempHigh", "N/A") + String.valueOf(centigrade));
+                    weatherTemperature.setText(loadWeather.getString("Day2TempHigh", "N/A") + String.valueOf(centigrade));
 					weatherStatus.setText(loadWeather.getString("Day2Weather", "N/A"));
 	
 					contentYi.setText(loadLHL.getString("D2YI", null));
@@ -797,7 +802,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 					weatherBtnRight.setVisibility(View.VISIBLE);
 				} else if(showDay == 1) {   // now the day two weather, to show the day three weather
 					showDay++;
-					weatherTemp.setText(loadWeather.getString("Day3TempHigh", "N/A") + String.valueOf(centigrade));
+                    weatherTemperature.setText(loadWeather.getString("Day3TempHigh", "N/A") + String.valueOf(centigrade));
 					weatherStatus.setText(loadWeather.getString("Day3Weather", "N/A"));
 			
 					contentYi.setText(loadLHL.getString("D3YI", null));
@@ -913,6 +918,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
     private  class MyThread extends Thread {
 
         private volatile boolean stopThread = false;
+        private volatile long mScanningProid = 10000;
 
         public void stopThread() {
             this.stopThread = true;
@@ -926,7 +932,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
                 mHandler.sendMessage(msg);
                 Log.i("ThreadTest", Thread.currentThread().getId() + "myThread");
                 try {
-                    Thread.sleep(10000);
+                    Thread.sleep(mScanningProid);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -1026,7 +1032,18 @@ public class KeyFragment extends Fragment implements ShakeListener {
 					
 					Log.e(TAG, "mDeviceList.size() =" + String.valueOf(mDeviceList.size()));
 					
-					if(mDeviceList.size() != 0) scanStatus.setText(R.string.can_shake_to_open_door);
+					if(mDeviceList.size() != 0){
+                        scanStatus.setText(R.string.can_shake_to_open_door);
+                        myThread.mScanningProid = 10000;
+                        myAnimationView.setVisibility(View.INVISIBLE);
+                        myline.setVisibility(View.INVISIBLE);
+                        myline.clearAnimation();
+                    }else {
+                        myThread.mScanningProid = 3000;
+                        myline.startAnimation(animation1);
+                        myline.setVisibility(View.VISIBLE);
+                        myAnimationView.setVisibility(View.VISIBLE);
+                    }
 					
 					// add for the case of only one door -- START
 					if (mDeviceList != null && mDeviceList.size() == 1) {
