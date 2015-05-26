@@ -270,9 +270,9 @@ public class WuyeFragment extends Fragment {
 				break;
 			case R.id.btn_notice:
 				
-				unreadNoticeLayout.setVisibility(View.INVISIBLE);
-				unreadNoticeCount.setText("");
-				unreadNotice = 0;
+//				unreadNoticeLayout.setVisibility(View.INVISIBLE);
+//				unreadNoticeCount.setText("");
+//				unreadNotice = 0;
 				
 				intent.setClass(getActivity(), NoticeActivity.class);
 				startActivity(intent);
@@ -291,9 +291,9 @@ public class WuyeFragment extends Fragment {
 				break;
 			case R.id.btn_query:
 				
-				unreadQueryLayout.setVisibility(View.INVISIBLE);
-				unreadQueryCount.setText("");
-				unreadQuery = 0;
+//				unreadQueryLayout.setVisibility(View.INVISIBLE);
+//				unreadQueryCount.setText("");
+//				unreadQuery = 0;
 				
 				intent.setClass(getActivity(), QueryActivity.class);
 				startActivity(intent);
