@@ -93,8 +93,7 @@ public class WuyeWidgeFragment3 extends Fragment {
 			contentLayout.setLayoutParams(params);
 
 			TVtitle.setText(banner.getString("3title", null));
-			TVnamedate.setText(banner.getString("3company", null) + '\n'
-					+ banner.getString("2date", null));
+			TVnamedate.setText(banner.getString("3date", null));
 
 			if (banner.getString("3content", null) != null) {
 				String formatContent = banner.getString("3content", null)
