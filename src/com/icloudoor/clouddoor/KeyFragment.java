@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,6 +30,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -174,6 +176,9 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	
 	private ImageView keyRedDot;
 	private TextView keyRedDotNum;
+	private int newNum;
+	private String uuid;
+	private URL downLoadKeyURL;
 	
 	// for new channel switch
 	private LinearLayout channelSwitchLayout;
@@ -278,6 +283,12 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		keyRedDotNum = (TextView) view.findViewById(R.id.key_red_dot_num);
 		keyRedDot.setVisibility(View.INVISIBLE); 
 		keyRedDotNum.setText("");
+		
+		mQueue = Volley.newRequestQueue(getActivity());
+		sid = loadSid();
+		
+		newNum = 0;
+		checkForNewKey();		
 		
 		requestWeatherData();
 		
@@ -453,12 +464,128 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		RlOpenKeyList.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				keyRedDot.setVisibility(View.INVISIBLE); 
+				keyRedDotNum.setText("");
+				
 				Intent intent = new Intent();
 				intent.setClass(getActivity(), KeyList.class);
 				startActivity(intent);
 			}
 		});
 		return view;
+	}
+	
+	public void checkForNewKey() {
+		uuid = loadUUID();
+		if (uuid == null) {
+			uuid = UUID.randomUUID().toString().replaceAll("-", "");
+			saveUUID(uuid);
+		}
+
+		try {
+			downLoadKeyURL = new URL(
+					"http://zone.icloudoor.com/icloudoor-web/user/door/download2.do"
+							+ "?sid=" + sid);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+
+		MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(Method.POST,
+				downLoadKeyURL.toString(), null,
+				new Response.Listener<JSONObject>() {
+
+					@Override
+					public void onResponse(JSONObject response) {
+						try {
+							if (response.getInt("code") == 1) {
+
+								parseKeyData(response);
+
+								Log.e(TAG, response.toString());
+
+								if (response.getString("sid") != null)
+									saveSid(response.getString("sid"));
+								
+								
+
+							} else if (response.getInt("code") == -81) {
+								if (getActivity() != null)
+									Toast.makeText(getActivity(),
+											R.string.have_no_key_authorised,
+											Toast.LENGTH_SHORT).show();
+							}
+						} catch (JSONException e) {
+							Log.e(TAG, "request error");
+							e.printStackTrace();
+						}
+
+					}
+				}, new Response.ErrorListener() {
+
+					@Override
+					public void onErrorResponse(VolleyError error) {
+
+					}
+				}) {
+			@Override
+			protected Map<String, String> getParams() throws AuthFailureError {
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("appId", uuid);
+				return map;
+			}
+		};
+
+		mQueue.add(mJsonRequest);
+	}
+	
+	public void parseKeyData(JSONObject response) throws JSONException {
+		Log.e(TAG, "parseKeyData func");
+
+		JSONObject data = response.getJSONObject("data");
+		JSONArray doorAuths = data.getJSONArray("doorAuths");
+		for (int index = 0; index < doorAuths.length(); index++) {
+			JSONObject doorData = (JSONObject) doorAuths.get(index);
+			
+			ContentValues value = new ContentValues();
+			if(doorData.getString("deviceId").length() > 0){
+				if(!hasData(mKeyDB, doorData.getString("deviceId"))){
+					Log.e(TAG, "add");
+					newNum++;
+					value.put("zoneId", doorData.getString("zoneId"));
+					value.put("doorName", doorData.getString("doorName"));
+					value.put("doorId", doorData.getString("doorId"));
+					value.put("deviceId", doorData.getString("deviceId"));
+					value.put("doorType", doorData.getString("doorType"));
+					value.put("plateNum", doorData.getString("plateNum"));
+					value.put("direction", doorData.getString("direction"));
+					value.put("authFrom", doorData.getString("authFrom"));
+					value.put("authTo", doorData.getString("authTo"));
+					
+					if (doorData.getString("doorType").equals("1")) {
+						Log.e(TAG, "herehere");
+						value.put("carStatus", "none");
+						value.put("carPosStatus", "none");
+					} else {
+						JSONArray cars = data.getJSONArray("cars");
+						for (int i = 0; i < cars.length(); i++) {
+							JSONObject carData = (JSONObject) cars.get(i);
+							if (carData.getString("l1ZoneId").equals(doorData.getString("zoneId"))
+									&& carData.getString("plateNum").equals(doorData.getString("plateNum"))) {
+								value.put("carStatus", carData.getString("carStatus"));
+								value.put("carPosStatus", carData.getString("carPosStatus"));
+							}
+						}
+					}
+	
+					mKeyDB.insert(TABLE_NAME, null, value);
+				}
+			}
+		}
+		
+		if(newNum > 0){
+			keyRedDot.setVisibility(View.VISIBLE); 
+			keyRedDotNum.setText(String.valueOf(newNum));
+		}
 	}
 	
 	// for new channel switch
@@ -569,9 +696,6 @@ public class KeyFragment extends Fragment implements ShakeListener {
 			haveRequestLHL = true;
 		else
 			haveRequestLHL = false;
-
-		mQueue = Volley.newRequestQueue(getActivity());
-		sid = loadSid();
 
 		try {
 			if (latitude != 0.0 || longitude != 0.0) { // can get the location
@@ -1803,6 +1927,25 @@ public class KeyFragment extends Fragment implements ShakeListener {
 				0, 1);
 	}
 
+	private boolean hasData(SQLiteDatabase mDB, String str){
+		boolean hasData = false;
+		Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME,null);
+		
+		if(mCursor.moveToFirst()){
+			int deviceIdIndex = mCursor.getColumnIndex("deviceId");
+			do{
+				 String deviceId = mCursor.getString(deviceIdIndex);
+				 
+				 if(deviceId.equals(str)) {
+					 hasData = true;
+					 break;
+				 }
+				 
+			}while(mCursor.moveToNext());
+		}
+		return hasData;
+	}
+	
 	private long DBCount() {
 		String sql = "SELECT COUNT(*) FROM " + TABLE_NAME;
 		SQLiteStatement statement = mKeyDB.compileStatement(sql);
@@ -1848,5 +1991,19 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	public String loadSid() {
 		SharedPreferences loadSid = getActivity().getSharedPreferences("SAVEDSID", 0);
 		return loadSid.getString("SID", null);
+	}
+	
+	public void saveUUID(String uuid){	
+		if(getActivity() != null) {
+			SharedPreferences savedUUID = getActivity().getSharedPreferences("SAVEDUUID", 0);
+			Editor editor = savedUUID.edit();
+			editor.putString("UUID", uuid);
+			editor.commit();
+		}		
+	}
+	
+	public String loadUUID(){
+		SharedPreferences loadUUID = getActivity().getSharedPreferences("SAVEDUUID", 0);
+		return loadUUID.getString("UUID", null);
 	}
 }
