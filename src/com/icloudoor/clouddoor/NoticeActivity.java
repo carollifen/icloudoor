@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
 
 public class NoticeActivity extends Activity {
@@ -60,6 +61,11 @@ public class NoticeActivity extends Activity {
 		anouncewebSetting.setLoadsImagesAutomatically(true);
 		anouncewebSetting.setBuiltInZoomControls(true);
 
+		anouncePageWebView.setWebViewClient(new webViewClient()); 
+		
+		
+		
+		
 		detailwebSetting = anounceDetailWebView.getSettings();
 
 		detailwebSetting.setUseWideViewPort(true);
@@ -76,6 +82,14 @@ public class NoticeActivity extends Activity {
 
 	}
 
+	class webViewClient extends WebViewClient{        //override shouldOverrideUrlLoading method to use the webview to response when click the link     
+		@Override     
+		public boolean shouldOverrideUrlLoading(WebView view, String url) {         
+			view.loadUrl(url);          
+			return true;  
+		}
+	}
+	
 	public void saveSid(String sid) {
 		SharedPreferences savedSid = getApplicationContext()
 				.getSharedPreferences("SAVEDSID", 0);
