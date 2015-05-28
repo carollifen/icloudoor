@@ -1095,9 +1095,14 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		} catch (Exception e) {
 
 		}
-		getActivity().unbindService(mServiceConnection);
-		mUartService.stopSelf();
-		mUartService = null;
+		
+		if(mUartService != null){
+			if(getActivity() != null){
+				getActivity().unbindService(mServiceConnection);
+				mUartService.stopSelf();
+				mUartService = null;
+			}
+		}
 	}
 
 	private void service_init() {

@@ -2,17 +2,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.icloudoor.clouddoor.KeyListListFragment"
     android:background="#f8f8f8"
-    android:orientation="vertical" >
-    
+    android:orientation="vertical"
+    tools:context="com.icloudoor.clouddoor.KeyListListFragment" >
+
     <ListView
         android:id="@+id/temp_key_listview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="#dddddd"
         android:dividerHeight="0.5dp" />
-    
+
+    <LinearLayout
+        android:id="@+id/blankview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="12dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#dddddd" />
+    </LinearLayout>
+
     <ListView
         android:id="@+id/key_listview"
         android:layout_width="match_parent"

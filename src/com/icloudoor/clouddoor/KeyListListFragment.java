@@ -21,16 +21,19 @@ import com.android.volley.toolbox.Volley;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
@@ -51,6 +54,7 @@ public class KeyListListFragment extends Fragment {
 	private MyDataBaseHelper mKeyDBHelper;
 	private SQLiteDatabase mKeyDB;
 	
+	private URL returnCarKeyURL;
 	private URL downLoadKeyURL;
 	private RequestQueue mQueue;
 
@@ -62,9 +66,15 @@ public class KeyListListFragment extends Fragment {
 	
 	// Door info variable
 	private ListView mKeyList;
-	private ListView mTempKeyList;
 	private ArrayList<HashMap<String, String>> doorNameList;
 	private KeyListAdapter mAdapter;
+	
+	private ListView mTempKeyList;
+	private ArrayList<HashMap<String, String>> tempDoorNameList;
+	private TempKeyListAdapter mTempAdapter;
+	
+	//
+	LinearLayout blankView;
 	
 	// for new key download interface
 	private String ZONEID;
@@ -93,6 +103,9 @@ public class KeyListListFragment extends Fragment {
 		
 		mKeyDBHelper = new MyDataBaseHelper(getActivity(), DATABASE_NAME);
 		mKeyDB = mKeyDBHelper.getWritableDatabase();
+		
+		blankView = (LinearLayout) view.findViewById(R.id.blankview);
+		blankView.setVisibility(View.GONE);
 		
 		return view;
 	}
@@ -147,13 +160,21 @@ public class KeyListListFragment extends Fragment {
 											doorNameList = new ArrayList<HashMap<String, String>>();
 											mAdapter = new KeyListAdapter(getActivity(), doorNameList);
 											mKeyList.setAdapter(mAdapter);
-
+											
+											tempDoorNameList = new ArrayList<HashMap<String, String>>();
+											mTempAdapter = new TempKeyListAdapter(getActivity(), tempDoorNameList);
+											mTempKeyList.setAdapter(mTempAdapter);
+											
+											
+											int zoneIdIndex = mCursor.getColumnIndex("zoneId");
 											int deviceIdIndex = mCursor.getColumnIndex("deviceId");
 											int doorNamemIndex = mCursor.getColumnIndex("doorName");
 											int authFromIndex = mCursor.getColumnIndex("authFrom");
 											int authToIndex = mCursor.getColumnIndex("authTo");
 											int doorTypeIndex = mCursor.getColumnIndex("doorType");
 											int carStatusIndex = mCursor.getColumnIndex("carStatus");
+											int carNumIndex = mCursor.getColumnIndex("plateNum");
+											int carPosStatusIndex = mCursor.getColumnIndex("carPosStatus");
 
 											do {
 												String deviceId = mCursor.getString(deviceIdIndex);
@@ -162,6 +183,10 @@ public class KeyListListFragment extends Fragment {
 												String authTo = mCursor.getString(authToIndex);
 												String doorType = mCursor.getString(doorTypeIndex);
 												String carStatus = mCursor.getString(carStatusIndex);
+												String carNum = mCursor.getString(carNumIndex);
+												String zoneId = mCursor.getString(zoneIdIndex);
+												String carPosStatus = mCursor.getString(carPosStatusIndex);
+
 
 												Log.e("TESTTESTDB deviceId =", deviceId);
 												Log.e("TESTTESTDB doorName =", doorName);
@@ -169,17 +194,39 @@ public class KeyListListFragment extends Fragment {
 												Log.e("TESTTESTDB authTo =", authTo);
 												Log.e("TESTTESTDB doorType =", doorType);
 												Log.e("TESTTESTDB carStatus =", carStatus);
+												Log.e("TESTTESTDB carNum =", carNum);
+												Log.e("TESTTESTDB zoneId =", zoneId);
+												Log.e("TESTTESTDB carPosStatus =", carPosStatus);
+												
+												
+												if(carStatus.equals("2")){
+													blankView.setVisibility(View.VISIBLE);
+													
+													HashMap<String, String> tempKeyFromDB = new HashMap<String, String>();
+													tempKeyFromDB.put("Door", doorName);
+													tempKeyFromDB.put("BEGIN", authFrom);
+													tempKeyFromDB.put("END", authTo);
+													tempKeyFromDB.put("STATUS", carStatus);
+													tempKeyFromDB.put("DOORTYPE", doorType);
+													tempKeyFromDB.put("CARNUM", carNum);
+													tempKeyFromDB.put("ZONEID", zoneId);
+													tempKeyFromDB.put("POSSTATUS", carPosStatus);
+													tempKeyFromDB.put("DEVICEID", deviceId);
 
-												HashMap<String, String> keyFromDB = new HashMap<String, String>();
-												keyFromDB.put("Door", doorName);
-												keyFromDB.put("BEGIN", authFrom);
-												keyFromDB.put("END", authTo);
-												keyFromDB.put("STATUS", carStatus);
-												keyFromDB.put("DOORTYPE", doorType);
+													tempDoorNameList.add(tempKeyFromDB);
+													mTempAdapter.notifyDataSetChanged();
+												} else {
+													HashMap<String, String> keyFromDB = new HashMap<String, String>();
+													keyFromDB.put("Door", doorName);
+													keyFromDB.put("BEGIN", authFrom);
+													keyFromDB.put("END", authTo);
+													keyFromDB.put("STATUS", carStatus);
+													keyFromDB.put("DOORTYPE", doorType);
 
-												doorNameList.add(keyFromDB);
-												mAdapter.notifyDataSetChanged();
-
+													doorNameList.add(keyFromDB);
+													mAdapter.notifyDataSetChanged();
+												}
+	
 											} while (mCursor.moveToNext());
 										}
 										mCursor.close();
@@ -284,8 +331,9 @@ public class KeyListListFragment extends Fragment {
 			JSONObject doorData = (JSONObject) doorAuths.get(index);
 			
 			ContentValues value = new ContentValues();
+			
 			if(doorData.getString("deviceId").length() > 0){
-				if(!hasData(mKeyDB, doorData.getString("deviceId"))){
+				if(!hasData(mKeyDB, doorData.getString("deviceId"))){    //insert the new key
 					value.put("zoneId", doorData.getString("zoneId"));
 					value.put("doorName", doorData.getString("doorName"));
 					value.put("doorId", doorData.getString("doorId"));
@@ -314,8 +362,41 @@ public class KeyListListFragment extends Fragment {
 	
 					mKeyDB.insert(TABLE_NAME, null, value);
 				}
+			}	
+		}
+		
+		//need to delete the old key
+		if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
+			if (DBCount() > 0) {
+				Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME, null);
+				if (mCursor.moveToFirst()) {
+					boolean keepKey = false;
+					int deviceIdIndex = mCursor.getColumnIndex("deviceId");
+					String deviceId = mCursor.getString(deviceIdIndex);
+		
+					do{
+						for (int index = 0; index < doorAuths.length(); index++) {
+							JSONObject doorData = (JSONObject) doorAuths.get(index);
+							
+							if(doorData.getString("deviceId").length() > 0){
+								if(doorData.getString("deviceId").equals(deviceId)){
+									keepKey = true;
+									break;
+								}
+							}
+						}	
+						
+						if(!keepKey){
+							//delete in the table
+							mKeyDB.delete("KeyInfoTable", "deviceId = ?", new String[] {deviceId});
+						}
+						
+					}while(mCursor.moveToNext());				
+				}	
+				mCursor.close();
 			}
 		}
+		
 	}
 	
 	private class KeyListAdapter extends BaseAdapter {
@@ -388,6 +469,145 @@ public class KeyListListFragment extends Fragment {
 			public TextView endday;
 			public LinearLayout bg;
 			public TextView keyStatus;
+		}
+
+	}
+	
+	//TODO for temp car key
+	private class TempKeyListAdapter extends BaseAdapter {
+		Context context;
+//		private LayoutInflater mInflater;
+		private ArrayList<HashMap<String, String>> tempDoorNameList;
+
+		// public void setDataList(ArrayList<HashMap<String, String>> list) {
+		// doorNameList = list;
+		// notifyDataSetChanged();
+		// }
+
+		public TempKeyListAdapter(Context context, ArrayList<HashMap<String, String>> list) {
+			this.tempDoorNameList = list;
+			this.context = context;
+//			this.mInflater = LayoutInflater.from(context);
+		}
+
+		@Override
+		public int getCount() {
+			return tempDoorNameList.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return tempDoorNameList.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(final int position, View convertView, ViewGroup parent) {
+			ViewHolder holder;
+			if (convertView == null) {
+				convertView = LayoutInflater.from(context).inflate(R.layout.temp_car_key_item, null);
+				holder = new ViewHolder();
+				holder.carNum = (TextView) convertView.findViewById(R.id.temp_car_num);
+				holder.tempDoorName = (TextView) convertView.findViewById(R.id.temp_car_key_name);
+				holder.btnReturnCarKey = (TextView) convertView.findViewById(R.id.return_btn);
+				convertView.setTag(holder);
+			} else {
+				holder = (ViewHolder) convertView.getTag();
+			}
+			
+			holder.carNum.setSelected(true);
+			holder.carNum.setText(tempDoorNameList.get(position).get("CARNUM"));
+			holder.tempDoorName.setText(tempDoorNameList.get(position).get("Door"));
+			
+			final String zoneid = tempDoorNameList.get(position).get("ZONEID");
+			final String carnum = tempDoorNameList.get(position).get("CARNUM");
+			final String posstatus = tempDoorNameList.get(position).get("POSSTATUS");
+			
+			try {
+				returnCarKeyURL = new URL(HOST + "/user/api/returnTempAuthCar.do" + "?sid=" + sid);
+			} catch (MalformedURLException e1) {
+				e1.printStackTrace();
+			}
+			
+			holder.btnReturnCarKey.setTag(position);
+			holder.btnReturnCarKey.setOnClickListener(new OnClickListener(){
+
+				@Override
+				public void onClick(View v) {
+					Log.e(TAG, "item clicked!!!");
+					
+					//TODO return key		
+					MyJsonObjectRequest mReturnKeyRequest = new MyJsonObjectRequest(Method.POST, returnCarKeyURL.toString(), null,
+							new Response.Listener<JSONObject>() {
+
+								@Override
+								public void onResponse(JSONObject response) {
+										Log.e(TAG, response.toString());
+										
+										try {
+											if(response.getInt("code") == 1){
+												
+												if(response.getString("sid") != null){
+													saveSid(response.getString("sid"));
+												}
+												
+												mKeyDB.delete("KeyInfoTable", "deviceId = ?", new String[] {tempDoorNameList.get(position).get("DEVICEID")});
+												tempDoorNameList.remove(position);
+												mTempAdapter.notifyDataSetChanged();
+												if(tempDoorNameList.size() == 0){
+													blankView.setVisibility(View.GONE);
+												}
+												
+												Log.e(TAG, "car key return success!!!");
+												
+											}else if(response.getInt("code") == -1){
+												Toast.makeText(getActivity(), R.string.wrong_params, Toast.LENGTH_SHORT).show();
+											}else if(response.getInt("code") == -2){
+												Toast.makeText(getActivity(), R.string.not_login, Toast.LENGTH_SHORT).show();
+											}else if(response.getInt("code") == -99){
+												Toast.makeText(getActivity(), R.string.unknown_err, Toast.LENGTH_SHORT).show();
+											}else if(response.getInt("code") == -107){
+												Toast.makeText(getActivity(), R.string.car_not_lend, Toast.LENGTH_SHORT).show();
+											}
+										} catch (JSONException e) {
+											e.printStackTrace();
+											Log.e(TAG, e.toString());
+										}
+										
+									}
+							}, new Response.ErrorListener() {
+
+								@Override
+								public void onErrorResponse(VolleyError error) {
+
+								}
+							}) {
+						@Override
+						protected Map<String, String> getParams()
+								throws AuthFailureError {
+							Map<String, String> map = new HashMap<String, String>();
+
+							map.put("l1ZoneId", zoneid);
+							map.put("plateNum", carnum);
+							map.put("carPosStatus", posstatus);
+							return map;
+						}
+					};
+					mQueue.add(mReturnKeyRequest);
+				}			
+			});
+
+			return convertView;
+		}
+
+		class ViewHolder {
+			public TextView carNum;
+			public TextView tempDoorName;
+			public TextView btnReturnCarKey;
 		}
 
 	}

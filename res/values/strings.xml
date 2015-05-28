@@ -108,5 +108,6 @@
     <string name="cannot_auth_to_self">您不能授权给自己</string>
     <string name="borrow_count_too_more">该用户接受云门临时要是已超出限制(一个人最多只能接收5次)</string>
     <string name="already_have_the_temp_key">该用户已拥有该临时要是</string>
+    <string name="car_not_lend">该车未在借用状态</string>
 
 </resources>
