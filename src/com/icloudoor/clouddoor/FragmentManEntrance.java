@@ -36,13 +36,25 @@ public class FragmentManEntrance extends Fragment implements OnClickListener{
 	int mDay = c.get(Calendar.DAY_OF_MONTH);
 	private RelativeLayout call_datepicker;
 	private EditText phoneEdit;
+	//
+	private boolean havePhone = false;
 	
 	private TextView date_show;
+	//
+	private boolean haveDate = false;
+	
+	SharedPreferences submitStatus;
+	Editor editor;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		View view=inflater.inflate(R.layout.fragment_man_entrance, container, false);
+		
+		//
+		submitStatus =  getActivity().getSharedPreferences("SUBMITSTATUS", 0);
+		editor = submitStatus.edit();
 		
 		dateAndPhoneShare=getActivity().getSharedPreferences("DATEANDPHONESHARE", 0);
 		dateAndPhoneEditor=dateAndPhoneShare.edit();
@@ -55,6 +67,7 @@ public class FragmentManEntrance extends Fragment implements OnClickListener{
 		date_show=(TextView) view.findViewById(R.id.date_show_textview);
 		String str=mYear+"/"+(mMonth+1)+"/"+mDay;
 		date_show.setText(str);
+		
 		phoneEdit.addTextChangedListener(new TextWatcher() {
 			
 			@Override
@@ -75,8 +88,17 @@ public class FragmentManEntrance extends Fragment implements OnClickListener{
 				// TODO Auto-generated method stub
 				dateAndPhoneEditor.putString("PHONENUM",phoneEdit.getText().toString()).commit();
 				phoneEdit.setTextColor(0xff333333);
+				
+				//TODO
+				if(phoneEdit.getText().toString().length() > 10){
+					havePhone = true;
+					editor.putBoolean("ManPhone", havePhone);
+					editor.commit();
+				}
 			}
 		});
+		
+	
 		return view;
 	}
 	
@@ -98,8 +120,7 @@ public class FragmentManEntrance extends Fragment implements OnClickListener{
 		
 		  DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {  
 		        public void onDateSet(DatePicker view, int year, int monthOfYear,  
-		                int dayOfMonth) {  
-		            Log.d("test", ""+year+"Äê"+(monthOfYear+1)+"ÔÂ"+dayOfMonth+"ÈÕ"); 
+		                int dayOfMonth) {
 		            String s=year+"/"+(monthOfYear+1)+"/"+dayOfMonth;
 		            dateAndPhoneEditor.putString("DATE", year+"-"+(monthOfYear+1)+"-"+dayOfMonth).commit();
 		            date_show.setText(s);
@@ -108,6 +129,12 @@ public class FragmentManEntrance extends Fragment implements OnClickListener{
 		    };  
 		    new DatePickerDialog(getActivity(),onDateSetListener, mYear	, mMonth	, mDay).show();
 			
+		    //TODO
+			if(date_show.length() > 0){
+				haveDate = true;
+				editor.putBoolean("ManDate", haveDate);
+				editor.commit();
+			}
 		}
 		
 	}

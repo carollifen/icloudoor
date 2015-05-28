@@ -682,6 +682,7 @@ public class SetPersonalInfoNotCerti extends Activity {
 				}
 			}
 		}
+        mCursor.close();
 	}
 	
 	public void initViews() {

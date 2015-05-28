@@ -646,6 +646,7 @@ public class SetPersonalInfo extends Activity {
 				}
 			}
 		}
+        mCursor.close();
 	}
 	
 	public void initViews() {

@@ -171,7 +171,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="授权用户每月可发送接收5次"
+            android:text="授权用户每天可发送接收5次"
             android:textColor="#ffffff"
             android:textSize="12sp" />
     </RelativeLayout>

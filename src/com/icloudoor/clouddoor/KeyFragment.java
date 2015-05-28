@@ -185,7 +185,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	// for new channel switch
 	private LinearLayout channelSwitchLayout;
 	private ChannelSwitchView csv;
-	private int isChooseCarChannel = 1;
+	private int isChooseCarChannel = 1;   // 1 for car; 2 for man
     private int mOpenDoorState;
 	private boolean onlyOneDoor = false;
 	private StrokeTextView doorName;
@@ -216,7 +216,6 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	private SoundPool mSoundPool;
 		
 	private boolean checkForOpenDoor = false;
-    private boolean bHadFindDoor = false;
 
 	private String tempDeviceAddr = null;
     private Handler mHandler;
@@ -565,33 +564,6 @@ public class KeyFragment extends Fragment implements ShakeListener {
 				if(!hasData(mKeyDB, doorData.getString("deviceId"))){
 					Log.e(TAG, "add");
 					newNum++;
-					value.put("zoneId", doorData.getString("zoneId"));
-					value.put("doorName", doorData.getString("doorName"));
-					value.put("doorId", doorData.getString("doorId"));
-					value.put("deviceId", doorData.getString("deviceId"));
-					value.put("doorType", doorData.getString("doorType"));
-					value.put("plateNum", doorData.getString("plateNum"));
-					value.put("direction", doorData.getString("direction"));
-					value.put("authFrom", doorData.getString("authFrom"));
-					value.put("authTo", doorData.getString("authTo"));
-					
-					if (doorData.getString("doorType").equals("1")) {
-						Log.e(TAG, "herehere");
-						value.put("carStatus", "none");
-						value.put("carPosStatus", "none");
-					} else {
-						JSONArray cars = data.getJSONArray("cars");
-						for (int i = 0; i < cars.length(); i++) {
-							JSONObject carData = (JSONObject) cars.get(i);
-							if (carData.getString("l1ZoneId").equals(doorData.getString("zoneId"))
-									&& carData.getString("plateNum").equals(doorData.getString("plateNum"))) {
-								value.put("carStatus", carData.getString("carStatus"));
-								value.put("carPosStatus", carData.getString("carPosStatus"));
-							}
-						}
-					}
-	
-					mKeyDB.insert(TABLE_NAME, null, value);
 				}
 			}
 		}
@@ -996,17 +968,35 @@ public class KeyFragment extends Fragment implements ShakeListener {
 					int deviceIdIndex = mCursor.getColumnIndex("deviceId");
 					int doorNamemIndex = mCursor.getColumnIndex("doorName");
 					int doorTypeIndex = mCursor.getColumnIndex("doorType");
+					int directionIndex = mCursor.getColumnIndex("direction");
+					int carStatusIndex = mCursor.getColumnIndex("carStatus");
+					int carPosStatusIndex = mCursor.getColumnIndex("carPosStatus");
 
 					do {
 						HashMap<String, String> temp = new HashMap<String, String>();
 						String deviceId = mCursor.getString(deviceIdIndex);
 						String doorName = mCursor.getString(doorNamemIndex);
 						String doorType = mCursor.getString(doorTypeIndex);
+						String direction = mCursor.getString(directionIndex);
+						String carStatus = mCursor.getString(carStatusIndex);
+						String carPosStatus = mCursor.getString(carPosStatusIndex);
 
-						if (doorType.equals("2")) {
-							temp.put("CDdeviceid", deviceId);
-							temp.put("CDdoorName", doorName);
-							carDoorList.add(temp);
+						if (doorType.equals("2")) {						
+							if(direction.equals("1")){    // go in
+								if((carStatus.equals("1") || carStatus.equals("2"))     
+										&&    (carPosStatus.equals("1") || carPosStatus.equals("0"))){
+									temp.put("CDdeviceid", deviceId);
+									temp.put("CDdoorName", doorName);
+									carDoorList.add(temp);
+								}
+							} else if(direction.equals("2")){   // go out
+								if((carStatus.equals("1") || carStatus.equals("2"))     
+										&&    (carPosStatus.equals("2") || carPosStatus.equals("0"))){
+									temp.put("CDdeviceid", deviceId);
+									temp.put("CDdoorName", doorName);
+									carDoorList.add(temp);
+								}
+							}
 						} else if (doorType.equals("1")) { 
 							temp.put("MDdeviceid", deviceId);
 							temp.put("MDdoorName", doorName);
@@ -1014,6 +1004,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 						}
 					} while (mCursor.moveToNext());
 				}
+                mCursor.close();
 			}
 		}
         mHandler = new Handler(){
@@ -1087,22 +1078,26 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		getActivity().unregisterReceiver(mBluetoothStateReceiver);
+        if (getActivity() != null) {
+            getActivity().unregisterReceiver(mBluetoothStateReceiver);
+        }
+        try {
+            LocalBroadcastManager.getInstance(getActivity())
+                    .unregisterReceiver(UARTStatusChangeReceiver);
+        } catch (Exception e) {
 
-		try {
-			LocalBroadcastManager.getInstance(getActivity())
-					.unregisterReceiver(UARTStatusChangeReceiver);
-		} catch (Exception e) {
+        }
 
-		}
-		
-		if(mUartService != null){
-			if(getActivity() != null){
-				getActivity().unbindService(mServiceConnection);
-				mUartService.stopSelf();
-				mUartService = null;
-			}
-		}
+        if(mUartService != null){
+            if (getActivity() != null) {
+                getActivity().unbindService(mServiceConnection);
+            }
+            mUartService.stopSelf();
+            mUartService = null;
+        }
+
+
+
 	}
 
 	private void service_init() {
@@ -1358,11 +1353,13 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //			if (getActivity() != null)
 //				Toast.makeText(getActivity(), R.string.scanning, 3000).show();
 		} else {
-			mBluetoothAdapter.stopLeScan(mLeScanCallback);
+            if (mBTScanning) {
+                mBluetoothAdapter.stopLeScan(mLeScanCallback);
+            }
 //			channelSwitch.setEnabled(true);
-			
+			/*
 			if(mDeviceList.size() != 0) scanStatus.setText(R.string.can_shake_to_open_door);
-			
+
 			// add for the case of only one door -- START
 			if (mDeviceList != null && mDeviceList.size() == 1) {
 				onlyOneDoor = true;
@@ -1505,7 +1502,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 						}
 					}
 				}
-			}
+			}*/
 		}
 	}
 
@@ -1587,9 +1584,9 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		
 		if (mDeviceList != null && mDeviceList.size() > 0) {
 			if (mDeviceList.get(deviceIndexToOpen).getAddress() != null) {
-                if (mBTScanning) {
-                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
-                }
+//                if (mBTScanning) {
+//                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
+//                }
 				if (!mUartService.connect(mDeviceList.get(deviceIndexToOpen).getAddress())){
                     mOpenDoorState = 2;
                     Log.i("test", "connect failed!");
@@ -1960,6 +1957,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 				 
 			}while(mCursor.moveToNext());
 		}
+        mCursor.close();
 		return hasData;
 	}
 	
@@ -1999,10 +1997,12 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	}
 	
 	public void saveSid(String sid) {
-		SharedPreferences savedSid = getActivity().getSharedPreferences("SAVEDSID", 0);
-		Editor editor = savedSid.edit();
-		editor.putString("SID", sid);
-		editor.commit();
+        if (getActivity() != null) {
+            SharedPreferences savedSid = getActivity().getSharedPreferences("SAVEDSID", 0);
+            Editor editor = savedSid.edit();
+            editor.putString("SID", sid);
+            editor.commit();
+        }
 	}
 
 	public String loadSid() {

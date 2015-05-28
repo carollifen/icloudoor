@@ -428,7 +428,7 @@ public class Login extends Activity implements TextWatcher {
 
 	@Override
 	public void afterTextChanged(Editable s) {
-		if(ETInputPhoneNum.getText().toString().length() > 10 && ETInputPwd.getText().toString().length() > 7){
+		if(ETInputPhoneNum.getText().toString().length() > 10 && ETInputPwd.getText().toString().length() > 5){
 			TVLogin.setTextColor(0xFF0065a1);
 			loginLayout.setEnabled(true);
 			loginLayout.setBackgroundResource(R.drawable.shape_login_btn_enable);

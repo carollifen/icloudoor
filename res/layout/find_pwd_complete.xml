@@ -23,7 +23,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="12dp"
             android:background="@null"
-            android:hint="请输入你的密码"
+            android:hint="请输入6 - 20位密码"
             android:inputType="textPassword"
             android:textColorHint="#999999"
             android:textColor="#333333"

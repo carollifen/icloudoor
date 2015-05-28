@@ -36,7 +36,7 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
 		sBuffer.append("[zoneId] TEXT, ");
 		sBuffer.append("[doorName] TEXT, ");
 		sBuffer.append("[doorId] TEXT,");
-		sBuffer.append("[deviceId] TEXT PRIMARY KEY,");
+		sBuffer.append("[deviceId] TEXT,");
 		sBuffer.append("[doorType] TEXT,");
 		// sBuffer.append("[authType] TEXT,");
 		sBuffer.append("[plateNum] TEXT, ");
@@ -49,7 +49,7 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
 		db.execSQL(sBuffer.toString());
 
 		keyBuffer.append("CREATE TABLE [" + Key_TABLE_NAME + "] (");
-		keyBuffer.append("[zoneId] TEXT PRIMARY KEY, ");
+		keyBuffer.append("[zoneId] TEXT, ");
 		keyBuffer.append("[zoneAddress] TEXT)");
 		db.execSQL(keyBuffer.toString());
 		Log.e("DBHelper", "TABLE onCreate");
@@ -84,7 +84,7 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
 					result = true;
 				}
 			}
-
+            cursor.close();
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

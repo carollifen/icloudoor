@@ -824,6 +824,7 @@ public class KeyList extends FragmentActivity{
 				 
 			}while(mCursor.moveToNext());
 		}
+        mCursor.close();
 		return hasData;
 	}
 	

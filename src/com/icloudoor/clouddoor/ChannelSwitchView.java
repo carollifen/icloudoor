@@ -179,7 +179,7 @@ public class ChannelSwitchView extends LinearLayout implements OnClickListener {
 			toX = bg_right - margin - cursor_right;
 			animation = new TranslateAnimation(0, toX, 0, 0);
 		}
-		animation.setDuration(100);
+		animation.setDuration(10);
 		animation.setInterpolator(new LinearInterpolator());
 		animation.setAnimationListener(new AnimationListener() {
 			public void onAnimationStart(Animation animation) {

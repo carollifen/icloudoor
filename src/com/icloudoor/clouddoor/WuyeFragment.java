@@ -154,137 +154,137 @@ public class WuyeFragment extends Fragment {
 							Log.e(TAG, response.toString());
 
 							if (response.getInt("code") == 1) {
+                                if (getActivity() != null){
+                                    SharedPreferences banner = getActivity().getSharedPreferences("BANNER", 0);
+                                    Editor editor = banner.edit();
 
-								SharedPreferences banner = getActivity().getSharedPreferences("BANNER", 0);
-								Editor editor = banner.edit();
-								
-								JSONArray data = response.getJSONArray("data");
-								if(data.length() == 1) {
-									if(data.getJSONObject(0).getString("type").equals("1")){
-										String bg = data.getJSONObject(0).getString("bgColor");
-										String content = data.getJSONObject(0).getString("content");
-										String title = data.getJSONObject(0).getString("title");
-										String date = data.getJSONObject(0).getString("createDate");
+                                    JSONArray data = response.getJSONArray("data");
+                                    if(data.length() == 1) {
+                                        if(data.getJSONObject(0).getString("type").equals("1")){
+                                            String bg = data.getJSONObject(0).getString("bgColor");
+                                            String content = data.getJSONObject(0).getString("content");
+                                            String title = data.getJSONObject(0).getString("title");
+                                            String date = data.getJSONObject(0).getString("createDate");
 //										String company = data.getJSONObject(0).getString("propertyCompany");
-										editor.putString("1bg", bg);
-										editor.putString("1content", content);
-										editor.putString("1title", title);
-										editor.putString("1date", date);
+                                            editor.putString("1bg", bg);
+                                            editor.putString("1content", content);
+                                            editor.putString("1title", title);
+                                            editor.putString("1date", date);
 //										editor.putString("1company", company);
-										editor.putString("1type", "1");
-									} else if(data.getJSONObject(0).getString("type").equals("2")){
-										String url = data.getJSONObject(0).getString("photoUrl");
-										String link = data.getJSONObject(0).getString("link");
-										editor.putString("1url", url);
-										editor.putString("1link", link);
-										editor.putString("1type", "2");
-									}
-								}else if(data.length() == 2){
-									if(data.getJSONObject(0).getString("type").equals("1")){
-										String bg = data.getJSONObject(0).getString("bgColor");
-										String content = data.getJSONObject(0).getString("content");
-										String title = data.getJSONObject(0).getString("title");
-										String date = data.getJSONObject(0).getString("createDate");
+                                            editor.putString("1type", "1");
+                                        } else if(data.getJSONObject(0).getString("type").equals("2")){
+                                            String url = data.getJSONObject(0).getString("photoUrl");
+                                            String link = data.getJSONObject(0).getString("link");
+                                            editor.putString("1url", url);
+                                            editor.putString("1link", link);
+                                            editor.putString("1type", "2");
+                                        }
+                                    }else if(data.length() == 2){
+                                        if(data.getJSONObject(0).getString("type").equals("1")){
+                                            String bg = data.getJSONObject(0).getString("bgColor");
+                                            String content = data.getJSONObject(0).getString("content");
+                                            String title = data.getJSONObject(0).getString("title");
+                                            String date = data.getJSONObject(0).getString("createDate");
 //										String company = data.getJSONObject(0).getString("propertyCompany");
-										editor.putString("1bg", bg);
-										editor.putString("1content", content);
-										editor.putString("1title", title);
-										editor.putString("1date", date);
+                                            editor.putString("1bg", bg);
+                                            editor.putString("1content", content);
+                                            editor.putString("1title", title);
+                                            editor.putString("1date", date);
 //										editor.putString("1company", company);
-										editor.putString("1type", "1");
-									} else if(data.getJSONObject(0).getString("type").equals("2")){
-										String url = data.getJSONObject(0).getString("photoUrl");
-										String link = data.getJSONObject(0).getString("link");
-										editor.putString("1url", url);
-										editor.putString("1link", link);
-										editor.putString("1type", "2");
-									}
-									
-									if(data.getJSONObject(1).getString("type").equals("1")){
-										String bg = data.getJSONObject(1).getString("bgColor");
-										String content = data.getJSONObject(1).getString("content");
-										String title = data.getJSONObject(1).getString("title");
-										String date = data.getJSONObject(1).getString("createDate");
+                                            editor.putString("1type", "1");
+                                        } else if(data.getJSONObject(0).getString("type").equals("2")){
+                                            String url = data.getJSONObject(0).getString("photoUrl");
+                                            String link = data.getJSONObject(0).getString("link");
+                                            editor.putString("1url", url);
+                                            editor.putString("1link", link);
+                                            editor.putString("1type", "2");
+                                        }
+
+                                        if(data.getJSONObject(1).getString("type").equals("1")){
+                                            String bg = data.getJSONObject(1).getString("bgColor");
+                                            String content = data.getJSONObject(1).getString("content");
+                                            String title = data.getJSONObject(1).getString("title");
+                                            String date = data.getJSONObject(1).getString("createDate");
 //										String company = data.getJSONObject(1).getString("propertyCompany");
-										editor.putString("2bg", bg);
-										editor.putString("2content", content);
-										editor.putString("2title", title);
-										editor.putString("2date", date);
+                                            editor.putString("2bg", bg);
+                                            editor.putString("2content", content);
+                                            editor.putString("2title", title);
+                                            editor.putString("2date", date);
 //										editor.putString("2company", company);
-										editor.putString("2type", "1");
-									} else if(data.getJSONObject(1).getString("type").equals("2")){
-										String url = data.getJSONObject(1).getString("photoUrl");
-										String link = data.getJSONObject(1).getString("link");
-										editor.putString("2url", url);
-										editor.putString("2link", link);
-										editor.putString("2type", "2");
-									}						
-								}else if(data.length() == 3){
-									
-									Log.e(TAG, "here");
-									
-									if(data.getJSONObject(0).getString("type").equals("1")){
-										String bg = data.getJSONObject(0).getString("bgColor");
-										String content = data.getJSONObject(0).getString("content");
-										String title = data.getJSONObject(0).getString("title");
-										String date = data.getJSONObject(0).getString("createDate");
+                                            editor.putString("2type", "1");
+                                        } else if(data.getJSONObject(1).getString("type").equals("2")){
+                                            String url = data.getJSONObject(1).getString("photoUrl");
+                                            String link = data.getJSONObject(1).getString("link");
+                                            editor.putString("2url", url);
+                                            editor.putString("2link", link);
+                                            editor.putString("2type", "2");
+                                        }
+                                    }else if(data.length() == 3){
+
+                                        Log.e(TAG, "here");
+
+                                        if(data.getJSONObject(0).getString("type").equals("1")){
+                                            String bg = data.getJSONObject(0).getString("bgColor");
+                                            String content = data.getJSONObject(0).getString("content");
+                                            String title = data.getJSONObject(0).getString("title");
+                                            String date = data.getJSONObject(0).getString("createDate");
 //										String company = data.getJSONObject(0).getString("propertyCompany");
-										editor.putString("1bg", bg);
-										editor.putString("1content", content);
-										editor.putString("1title", title);
-										editor.putString("1date", date);
+                                            editor.putString("1bg", bg);
+                                            editor.putString("1content", content);
+                                            editor.putString("1title", title);
+                                            editor.putString("1date", date);
 //										editor.putString("1company", company);
-										editor.putString("1type", "1");
-									} else if(data.getJSONObject(0).getString("type").equals("2")){
-										String url = data.getJSONObject(0).getString("photoUrl");
-										String link = data.getJSONObject(0).getString("link");
-										editor.putString("1url", url);
-										editor.putString("1link", link);
-										editor.putString("1type", "2");
-									}
-									
-									if(data.getJSONObject(1).getString("type").equals("1")){
-										String bg = data.getJSONObject(1).getString("bgColor");
-										String content = data.getJSONObject(1).getString("content");
-										String title = data.getJSONObject(1).getString("title");
-										String date = data.getJSONObject(1).getString("createDate");
+                                            editor.putString("1type", "1");
+                                        } else if(data.getJSONObject(0).getString("type").equals("2")){
+                                            String url = data.getJSONObject(0).getString("photoUrl");
+                                            String link = data.getJSONObject(0).getString("link");
+                                            editor.putString("1url", url);
+                                            editor.putString("1link", link);
+                                            editor.putString("1type", "2");
+                                        }
+
+                                        if(data.getJSONObject(1).getString("type").equals("1")){
+                                            String bg = data.getJSONObject(1).getString("bgColor");
+                                            String content = data.getJSONObject(1).getString("content");
+                                            String title = data.getJSONObject(1).getString("title");
+                                            String date = data.getJSONObject(1).getString("createDate");
 //										String company = data.getJSONObject(1).getString("propertyCompany");
-										editor.putString("2bg", bg);
-										editor.putString("2content", content);
-										editor.putString("2title", title);
-										editor.putString("2date", date);
+                                            editor.putString("2bg", bg);
+                                            editor.putString("2content", content);
+                                            editor.putString("2title", title);
+                                            editor.putString("2date", date);
 //										editor.putString("2company", company);
-										editor.putString("2type", "1");
-									} else if(data.getJSONObject(1).getString("type").equals("2")){
-										String url = data.getJSONObject(1).getString("photoUrl");
-										String link = data.getJSONObject(1).getString("link");
-										editor.putString("2url", url);
-										editor.putString("2link", link);
-										editor.putString("2type", "2");
-									}		
-									
-									if(data.getJSONObject(2).getString("type").equals("1")){
-										String bg = data.getJSONObject(2).getString("bgColor");
-										String content = data.getJSONObject(2).getString("content");
-										String title = data.getJSONObject(2).getString("title");
-										String date = data.getJSONObject(2).getString("createDate");
+                                            editor.putString("2type", "1");
+                                        } else if(data.getJSONObject(1).getString("type").equals("2")){
+                                            String url = data.getJSONObject(1).getString("photoUrl");
+                                            String link = data.getJSONObject(1).getString("link");
+                                            editor.putString("2url", url);
+                                            editor.putString("2link", link);
+                                            editor.putString("2type", "2");
+                                        }
+
+                                        if(data.getJSONObject(2).getString("type").equals("1")){
+                                            String bg = data.getJSONObject(2).getString("bgColor");
+                                            String content = data.getJSONObject(2).getString("content");
+                                            String title = data.getJSONObject(2).getString("title");
+                                            String date = data.getJSONObject(2).getString("createDate");
 //										String company = data.getJSONObject(2).getString("propertyCompany");
-										editor.putString("3bg", bg);
-										editor.putString("3content", content);
-										editor.putString("3title", title);
-										editor.putString("3date", date);
+                                            editor.putString("3bg", bg);
+                                            editor.putString("3content", content);
+                                            editor.putString("3title", title);
+                                            editor.putString("3date", date);
 //										editor.putString("3company", company);
-										editor.putString("3type", "1");
-									} else if(data.getJSONObject(2).getString("type").equals("2")){
-										String url = data.getJSONObject(2).getString("photoUrl");
-										String link = data.getJSONObject(2).getString("link");
-										editor.putString("3url", url);
-										editor.putString("3link", link);
-										editor.putString("3type", "2");
-									}
-								}
-								editor.commit();
-										
+                                            editor.putString("3type", "1");
+                                        } else if(data.getJSONObject(2).getString("type").equals("2")){
+                                            String url = data.getJSONObject(2).getString("photoUrl");
+                                            String link = data.getJSONObject(2).getString("link");
+                                            editor.putString("3url", url);
+                                            editor.putString("3link", link);
+                                            editor.putString("3type", "2");
+                                        }
+                                    }
+                                    editor.commit();
+                                }
 							} else if (response.getInt("code") == -2) {
 								Toast.makeText(getActivity(),
 										R.string.not_login, Toast.LENGTH_SHORT)

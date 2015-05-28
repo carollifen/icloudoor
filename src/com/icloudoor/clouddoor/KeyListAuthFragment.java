@@ -1,5 +1,6 @@
 package com.icloudoor.clouddoor;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -189,6 +190,7 @@ public class KeyListAuthFragment extends Fragment {
 					meditor.putString("ZONEID", zoneid);
 					meditor.commit();
 				}
+                cursor.close();
 
 				LVkeylist.setVisibility(View.GONE);
 
@@ -255,17 +257,28 @@ public class KeyListAuthFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				if (!isChooseCarKey) {
-					mfragmentManager = getChildFragmentManager();
-					mfragmentTrasaction = mfragmentManager.beginTransaction();
-					mfragmentTrasaction.replace(R.id.id_entrancecontent, mcarFragment);
-					mfragmentTrasaction.commit();
-					chooseCarKey.setBackgroundResource(R.drawable.channel_select);
-					chooseManKey.setBackgroundResource(R.drawable.channel_normal);
-					carKeyText.setTextColor(0xFFffffff);
-					manKeyText.setTextColor(0xFF333333);
-					isChooseCarKey = true;
+				
+				if (TVkeyname.getText().toString() != "") {
+					if (!isChooseCarKey) {
+						mfragmentManager = getChildFragmentManager();
+						mfragmentTrasaction = mfragmentManager
+								.beginTransaction();
+						mfragmentTrasaction.replace(R.id.id_entrancecontent,
+								mcarFragment);
+						mfragmentTrasaction.commit();
+						chooseCarKey
+								.setBackgroundResource(R.drawable.channel_select);
+						chooseManKey
+								.setBackgroundResource(R.drawable.channel_normal);
+						carKeyText.setTextColor(0xFFffffff);
+						manKeyText.setTextColor(0xFF333333);
+						isChooseCarKey = true;
+					}
+				} else {
+					Toast.makeText(getActivity(), R.string.select_district_first,
+							Toast.LENGTH_SHORT).show();
 				}
+		
 			}
 
 		});
@@ -293,11 +306,12 @@ public class KeyListAuthFragment extends Fragment {
 
 		});
 		//
-
 		// submit
 		btnSubmitText = (TextView) view.findViewById(R.id.btn_submit_text);
-		btnSubmitText.setTextColor(ColorDisable);
-		btnSubmitText.setBackgroundResource(R.drawable.btn_submit_big_disable);
+		btnSubmitText.setBackgroundResource(R.drawable.selector_submit_text_bg);
+	    btnSubmitText.setTextColor(R.drawable.selector_submit_text_bg);
+//		btnSubmitText.setTextColor(ColorDisable);
+//		btnSubmitText.setBackgroundResource(R.drawable.btn_submit_big_disable);
 //		btnSubmitText.setEnabled(false);
 		DisplayMetrics dm = new DisplayMetrics();
 		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -305,24 +319,33 @@ public class KeyListAuthFragment extends Fragment {
 
 		btnSubmitText.setWidth(screenWidth - 32 * 2);
 
-//		if ((carNumAndPhoneNumShare.getString("PHONENUM", null) != null)
-//				&& (carNumAndPhoneNumShare.getString("CARNUM", null) != null)
-//				&& (carNumAndPhoneNumShare.getString("ZONEID", null) != null)) {
+		SharedPreferences status = getActivity().getSharedPreferences("SUBMITSTATUS", 0);
+//		if((status.getBoolean("CarPhone", false) && status.getBoolean("CarNum", false) && TVkeyname.length() > 0)
+//				|| (status.getBoolean("ManPhone", false) && status.getBoolean("ManDate", false) && TVkeyname.length() > 0)){
 //			btnSubmitText.setEnabled(true);
 //		}
+		
 		btnSubmitText.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
+				SharedPreferences status = getActivity().getSharedPreferences("SUBMITSTATUS", 0);
 				if (isChooseCarKey) {
-					Cursor carPositionCursor = mKeyDB.rawQuery("select * from KeyInfoTable where plateNum=?",
-							new String[] { carNumAndPhoneNumShare.getString("CARNUM", null) });
-					if (carPositionCursor.moveToFirst()) {
-						do {
-							carPosition = carPositionCursor.getString(carPositionCursor.getColumnIndex("carPosStatus"));
-						} while (carPositionCursor.moveToNext());
+					
+					if (carNumAndPhoneNumShare.getString("CARNUM", null) != null) {
+						Cursor carPositionCursor = mKeyDB.rawQuery(
+								"select * from KeyInfoTable where plateNum=?",
+								new String[] { carNumAndPhoneNumShare
+										.getString("CARNUM", null) });
+						if (carPositionCursor.moveToFirst()) {
+							do {
+								carPosition = carPositionCursor.getString(carPositionCursor
+										.getColumnIndex("carPosStatus"));
+							} while (carPositionCursor.moveToNext());
+						}
+						carPositionCursor.close();
 					}
-
+					
 					sid = loadSid();
 					MyJsonObjectRequest carAndPhoneRequest = new MyJsonObjectRequest(
 							Method.POST, postKerUrl + "?sid=" + sid, null,
@@ -331,14 +354,25 @@ public class KeyListAuthFragment extends Fragment {
 								@Override
 								public void onResponse(JSONObject response) {
 									Log.e("psotKeyResponse",response.toString());
-//									Toast.makeText(getActivity(),response.toString(),Toast.LENGTH_SHORT).show();
+
 									try {
+										
+										if(response.getInt("code") == 1){
+											if(response.getString("sid") != null){
+												saveSid(response.getString("sid"));
+											}
+										}
+										
 										if(response.getInt("code") == -100){
 											Toast.makeText(getActivity(), R.string.car_already_lend, Toast.LENGTH_SHORT).show();
 										}else if(response.getInt("code") == -101){
 											Toast.makeText(getActivity(), R.string.user_not_regis, Toast.LENGTH_SHORT).show();
 										}else if(response.getInt("code") == -104){
 											Toast.makeText(getActivity(), R.string.cannot_auth_to_self, Toast.LENGTH_SHORT).show();
+										}else if(response.getInt("code") == -1){
+											Toast.makeText(getActivity(), R.string.wrong_params, Toast.LENGTH_SHORT).show();
+										}else if(response.getInt("code") == -105){
+											Toast.makeText(getActivity(), R.string.can_only_have_one_car_key_in_one_district, Toast.LENGTH_SHORT).show();
 										}
 									} catch (JSONException e) {
 										e.printStackTrace();
@@ -366,7 +400,9 @@ public class KeyListAuthFragment extends Fragment {
 						}
 					};
 
-					mQueue.add(carAndPhoneRequest);
+					if(status.getBoolean("CarPhone", false) && status.getBoolean("CarNum", false) && TVkeyname.length() > 0){
+						mQueue.add(carAndPhoneRequest);
+					}				
 				} else {
 					sid = loadSid();
 					MyJsonObjectRequest postMankeyRequest = new MyJsonObjectRequest(
@@ -378,14 +414,25 @@ public class KeyListAuthFragment extends Fragment {
 									// TODO Auto-generated method stub
 									Log.e("psotnomalnomalKeyResponse", response.toString());
 									try {
+										
+										if(response.getInt("code") == 1){
+											if(response.getString("sid") != null){
+												saveSid(response.getString("sid"));
+											}
+										}
+										
 										if(response.getInt("code") == -101){
 											Toast.makeText(getActivity(), R.string.user_not_regis, Toast.LENGTH_SHORT).show();
 										}else if(response.getInt("code") == -102){
-											Toast.makeText(getActivity(), R.string.borrow_count_too_more, Toast.LENGTH_SHORT).show();
+											Toast.makeText(getActivity(), R.string.lend_count_too_more, Toast.LENGTH_SHORT).show();
 										}else if(response.getInt("code") == -103){
 											Toast.makeText(getActivity(), R.string.already_have_the_temp_key, Toast.LENGTH_SHORT).show();
 										}else if(response.getInt("code") == -104){
 											Toast.makeText(getActivity(), R.string.cannot_auth_to_self, Toast.LENGTH_SHORT).show();
+										}else if(response.getInt("code") == -1){
+											Toast.makeText(getActivity(), R.string.wrong_params, Toast.LENGTH_SHORT).show();
+										}else if(response.getInt("code") == -106){
+											Toast.makeText(getActivity(), R.string.borrow_count_too_more, Toast.LENGTH_SHORT).show();
 										}
 									} catch (JSONException e) {
 										e.printStackTrace();
@@ -415,7 +462,9 @@ public class KeyListAuthFragment extends Fragment {
 							return map;
 						}
 					};
-					mQueue.add(postMankeyRequest);
+					if(status.getBoolean("ManPhone", false) && status.getBoolean("ManDate", false) && TVkeyname.length() > 0){
+						mQueue.add(postMankeyRequest);
+					}
 				}
 			}
 
@@ -476,25 +525,30 @@ public class KeyListAuthFragment extends Fragment {
 			public void onResponse(JSONObject response) {
 				// TODO Auto-generated method stub
 				try {
-					JSONArray zoneArr = response.getJSONArray("data");
-					Log.e("responseTest", response.toString());
-					for (int i = 0; i < zoneArr.length(); i++) {
-						String zoneId = zoneArr.getJSONObject(i).getString("zoneUserId");
-						String zoneAdd = zoneArr.getJSONObject(i).getString("address");
+					
+					if(response.getInt("code") == 1){
+						JSONArray zoneArr = response.getJSONArray("data");
+						Log.e("responseTest", response.toString());
+						for (int i = 0; i < zoneArr.length(); i++) {
+							String zoneId = zoneArr.getJSONObject(i).getString("zoneUserId");
+							String zoneAdd = zoneArr.getJSONObject(i).getString("address");
 
-						Log.e("address", zoneAdd);
-						Map<String, String> zoneMap = new HashMap<String, String>();
-						zoneMap.put("zoneName", zoneAdd);
-						Zonekeylist.add(zoneMap);
-						ContentValues value = new ContentValues();
-						value.put("zoneId", zoneId);
-						value.put("zoneAddress", zoneAdd);
-						try {
-							mKeyDB.insert(TABLE_NAME, null, value);
-						} catch (Exception e) {
-							Log.e("dbdbdbd", "数据已经存在");
+							Log.e("address", zoneAdd);
+							Map<String, String> zoneMap = new HashMap<String, String>();
+							zoneMap.put("zoneName", zoneAdd);
+							Zonekeylist.add(zoneMap);
+							ContentValues value = new ContentValues();
+							value.put("zoneId", zoneId);
+							value.put("zoneAddress", zoneAdd);
+							try {
+								mKeyDB.insert(TABLE_NAME, null, value);
+							} catch (Exception e) {
+								Log.e("dbdbdbd", "数据已经存在");
+							}
 						}
 					}
+					
+					
 
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
@@ -552,6 +606,7 @@ public class KeyListAuthFragment extends Fragment {
 				cursor.moveToFirst();
 				String username = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
 				String contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+                cursor.close();
 				Cursor phone = reContentResolverol.query(
 						ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
 						null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID
@@ -564,11 +619,26 @@ public class KeyListAuthFragment extends Fragment {
 					// FragmentManEntrance f=new FragmentManEntrance();
 					mManFragment.getData(usernumber);
 				}
-
+                phone.close();
 			}
 		}
 		Log.e("sd", "dsjdkfkl");
 
 	}
+
+    @Override
+    public void onDetach() {
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        super.onDetach();
+
+    }
 
 }

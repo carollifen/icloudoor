@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import org.apache.http.client.HttpClient;
@@ -17,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.umeng.message.PushAgent;
+import com.umeng.message.UmengNotificationClickHandler;
 import com.umeng.message.UmengRegistrar;
 
 import android.content.BroadcastReceiver;
@@ -55,7 +54,6 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.Request.Method;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.umeng.message.PushAgent;
@@ -132,6 +130,7 @@ public class CloudDoorMainActivity extends FragmentActivity {
 				.getRegistrationId(getApplicationContext());
 		Log.e("devicetoken", device_token);
 		// mPushAgent.setDebugMode(true);
+		
 		mRequestQueue = Volley.newRequestQueue(getApplicationContext());
 		sid = loadSid();
 		JsonObjectRequest mJsonObjectRequest = new JsonObjectRequest(url
@@ -170,7 +169,7 @@ public class CloudDoorMainActivity extends FragmentActivity {
 			}
 		});
 		mRequestQueue.add(mJsonObjectRequest);
-
+		
         registerReceiver(mConnectionStatusReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         instance = this;
         

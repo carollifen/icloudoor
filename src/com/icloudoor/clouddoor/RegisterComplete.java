@@ -250,7 +250,7 @@ public class RegisterComplete extends Activity implements TextWatcher {
 
 	@Override
 	public void afterTextChanged(Editable s) {
-		if(ETInputPwd.getText().toString().length() > 7){
+		if(ETInputPwd.getText().toString().length() > 5){
 			TVRegiComplete.setTextColor(0xFF0065a1);
 			regiCompleteLayout.setEnabled(true);
 			regiCompleteLayout.setBackgroundResource(R.drawable.selector_next_step);

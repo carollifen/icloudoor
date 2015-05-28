@@ -210,7 +210,7 @@ public class ResetPwdActivity extends Activity implements TextWatcher {
 
 	@Override
 	public void afterTextChanged(Editable s) {
-		if(ETInputNewPwd.getText().toString().length() > 7 && ETConfirmNewPwd.getText().toString().length() > 7 && ETInputOldPwd.getText().toString().length() > 7){
+		if(ETInputNewPwd.getText().toString().length() > 5 && ETConfirmNewPwd.getText().toString().length() > 5 && ETInputOldPwd.getText().toString().length() > 5){
 //			TVResetDone.setTextColor(0xFFffffff);
 			TVResetDone.setEnabled(true);
 		} else {

@@ -1,5 +1,6 @@
 package com.icloudoor.clouddoor;
 
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -157,7 +158,7 @@ public class KeyListListFragment extends Fragment {
 								if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
 									Log.e("TESTTESTDB", "have the table");
 									if (DBCount() > 0) {
-										Log.e("TESTTESTDB", "table is not empty");
+										Log.e(TAG, String.valueOf(DBCount()));
 										Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME, null);
 										if (mCursor.moveToFirst()) {
 
@@ -205,6 +206,8 @@ public class KeyListListFragment extends Fragment {
 												
 												if(carStatus.equals("2")){
 													blankView.setVisibility(View.VISIBLE);
+													
+													Log.e(TAG, "add temp key");
 													
 													HashMap<String, String> tempKeyFromDB = new HashMap<String, String>();
 													tempKeyFromDB.put("Door", doorName);
@@ -352,18 +355,27 @@ public class KeyListListFragment extends Fragment {
 						Log.e(TAG, "herehere");
 						value.put("carStatus", "none");
 						value.put("carPosStatus", "none");
-					} else {
+						mKeyDB.insert(TABLE_NAME, null, value);
+					} else if (doorData.getString("doorType").equals("2")){
+						Log.e(TAG, "HEREHERE");
 						JSONArray cars = data.getJSONArray("cars");
+						Log.e(TAG, "cars  " + String.valueOf(cars.length()));
 						for (int i = 0; i < cars.length(); i++) {
 							JSONObject carData = (JSONObject) cars.get(i);
+							
+							Log.e(TAG, "carData   " + carData.getString("l1ZoneId"));
+							Log.e(TAG, "doorData   " + doorData.getString("zoneId"));
+							Log.e(TAG, "carData   " + carData.getString("plateNum"));
+							Log.e(TAG, "doorData   " + doorData.getString("plateNum"));
+							
 							if (carData.getString("l1ZoneId").equals(doorData.getString("zoneId")) && carData.getString("plateNum").equals(doorData.getString("plateNum"))) {
+								Log.e(TAG, "add temp key_DB" + carData.getString("plateNum"));
 								value.put("carStatus", carData.getString("carStatus"));
 								value.put("carPosStatus", carData.getString("carPosStatus"));
+								mKeyDB.insert(TABLE_NAME, null, value);
 							}
 						}
 					}
-	
-					mKeyDB.insert(TABLE_NAME, null, value);
 				} else {            // update the old key status
 				
 					if(doorData.getString("doorType").equals("1")){
@@ -698,4 +710,18 @@ public class KeyListListFragment extends Fragment {
 		return hasData;
 	}
 
+    @Override
+    public void onDetach() {
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        super.onDetach();
+
+    }
 }

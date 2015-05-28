@@ -86,7 +86,7 @@
                 android:layout_width="match_parent" 
                 android:layout_height="match_parent" 
                 android:background="@null"
-                android:hint="请输入新密码"
+                android:hint="请输入6 -20位新密码"
                 android:inputType="textPassword"
                 android:textColorHint="#cccccc"
                 android:textSize="15sp"

@@ -67,6 +67,12 @@ public class FragmentCarEntrance extends Fragment {
 	private ArrayList<Map<String, String>> tempcarNumList;
 
 	private JsonObjectRequest jsonRequest;
+	
+	//
+	SharedPreferences submitStatus;
+	Editor editor;
+	boolean havePhone;
+	boolean haveCarNum;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,6 +81,12 @@ public class FragmentCarEntrance extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_car_entrance, container,
 				false);
 
+		//
+		havePhone = false;
+		haveCarNum = false;
+		submitStatus =  getActivity().getSharedPreferences("SUBMITSTATUS", 0);
+		editor = submitStatus.edit();
+		
 		TVphoneNum = (TextView) view.findViewById(R.id.id_carentrance_phonenum);
 		TVcarNum = (TextView) view.findViewById(R.id.id_carentrance_carnum);
 
@@ -102,13 +114,29 @@ public class FragmentCarEntrance extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				TextView TVphoneItem = (TextView) view
-						.findViewById(R.id.id_familychildphonenum);
+				TextView TVphoneItem = (TextView) view.findViewById(R.id.id_familychildphonenum);
 				TVphoneNum.setText(TVphoneItem.getText().toString());
-				carNumAndPhoneNumEditor.putString("PHONENUM",
-						TVphoneNum.getText().toString()).commit();
+				carNumAndPhoneNumEditor.putString("PHONENUM", TVphoneNum.getText().toString()).commit();
 				TVphoneNum.setTextColor(0xFF333333);
 				mFamiliesListView.setVisibility(View.GONE);
+				if (!isShowPhoneNum) {
+					IVshowPhoneNum
+							.setImageResource(R.drawable.common_hide_list);
+					isShowPhoneNum = true;
+
+				} else {
+					IVshowPhoneNum
+							.setImageResource(R.drawable.common_show_list);
+					isShowPhoneNum = false;
+
+				}
+				
+				//TODO
+				if(TVphoneNum.length() > 0){
+					havePhone = true;
+					editor.putBoolean("CarPhone", havePhone);
+					editor.commit();
+				}
 			}
 		});
 
@@ -117,18 +145,33 @@ public class FragmentCarEntrance extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				TextView TVcarItem = (TextView) view
-						.findViewById(R.id.id_carchildnum);
+				TextView TVcarItem = (TextView) view.findViewById(R.id.id_carchildnum);
 				TVcarNum.setText(TVcarItem.getText().toString());
-				carNumAndPhoneNumEditor.putString("CARNUM",
-						TVcarNum.getText().toString()).commit();
+				carNumAndPhoneNumEditor.putString("CARNUM", TVcarNum.getText().toString()).commit();
 
 				TVcarNum.setTextColor(0xFF333333);
 
 				mCarNumListView.setVisibility(View.GONE);
+				if (!isShowCarNum) {
 
+					IVshowCarNum.setImageResource(R.drawable.common_hide_list);
+					isShowCarNum = true;
+
+				} else {
+					IVshowCarNum.setImageResource(R.drawable.common_show_list);
+					isShowCarNum = false;
+
+				}
+
+				if(TVcarNum.length() > 0){
+					haveCarNum = true;
+					editor.putBoolean("CarNum", haveCarNum);
+					editor.commit();
+				}
+				
 			}
 		});
+
 
 		showPhoneNum.setOnClickListener(new OnClickListener() {
 
@@ -190,8 +233,6 @@ public class FragmentCarEntrance extends Fragment {
 					public void onResponse(JSONObject response) {
 						// TODO Auto-generated method stub
 						try {
-							Log.e("carresponse", response.toString()
-									+ "sadkjlfk;s;");
 							JSONObject jsonobj = response.getJSONObject("data");
 							JSONArray familyArr = jsonobj
 									.getJSONArray("families");

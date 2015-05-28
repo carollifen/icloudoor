@@ -88,7 +88,7 @@ public class MyAreaDBHelper extends SQLiteOpenHelper {
 					result = true;
 				}
 			}
-
+            cursor.close();
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
