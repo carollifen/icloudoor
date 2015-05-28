@@ -89,6 +89,8 @@ public class KeyListListFragment extends Fragment {
 	private String CARSTATUS; // 1. own car 2.borrow car 3.lend car
 	private String CARPOSSTATUS; // 1.init 2.inside 3.outside
 
+	private SharedPreferences carNumAndPhoneNumShare;
+	
 	public KeyListListFragment() {
 		// Required empty public constructor
 	}
@@ -97,6 +99,8 @@ public class KeyListListFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_key_list_list, container, false);
+		
+		carNumAndPhoneNumShare = getActivity().getSharedPreferences("carNumAndPhoneNum", 0);
 		
 		mKeyList = (ListView) view.findViewById(R.id.key_listview);
 		mTempKeyList = (ListView) view.findViewById(R.id.temp_key_listview);
@@ -352,8 +356,7 @@ public class KeyListListFragment extends Fragment {
 						JSONArray cars = data.getJSONArray("cars");
 						for (int i = 0; i < cars.length(); i++) {
 							JSONObject carData = (JSONObject) cars.get(i);
-							if (carData.getString("l1ZoneId").equals(doorData.getString("zoneId"))
-									&& carData.getString("plateNum").equals(doorData.getString("plateNum"))) {
+							if (carData.getString("l1ZoneId").equals(doorData.getString("zoneId")) && carData.getString("plateNum").equals(doorData.getString("plateNum"))) {
 								value.put("carStatus", carData.getString("carStatus"));
 								value.put("carPosStatus", carData.getString("carPosStatus"));
 							}
@@ -361,6 +364,33 @@ public class KeyListListFragment extends Fragment {
 					}
 	
 					mKeyDB.insert(TABLE_NAME, null, value);
+				} else {            // update the old key status
+				
+					if(doorData.getString("doorType").equals("1")){
+						ContentValues valueTemp = new ContentValues();
+						valueTemp.put("authFrom", doorData.getString("authFrom"));
+						valueTemp.put("authTo", doorData.getString("authTo"));
+						
+						mKeyDB.update("KeyInfoTable", valueTemp, "deviceId = ?", new String[] {doorData.getString("deviceId")});
+					}else if(doorData.getString("doorType").equals("2")){
+						ContentValues valueTemp1 = new ContentValues();
+						valueTemp1.put("authFrom", doorData.getString("authFrom"));
+						valueTemp1.put("authTo", doorData.getString("authTo"));
+						valueTemp1.put("direction", doorData.getString("direction"));
+						//TODO
+						JSONArray cars = data.getJSONArray("cars");
+						for (int i = 0; i < cars.length(); i++) {
+							JSONObject carData = (JSONObject) cars.get(i);
+							if (carData.getString("l1ZoneId").equals(doorData.getString("zoneId")) && carData.getString("plateNum").equals(carNumAndPhoneNumShare.getString("CARNUM", null))) {
+								Log.e(TAG, carData.getString("carStatus"));
+								valueTemp1.put("carStatus", carData.getString("carStatus"));
+								valueTemp1.put("carPosStatus", carData.getString("carPosStatus"));
+								break;
+							}
+						}
+						
+						mKeyDB.update("KeyInfoTable", valueTemp1, "deviceId = ?", new String[] {doorData.getString("deviceId")});
+					}
 				}
 			}	
 		}
