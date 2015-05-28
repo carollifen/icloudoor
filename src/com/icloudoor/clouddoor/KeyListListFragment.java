@@ -694,6 +694,7 @@ public class KeyListListFragment extends Fragment {
 				 
 			}while(mCursor.moveToNext());
 		}
+		mCursor.close();
 		return hasData;
 	}
 
