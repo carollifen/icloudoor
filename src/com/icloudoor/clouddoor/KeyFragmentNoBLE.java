@@ -130,6 +130,8 @@ public class KeyFragmentNoBLE extends Fragment implements ShakeListener {
 //	public MyPageChangeListener myPageChangeListener;
 	
 	// for new UI weather
+	private LinearLayout weatherWidge;
+	
 	private WeatherClick mClick;
 	
 	private ImageView weatherBtnLeft;
@@ -238,6 +240,18 @@ public class KeyFragmentNoBLE extends Fragment implements ShakeListener {
 //		myPageChangeListener = new MyPageChangeListener();
 		
 		// for new UI weather
+		weatherWidge = (LinearLayout) view.findViewById(R.id.weather_widge);
+		weatherWidge.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent();
+				intent.setClass(getActivity(), WeatherDetail.class);
+				startActivity(intent);
+			}
+			
+		});
+		
 		weatherBtnLeft = (ImageView) view.findViewById(R.id.weather_btn_left);
 		weatherBtnRight = (ImageView) view.findViewById(R.id.weather_btn_right);
 		

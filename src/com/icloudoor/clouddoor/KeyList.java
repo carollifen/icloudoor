@@ -549,6 +549,11 @@ public class KeyList extends FragmentActivity{
 	 *                	3 - temp
 	 * doorType: 	1 - man	
 	 *                	2 - car
+	 * carStatus:  1 - my own car
+	 * 					2 - my borrowed car
+	 *					3 - my lend car
+	 *carPosStatus:  1 - car inside the zone
+	 *					   2 - car outside the zone
 	 */
 	public void parseKeyData(JSONObject response) throws JSONException {
 		Log.e("test for new interface", "parseKeyData func");

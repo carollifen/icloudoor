@@ -33,6 +33,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,6 +62,7 @@ public class KeyListListFragment extends Fragment {
 	
 	// Door info variable
 	private ListView mKeyList;
+	private ListView mTempKeyList;
 	private ArrayList<HashMap<String, String>> doorNameList;
 	private KeyListAdapter mAdapter;
 	
@@ -87,6 +89,7 @@ public class KeyListListFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_key_list_list, container, false);
 		
 		mKeyList = (ListView) view.findViewById(R.id.key_listview);
+		mTempKeyList = (ListView) view.findViewById(R.id.temp_key_listview);
 		
 		mKeyDBHelper = new MyDataBaseHelper(getActivity(), DATABASE_NAME);
 		mKeyDB = mKeyDBHelper.getWritableDatabase();
@@ -150,6 +153,7 @@ public class KeyListListFragment extends Fragment {
 											int authFromIndex = mCursor.getColumnIndex("authFrom");
 											int authToIndex = mCursor.getColumnIndex("authTo");
 											int doorTypeIndex = mCursor.getColumnIndex("doorType");
+											int carStatusIndex = mCursor.getColumnIndex("carStatus");
 
 											do {
 												String deviceId = mCursor.getString(deviceIdIndex);
@@ -157,17 +161,21 @@ public class KeyListListFragment extends Fragment {
 												String authFrom = mCursor.getString(authFromIndex);
 												String authTo = mCursor.getString(authToIndex);
 												String doorType = mCursor.getString(doorTypeIndex);
+												String carStatus = mCursor.getString(carStatusIndex);
 
 												Log.e("TESTTESTDB deviceId =", deviceId);
 												Log.e("TESTTESTDB doorName =", doorName);
 												Log.e("TESTTESTDB authFrom =", authFrom);
 												Log.e("TESTTESTDB authTo =", authTo);
 												Log.e("TESTTESTDB doorType =", doorType);
+												Log.e("TESTTESTDB carStatus =", carStatus);
 
 												HashMap<String, String> keyFromDB = new HashMap<String, String>();
 												keyFromDB.put("Door", doorName);
 												keyFromDB.put("BEGIN", authFrom);
 												keyFromDB.put("END", authTo);
+												keyFromDB.put("STATUS", carStatus);
+												keyFromDB.put("DOORTYPE", doorType);
 
 												doorNameList.add(keyFromDB);
 												mAdapter.notifyDataSetChanged();
@@ -205,49 +213,52 @@ public class KeyListListFragment extends Fragment {
 		
 		mQueue.add(mJsonRequest);
 		
-		if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
-			Log.e("TESTTESTDBDB", "have the table");
-			if (DBCount() > 0) {
-				Log.e("TESTTESTDBDB", "table is not empty");
-				Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME, null);
-				if (mCursor.moveToFirst()) {
-
-					doorNameList = new ArrayList<HashMap<String, String>>();
-					mAdapter = new KeyListAdapter(getActivity(), doorNameList);
-					mKeyList.setAdapter(mAdapter);
-
-					int deviceIdIndex = mCursor.getColumnIndex("deviceId");
-					int doorNamemIndex = mCursor.getColumnIndex("doorName");
-					int authFromIndex = mCursor.getColumnIndex("authFrom");
-					int authToIndex = mCursor.getColumnIndex("authTo");
-					int doorTypeIndex = mCursor.getColumnIndex("doorType");
-
-					do {
-						String deviceId = mCursor.getString(deviceIdIndex);
-						String doorName = mCursor.getString(doorNamemIndex);
-						String authFrom = mCursor.getString(authFromIndex);
-						String authTo = mCursor.getString(authToIndex);
-						String doorType = mCursor.getString(doorTypeIndex);
-
-						Log.e("TESTTESTDBDB deviceId =", deviceId);
-						Log.e("TESTTESTDBDB doorName =", doorName);
-						Log.e("TESTTESTDBDB authFrom =", authFrom);
-						Log.e("TESTTESTDBDB authTo =", authTo);
-						Log.e("TESTTESTDBDB doorType =", doorType);
-
-						HashMap<String, String> keyFromDB = new HashMap<String, String>();
-						keyFromDB.put("Door", doorName);
-						keyFromDB.put("BEGIN", authFrom);
-						keyFromDB.put("END", authTo);
-
-						doorNameList.add(keyFromDB);
-						mAdapter.notifyDataSetChanged();
-
-					} while (mCursor.moveToNext());
-				}
-				mCursor.close();
-			}
-		}
+//		if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
+//			Log.e("TESTTESTDBDB", "have the table");
+//			if (DBCount() > 0) {
+//				Log.e("TESTTESTDBDB", "table is not empty");
+//				Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME, null);
+//				if (mCursor.moveToFirst()) {
+//
+//					doorNameList = new ArrayList<HashMap<String, String>>();
+//					mAdapter = new KeyListAdapter(getActivity(), doorNameList);
+//					mKeyList.setAdapter(mAdapter);
+//
+//					int deviceIdIndex = mCursor.getColumnIndex("deviceId");
+//					int doorNamemIndex = mCursor.getColumnIndex("doorName");
+//					int authFromIndex = mCursor.getColumnIndex("authFrom");
+//					int authToIndex = mCursor.getColumnIndex("authTo");
+//					int doorTypeIndex = mCursor.getColumnIndex("doorType");
+//					int carStatusIndex = mCursor.getColumnIndex("carStatus");
+//
+//					do {
+//						String deviceId = mCursor.getString(deviceIdIndex);
+//						String doorName = mCursor.getString(doorNamemIndex);
+//						String authFrom = mCursor.getString(authFromIndex);
+//						String authTo = mCursor.getString(authToIndex);
+//						String doorType = mCursor.getString(doorTypeIndex);		
+//						String carStatus = mCursor.getString(carStatusIndex);
+//
+//						Log.e("DBDB deviceId =", deviceId);
+//						Log.e("DBDB doorName =", doorName);
+//						Log.e("DBDB authFrom =", authFrom);
+//						Log.e("DBDB authTo =", authTo);
+//						Log.e("DBDB doorType =", doorType);
+//						Log.e("DBDB carStatus =", carStatus);
+//
+//						HashMap<String, String> keyFromDB = new HashMap<String, String>();
+//						keyFromDB.put("Door", doorName);
+//						keyFromDB.put("BEGIN", authFrom);
+//						keyFromDB.put("END", authTo);
+//
+//						doorNameList.add(keyFromDB);
+//						mAdapter.notifyDataSetChanged();
+//
+//					} while (mCursor.moveToNext());
+//				}
+//				mCursor.close();
+//			}
+//		}
 	}
 	
 	/*
@@ -257,6 +268,11 @@ public class KeyListListFragment extends Fragment {
 	 *                	3 - temp
 	 * doorType: 	1 - man	
 	 *                	2 - car
+	 * carStatus:  1 - my own car
+	 * 					2 - my borrowed car
+	 *					3 - my lend car
+	 *carPosStatus:  1 - car inside the zone
+	 *					   2 - car outside the zone
 	 */
 	public void parseKeyData(JSONObject response) throws JSONException {
 		Log.e("test for new interface", "parseKeyData func");
@@ -280,15 +296,22 @@ public class KeyListListFragment extends Fragment {
 					value.put("authFrom", doorData.getString("authFrom"));
 					value.put("authTo", doorData.getString("authTo"));
 					
-					JSONArray cars = data.getJSONArray("cars");
-					for(int i = 0; i < cars.length(); i++){
-						JSONObject carData = (JSONObject) cars.get(i);
-						if(carData.getString("l1ZoneId").equals(doorData.getString("zoneId")) 
-								&& carData.getString("plateNum").equals(doorData.getString("plateNum"))){
-							value.put("carStatus", carData.getString("carStatus"));
-							value.put("carPosStatus", carData.getString("carPosStatus"));
+					if (doorData.getString("doorType").equals("1")) {
+						Log.e(TAG, "herehere");
+						value.put("carStatus", "none");
+						value.put("carPosStatus", "none");
+					} else {
+						JSONArray cars = data.getJSONArray("cars");
+						for (int i = 0; i < cars.length(); i++) {
+							JSONObject carData = (JSONObject) cars.get(i);
+							if (carData.getString("l1ZoneId").equals(doorData.getString("zoneId"))
+									&& carData.getString("plateNum").equals(doorData.getString("plateNum"))) {
+								value.put("carStatus", carData.getString("carStatus"));
+								value.put("carPosStatus", carData.getString("carPosStatus"));
+							}
 						}
 					}
+	
 					mKeyDB.insert(TABLE_NAME, null, value);
 				}
 			}
@@ -335,6 +358,8 @@ public class KeyListListFragment extends Fragment {
 				holder.doorname = (TextView) convertView.findViewById(R.id.door_name);
 				holder.beginday = (TextView) convertView.findViewById(R.id.door_time_from);
 				holder.endday = (TextView) convertView.findViewById(R.id.door_time_to);
+				holder.bg = (LinearLayout) convertView.findViewById(R.id.item_bg);
+				holder.keyStatus = (TextView) convertView.findViewById(R.id.key_status);
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
@@ -345,6 +370,15 @@ public class KeyListListFragment extends Fragment {
 			holder.beginday.setText(doorNameList.get(position).get("BEGIN"));
 			holder.endday.setText(doorNameList.get(position).get("END"));
 
+			if(doorNameList.get(position).get("STATUS").equals("3")){
+				holder.bg.setBackgroundColor(0xffeeeeee);
+				holder.keyStatus.setText(R.string.key_has_lend);
+			} else {
+				holder.bg.setBackgroundColor(0xffffffff);
+				holder.keyStatus.setText("");
+			}
+			
+			
 			return convertView;
 		}
 
@@ -352,6 +386,8 @@ public class KeyListListFragment extends Fragment {
 			public TextView doorname;
 			public TextView beginday;
 			public TextView endday;
+			public LinearLayout bg;
+			public TextView keyStatus;
 		}
 
 	}

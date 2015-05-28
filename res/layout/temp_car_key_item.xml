@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_bg"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#aed5f3" >
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="68dp" 
+        >
+        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="18.5dp"
+            android:orientation="horizontal" >
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="临时钥匙"
+                android:textSize="15sp"
+                android:textColor="#0065a1" 
+                />
+            
+            <View
+                android:layout_width="12dp"
+                android:layout_height="1dp" 
+                />
+            
+            <TextView
+                android:id="@+id/temp_car_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="粤A XXXXX"
+                android:textSize="12sp"
+                android:textColor="#0065a1" />
+        </LinearLayout>
+        
+        <TextView
+            android:id="@+id/temp_car_key_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="14dp"
+            android:text="大门"
+            android:textSize="12sp"
+            android:textColor="#0065a1" />
+        
+        <TextView
+            android:id="@+id/return_btn"
+            android:layout_width="90dp"
+            android:layout_height="32dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="16dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/seletor_return_key"
+            android:gravity="center"
+            android:text="还回钥匙"
+            android:textSize="15sp"
+            android:textColor="#ffffff" />
+    </RelativeLayout>
+
+<!--     <View -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="0.5dp" -->
+<!--         android:background="#dddddd"  -->
+<!--         /> -->
+    
+</LinearLayout>

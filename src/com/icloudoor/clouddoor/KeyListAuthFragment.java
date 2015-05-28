@@ -1,18 +1,33 @@
 package com.icloudoor.clouddoor;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request.Method;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.umeng.message.proguard.m;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -36,44 +51,76 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
  *
  */
 @SuppressLint("ResourceAsColor")
-public class KeyListAuthFragment extends Fragment{
-	
+public class KeyListAuthFragment extends Fragment {
+
+	private String HOST = "http://zone.icloudoor.com/icloudoor-web"
+			+ "/user/api/getMyAddress.do";
+
+	private String postKerUrl = "http://zone.icloudoor.com/icloudoor-web/user/api/authTempCar.do";
+
+	private String postNomalKeyUrl = "http://zone.icloudoor.com/icloudoor-web/user/api/authTempNormal.do";
+	private String sid = null;
+
+	private SharedPreferences dateAndPhoneShare;
+	private Editor dateAndPhoneEditor;
+	private SharedPreferences carNumAndPhoneNumShare;
+	private Editor carAndPhoneEditor;
+	private SharedPreferences zoneIdShare;
+	private Editor meditor;
+	private RequestQueue mQueue;
+
+	private String carPosition = null;
+
+	private final String DATABASE_NAME = "KeyDB.db";
+	private final String TABLE_NAME = "ZoneKeyTable";
+	private MyDataBaseHelper mKeyDBHelper;
+	private SQLiteDatabase mKeyDB;
+
+	private String zoneUserId;
+	private String plateNum;
+	private String toMobile;
+	private String carPosStatus;
+
 	public ImageView IVselectkeyItem;
-	public	TextView TVListItem;
+	public TextView TVListItem;
 	private String TAG = this.getClass().getSimpleName();
-	
+
 	private ListView LVkeylist;
-	
+
 	private RelativeLayout showHideKeyList;
 	private ImageView btnShowHideKeyList;
 	private boolean isShowingKeyList;
-	
+
 	private RelativeLayout chooseCarKey;
 	private RelativeLayout chooseManKey;
 	private TextView carKeyText;
 	private TextView manKeyText;
 	private boolean isChooseCarKey;
-	
+
 	private RelativeLayout showTip;
-	
+
 	private FrameLayout mframlayout;
-	
+
 	private FragmentManager mfragmentManager;
 	private FragmentTransaction mfragmentTrasaction;
-	
+
 	private TextView TVkeyname;
 	private FragmentCarEntrance mcarFragment;
 	private FragmentManEntrance mManFragment;
-	
+
 	private TextView btnSubmitText;
 	private int ColorDisable = 0xFF999999;
-	
+
+	private ArrayList<Map<String, String>> Zonekeylist;
+	private ArrayList<Map<String, String>> tempkeylist;
+
 	public KeyListAuthFragment() {
 		// Required empty public constructor
 	}
@@ -81,127 +128,136 @@ public class KeyListAuthFragment extends Fragment{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		final View view = inflater.inflate(R.layout.fragment_key_list_auth, container, false);
-		mframlayout=(FrameLayout) view.findViewById(R.id.id_entrancecontent);
-		
-		mcarFragment=new FragmentCarEntrance();
-		mManFragment=new FragmentManEntrance();
-		mfragmentManager=getChildFragmentManager();
-		mfragmentTrasaction=mfragmentManager.beginTransaction();
-		
-	
+		final View view = inflater.inflate(R.layout.fragment_key_list_auth,
+				container, false);
+
+		mQueue = Volley.newRequestQueue(getActivity());
+
+		dateAndPhoneShare = getActivity().getSharedPreferences("DATEANDPHONESHARE", 0);
+		dateAndPhoneEditor = dateAndPhoneShare.edit();
+		carNumAndPhoneNumShare = getActivity().getSharedPreferences("carNumAndPhoneNum", 0);
+		carAndPhoneEditor = carNumAndPhoneNumShare.edit();
+		zoneIdShare = getActivity().getSharedPreferences("ZONESHARE", 0);
+		meditor = zoneIdShare.edit();
+
+		mKeyDBHelper = new MyDataBaseHelper(getActivity(), DATABASE_NAME);
+		mKeyDB = mKeyDBHelper.getWritableDatabase();
+
+		tempkeylist = new ArrayList<Map<String, String>>();
+
+		mframlayout = (FrameLayout) view.findViewById(R.id.id_entrancecontent);
+
+		mcarFragment = new FragmentCarEntrance();
+		mManFragment = new FragmentManEntrance();
+		mfragmentManager = getChildFragmentManager();
+		mfragmentTrasaction = mfragmentManager.beginTransaction();
+
 		mfragmentTrasaction.replace(R.id.id_entrancecontent, mManFragment);
 		mfragmentTrasaction.commit();
-		TVkeyname=(TextView) view.findViewById(R.id.keyname_in_key_auth);
-		LVkeylist=(ListView)view.findViewById(R.id.doorname_listview);
-		
-		ArrayList<Map<String, String>> mlist=new ArrayList<Map<String,String>>();
-		for(int i=3;i>=0;i--)
-		{
-			Map<String, String> map=new HashMap<String, String>();
-			map.put("keyname"," 锦绣香江大门"+i);
+		TVkeyname = (TextView) view.findViewById(R.id.keyname_in_key_auth);
+		LVkeylist = (ListView) view.findViewById(R.id.doorname_listview);
+
+		mKeyDBHelper = new MyDataBaseHelper(getActivity(), DATABASE_NAME);
+		mKeyDB = mKeyDBHelper.getReadableDatabase();
+
+		ArrayList<Map<String, String>> mlist = new ArrayList<Map<String, String>>();
+		for (int i = 3; i >= 0; i--) {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("keyname", " 锦绣香江大门" + i);
 			mlist.add(map);
 		}
 		LVkeylist.setVisibility(View.GONE);
-		
-		
-		//LVkeylist.setAdapter(new MykeyListAdapter(getActivity(), mlist) );
-		LVkeylist.setAdapter(new SimpleAdapter(getActivity(),mlist, 
-				R.layout.keylist_child, new String[]{"keyname"}, new int[]{R.id.id_keyname}));
-		
-		
-		
+
+		// LVkeylist.setAdapter(new MykeyListAdapter(getActivity(), mlist) );
+
 		LVkeylist.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				//Log.e("textview", arg1);
-				TVListItem=(TextView) view.findViewById(R.id.id_keyname);
-				IVselectkeyItem=(ImageView) view.findViewById(R.id.select_keyicon);
-				
-				//IVselectkeyItem.setImageResource(R.drawable.key_selected);
-//				try {
-//					Thread.sleep(1000);
-//				} catch (InterruptedException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
+
+				TVListItem = (TextView) view.findViewById(R.id.id_keyname);
+				IVselectkeyItem = (ImageView) view.findViewById(R.id.select_keyicon);
+
 				TVkeyname.setText(TVListItem.getText().toString());
+				Cursor cursor = mKeyDB.rawQuery("select * from ZoneKeyTable where zoneAddress=?",
+						new String[] { TVkeyname.getText().toString() });
+				if (cursor.moveToFirst()) {
+					String zoneid = cursor.getString(cursor.getColumnIndex("zoneId"));
+					Log.e("ididididid", zoneid);
+
+					meditor.putString("ZONEID", zoneid);
+					meditor.commit();
+				}
+
 				LVkeylist.setVisibility(View.GONE);
-				//IVselectkeyItem.setImageResource(R.drawable.key_notselected);
-				if(!isShowingKeyList){
+
+				if (!isShowingKeyList) {
 					btnShowHideKeyList.setImageResource(R.drawable.common_hide_list);
 					isShowingKeyList = true;
-					//LVkeylist.setVisibility(View.VISIBLE);
-				}else{
+
+				} else {
 					btnShowHideKeyList.setImageResource(R.drawable.common_show_list);
 					isShowingKeyList = false;
-					
-					//LVkeylist.setVisibility(View.GONE);
+
 				}
-	
+
 			}
-			
+
 		});
-		
-		
-		
+
 		// to hide the tip after 3 secs
 		showTip = (RelativeLayout) view.findViewById(R.id.show_tip);
-		
-		Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.show_tip_animation);
+
+		Animation animation = AnimationUtils.loadAnimation(getActivity(),
+				R.anim.show_tip_animation);
 		DecelerateInterpolator interpolator = new DecelerateInterpolator();
 		animation.setInterpolator(interpolator);
 		animation.setFillAfter(true);
 		showTip.startAnimation(animation);
-		
+
 		// show or hide key list
 		isShowingKeyList = false;
 		showHideKeyList = (RelativeLayout) view.findViewById(R.id.show_hide_key_list);
 		btnShowHideKeyList = (ImageView) view.findViewById(R.id.btn_show_hide_key_list);
 		btnShowHideKeyList.setImageResource(R.drawable.common_show_list);
-		
-		showHideKeyList.setOnClickListener(new OnClickListener(){
+
+		showHideKeyList.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				if(!isShowingKeyList){
+				if (!isShowingKeyList) {
 					btnShowHideKeyList.setImageResource(R.drawable.common_hide_list);
 					isShowingKeyList = true;
 					LVkeylist.setVisibility(View.VISIBLE);
-				}else{
+				} else {
 					btnShowHideKeyList.setImageResource(R.drawable.common_show_list);
 					isShowingKeyList = false;
-					
 					LVkeylist.setVisibility(View.GONE);
 				}
 			}
-			
+
 		});
 		//
-		
-		
-		
 		// choose car or man key
 		isChooseCarKey = false;
 		chooseCarKey = (RelativeLayout) view.findViewById(R.id.btn_choose_car_key);
 		chooseManKey = (RelativeLayout) view.findViewById(R.id.btn_choose_man_key);
 		carKeyText = (TextView) view.findViewById(R.id.car_key_text);
 		manKeyText = (TextView) view.findViewById(R.id.man_key_text);
-		
+
 		chooseCarKey.setBackgroundResource(R.drawable.channel_normal);
 		chooseManKey.setBackgroundResource(R.drawable.channel_select);
 		carKeyText.setTextColor(0xFF333333);
 		manKeyText.setTextColor(0xFFffffff);
-		
-		chooseCarKey.setOnClickListener(new OnClickListener(){
+
+		chooseCarKey.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				if(!isChooseCarKey){
-					mfragmentManager=getChildFragmentManager();
-					mfragmentTrasaction=mfragmentManager.beginTransaction();
+				if (!isChooseCarKey) {
+					mfragmentManager = getChildFragmentManager();
+					mfragmentTrasaction = mfragmentManager.beginTransaction();
 					mfragmentTrasaction.replace(R.id.id_entrancecontent, mcarFragment);
 					mfragmentTrasaction.commit();
 					chooseCarKey.setBackgroundResource(R.drawable.channel_select);
@@ -211,16 +267,16 @@ public class KeyListAuthFragment extends Fragment{
 					isChooseCarKey = true;
 				}
 			}
-			
+
 		});
-		
-		chooseManKey.setOnClickListener(new OnClickListener(){
+
+		chooseManKey.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				if(isChooseCarKey){
-					mfragmentManager=getChildFragmentManager();
-					mfragmentTrasaction=mfragmentManager.beginTransaction();
+				if (isChooseCarKey) {
+					mfragmentManager = getChildFragmentManager();
+					mfragmentTrasaction = mfragmentManager.beginTransaction();
 					mfragmentTrasaction.replace(R.id.id_entrancecontent, mManFragment);
 					mfragmentTrasaction.commit();
 					chooseCarKey.setBackgroundResource(R.drawable.channel_normal);
@@ -228,187 +284,291 @@ public class KeyListAuthFragment extends Fragment{
 					carKeyText.setTextColor(0xFF333333);
 					manKeyText.setTextColor(0xFFffffff);
 					isChooseCarKey = false;
+					// LVkeylist.setAdapter(new
+					// SimpleAdapter(getActivity(),mankeylist,
+					// R.layout.keylist_child, new String[]{"mankeyItem"}, new
+					// int[]{R.id.id_keyname}));
 				}
 			}
-			
+
 		});
 		//
 
-		// submit 
+		// submit
 		btnSubmitText = (TextView) view.findViewById(R.id.btn_submit_text);
 		btnSubmitText.setTextColor(ColorDisable);
 		btnSubmitText.setBackgroundResource(R.drawable.btn_submit_big_disable);
-		
+//		btnSubmitText.setEnabled(false);
 		DisplayMetrics dm = new DisplayMetrics();
 		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
 		int screenWidth = dm.widthPixels;
-		
-		btnSubmitText.setWidth(screenWidth - 32 * 2);	
-		btnSubmitText.setOnClickListener(new OnClickListener(){
+
+		btnSubmitText.setWidth(screenWidth - 32 * 2);
+
+//		if ((carNumAndPhoneNumShare.getString("PHONENUM", null) != null)
+//				&& (carNumAndPhoneNumShare.getString("CARNUM", null) != null)
+//				&& (carNumAndPhoneNumShare.getString("ZONEID", null) != null)) {
+//			btnSubmitText.setEnabled(true);
+//		}
+		btnSubmitText.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
+				if (isChooseCarKey) {
+					Cursor carPositionCursor = mKeyDB.rawQuery("select * from KeyInfoTable where plateNum=?",
+							new String[] { carNumAndPhoneNumShare.getString("CARNUM", null) });
+					if (carPositionCursor.moveToFirst()) {
+						do {
+							carPosition = carPositionCursor.getString(carPositionCursor.getColumnIndex("carPosStatus"));
+						} while (carPositionCursor.moveToNext());
+					}
+
+					sid = loadSid();
+					MyJsonObjectRequest carAndPhoneRequest = new MyJsonObjectRequest(
+							Method.POST, postKerUrl + "?sid=" + sid, null,
+							new Response.Listener<JSONObject>() {
+
+								@Override
+								public void onResponse(JSONObject response) {
+									Log.e("psotKeyResponse",response.toString());
+//									Toast.makeText(getActivity(),response.toString(),Toast.LENGTH_SHORT).show();
+									try {
+										if(response.getInt("code") == -100){
+											Toast.makeText(getActivity(), R.string.car_already_lend, Toast.LENGTH_SHORT).show();
+										}else if(response.getInt("code") == -101){
+											Toast.makeText(getActivity(), R.string.user_not_regis, Toast.LENGTH_SHORT).show();
+										}else if(response.getInt("code") == -104){
+											Toast.makeText(getActivity(), R.string.cannot_auth_to_self, Toast.LENGTH_SHORT).show();
+										}
+									} catch (JSONException e) {
+										e.printStackTrace();
+									}
+								}
+							}, new Response.ErrorListener() {
+
+								@Override
+								public void onErrorResponse(VolleyError error) {
+									// TODO Auto-generated method stub
+
+								}
+							}) {
+						@Override
+						protected Map<String, String> getParams()
+								throws AuthFailureError {
+
+							Map<String, String> map = new HashMap<String, String>();
+
+							map.put("zoneUserId",zoneIdShare.getString("ZONEID", null));
+							map.put("plateNum", carNumAndPhoneNumShare.getString("CARNUM", null));
+							map.put("toMobile", carNumAndPhoneNumShare.getString("PHONENUM", null));
+							map.put("carPosStatus", carPosition);
+							return map;
+						}
+					};
+
+					mQueue.add(carAndPhoneRequest);
+				} else {
+					sid = loadSid();
+					MyJsonObjectRequest postMankeyRequest = new MyJsonObjectRequest(
+							Method.POST, postNomalKeyUrl + "?sid=" + sid, null,
+							new Response.Listener<JSONObject>() {
+
+								@Override
+								public void onResponse(JSONObject response) {
+									// TODO Auto-generated method stub
+									Log.e("psotnomalnomalKeyResponse", response.toString());
+									try {
+										if(response.getInt("code") == -101){
+											Toast.makeText(getActivity(), R.string.user_not_regis, Toast.LENGTH_SHORT).show();
+										}else if(response.getInt("code") == -102){
+											Toast.makeText(getActivity(), R.string.borrow_count_too_more, Toast.LENGTH_SHORT).show();
+										}else if(response.getInt("code") == -103){
+											Toast.makeText(getActivity(), R.string.already_have_the_temp_key, Toast.LENGTH_SHORT).show();
+										}else if(response.getInt("code") == -104){
+											Toast.makeText(getActivity(), R.string.cannot_auth_to_self, Toast.LENGTH_SHORT).show();
+										}
+									} catch (JSONException e) {
+										e.printStackTrace();
+									}
+								}
+							}, new Response.ErrorListener() {
+
+								@Override
+								public void onErrorResponse(VolleyError error) {
+									// TODO Auto-generated method stub
+
+								}
+							}) {
+						@Override
+						protected Map<String, String> getParams()
+								throws AuthFailureError {
+							StringBuilder ss = new StringBuilder();
+							Map<String, String> map = new HashMap<String, String>();
+
+							map.put("zoneUserId",
+									zoneIdShare.getString("ZONEID", null));
+							map.put("authDate",
+									dateAndPhoneShare.getString("DATE", null));
+							map.put("toMobile", dateAndPhoneShare.getString(
+									"PHONENUM", null));
+
+							return map;
+						}
+					};
+					mQueue.add(postMankeyRequest);
+				}
 			}
-			
+
 		});
 		//
-		
+
 		return view;
 	}
 
-//	private class MykeyListAdapter extends BaseAdapter
-//	{	private LayoutInflater inflater;
-//		private Context mcontext;
-//		private ArrayList<Map<String, String>> mlist;
-//		 public MykeyListAdapter(Context mcontext,ArrayList<Map<String, String>> mlist) 
-//		{	this.inflater=LayoutInflater.from(mcontext);
-//			this.mcontext=mcontext;
-//			this.mlist=mlist;
-//			}
-//		@Override
-//		public int getCount() {
-//			// TODO Auto-generated method stub
-//			return mlist.size();
-//		}
-//
-//		@Override
-//		public Object getItem(int position) {
-//			// TODO Auto-generated method stub
-//			return null;
-//		}
-//
-//		@Override
-//		public long getItemId(int position) {
-//			// TODO Auto-generated method stub
-//			return position;
-//		}
-//
-//		@Override
-//		public View getView(int position, View convertView, ViewGroup parent) {
-//			// TODO Auto-generated method stub
-//			
-//			convertView=inflater.inflate(R.layout.keylist_child, null);
-//			 TVListItem=(TextView) convertView.findViewById(R.id.id_keyname);
-//			 TVListItem.setText(mlist.get(position).get("keyname"));
-//			 IVselectkeyItem=(ImageView) convertView.findViewById(R.id.select_keyicon);
-//			 
-//			 LVkeylist.setOnItemClickListener(new OnItemClickListener() {
-//
-//				@Override
-//				public void onItemClick(AdapterView<?> parent, View view,
-//						int position, long id) {
-//					// TODO Auto-generated method stub
-//					
-//				}
-//			});
-//			 
-//			IVselectkeyItem.setOnClickListener(new OnClickListener() {
-//				
-//				@Override
-//				public void onClick(View v) {
-//					IVselectkeyItem.setImageResource(R.drawable.key_selected);
-//					TVkeyname.setText("00");
-//				}
-//			});
-//			 
-//			
-//			return convertView;
-//		}
-//		
-//	}
-	
-	
-//	private class KeyListAdapter extends BaseAdapter {
-//		private LayoutInflater mInflater;
-//		private ArrayList<HashMap<String, String>> doorNameList;
-//
-//		// public void setDataList(ArrayList<HashMap<String, String>> list) {
-//		// doorNameList = list;
-//		// notifyDataSetChanged();
-//		// }
-//
-//		public KeyListAdapter(Context context, ArrayList<HashMap<String, String>> list) {
-//			this.doorNameList = list;
-//			this.mInflater = LayoutInflater.from(context);
-//		}
-//
-//		@Override
-//		public int getCount() {
-//			return doorNameList.size();
-//		}
-//
-//		@Override
-//		public Object getItem(int position) {
-//			return doorNameList.get(position);
-//		}
-//
-//		@Override
-//		public long getItemId(int position) {
-//			return position;
-//		}
-//
-//		@Override
-//		public View getView(int position, View convertView, ViewGroup parent) {
-//			ViewHolder holder;
-//			if (convertView == null) {
-//				convertView = mInflater.inflate(R.layout.keylist_child, null);
-//				holder = new ViewHolder();
-//				holder.doorname = (TextView) convertView.findViewById(R.id.door_name);
-//				holder.beginday = (TextView) convertView.findViewById(R.id.door_time_from);
-//				holder.endday = (TextView) convertView.findViewById(R.id.door_time_to);
-//				convertView.setTag(holder);
-//			} else {
-//				holder = (ViewHolder) convertView.getTag();
-//			}
-//
-//			//holder.doorname.setSelected(true);
-//			holder.TVListItem.setText(doorNameList.get(position).get("Door"));
-//			holder.beginday.setText(doorNameList.get(position).get("BEGIN"));
-//			holder.endday.setText(doorNameList.get(position).get("END"));
-//
-//			return convertView;
-//		}
-//
-//		class ViewHolder {
-//			public TextView TVListItem;
-//			public ImageView IVselectkeyItem;
-//			
-//		}
-//
-//	}
-//	
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		// if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
+		// Log.e("TESTTESTDBDB", "have the table");
+		// if (DBCount() > 0) {
+		// Log.e("TESTTESTDBDB", "table is not empty");
+		// //人门
+		// Cursor manKeyCursor =
+		// mKeyDB.rawQuery("select * from KeyInfoTable where doorType=?", new
+		// String[]{"1"});
+		// if (manKeyCursor.moveToFirst())
+		// {do{
+		// Map<String , String > manMap=new HashMap<String, String>();
+		// manMap.put("mankeyItem",
+		// manKeyCursor.getString(manKeyCursor.getColumnIndex("doorName")));
+		// mankeylist.add(manMap);
+		// }while(manKeyCursor.moveToNext());
+		//
+		// //初始化为显示人门
+		// LVkeylist.setAdapter(new SimpleAdapter(getActivity(),mankeylist,
+		// R.layout.keylist_child, new String[]{"mankeyItem"}, new
+		// int[]{R.id.id_keyname}));
+		// }
+		// //车门
+		// Cursor carKeyCursor =
+		// mKeyDB.rawQuery("select * from KeyInfoTable where doorType=?", new
+		// String[]{"2"});
+		// if (carKeyCursor.moveToFirst())
+		// {do{
+		// Map<String , String > carMap=new HashMap<String, String>();
+		// carMap.put("carkeyItem",
+		// manKeyCursor.getString(manKeyCursor.getColumnIndex("doorName")));
+		// mankeylist.add(carMap);
+		// }while(manKeyCursor.moveToNext());
+		//
+		// }
+		// }
+		// }
+
+		sid = loadSid();
+
+		Zonekeylist = new ArrayList<Map<String, String>>();
+		JsonObjectRequest mjsonobjrequest = new JsonObjectRequest(HOST
+				+ "?sid=" + sid, null, new Response.Listener<JSONObject>() {
+
+			@Override
+			public void onResponse(JSONObject response) {
+				// TODO Auto-generated method stub
+				try {
+					JSONArray zoneArr = response.getJSONArray("data");
+					Log.e("responseTest", response.toString());
+					for (int i = 0; i < zoneArr.length(); i++) {
+						String zoneId = zoneArr.getJSONObject(i).getString("zoneUserId");
+						String zoneAdd = zoneArr.getJSONObject(i).getString("address");
+
+						Log.e("address", zoneAdd);
+						Map<String, String> zoneMap = new HashMap<String, String>();
+						zoneMap.put("zoneName", zoneAdd);
+						Zonekeylist.add(zoneMap);
+						ContentValues value = new ContentValues();
+						value.put("zoneId", zoneId);
+						value.put("zoneAddress", zoneAdd);
+						try {
+							mKeyDB.insert(TABLE_NAME, null, value);
+						} catch (Exception e) {
+							Log.e("dbdbdbd", "数据已经存在");
+						}
+					}
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}, new Response.ErrorListener() {
+
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				// TODO Auto-generated method stub
+
+			}
+
+		});
+		mQueue.add(mjsonobjrequest);
+
+		LVkeylist.setAdapter(new SimpleAdapter(getActivity(), Zonekeylist,
+				R.layout.keylist_child, new String[] { "zoneName" },
+				new int[] { R.id.id_keyname }));
+
+	}
+
+	private void saveSid(String sid) {
+		if (getActivity() != null) {
+			SharedPreferences savedSid = getActivity().getSharedPreferences(
+					"SAVEDSID", 0);
+			Editor editor = savedSid.edit();
+			editor.putString("SID", sid);
+			editor.commit();
+		}
+	}
+
+	private String loadSid() {
+
+		SharedPreferences loadSid = getActivity().getSharedPreferences(
+				"SAVEDSID", 0);
+		return loadSid.getString("SID", null);
+	}
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
-		if(requestCode==1&&resultCode==Activity.RESULT_OK);
+		if (requestCode == 1 && resultCode == Activity.RESULT_OK)
+			;
 		{
-			 if (resultCode == Activity.RESULT_OK) {
-		            ContentResolver reContentResolverol = getActivity().getContentResolver();
-		             Uri contactData = data.getData();
-		             @SuppressWarnings("deprecation")
-		            Cursor cursor = reContentResolverol.query(contactData, null, null, null, null);
-		             cursor.moveToFirst();
-		             String username = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-		            String contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-		            Cursor phone = reContentResolverol.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, 
-		                     null, 
-		                     ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, 
-		                     null, 
-		                     null);
-		             while (phone.moveToNext()) {
-		                 String usernumber = phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-		                // text.setText(usernumber+" ("+username+")");
-		                // FragmentManEntrance f=new FragmentManEntrance();
-		                 mManFragment.getData(usernumber);
-		             }
-		             
-		         }
-		    }
-			Log.e("sd", "dsjdkfkl");
-		
+			if (resultCode == Activity.RESULT_OK) {
+				ContentResolver reContentResolverol = getActivity()
+						.getContentResolver();
+				Uri contactData = data.getData();
+				@SuppressWarnings("deprecation")
+				Cursor cursor = reContentResolverol.query(contactData, null,
+						null, null, null);
+				cursor.moveToFirst();
+				String username = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+				String contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+				Cursor phone = reContentResolverol.query(
+						ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+						null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID
+								+ " = " + contactId, null, null);
+				while (phone.moveToNext()) {
+					String usernumber = phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+					// dateAndPhoneEditor.putString("PHONENUM",
+					// usernumber).commit();
+					// text.setText(usernumber+" ("+username+")");
+					// FragmentManEntrance f=new FragmentManEntrance();
+					mManFragment.getData(usernumber);
+				}
+
+			}
+		}
+		Log.e("sd", "dsjdkfkl");
+
 	}
 
 }

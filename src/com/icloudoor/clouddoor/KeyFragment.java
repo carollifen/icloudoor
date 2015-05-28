@@ -138,6 +138,8 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //	public MyPageChangeListener myPageChangeListener;
 	
 	// for new UI weather
+	private LinearLayout weatherWidge;
+	
 	private WeatherClick mWeatherClick;
 	
 	private ImageView weatherBtnLeft;
@@ -260,6 +262,18 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //		myPageChangeListener = new MyPageChangeListener();
 		
 		// for new UI weather
+		weatherWidge = (LinearLayout) view.findViewById(R.id.weather_widge);
+		weatherWidge.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent();
+				intent.setClass(getActivity(), WeatherDetail.class);
+				startActivity(intent);
+			}
+			
+		});
+		
 		weatherBtnLeft = (ImageView) view.findViewById(R.id.weather_btn_left);
 		weatherBtnRight = (ImageView) view.findViewById(R.id.weather_btn_right);
 
@@ -839,13 +853,11 @@ public class KeyFragment extends Fragment implements ShakeListener {
 								editor.putString("Day1Temp", now.getString("temperature"));
 								editor.putString("Day1Weather", now.getString("text"));
 								editor.putString("Day1IconIndex", now.getString("code"));
-								
 								editor.putString("Day2TempLow", tomorrow.getString("low"));
 								editor.putString("Day2TempHigh", tomorrow.getString("high"));
 								editor.putString("Day2Weather", tomorrow.getString("text"));
 								editor.putString("Day2IconIndexDay", tomorrow.getString("code1"));
-								editor.putString("Day2IconIndexNight", tomorrow.getString("code2"));
-								
+								editor.putString("Day2IconIndexNight", tomorrow.getString("code2"));							
 								editor.putString("Day3TempLow", tomorrow2.getString("low"));
 								editor.putString("Day3TempHigh", tomorrow2.getString("high"));
 								editor.putString("Day3Weather", tomorrow2.getString("text"));

@@ -484,10 +484,12 @@ public class WuyeFragment extends Fragment {
 				startActivity(intent);
 				break;
 			case R.id.btn_bill:
-				// intent.setClass(getActivity(), BillActivity.class);
+				intent.setClass(getActivity(), BillActivity.class);
+				startActivity(intent);
 				break;
 			case R.id.btn_pay:
-				// intent.setClass(getActivity(), PayActivity.class);
+				intent.setClass(getActivity(), PayActivity.class);
+				startActivity(intent);
 				break;
 			}
 		}

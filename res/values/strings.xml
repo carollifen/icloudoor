@@ -100,6 +100,13 @@
     <string name="certi">已认证</string>
     <string name="not_certi">未认证</string>
     <string name="title_activity_modify_personal_info_not_certi">ModifyPersonalInfoNotCerti</string>
-	<string name="plz_upload_image">请上传头像</string>
-    
+    <string name="plz_upload_image">请上传头像</string>
+    <string name="title_activity_weather_detail">WeatherDetail</string>
+    <string name="key_has_lend">车钥匙已借出</string>
+    <string name="user_not_regis">该用户尚未注册云门</string>
+    <string name="car_already_lend">该车正在借出中</string>
+    <string name="cannot_auth_to_self">您不能授权给自己</string>
+    <string name="borrow_count_too_more">该用户接受云门临时要是已超出限制(一个人最多只能接收5次)</string>
+    <string name="already_have_the_temp_key">该用户已拥有该临时要是</string>
+
 </resources>
