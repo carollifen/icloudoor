@@ -22,11 +22,8 @@ public class NoticeActivity extends Activity {
 
 	private String sid;
 	private WebSettings anouncewebSetting;
-	private WebSettings detailwebSetting;
-	private WebView anounceDetailWebView;
 	private String pageurl = "http://zone.icloudoor.com/icloudoor-web/user/prop/zone/notice/page.do";
 
-	private String detailurl = "http://zone.icloudoor.com/icloudoor-web/user/prop/zone/notice/detail.do";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +46,6 @@ public class NoticeActivity extends Activity {
 
 		PushAgent.getInstance(this).onAppStart();
 		anouncePageWebView = (WebView) findViewById(R.id.id_public_anounce_page);
-		anounceDetailWebView = (WebView) findViewById(R.id.id_public_anounce_detail);
 
 		anouncewebSetting = anouncePageWebView.getSettings();
 
@@ -63,22 +59,9 @@ public class NoticeActivity extends Activity {
 
 		anouncePageWebView.setWebViewClient(new webViewClient()); 
 		
-		
-		
-		
-		detailwebSetting = anounceDetailWebView.getSettings();
-
-		detailwebSetting.setUseWideViewPort(true);
-		detailwebSetting.setJavaScriptEnabled(true);
-		detailwebSetting.setLoadWithOverviewMode(true);
-		detailwebSetting.setSupportZoom(false);
-		detailwebSetting.setJavaScriptCanOpenWindowsAutomatically(true);
-		detailwebSetting.setLoadsImagesAutomatically(true);
-		detailwebSetting.setBuiltInZoomControls(true);
 		sid = loadSid();
 
 		anouncePageWebView.loadUrl(pageurl + "?sid=" + sid);
-		anounceDetailWebView.loadUrl(detailurl + "?sid=" + sid);
 
 	}
 
