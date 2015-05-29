@@ -109,12 +109,15 @@ public class SettingDetailActivity extends Activity {
 	}
 	
 	public void InitBtns(){
-		
-		SharedPreferences setting = getSharedPreferences("SETTING", 0);		
-		canShake = setting.getInt("shake", 0);
-		haveSound = setting.getInt("sound", 1);
-		canDisturb = setting.getInt("disturb", 1);
-		switchToCar = setting.getInt("chooseCar", 1);
+		canShake = 1;
+		haveSound = 1;
+		canDisturb = 1;
+		switchToCar = 1;
+//		SharedPreferences setting = getSharedPreferences("SETTING", 0);		
+//		canShake = setting.getInt("shake", 1);
+//		haveSound = setting.getInt("sound", 1);
+//		canDisturb = setting.getInt("disturb", 1);
+//		switchToCar = setting.getInt("chooseCar", 1);
 		
 		if(canShake == 1)
 			IVSetDetailShake.setImageResource(R.drawable.btn_yes);
@@ -144,47 +147,60 @@ public class SettingDetailActivity extends Activity {
 
 		@Override
 		public void onClick(View v) {
+			SharedPreferences setting = getSharedPreferences("SETTING", 0);
+			Editor editor = setting.edit();
 			switch(v.getId()){
 			case R.id.btn_set_detail_shake:
 				if(canShake == 1){
 					IVSetDetailShake.setImageResource(R.drawable.btn_no);
 					canShake = 0;
+					editor.putInt("shake", canShake);
 				}else{
 					IVSetDetailShake.setImageResource(R.drawable.btn_yes);
 					canShake = 1;
+					editor.putInt("shake", canShake);
 				}
 				break;
 			case R.id.btn_set_detail_sound:
 				if(haveSound == 1){
 					IVSetDetailSound.setImageResource(R.drawable.btn_no);
 					haveSound = 0;
+					editor.putInt("sound", haveSound);
 				}else{
 					IVSetDetailSound.setImageResource(R.drawable.btn_yes);
 					haveSound = 1;
+					editor.putInt("sound", haveSound);
 				}
 				break;
 			case R.id.btn_set_detail_disturb:
 				if(canDisturb == 1){
 					IVSetDetailDisturb.setImageResource(R.drawable.btn_no);
 					canDisturb = 0;
+					editor.putInt("disturb", canDisturb);
 				}else{
 					IVSetDetailDisturb.setImageResource(R.drawable.btn_yes);
 					canDisturb = 1;
+					editor.putInt("disturb", canDisturb);
 				}
 				break;
 			case R.id.btn_switch_car:
+				if(switchToCar == 0){
+					switchToCar = 1;
+					IVSwitchCar.setImageResource(R.drawable.select);
+					IVSwitchMan.setImageResource(R.drawable.not_select);
+					editor.putInt("chooseCar", switchToCar);
+				}
+				break;
 			case R.id.btn_switch_man:
 				if(switchToCar == 1){
 					switchToCar = 0;
 					IVSwitchCar.setImageResource(R.drawable.not_select);
 					IVSwitchMan.setImageResource(R.drawable.select);
-				}else{
-					switchToCar = 1;
-					IVSwitchCar.setImageResource(R.drawable.select);
-					IVSwitchMan.setImageResource(R.drawable.not_select);
+					editor.putInt("chooseCar", switchToCar);
 				}
 				break;
 			}
+			editor.commit();
 		}
 		
 	}

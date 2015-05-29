@@ -185,7 +185,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	// for new channel switch
 	private LinearLayout channelSwitchLayout;
 	private ChannelSwitchView csv;
-	private int isChooseCarChannel = 1;   // 1 for car; 2 for man
+	private int isChooseCarChannel;   // 1 for car; 2 for man
     private int mOpenDoorState;
 	private boolean onlyOneDoor = false;
 	private StrokeTextView doorName;
@@ -259,6 +259,8 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //		mFragmentManager = getChildFragmentManager();
 //		mWeatherWidgePager = (ViewPager) view.findViewById(R.id.weather_widge_pager);
 //		myPageChangeListener = new MyPageChangeListener();
+		
+		InitFragmentViews();
 		
 		// for new UI weather
 		weatherWidge = (LinearLayout) view.findViewById(R.id.weather_widge);
@@ -355,6 +357,11 @@ public class KeyFragment extends Fragment implements ShakeListener {
                 if (mOpenDoorState == 0) {
                     mOpenDoorState = 1; // doing opendoor
                     Log.i("test", "doOpenDoor");
+                    
+                    if(haveSound == 1){
+                    	playOpenDoorSound();
+                    }
+
                     doOpenDoor(); //ONLY FOR TEST
                 }
 			}
@@ -383,7 +390,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		scanStatus = (TextView) view.findViewById(R.id.scan_status);
 		scanStatus.setText(R.string.can_shake_to_open_door);
 	
-//		InitFragmentViews();
+		
 //		InitViewPager();
 		
 //		// BLE
@@ -1528,7 +1535,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		if(tempDeviceAddr != device.getAddress()){
 			tempDeviceAddr = device.getAddress();
 			
-//			if (isChooseCarChannel == 1) {
+			if (isChooseCarChannel == 1) {
 				for (int i = 0; i < carDoorList.size(); i++) {
 					String tempDID = carDoorList.get(i).get("CDdeviceid");
 					tempDID = tempDID.toUpperCase();
@@ -1552,7 +1559,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 						}
 					}
 				}
-//			} else {
+			} else {
 				for (int i = 0; i < manDoorList.size(); i++) {
 					String tempDID = manDoorList.get(i).get("MDdeviceid");
 					tempDID = tempDID.toUpperCase();
@@ -1576,7 +1583,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 						}
 					}
 				}
-//			}
+			}
 		}
 	}
 	
@@ -1605,20 +1612,57 @@ public class KeyFragment extends Fragment implements ShakeListener {
 				 *  if direction "1", need to update the carPosStatus to "1"
 				 *  if direction "2", need to update the carPosStatus to "2"
 				 */
-				if(isChooseCarChannel == 1){
-					Cursor cursor = mKeyDB.rawQuery("select * from KeyInfoTable where deviceId=?",
-							new String[] { mDeviceList.get(deviceIndexToOpen).getAddress() });
-					int directionIndex = cursor.getColumnIndex("direction");
-					String direction = cursor.getString(directionIndex);
-					ContentValues value = new ContentValues();
-					if(direction.equals("1")){
-						value.put("carPosStatus", "1");
-					}else if(direction.equals("2")){
-						value.put("carPosStatus", "2");
+//				if(isChooseCarChannel == 1){
+					Cursor cursor = mKeyDB.rawQuery("select * from " + TABLE_NAME, null);
+					
+					if(cursor.moveToFirst()){
+						int directionIndex = cursor.getColumnIndex("direction");
+						int deviceIdIndex = cursor.getColumnIndex("deviceId");
+						int doorTypeIndex  = cursor.getColumnIndex("doorType");
+						
+						do{
+							String direction = cursor.getString(directionIndex);
+							String deviceId = cursor.getString(deviceIdIndex);
+							String doorType = cursor.getString(doorTypeIndex);
+							
+							Log.e("testforcardooropen", deviceId);
+							Log.e("testforcardooropen", mDeviceList.get(deviceIndexToOpen).getAddress());
+							Log.e("testforcardooropen", doorType);
+							
+							//
+							String Tempid;
+							Tempid = deviceId.toUpperCase();
+							char[] data = Tempid.toCharArray();
+							String formatDeviceId = String.valueOf(data[0]) + String.valueOf(data[1]) + ":"
+									+ String.valueOf(data[2]) + String.valueOf(data[3]) + ":"
+									+ String.valueOf(data[4]) + String.valueOf(data[5]) + ":"
+									+ String.valueOf(data[6]) + String.valueOf(data[7]) + ":"
+									+ String.valueOf(data[8]) + String.valueOf(data[9]) + ":"
+									+ String.valueOf(data[10]) + String.valueOf(data[11]);
+							Log.e("testforcardooropen", formatDeviceId);
+							
+							if(formatDeviceId.equals(mDeviceList.get(deviceIndexToOpen).getAddress()) && doorType.equals("2")){
+								ContentValues value = new ContentValues();
+								
+								Log.e("testforcardooropen", direction);
+								
+								if(direction.equals("1")){
+									Log.e("dsdsdsds", "i am here");
+									value.put("carPosStatus", "1");
+									mKeyDB.update("KeyInfoTable", value, "deviceId=?", new String[] {deviceId});
+								}else if(direction.equals("2")){
+									Log.e("dsdsdsds", "i am there");
+									value.put("carPosStatus", "2");
+									mKeyDB.update("KeyInfoTable", value, "deviceId=?", new String[] {deviceId});
+								}
+								
+								break;
+							}
+						}while(cursor.moveToNext());
+							
 					}
-					mKeyDB.update("KeyInfoTable", value, "deviceId=?", new String[] { mDeviceList.get(deviceIndexToOpen).getAddress() });
 					cursor.close();
-				}
+//				}
 				
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -1678,7 +1722,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		isChooseCarChannel = setting.getInt("chooseCar", 1);
 		canDisturb = setting.getInt("disturb", 1);
 		haveSound = setting.getInt("sound", 1);
-		canShake = setting.getInt("shake", 0);
+		canShake = setting.getInt("shake", 1);
 
 //		if (isChooseCarChannel == 1) {
 //			TvChooseCar.setTextColor(COLOR_CHANNEL_CHOOSE);

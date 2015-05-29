@@ -170,7 +170,7 @@ public class KeyListListFragment extends Fragment {
 											mTempAdapter = new TempKeyListAdapter(getActivity(), tempDoorNameList);
 											mTempKeyList.setAdapter(mTempAdapter);
 											
-											
+											int directionIndex = mCursor.getColumnIndex("direction");
 											int zoneIdIndex = mCursor.getColumnIndex("zoneId");
 											int deviceIdIndex = mCursor.getColumnIndex("deviceId");
 											int doorNamemIndex = mCursor.getColumnIndex("doorName");
@@ -191,6 +191,7 @@ public class KeyListListFragment extends Fragment {
 												String carNum = mCursor.getString(carNumIndex);
 												String zoneId = mCursor.getString(zoneIdIndex);
 												String carPosStatus = mCursor.getString(carPosStatusIndex);
+												String direction = mCursor.getString(directionIndex);
 
 
 												Log.e("TESTTESTDB deviceId =", deviceId);
@@ -202,6 +203,7 @@ public class KeyListListFragment extends Fragment {
 												Log.e("TESTTESTDB carNum =", carNum);
 												Log.e("TESTTESTDB zoneId =", zoneId);
 												Log.e("TESTTESTDB carPosStatus =", carPosStatus);
+												Log.e("TESTTESTDB direction =", direction);
 												
 												
 												/*  Add new logic for car key
@@ -351,12 +353,12 @@ public class KeyListListFragment extends Fragment {
 					value.put("deviceId", doorData.getString("deviceId"));
 					value.put("doorType", doorData.getString("doorType"));
 					value.put("plateNum", doorData.getString("plateNum"));
-					value.put("direction", doorData.getString("direction"));
 					value.put("authFrom", doorData.getString("authFrom"));
 					value.put("authTo", doorData.getString("authTo"));
 					
 					if (doorData.getString("doorType").equals("1")) {
 						Log.e(TAG, "herehere");
+						value.put("direction", "none");
 						value.put("carStatus", "none");
 						value.put("carPosStatus", "none");
 						mKeyDB.insert(TABLE_NAME, null, value);
@@ -374,6 +376,7 @@ public class KeyListListFragment extends Fragment {
 							
 							if (carData.getString("l1ZoneId").equals(doorData.getString("zoneId")) && carData.getString("plateNum").equals(doorData.getString("plateNum"))) {
 								Log.e(TAG, "add temp key_DB" + carData.getString("plateNum"));
+								value.put("direction", doorData.getString("direction"));
 								value.put("carStatus", carData.getString("carStatus"));
 								value.put("carPosStatus", carData.getString("carPosStatus"));
 								mKeyDB.insert(TABLE_NAME, null, value);
