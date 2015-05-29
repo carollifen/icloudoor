@@ -1,13 +1,9 @@
 package com.icloudoor.clouddoor;
 
-import com.umeng.message.PushAgent;
-
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.WebSettings;
@@ -15,26 +11,36 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
 
+import com.umeng.message.PushAgent;
+
 public class NoticeActivity extends Activity {
+
+	private SharedPreferences noticeUrlShare;
+	private Editor noticeUrlEditor;
 
 	private WebView anouncePageWebView;
 	private RelativeLayout back;
 
 	private String sid;
+	private String str;
 	private WebSettings anouncewebSetting;
-	private String pageurl = "http://zone.icloudoor.com/icloudoor-web/user/prop/zone/notice/page.do";
 
+	private WebView anounceDetailWebView;
+	private String pageurl = "http://zone.icloudoor.com/icloudoor-web/user/prop/zone/notice/page.do";
+	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
+	private String detailurl = "http://zone.icloudoor.com/icloudoor-web/user/prop/zone/notice/detail.do";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_notice);
-
+		noticeUrlShare = getApplicationContext().getSharedPreferences("noticeUrlShare", 0);
+		noticeUrlEditor = noticeUrlShare.edit();
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_notice);
-		
-		
+
+		back = (RelativeLayout) findViewById(R.id.btn_back);
 
 		PushAgent.getInstance(this).onAppStart();
 		anouncePageWebView = (WebView) findViewById(R.id.id_public_anounce_page);
@@ -49,35 +55,44 @@ public class NoticeActivity extends Activity {
 		anouncewebSetting.setLoadsImagesAutomatically(true);
 		anouncewebSetting.setBuiltInZoomControls(true);
 
-		anouncePageWebView.setWebViewClient(new webViewClient()); 
-		
+		anouncePageWebView.setWebViewClient(new webViewClient());
+
 		sid = loadSid();
 
-		anouncePageWebView.loadUrl(pageurl + "?sid=" + sid);
+		if (noticeUrlShare.getString("NOTICEURL", null) != null) {
 
-		
-		back = (RelativeLayout) findViewById(R.id.btn_back);
-		back.setOnClickListener(new OnClickListener(){
+			anouncePageWebView.loadUrl(HOST + noticeUrlShare.getString("NOTICEURL", null) + "&sid=" + sid);
+			noticeUrlEditor.putString("NOTICEURL", null).commit();
+
+		} else {
+			anouncePageWebView.loadUrl(pageurl + "?sid=" + sid);
+		}
+
+		anouncePageWebView.setWebViewClient(new webViewClient());
+		back.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				if(anouncePageWebView.canGoBack())
+				if (anouncePageWebView.canGoBack())
 					anouncePageWebView.goBack();
 				else
 					finish();
 			}
-			
+
 		});
 	}
 
-	class webViewClient extends WebViewClient{        //override shouldOverrideUrlLoading method to use the webview to response when click the link     
-		@Override     
-		public boolean shouldOverrideUrlLoading(WebView view, String url) {         
-			view.loadUrl(url);          
-			return true;  
+	class webViewClient extends WebViewClient { // override
+												// shouldOverrideUrlLoading
+												// method to use the webview to
+												// response when click the link
+		@Override
+		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			view.loadUrl(url);
+			return true;
 		}
 	}
-	
+
 	public void saveSid(String sid) {
 		SharedPreferences savedSid = getApplicationContext()
 				.getSharedPreferences("SAVEDSID", 0);
