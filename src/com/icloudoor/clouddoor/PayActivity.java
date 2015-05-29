@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
 
 public class PayActivity extends Activity {
@@ -47,8 +48,18 @@ public class PayActivity extends Activity {
 		webSetting.setJavaScriptCanOpenWindowsAutomatically(true);
 		webSetting.setLoadsImagesAutomatically(true);
 		webSetting.setBuiltInZoomControls(true);
+		
+		payWebView.setWebViewClient(new webViewClient()); 
 
 		payWebView.loadUrl(url + "?sid=" + sid);
+	}
+	
+	class webViewClient extends WebViewClient{        //override shouldOverrideUrlLoading method to use the webview to response when click the link     
+		@Override     
+		public boolean shouldOverrideUrlLoading(WebView view, String url) {         
+			view.loadUrl(url);          
+			return true;  
+		}
 	}
 	
 	public void saveSid(String sid) {
