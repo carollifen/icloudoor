@@ -204,6 +204,9 @@ public class KeyListListFragment extends Fragment {
 												Log.e("TESTTESTDB carPosStatus =", carPosStatus);
 												
 												
+												/*  Add new logic for car key
+												 * 
+												 */
 												if(carStatus.equals("2")){
 													blankView.setVisibility(View.VISIBLE);
 													
@@ -222,6 +225,7 @@ public class KeyListListFragment extends Fragment {
 
 													tempDoorNameList.add(tempKeyFromDB);
 													mTempAdapter.notifyDataSetChanged();
+													
 												} else {
 													HashMap<String, String> keyFromDB = new HashMap<String, String>();
 													keyFromDB.put("Door", doorName);
@@ -373,6 +377,12 @@ public class KeyListListFragment extends Fragment {
 								value.put("carStatus", carData.getString("carStatus"));
 								value.put("carPosStatus", carData.getString("carPosStatus"));
 								mKeyDB.insert(TABLE_NAME, null, value);
+								
+								// refresh the carPosStatus to "0" if carPosStatus not "0" when you get the new temp car key
+								if(!carData.getString("carPosStatus").equals("0")){
+									updatePosStatus(carData.getString("l1ZoneId"), carData.getString("plateNum"));
+								}
+								
 							}
 						}
 					}
@@ -439,6 +449,47 @@ public class KeyListListFragment extends Fragment {
 			}
 		}
 		
+	}
+	
+	// refresh the carPosStatus if carPosStatus not "0" when you get the temp car key
+	public void updatePosStatus(final String zoneid, final String carnum) {
+		URL updateCarPosStatusURL = null;
+		String sid2 = null;
+		RequestQueue mQueue2;
+		
+		sid2 = loadSid();
+		try {
+			updateCarPosStatusURL = new URL(HOST + "/user/api/updateCarPosStatus.do" + "?sid=" + sid2);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		mQueue2 = Volley.newRequestQueue(getActivity());
+		
+		MyJsonObjectRequest mJsonRequest2 = new MyJsonObjectRequest(Method.POST, updateCarPosStatusURL.toString(), null,
+				new Response.Listener<JSONObject>() {
+
+					@Override
+					public void onResponse(JSONObject response) {
+						Log.e(TAG, "test " + response.toString());
+					}
+				}, new Response.ErrorListener() {
+
+					@Override
+					public void onErrorResponse(VolleyError error) {
+
+					}
+				}) {
+			@Override
+			protected Map<String, String> getParams()
+					throws AuthFailureError {
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("l1ZoneId", zoneid);
+				map.put("plateNum", carnum);
+				map.put("carPosStatus", "0");
+				return map;
+			}
+		};
+		mQueue2.add(mJsonRequest2);
 	}
 	
 	private class KeyListAdapter extends BaseAdapter {

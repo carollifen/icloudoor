@@ -981,23 +981,30 @@ public class KeyFragment extends Fragment implements ShakeListener {
 						String carStatus = mCursor.getString(carStatusIndex);
 						String carPosStatus = mCursor.getString(carPosStatusIndex);
 
+						/*  Add new logic for car key
+						 *  select the car doors can be opened, 
+						 *  and all the man doors
+						 */
 						if (doorType.equals("2")) {						
 							if(direction.equals("1")){    // go in
 								if((carStatus.equals("1") || carStatus.equals("2"))     
-										&&    (carPosStatus.equals("1") || carPosStatus.equals("0"))){
+										&&    (carPosStatus.equals("2") || carPosStatus.equals("0"))){
+									Log.e(TAG, "add a goin car key");
 									temp.put("CDdeviceid", deviceId);
 									temp.put("CDdoorName", doorName);
 									carDoorList.add(temp);
 								}
 							} else if(direction.equals("2")){   // go out
 								if((carStatus.equals("1") || carStatus.equals("2"))     
-										&&    (carPosStatus.equals("2") || carPosStatus.equals("0"))){
+										&&    (carPosStatus.equals("1") || carPosStatus.equals("0"))){
+									Log.e(TAG, "add a goout car key");
 									temp.put("CDdeviceid", deviceId);
 									temp.put("CDdoorName", doorName);
 									carDoorList.add(temp);
 								}
 							}
-						} else if (doorType.equals("1")) { 
+						} else if (doorType.equals("1")) {
+							Log.e(TAG, "add man key");
 							temp.put("MDdeviceid", deviceId);
 							temp.put("MDdoorName", doorName);
 							manDoorList.add(temp);
@@ -1045,7 +1052,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
     private  class MyThread extends Thread {
 
         private volatile boolean stopThread = false;
-        private volatile long mScanningProid = 10000;
+        private volatile long mScanningProid = 9000;
 
         public void stopThread() {
             this.stopThread = true;
@@ -1170,7 +1177,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 					
 					if(mDeviceList.size() != 0){
                         scanStatus.setText(R.string.can_shake_to_open_door);
-                        myThread.mScanningProid = 10000;
+                        myThread.mScanningProid = 9000;
                         myAnimationView.setVisibility(View.INVISIBLE);
                         myline.setVisibility(View.INVISIBLE);
                         myline.clearAnimation();
@@ -1589,14 +1596,36 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //                }
 				if (!mUartService.connect(mDeviceList.get(deviceIndexToOpen).getAddress())){
                     mOpenDoorState = 2;
-                    Log.i("test", "connect failed!");
+//                    Log.i("test", "connect failed!");
                 }
+				
+				
+				/*  Add new logic for car key
+				 *  if open the car door, need update the carPosStatus in DB
+				 *  if direction "1", need to update the carPosStatus to "1"
+				 *  if direction "2", need to update the carPosStatus to "2"
+				 */
+				if(isChooseCarChannel == 1){
+					Cursor cursor = mKeyDB.rawQuery("select * from KeyInfoTable where deviceId=?",
+							new String[] { mDeviceList.get(deviceIndexToOpen).getAddress() });
+					int directionIndex = cursor.getColumnIndex("direction");
+					String direction = cursor.getString(directionIndex);
+					ContentValues value = new ContentValues();
+					if(direction.equals("1")){
+						value.put("carPosStatus", "1");
+					}else if(direction.equals("2")){
+						value.put("carPosStatus", "2");
+					}
+					mKeyDB.update("KeyInfoTable", value, "deviceId=?", new String[] { mDeviceList.get(deviceIndexToOpen).getAddress() });
+					cursor.close();
+				}
+				
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         if(mOpenDoorState != 0) {
 //                            Toast.makeText(getActivity(), R.string.open_door_fail, Toast.LENGTH_SHORT).show();
-                            Log.e("test for open door", "fail");
+//                            Log.e("test for open door", "fail");
                             mOpenDoorState = 0;
                         }
                     }

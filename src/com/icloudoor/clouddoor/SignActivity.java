@@ -41,14 +41,7 @@ public class SignActivity extends Activity{
 		
 		back = (RelativeLayout) findViewById(R.id.btn_back);
 		IvSignSwitch = (ImageView) findViewById(R.id.btn_sign_switch);
-		
-		SharedPreferences setting = getSharedPreferences("SETTING", 0);
-		useSign = setting.getInt("useSign", 0);
-		if(useSign == 1)
-			IvSignSwitch.setImageResource(R.drawable.btn_yes);
-		else
-			IvSignSwitch.setImageResource(R.drawable.btn_no);
-			
+
 		IvSignSwitch.setOnClickListener(new OnClickListener(){
 
 			@Override
@@ -64,20 +57,18 @@ public class SignActivity extends Activity{
 					editor.putInt("useSign", useSign);
 					editor.commit();
 				}else{
-					IvSignSwitch.setImageResource(R.drawable.btn_yes);
-					useSign = 1;
-					
-					SharedPreferences setting = getSharedPreferences("SETTING",
-							MODE_PRIVATE);
-					Editor editor = setting.edit();
-					editor.putInt("useSign", useSign);
-					editor.commit();
-					
 					if(haveSet == 0) {
 						Intent intent = new Intent();
 						intent.setClass(SignActivity.this, SetGestureActivity.class);
 						startActivityForResult(intent, 0);
-					}
+					}else {
+                        IvSignSwitch.setImageResource(R.drawable.btn_yes);
+                        useSign = 1;
+                        SharedPreferences setting = getSharedPreferences("SETTING", MODE_PRIVATE);
+                        Editor editor = setting.edit();
+                        editor.putInt("useSign", useSign);
+                        editor.commit();
+                    }
 				}
 			}
 			
@@ -121,15 +112,14 @@ public class SignActivity extends Activity{
 						editor.putInt("useSign", useSign);
 						editor.commit();
 					} else {
-						IvSignSwitch.setImageResource(R.drawable.btn_yes);
-						useSign = 1;
-
-						SharedPreferences setting = getSharedPreferences(
-								"SETTING", MODE_PRIVATE);
-						Editor editor = setting.edit();
-						editor.putInt("useSign", useSign);
-						editor.commit();
-
+                        if(haveSet == 1) {
+                            IvSignSwitch.setImageResource(R.drawable.btn_yes);
+                            useSign = 1;
+                            SharedPreferences setting = getSharedPreferences("SETTING", MODE_PRIVATE);
+                            Editor editor = setting.edit();
+                            editor.putInt("useSign", useSign);
+                            editor.commit();
+                        }
 					}
 				}
 
@@ -175,10 +165,12 @@ public class SignActivity extends Activity{
 			changeSign = (RelativeLayout) findViewById(R.id.btn_change_sign);
 			forgetSign = (RelativeLayout) findViewById(R.id.btn_forget_sign);
 
-			if(useSign == 1)
-				IvSignSwitch.setImageResource(R.drawable.btn_yes);
-			else
-				IvSignSwitch.setImageResource(R.drawable.btn_no);
+            SharedPreferences setting = getSharedPreferences("SETTING", 0);
+            useSign = setting.getInt("useSign", 0);
+            if(useSign == 1)
+                IvSignSwitch.setImageResource(R.drawable.btn_yes);
+            else
+                IvSignSwitch.setImageResource(R.drawable.btn_no);
 			IvSignSwitch.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -194,15 +186,14 @@ public class SignActivity extends Activity{
 						editor.putInt("useSign", useSign);
 						editor.commit();
 					} else {
-						IvSignSwitch.setImageResource(R.drawable.btn_yes);
-						useSign = 1;
-
-						SharedPreferences setting = getSharedPreferences(
-								"SETTING", MODE_PRIVATE);
-						Editor editor = setting.edit();
-						editor.putInt("useSign", useSign);
-						editor.commit();
-
+                        if(haveSet == 1) {
+                            IvSignSwitch.setImageResource(R.drawable.btn_yes);
+                            useSign = 1;
+                            SharedPreferences setting = getSharedPreferences("SETTING", MODE_PRIVATE);
+                            Editor editor = setting.edit();
+                            editor.putInt("useSign", useSign);
+                            editor.commit();
+                        }
 					}
 				}
 
@@ -310,27 +301,22 @@ public class SignActivity extends Activity{
 																useSign);
 														editor.commit();
 													} else {
-														IvSignSwitch
-																.setImageResource(R.drawable.btn_yes);
-														useSign = 1;
-
-														SharedPreferences setting = getSharedPreferences(
-																"SETTING",
-																MODE_PRIVATE);
-														Editor editor = setting
-																.edit();
-														editor.putInt(
-																"useSign",
-																useSign);
-														editor.commit();
-
 														if (haveSet == 0) {
 															Intent intent = new Intent();
 															intent.setClass(
 																	SignActivity.this,
 																	SetGestureActivity.class);
 															startActivity(intent);
-														}
+														}else {
+                                                            IvSignSwitch.setImageResource(R.drawable.btn_yes);
+                                                            useSign = 1;
+                                                            SharedPreferences setting = getSharedPreferences(
+                                                                    "SETTING",
+                                                                    MODE_PRIVATE);
+                                                            Editor editor = setting.edit();
+                                                            editor.putInt("useSign", useSign);
+                                                            editor.commit();
+                                                        }
 													}
 												}
 
@@ -382,21 +368,23 @@ public class SignActivity extends Activity{
 						editor.putInt("useSign", useSign);
 						editor.commit();
 					}else{
-						IvSignSwitch.setImageResource(R.drawable.btn_yes);
-						useSign = 1;
-						
-						SharedPreferences setting = getSharedPreferences("SETTING",
-								MODE_PRIVATE);
-						Editor editor = setting.edit();
-						editor.putInt("useSign", useSign);
-						editor.commit();
-						
+
 						if(haveSet == 0	) 
 						{
 							Intent intent = new Intent();
 							intent.setClass(SignActivity.this, SetGestureActivity.class);
 							startActivity(intent);
-						}
+						}else {
+                            IvSignSwitch.setImageResource(R.drawable.btn_yes);
+                            useSign = 1;
+
+                            SharedPreferences setting = getSharedPreferences("SETTING",
+                                    MODE_PRIVATE);
+                            Editor editor = setting.edit();
+                            editor.putInt("useSign", useSign);
+                            editor.commit();
+
+                        }
 					}
 				}
 				

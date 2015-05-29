@@ -73,7 +73,7 @@ public class SetGestureActivity extends Activity implements OnClickListener {
 					mGestureContentView.clearDrawlineState(0L);
 				} else {
 					if (inputCode.equals(mFirstPassword)) {
-							Toast.makeText(SetGestureActivity.this, R.string.sign_set_success, Toast.LENGTH_SHORT).show();
+						Toast.makeText(SetGestureActivity.this, R.string.sign_set_success, Toast.LENGTH_SHORT).show();
 						mGestureContentView.clearDrawlineState(0L);
 						
 						saveSign(mFirstPassword);  
@@ -83,7 +83,11 @@ public class SetGestureActivity extends Activity implements OnClickListener {
 						Editor set = setSign.edit();
 						set.putInt("HAVESETSIGN", haveSet);
 						set.commit();
-						
+						SharedPreferences setSign1 = getSharedPreferences("SETTING", 0);
+						Editor set1 = setSign1.edit();
+                        set1.putInt("useSign", 1);
+						set1.commit();
+
 						setResult(RESULT_OK);
 						
 						SetGestureActivity.this.finish();

@@ -15,7 +15,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.umeng.message.PushAgent;
-import com.umeng.message.UmengNotificationClickHandler;
 import com.umeng.message.UmengRegistrar;
 
 import android.content.BroadcastReceiver;
@@ -130,7 +129,6 @@ public class CloudDoorMainActivity extends FragmentActivity {
 				.getRegistrationId(getApplicationContext());
 		Log.e("devicetoken", device_token);
 		// mPushAgent.setDebugMode(true);
-		
 		mRequestQueue = Volley.newRequestQueue(getApplicationContext());
 		sid = loadSid();
 		JsonObjectRequest mJsonObjectRequest = new JsonObjectRequest(url
@@ -169,7 +167,7 @@ public class CloudDoorMainActivity extends FragmentActivity {
 			}
 		});
 		mRequestQueue.add(mJsonObjectRequest);
-		
+
         registerReceiver(mConnectionStatusReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         instance = this;
         
@@ -255,7 +253,6 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		}else{
 			mFragmenetTransaction.replace(R.id.id_content, mKeyFragmentNoBLE).commit();
 		}
-		
 		
 		bottomTvKey.setTextColor(COLOR_BLACK);
 		bottomTvMsg.setTextColor(COLOR_GRAY);
