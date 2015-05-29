@@ -26,16 +26,6 @@ public class PayActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pay);
 		
-		back = (RelativeLayout) findViewById(R.id.btn_back);
-		back.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				finish();
-			}
-			
-		});
-		
 		sid = loadSid();
 		
 		payWebView = (WebView) findViewById(R.id.id_pay);
@@ -52,6 +42,19 @@ public class PayActivity extends Activity {
 		payWebView.setWebViewClient(new webViewClient()); 
 
 		payWebView.loadUrl(url + "?sid=" + sid);
+		
+		back = (RelativeLayout) findViewById(R.id.btn_back);
+		back.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				if(payWebView.canGoBack())
+					payWebView.goBack();
+				else 
+					finish();
+			}
+			
+		});
 	}
 	
 	class webViewClient extends WebViewClient{        //override shouldOverrideUrlLoading method to use the webview to response when click the link     

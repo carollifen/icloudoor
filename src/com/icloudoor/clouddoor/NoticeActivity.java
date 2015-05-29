@@ -34,15 +34,7 @@ public class NoticeActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_notice);
 		
-		back = (RelativeLayout) findViewById(R.id.btn_back);
-		back.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				finish();
-			}
-			
-		});
+		
 
 		PushAgent.getInstance(this).onAppStart();
 		anouncePageWebView = (WebView) findViewById(R.id.id_public_anounce_page);
@@ -63,6 +55,19 @@ public class NoticeActivity extends Activity {
 
 		anouncePageWebView.loadUrl(pageurl + "?sid=" + sid);
 
+		
+		back = (RelativeLayout) findViewById(R.id.btn_back);
+		back.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				if(anouncePageWebView.canGoBack())
+					anouncePageWebView.goBack();
+				else
+					finish();
+			}
+			
+		});
 	}
 
 	class webViewClient extends WebViewClient{        //override shouldOverrideUrlLoading method to use the webview to response when click the link     
