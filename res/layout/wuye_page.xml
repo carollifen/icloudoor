@@ -56,12 +56,43 @@
                         android:layout_height="0dp"
                         android:layout_weight="1" >
 
-                        <ImageView
-                            android:id="@+id/btn_lianxiwuye"
-                            android:layout_width="wrap_content"
+                        <RelativeLayout
+                            android:layout_width="44dp"
                             android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:background="@drawable/selector_lianxiwuye" />
+                            android:layout_centerHorizontal="true" 
+                            >
+                            
+                            <ImageView
+                                android:id="@+id/btn_notice"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:background="@drawable/selector_notice" />
+                            
+                            <RelativeLayout
+                                 android:id="@+id/unread_notice_layout"
+                                 android:layout_width="wrap_content"
+                           		 android:layout_height="wrap_content"
+                           		 android:layout_alignParentRight="true"
+                                >
+                                
+                                <ImageView
+                                    android:id="@+id/red_dot_notice"
+                                    android:layout_width="wrap_content"
+                            		android:layout_height="wrap_content" />
+                                
+                                <TextView
+                                    android:id="@+id/unread_notice"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerHorizontal="true"
+                                    android:layout_centerVertical="true"
+                                    android:textColor="#ffffff"
+                                    android:textSize="9sp" />
+                                
+                            </RelativeLayout>
+                            
+                        </RelativeLayout>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -69,7 +100,7 @@
                             android:layout_alignParentBottom="true"
                             android:layout_centerHorizontal="true"
                             android:layout_marginBottom="14dp"
-                            android:text="联系物业"
+                            android:text="公告"
                             android:textColor="#333333"
                             android:textSize="12sp" />
                     </RelativeLayout>
@@ -80,11 +111,11 @@
                         android:layout_weight="1" >
 
                         <ImageView
-                            android:id="@+id/btn_good"
+                            android:id="@+id/btn_bad"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
-                            android:background="@drawable/selector_good" />
+                            android:background="@drawable/selector_bad" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -92,7 +123,7 @@
                             android:layout_alignParentBottom="true"
                             android:layout_centerHorizontal="true"
                             android:layout_marginBottom="14dp"
-                            android:text="表扬"
+                            android:text="投诉"
                             android:textColor="#333333"
                             android:textSize="12sp" />
                     </RelativeLayout>
@@ -124,63 +155,6 @@
                         <RelativeLayout
                             android:layout_width="44dp"
                             android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true" 
-                            >
-                            
-                            <ImageView
-                            android:id="@+id/btn_notice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:background="@drawable/selector_notice" />
-                            
-                            <RelativeLayout
-                                 android:id="@+id/unread_notice_layout"
-                                 android:layout_width="wrap_content"
-                           		 android:layout_height="wrap_content"
-                           		 android:layout_alignParentRight="true"
-                                >
-                                
-                                <ImageView
-                                    android:id="@+id/red_dot_notice"
-                                    android:layout_width="wrap_content"
-                            		android:layout_height="wrap_content" 
-                            		android:layout_centerHorizontal="true"
-                                    android:background="@drawable/red_dot" />
-                                
-                                <TextView
-                                    android:id="@+id/unread_notice"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:layout_centerInParent="true"
-                                    android:textSize="14sp"
-                                    android:textColor="#ffffff"
-                                    />
-                                
-                            </RelativeLayout>
-                            
-                        </RelativeLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginBottom="14dp"
-                            android:text="公告"
-                            android:textColor="#333333"
-                            android:textSize="12sp" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" >
-
-                        <RelativeLayout
-                            android:layout_width="44dp"
-                            android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true" >
                             
                             <ImageView
@@ -200,19 +174,16 @@
                                 <ImageView
                                     android:id="@+id/red_dot_query"
                                     android:layout_width="wrap_content"
-                            		android:layout_height="wrap_content" 
-                            		android:layout_centerHorizontal="true"
-                                    android:background="@drawable/red_dot" />
+                            		android:layout_height="wrap_content" />
                                 
                                 <TextView
                                     android:id="@+id/unread_query"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:layout_centerInParent="true"
-                                    android:textSize="14sp"
+                                    android:layout_centerHorizontal="true"
+                                    android:layout_centerVertical="true"
                                     android:textColor="#ffffff"
-                                    />
+                                    android:textSize="9sp" />
                                 
                             </RelativeLayout>
                             
@@ -229,6 +200,29 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginBottom="14dp"
                             android:text="问卷调查"
+                            android:textColor="#333333"
+                            android:textSize="12sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" >
+
+                        <ImageView
+                            android:id="@+id/btn_pay"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:background="@drawable/selector_pay" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginBottom="14dp"
+                            android:text="缴费"
                             android:textColor="#333333"
                             android:textSize="12sp" />
                     </RelativeLayout>
@@ -404,11 +398,11 @@
                         android:layout_weight="1" >
 
                         <ImageView
-                            android:id="@+id/btn_bad"
+                            android:id="@+id/btn_good"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
-                            android:background="@drawable/selector_bad" />
+                            android:background="@drawable/selector_good" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -416,7 +410,7 @@
                             android:layout_alignParentBottom="true"
                             android:layout_centerHorizontal="true"
                             android:layout_marginBottom="14dp"
-                            android:text="投诉"
+                            android:text="表扬"
                             android:textColor="#333333"
                             android:textSize="12sp" />
                     </RelativeLayout>
@@ -427,11 +421,11 @@
                         android:layout_weight="1" >
 
                         <ImageView
-                            android:id="@+id/btn_pay"
+                            android:id="@+id/btn_lianxiwuye"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
-                            android:background="@drawable/selector_pay" />
+                            android:background="@drawable/selector_lianxiwuye" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -439,7 +433,7 @@
                             android:layout_alignParentBottom="true"
                             android:layout_centerHorizontal="true"
                             android:layout_marginBottom="14dp"
-                            android:text="缴费"
+                            android:text="联系物业"
                             android:textColor="#333333"
                             android:textSize="12sp" />
                     </RelativeLayout>
