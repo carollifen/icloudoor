@@ -151,7 +151,7 @@ public class Login extends Activity implements TextWatcher {
 		//
 		
 		
-		TVLogin.setTextColor(0xFF999999);
+		TVLogin.setTextColor(0xFF015b91);
 		loginLayout.setEnabled(false);
 //		TVLogin.setEnabled(false);
 		
@@ -429,12 +429,12 @@ public class Login extends Activity implements TextWatcher {
 	@Override
 	public void afterTextChanged(Editable s) {
 		if(ETInputPhoneNum.getText().toString().length() > 10 && ETInputPwd.getText().toString().length() > 5){
-			TVLogin.setTextColor(0xFF0065a1);
+			TVLogin.setTextColor(0xFFffffff);
 			loginLayout.setEnabled(true);
-			loginLayout.setBackgroundResource(R.drawable.shape_login_btn_enable);
+			loginLayout.setBackgroundResource(R.drawable.selector_login_in);
 //			TVLogin.setEnabled(true);
 		} else {
-			TVLogin.setTextColor(0xFF999999);
+			TVLogin.setTextColor(0xFF015b91);
 			loginLayout.setEnabled(false);
 			loginLayout.setBackgroundResource(R.drawable.shape_login_btn_disable);
 //			TVLogin.setEnabled(false);
