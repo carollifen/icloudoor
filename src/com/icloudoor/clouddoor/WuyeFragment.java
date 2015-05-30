@@ -135,224 +135,8 @@ public class WuyeFragment extends Fragment {
 		// view.findViewById(R.id.wuye_widge_pager);
 		myPageChangeListener = new MyPageChangeListener();
 
-		// for test
-		try {
-			bannerURL = new URL(
-					"http://zone.icloudoor.com/icloudoor-web/user/prop/zone/getBannerRotate.do"
-							+ "?sid=" + sid);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		JsonObjectRequest mBannerRequest = new JsonObjectRequest(Method.POST,
-				bannerURL.toString(), null,
-				new Response.Listener<JSONObject>() {
-					@Override
-					public void onResponse(JSONObject response) {
-						Log.e("response", response.toString());
-						try {
-
-							Log.e(TAG, response.toString());
-
-							if (response.getInt("code") == 1) {
-                                if (getActivity() != null){
-                                    SharedPreferences banner = getActivity().getSharedPreferences("BANNER", 0);
-                                    Editor editor = banner.edit();
-
-                                    JSONArray data = response.getJSONArray("data");
-                                    if(data.length() == 1) {
-                                        if(data.getJSONObject(0).getString("type").equals("1")){
-                                            String bg = data.getJSONObject(0).getString("bgColor");
-                                            String content = data.getJSONObject(0).getString("content");
-                                            String title = data.getJSONObject(0).getString("title");
-                                            String date = data.getJSONObject(0).getString("createDate");
-//										String company = data.getJSONObject(0).getString("propertyCompany");
-                                            editor.putString("1bg", bg);
-                                            editor.putString("1content", content);
-                                            editor.putString("1title", title);
-                                            editor.putString("1date", date);
-//										editor.putString("1company", company);
-                                            editor.putString("1type", "1");
-                                        } else if(data.getJSONObject(0).getString("type").equals("2")){
-                                            String url = data.getJSONObject(0).getString("photoUrl");
-                                            String link = data.getJSONObject(0).getString("link");
-                                            editor.putString("1url", url);
-                                            editor.putString("1link", link);
-                                            editor.putString("1type", "2");
-                                        }
-                                    }else if(data.length() == 2){
-                                        if(data.getJSONObject(0).getString("type").equals("1")){
-                                            String bg = data.getJSONObject(0).getString("bgColor");
-                                            String content = data.getJSONObject(0).getString("content");
-                                            String title = data.getJSONObject(0).getString("title");
-                                            String date = data.getJSONObject(0).getString("createDate");
-//										String company = data.getJSONObject(0).getString("propertyCompany");
-                                            editor.putString("1bg", bg);
-                                            editor.putString("1content", content);
-                                            editor.putString("1title", title);
-                                            editor.putString("1date", date);
-//										editor.putString("1company", company);
-                                            editor.putString("1type", "1");
-                                        } else if(data.getJSONObject(0).getString("type").equals("2")){
-                                            String url = data.getJSONObject(0).getString("photoUrl");
-                                            String link = data.getJSONObject(0).getString("link");
-                                            editor.putString("1url", url);
-                                            editor.putString("1link", link);
-                                            editor.putString("1type", "2");
-                                        }
-
-                                        if(data.getJSONObject(1).getString("type").equals("1")){
-                                            String bg = data.getJSONObject(1).getString("bgColor");
-                                            String content = data.getJSONObject(1).getString("content");
-                                            String title = data.getJSONObject(1).getString("title");
-                                            String date = data.getJSONObject(1).getString("createDate");
-//										String company = data.getJSONObject(1).getString("propertyCompany");
-                                            editor.putString("2bg", bg);
-                                            editor.putString("2content", content);
-                                            editor.putString("2title", title);
-                                            editor.putString("2date", date);
-//										editor.putString("2company", company);
-                                            editor.putString("2type", "1");
-                                        } else if(data.getJSONObject(1).getString("type").equals("2")){
-                                            String url = data.getJSONObject(1).getString("photoUrl");
-                                            String link = data.getJSONObject(1).getString("link");
-                                            editor.putString("2url", url);
-                                            editor.putString("2link", link);
-                                            editor.putString("2type", "2");
-                                        }
-                                    }else if(data.length() == 3){
-
-                                        Log.e(TAG, "here");
-
-                                        if(data.getJSONObject(0).getString("type").equals("1")){
-                                            String bg = data.getJSONObject(0).getString("bgColor");
-                                            String content = data.getJSONObject(0).getString("content");
-                                            String title = data.getJSONObject(0).getString("title");
-                                            String date = data.getJSONObject(0).getString("createDate");
-//										String company = data.getJSONObject(0).getString("propertyCompany");
-                                            editor.putString("1bg", bg);
-                                            editor.putString("1content", content);
-                                            editor.putString("1title", title);
-                                            editor.putString("1date", date);
-//										editor.putString("1company", company);
-                                            editor.putString("1type", "1");
-                                        } else if(data.getJSONObject(0).getString("type").equals("2")){
-                                            String url = data.getJSONObject(0).getString("photoUrl");
-                                            String link = data.getJSONObject(0).getString("link");
-                                            editor.putString("1url", url);
-                                            editor.putString("1link", link);
-                                            editor.putString("1type", "2");
-                                        }
-
-                                        if(data.getJSONObject(1).getString("type").equals("1")){
-                                            String bg = data.getJSONObject(1).getString("bgColor");
-                                            String content = data.getJSONObject(1).getString("content");
-                                            String title = data.getJSONObject(1).getString("title");
-                                            String date = data.getJSONObject(1).getString("createDate");
-//										String company = data.getJSONObject(1).getString("propertyCompany");
-                                            editor.putString("2bg", bg);
-                                            editor.putString("2content", content);
-                                            editor.putString("2title", title);
-                                            editor.putString("2date", date);
-//										editor.putString("2company", company);
-                                            editor.putString("2type", "1");
-                                        } else if(data.getJSONObject(1).getString("type").equals("2")){
-                                            String url = data.getJSONObject(1).getString("photoUrl");
-                                            String link = data.getJSONObject(1).getString("link");
-                                            editor.putString("2url", url);
-                                            editor.putString("2link", link);
-                                            editor.putString("2type", "2");
-                                        }
-
-                                        if(data.getJSONObject(2).getString("type").equals("1")){
-                                            String bg = data.getJSONObject(2).getString("bgColor");
-                                            String content = data.getJSONObject(2).getString("content");
-                                            String title = data.getJSONObject(2).getString("title");
-                                            String date = data.getJSONObject(2).getString("createDate");
-//										String company = data.getJSONObject(2).getString("propertyCompany");
-                                            editor.putString("3bg", bg);
-                                            editor.putString("3content", content);
-                                            editor.putString("3title", title);
-                                            editor.putString("3date", date);
-//										editor.putString("3company", company);
-                                            editor.putString("3type", "1");
-                                        } else if(data.getJSONObject(2).getString("type").equals("2")){
-                                            String url = data.getJSONObject(2).getString("photoUrl");
-                                            String link = data.getJSONObject(2).getString("link");
-                                            editor.putString("3url", url);
-                                            editor.putString("3link", link);
-                                            editor.putString("3type", "2");
-                                        }
-                                    }
-                                    editor.commit();
-                                }
-							} else if (response.getInt("code") == -2) {
-								Toast.makeText(getActivity(),
-										R.string.not_login, Toast.LENGTH_SHORT)
-										.show();
-								final Intent intent = new Intent();
-								intent.setClass(getActivity(), Login.class);
-								startActivity(intent);
-								getActivity().finish();
-							}
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-					}
-				}, new Response.ErrorListener() {
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						// TODO Auto-generated method stub
-					}
-				});
-		mQueue.add(mBannerRequest);
-
 		InitFragmentViews();
 		InitViewPager();
-
-		try {
-			unReadURL = new URL(HOST + "/user/prop/zone/getGridCount.do"
-					+ "?sid=" + sid);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(Method.GET,
-				unReadURL.toString(), null,
-				new Response.Listener<JSONObject>() {
-
-					@Override
-					public void onResponse(JSONObject response) {
-						Log.e(TAG, response.toString());
-
-						try {
-							JSONArray data = response.getJSONArray("data");
-
-							if (data.getInt(0) != 0) {
-								unreadNotice = data.getInt(0);
-								unreadNoticeLayout.setVisibility(View.VISIBLE);
-								unreadNoticeCount.setText(String
-										.valueOf(unreadNotice));
-							}
-
-							if (data.getInt(1) != 0) {
-								unreadQuery = data.getInt(1);
-								unreadQueryLayout.setVisibility(View.VISIBLE);
-								unreadQueryCount.setText(String
-										.valueOf(unreadQuery));
-							}
-
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-
-					}
-				}, new Response.ErrorListener() {
-
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						Log.e(TAG, error.toString());
-					}
-				});
-		mQueue.add(mJsonRequest);
 
 		return view;
 	}
@@ -385,7 +169,7 @@ public class WuyeFragment extends Fragment {
 		// mWuyeWidgePager.setCurrentItem(0);
 		// mWuyeWidgePager.setOnPageChangeListener(myPageChangeListener);
 	}
-
+	
 	public class MyPageChangeListener implements OnPageChangeListener {
 
 		@Override
@@ -439,8 +223,226 @@ public class WuyeFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
+		
+		Log.e(TAG, "test");
+		
 		// start auto scroll when onResume
 		viewPager.startAutoScroll();
+
+		// for test
+		try {
+			bannerURL = new URL(
+					"http://zone.icloudoor.com/icloudoor-web/user/prop/zone/getBannerRotate.do"
+							+ "?sid=" + sid);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		JsonObjectRequest mBannerRequest = new JsonObjectRequest(Method.POST,
+				bannerURL.toString(), null,
+				new Response.Listener<JSONObject>() {
+					@Override
+					public void onResponse(JSONObject response) {
+						Log.e("response", response.toString());
+						try {
+
+							Log.e(TAG, response.toString());
+
+							if (response.getInt("code") == 1) {
+								if (getActivity() != null) {
+									SharedPreferences banner = getActivity().getSharedPreferences("BANNER", 0);
+									Editor editor = banner.edit();
+
+									JSONArray data = response.getJSONArray("data");
+									if (data.length() == 1) {
+										if (data.getJSONObject(0).getString("type").equals("1")) {
+											String bg = data.getJSONObject(0).getString("bgColor");
+											String content = data.getJSONObject(0).getString("content");
+											String title = data.getJSONObject(0).getString("title");
+											String date = data.getJSONObject(0)
+													.getString("createDate");
+											// String company =
+											// data.getJSONObject(0).getString("propertyCompany");
+											editor.putString("1bg", bg);
+											editor.putString("1content", content);
+											editor.putString("1title", title);
+											editor.putString("1date", date);
+											// editor.putString("1company",
+											// company);
+											editor.putString("1type", "1");
+										} else if (data.getJSONObject(0).getString("type").equals("2")) {
+											String url = data.getJSONObject(0).getString("photoUrl");
+											String link = data.getJSONObject(0).getString("link");
+											editor.putString("1url", url);
+											editor.putString("1link", link);
+											editor.putString("1type", "2");
+										}
+									} else if (data.length() == 2) {
+										if (data.getJSONObject(0).getString("type").equals("1")) {
+											String bg = data.getJSONObject(0).getString("bgColor");
+											String content = data.getJSONObject(0).getString("content");
+											String title = data.getJSONObject(0).getString("title");
+											String date = data.getJSONObject(0).getString("createDate");
+											// String company = data.getJSONObject(0).getString("propertyCompany");
+											editor.putString("1bg", bg);
+											editor.putString("1content", content);
+											editor.putString("1title", title);
+											editor.putString("1date", date);
+											// editor.putString("1company", company);
+											editor.putString("1type", "1");
+										} else if (data.getJSONObject(0).getString("type").equals("2")) {
+											String url = data.getJSONObject(0).getString("photoUrl");
+											String link = data.getJSONObject(0).getString("link");
+											editor.putString("1url", url);
+											editor.putString("1link", link);
+											editor.putString("1type", "2");
+										}
+
+										if (data.getJSONObject(1).getString("type").equals("1")) {
+											String bg = data.getJSONObject(1).getString("bgColor");
+											String content = data.getJSONObject(1).getString("content");
+											String title = data.getJSONObject(1).getString("title");
+											String date = data.getJSONObject(1).getString("createDate");
+											// String company = data.getJSONObject(1).getString("propertyCompany");
+											editor.putString("2bg", bg);
+											editor.putString("2content", content);
+											editor.putString("2title", title);
+											editor.putString("2date", date);
+											// editor.putString("2company", company);
+											editor.putString("2type", "1");
+										} else if (data.getJSONObject(1).getString("type").equals("2")) {
+											String url = data.getJSONObject(1).getString("photoUrl");
+											String link = data.getJSONObject(1).getString("link");
+											editor.putString("2url", url);
+											editor.putString("2link", link);
+											editor.putString("2type", "2");
+										}
+									} else if (data.length() == 3) {
+
+										Log.e(TAG, "here");
+
+										if (data.getJSONObject(0).getString("type").equals("1")) {
+											String bg = data.getJSONObject(0).getString("bgColor");
+											String content = data.getJSONObject(0).getString("content");
+											String title = data.getJSONObject(0).getString("title");
+											String date = data.getJSONObject(0).getString("createDate");
+											// String company = data.getJSONObject(0).getString("propertyCompany");
+											editor.putString("1bg", bg);
+											editor.putString("1content", content);
+											editor.putString("1title", title);
+											editor.putString("1date", date);
+											// editor.putString("1company", company);
+											editor.putString("1type", "1");
+										} else if (data.getJSONObject(0).getString("type").equals("2")) {
+											String url = data.getJSONObject(0).getString("photoUrl");
+											String link = data.getJSONObject(0).getString("link");
+											editor.putString("1url", url);
+											editor.putString("1link", link);
+											editor.putString("1type", "2");
+										}
+
+										if (data.getJSONObject(1).getString("type").equals("1")) {
+											String bg = data.getJSONObject(1).getString("bgColor");
+											String content = data.getJSONObject(1).getString("content");
+											String title = data.getJSONObject(1).getString("title");
+											String date = data.getJSONObject(1).getString("createDate");
+											// String company = data.getJSONObject(1).getString("propertyCompany");
+											editor.putString("2bg", bg);
+											editor.putString("2content", content);
+											editor.putString("2title", title);
+											editor.putString("2date", date);
+											// editor.putString("2company", company);
+											editor.putString("2type", "1");
+										} else if (data.getJSONObject(1).getString("type").equals("2")) {
+											String url = data.getJSONObject(1).getString("photoUrl");
+											String link = data.getJSONObject(1).getString("link");
+											editor.putString("2url", url);
+											editor.putString("2link", link);
+											editor.putString("2type", "2");
+										}
+
+										if (data.getJSONObject(2).getString("type").equals("1")) {
+											String bg = data.getJSONObject(2).getString("bgColor");
+											String content = data.getJSONObject(2).getString("content");
+											String title = data.getJSONObject(2).getString("title");
+											String date = data.getJSONObject(2).getString("createDate");
+											// String company = data.getJSONObject(2).getString("propertyCompany");
+											editor.putString("3bg", bg);
+											editor.putString("3content", content);
+											editor.putString("3title", title);
+											editor.putString("3date", date);
+											// editor.putString("3company", company);
+											editor.putString("3type", "1");
+										} else if (data.getJSONObject(2).getString("type").equals("2")) {
+											String url = data.getJSONObject(2).getString("photoUrl");
+											String link = data.getJSONObject(2).getString("link");
+											editor.putString("3url", url);
+											editor.putString("3link", link);
+											editor.putString("3type", "2");
+										}
+									}
+									editor.commit();
+								}
+							} else if (response.getInt("code") == -2) {
+								Toast.makeText(getActivity(), R.string.not_login, Toast.LENGTH_SHORT).show();
+								final Intent intent = new Intent();
+								intent.setClass(getActivity(), Login.class);
+								startActivity(intent);
+								getActivity().finish();
+							}
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						// TODO Auto-generated method stub
+					}
+				});
+		mQueue.add(mBannerRequest);
+
+		try {
+			unReadURL = new URL(HOST + "/user/prop/zone/getGridCount.do"
+					+ "?sid=" + sid);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(Method.GET,
+				unReadURL.toString(), null,
+				new Response.Listener<JSONObject>() {
+
+					@Override
+					public void onResponse(JSONObject response) {
+						Log.e(TAG, response.toString());
+
+						try {
+							JSONArray data = response.getJSONArray("data");
+
+							if (data.getInt(0) != 0) {
+								unreadNotice = data.getInt(0);
+								unreadNoticeLayout.setVisibility(View.VISIBLE);
+								unreadNoticeCount.setText(String.valueOf(unreadNotice));
+							}
+
+							if (data.getInt(1) != 0) {
+								unreadQuery = data.getInt(1);
+								unreadQueryLayout.setVisibility(View.VISIBLE);
+								unreadQueryCount.setText(String.valueOf(unreadQuery));
+							}
+
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+
+					}
+				}, new Response.ErrorListener() {
+
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						Log.e(TAG, error.toString());
+					}
+				});
+		mQueue.add(mJsonRequest);
 	}
 
 	public class MyClickListener implements OnClickListener {
@@ -455,9 +457,9 @@ public class WuyeFragment extends Fragment {
 				break;
 			case R.id.btn_notice:
 
-				// unreadNoticeLayout.setVisibility(View.INVISIBLE);
-				// unreadNoticeCount.setText("");
-				// unreadNotice = 0;
+				unreadNoticeLayout.setVisibility(View.INVISIBLE);
+				unreadNoticeCount.setText("");
+				unreadNotice = 0;
 
 				intent.setClass(getActivity(), NoticeActivity.class);
 				startActivity(intent);
@@ -476,9 +478,9 @@ public class WuyeFragment extends Fragment {
 				break;
 			case R.id.btn_query:
 
-				// unreadQueryLayout.setVisibility(View.INVISIBLE);
-				// unreadQueryCount.setText("");
-				// unreadQuery = 0;
+				unreadQueryLayout.setVisibility(View.INVISIBLE);
+				unreadQueryCount.setText("");
+				unreadQuery = 0;
 
 				intent.setClass(getActivity(), QueryActivity.class);
 				startActivity(intent);
