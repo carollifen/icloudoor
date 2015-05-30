@@ -692,46 +692,46 @@ public class KeyFragment extends Fragment implements ShakeListener {
 			haveRequestLHL = false;
 
 		try {
-			if (latitude != 0.0 || longitude != 0.0) { // can get the location
-														// in time
-				SharedPreferences saveLocation = getActivity()
-						.getSharedPreferences("LOCATION", 0);
-				Editor editor = saveLocation.edit();
-				editor.putString("Latitude", String.valueOf(latitude));
-				editor.putString("Longitude", String.valueOf(longitude));
-				editor.commit();
-
-				weatherURL = new URL(HOST + "city=" + String.valueOf(latitude)
-						+ ":" + String.valueOf(longitude)
-						+ "&language=zh-chs&unit=c&aqi=city&key=" + Key);
-			} else {
-				SharedPreferences loadLocation = getActivity()
-						.getSharedPreferences("LOCATION", 0); // if we can't get
-																// the location
-																// in time, use
-																// the location
-																// for the last
-																// usage
-				latitude = Double.parseDouble(loadLocation.getString(
-						"Latitude", "0.0"));
-				longitude = Double.parseDouble(loadLocation.getString(
-						"Longitude", "0.0"));
-
-				if (longitude == 0.0 && latitude == 0.0) // if no location for
-															// the last usage,
-															// then use the ip
-															// address to get
-															// the weather info
-															// for better user
-															// experiences
-					weatherURL = new URL(HOST + "city=ip"
-							+ "&language=zh-chs&unit=c&aqi=city&key=" + Key);
-				else 
+//			if (latitude != 0.0 || longitude != 0.0) { // can get the location
+//														// in time
+//				SharedPreferences saveLocation = getActivity()
+//						.getSharedPreferences("LOCATION", 0);
+//				Editor editor = saveLocation.edit();
+//				editor.putString("Latitude", String.valueOf(latitude));
+//				editor.putString("Longitude", String.valueOf(longitude));
+//				editor.commit();
+//
+//				weatherURL = new URL(HOST + "city=" + String.valueOf(latitude)
+//						+ ":" + String.valueOf(longitude)
+//						+ "&language=zh-chs&unit=c&aqi=city&key=" + Key);
+//			} else {
+//				SharedPreferences loadLocation = getActivity()
+//						.getSharedPreferences("LOCATION", 0); // if we can't get
+//																// the location
+//																// in time, use
+//																// the location
+//																// for the last
+//																// usage
+//				latitude = Double.parseDouble(loadLocation.getString(
+//						"Latitude", "0.0"));
+//				longitude = Double.parseDouble(loadLocation.getString(
+//						"Longitude", "0.0"));
+//
+//				if (longitude == 0.0 && latitude == 0.0) // if no location for
+//															// the last usage,
+//															// then use the ip
+//															// address to get
+//															// the weather info
+//															// for better user
+//															// experiences
+//					weatherURL = new URL(HOST + "city=ip"
+//							+ "&language=zh-chs&unit=c&aqi=city&key=" + Key);
+//				else 
 					weatherURL = new URL(HOST + "city=" + String.valueOf(latitude)
 							+ ":" + String.valueOf(longitude)
 							+ "&language=zh-chs&unit=c&aqi=city&key=" + Key);
 					
-			}
+//			}
 
 			lhlURL = new URL(lhlHOST + "/user/data/laohuangli/get.do" + "?sid="
 					+ sid);
@@ -1840,7 +1840,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		isChooseCarChannel = setting.getInt("chooseCar", 1);
 		canDisturb = setting.getInt("disturb", 1);
 		haveSound = setting.getInt("sound", 1);
-		canShake = setting.getInt("shake", 1);
+		canShake = setting.getInt("shake", 0);
 
 //		if (isChooseCarChannel == 1) {
 //			TvChooseCar.setTextColor(COLOR_CHANNEL_CHOOSE);

@@ -109,15 +109,11 @@ public class SettingDetailActivity extends Activity {
 	}
 	
 	public void InitBtns(){
-		canShake = 0;
-		haveSound = 1;
-		canDisturb = 1;
-		switchToCar = 1;
-//		SharedPreferences setting = getSharedPreferences("SETTING", 0);		
-//		canShake = setting.getInt("shake", 1);
-//		haveSound = setting.getInt("sound", 1);
-//		canDisturb = setting.getInt("disturb", 1);
-//		switchToCar = setting.getInt("chooseCar", 1);
+		SharedPreferences setting = getSharedPreferences("SETTING", 0);		
+		canShake = setting.getInt("shake", 0);
+		haveSound = setting.getInt("sound", 1);
+		canDisturb = setting.getInt("disturb", 1);
+		switchToCar = setting.getInt("chooseCar", 1);
 		
 		if(canShake == 1)
 			IVSetDetailShake.setImageResource(R.drawable.btn_yes);

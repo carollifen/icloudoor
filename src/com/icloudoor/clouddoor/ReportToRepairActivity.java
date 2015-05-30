@@ -55,8 +55,7 @@ public class ReportToRepairActivity extends Activity {
 	private String TAG = this.getClass().getSimpleName();
 
 	private RelativeLayout back;
-	
-	
+
 	private String callback;
 	private WebView fixwebview;
 	private String sid;
@@ -64,7 +63,7 @@ public class ReportToRepairActivity extends Activity {
 	private String url = "http://zone.icloudoor.com/icloudoor-web/user/prop/zone/rr/add.do";
 	private String resultForup = "http://zone.icloudoor.com/icloudoor-web/user/file/getSignatureAndPolicy.do";
 
-	JsonObjectRequest upRequest ;
+	JsonObjectRequest upRequest;
 
 	private String UrltoServer;
 	private String phonenum;
@@ -83,10 +82,10 @@ public class ReportToRepairActivity extends Activity {
 	private String upsubmitUrl;
 	private String upphotoUrl;
 	private String upcode;
-	
+
 	private MyHandler mhandler;
-	
-	private  String imageUrl;
+
+	private String imageUrl;
 
 	private static final int CAMERA_REQUEST_CODE = 1;
 	private static final int PICTURE_REQUEST_CODE = 2;
@@ -103,15 +102,23 @@ public class ReportToRepairActivity extends Activity {
 		setContentView(R.layout.activity_report_to_repair);
 
 		back = (RelativeLayout) findViewById(R.id.btn_back);
-		back.setOnClickListener(new OnClickListener(){
+		back.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				finish();
+				StringBuilder sb = new StringBuilder();
+				String metho = "Tool.showWidget";
+				sb.append("javascript:").append(metho).append('(')
+						.append("'dialog'").append(",").append("'")
+						.append(" «∑Ò∑µªÿ ◊“≥").append("');");
+				Log.e(TAG, sb.toString());
+				fixwebview.loadUrl(sb.toString());
+
+				// finish();
 			}
-			
+
 		});
-		
+
 		PushAgent.getInstance(this).onAppStart();
 		fixwebview = (WebView) findViewById(R.id.repair_webview);
 		webSetting = fixwebview.getSettings();
@@ -125,22 +132,21 @@ public class ReportToRepairActivity extends Activity {
 		webSetting.setBuiltInZoomControls(true);
 
 		sid = loadSid();
-		
+
 		fixwebview.addJavascriptInterface(new Camera(), "cloudoorNative");
-		fixwebview.loadUrl(url + "?sid="+ sid);
+		//fixwebview.addJavascriptInterface(new close(), "cloudoorNative");
+		fixwebview.loadUrl(url + "?sid=" + sid);
 		sid = loadSid();
-		
-		
 
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		
-		
-		if (requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
-			  Bitmap bitmap=data.getParcelableExtra("data");  
+
+		if (requestCode == CAMERA_REQUEST_CODE
+				&& resultCode == Activity.RESULT_OK && data != null) {
+			Bitmap bitmap = data.getParcelableExtra("data");
 			FixPictrueFileUtil.getInstance().saveBitmap(bitmap);
 
 			Log.e(TAG, "±£¥Ê");
@@ -156,18 +162,15 @@ public class ReportToRepairActivity extends Activity {
 			}
 			Log.e(TAG, "∂¡»°" + "dsijkl");
 
-			//Collections.sort(mList, new FileComparator());
+			// Collections.sort(mList, new FileComparator());
 
 			Log.e(TAG, "∂¡»°" + "≈≈–Ú");
-			
-			
+
 			MyAsyncTask myAsyncTask = new MyAsyncTask();
 			myAsyncTask.execute(upsubmitUrl);
-			
-			
+
 		}
 
-	
 	}
 
 	private FileFilter filefiter = new FileFilter() {
@@ -196,17 +199,16 @@ public class ReportToRepairActivity extends Activity {
 		}
 
 	};
-	
-	class MyHandler extends Handler
-	{
+
+	class MyHandler extends Handler {
 
 		@Override
 		public void handleMessage(Message msg) {
 			// TODO Auto-generated method stub
 			super.handleMessage(msg);
 			requestQueue = Volley.newRequestQueue(ReportToRepairActivity.this);
-			 upRequest = new JsonObjectRequest(resultForup
-					+ "?sid=" + loadSid() + "&type=" + "1" + "&ext=" + "jpeg", null,
+			upRequest = new JsonObjectRequest(resultForup + "?sid=" + loadSid()
+					+ "&type=" + "1" + "&ext=" + "jpeg", null,
 					new Response.Listener<JSONObject>() {
 						@Override
 						public void onResponse(JSONObject obj) {
@@ -220,7 +222,7 @@ public class ReportToRepairActivity extends Activity {
 									upPolicy = UPjsa.getString("policy");
 									upSignature = UPjsa.getString("signature");
 									upsubmitUrl = UPjsa.getString("submitUrl");
-									upphotoUrl=UPjsa.getString("photoUrl");
+									upphotoUrl = UPjsa.getString("photoUrl");
 									Log.e(TAG, upPolicy);
 									Log.e(TAG, upSignature);
 									Log.e(TAG, upsubmitUrl);
@@ -237,33 +239,34 @@ public class ReportToRepairActivity extends Activity {
 							error.getMessage();
 						}
 					});
-			
-			 requestQueue.add(upRequest);
-		
-		}
-		
-	}
-	
 
+			requestQueue.add(upRequest);
+
+		}
+
+	}
 
 	class MyAsyncTask extends AsyncTask<String, Integer, String> {
-		
+
 		@Override
 		protected void onPreExecute() {
 			// TODO Auto-generated method stub
 			super.onPreExecute();
 		}
+
 		@Override
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
-		
-				Log.e("≤‚ ‘", "’‚ «≤‚ ‘≤‚ ‘");
-				StringBuilder sb = new StringBuilder();
-				sb.append("javascript:").append(callback).append('(').append(0).append(",").append("'").append(upphotoUrl).append("');");
-				fixwebview.loadUrl(sb.toString());
-				upcode="0";
-			
+
+			Log.e(TAG, "’‚ «≤‚ ‘≤‚ ‘");
+			StringBuilder sb = new StringBuilder();
+			sb.append("javascript:").append(callback).append('(').append(0)
+					.append(",").append("'").append(upphotoUrl).append("');");
+			fixwebview.loadUrl(sb.toString());
+			Log.e("string dsklfjkl", sb.toString());
+			upcode = "0";
+
 		}
 
 		@Override
@@ -276,7 +279,7 @@ public class ReportToRepairActivity extends Activity {
 		protected String doInBackground(String... params) {
 
 			HttpClient httpClient = new DefaultHttpClient();
-			HttpPost postRequest = new HttpPost(params[0] );
+			HttpPost postRequest = new HttpPost(params[0]);
 
 			File file = null;
 			if (URLUtil.isFileUrl(mList.get(0).getAbsolutePath())) {
@@ -295,7 +298,7 @@ public class ReportToRepairActivity extends Activity {
 				StringPart signaturePart = new StringPart("signature",
 						upSignature);
 
-				parts = new Part[] { policyPart, signaturePart ,photoPart};
+				parts = new Part[] { policyPart, signaturePart, photoPart };
 
 			} catch (FileNotFoundException e1) {
 				// TODO Auto-generated catch block
@@ -312,7 +315,7 @@ public class ReportToRepairActivity extends Activity {
 				String jsonString = EntityUtils.toString(response.getEntity());
 				fromUPjson = new JSONObject(jsonString);
 				postToServer = fromUPjson.getString("url");
-				upcode=fromUPjson.getString("code");
+				upcode = fromUPjson.getString("code");
 
 				Log.e(TAG, upcode);
 				Log.e("TEst StringBuilder", postToServer);
@@ -345,27 +348,35 @@ public class ReportToRepairActivity extends Activity {
 
 	}
 
+	
 	public class Camera {
-
+		
+		
+		@JavascriptInterface
+		public void closeWebBrowser()
+		{	
+			ReportToRepairActivity.this.finish();
+		}
+		
 		@JavascriptInterface
 		public void takePhoto(final String str) {
-			
+
 			runOnUiThread(new Runnable() {
 				public void run() {
 					try {
-						mhandler=new MyHandler();
+						mhandler = new MyHandler();
 						mhandler.sendEmptyMessage(0);
-						Log.e("webview", str+"sdyiufoi");
-						JSONObject jsObj=new JSONObject(str);
-					Log.e("jsjsjjsjs", jsObj.getString("callback"))	;
-					callback=jsObj.getString("callback");
+						Log.e("webview", str + "sdyiufoi");
+						JSONObject jsObj = new JSONObject(str);
+						Log.e("jsjsjjsjs", jsObj.getString("callback"));
+						callback = jsObj.getString("callback");
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					startActivityForResult(new Intent(
 							MediaStore.ACTION_IMAGE_CAPTURE), 1);
-					
+
 				}
 			});
 
@@ -374,15 +385,3 @@ public class ReportToRepairActivity extends Activity {
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
