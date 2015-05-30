@@ -49,7 +49,7 @@ public class FixPictrueFileUtil {
 		SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyyMMdd-hhmmss");
 		String dataTake = sDateFormat.format(System.currentTimeMillis());
 		
-		String jpegName = path + "/" + dataTake +".jpg";
+		String jpegName = path + "/" + "repair" +".jpg";
 		
 		try {
 			FileOutputStream fout = new FileOutputStream(jpegName);
