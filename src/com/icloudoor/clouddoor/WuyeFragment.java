@@ -53,6 +53,8 @@ public class WuyeFragment extends Fragment {
 
 	private RelativeLayout unreadNoticeLayout;
 	private RelativeLayout unreadQueryLayout;
+	private ImageView unreadNoticeDot;
+	private ImageView unreadQueryDot;
 	private TextView unreadNoticeCount;
 	private TextView unreadQueryCount;
 	private int unreadNotice, unreadQuery;
@@ -105,12 +107,12 @@ public class WuyeFragment extends Fragment {
 		BtnBill = (ImageView) view.findViewById(R.id.btn_bill);
 		BtnPay = (ImageView) view.findViewById(R.id.btn_pay);
 
-		unreadNoticeLayout = (RelativeLayout) view
-				.findViewById(R.id.unread_notice_layout);
-		unreadQueryLayout = (RelativeLayout) view
-				.findViewById(R.id.unread_query_layout);
+		unreadNoticeLayout = (RelativeLayout) view.findViewById(R.id.unread_notice_layout);
+		unreadQueryLayout = (RelativeLayout) view.findViewById(R.id.unread_query_layout);
 		unreadNoticeCount = (TextView) view.findViewById(R.id.unread_notice);
 		unreadQueryCount = (TextView) view.findViewById(R.id.unread_query);
+		unreadNoticeDot = (ImageView) view.findViewById(R.id.red_dot_notice);
+		unreadQueryDot = (ImageView) view.findViewById(R.id.red_dot_query);
 
 		unreadNoticeLayout.setVisibility(View.INVISIBLE);
 		unreadQueryLayout.setVisibility(View.INVISIBLE);
@@ -422,12 +424,22 @@ public class WuyeFragment extends Fragment {
 								unreadNotice = data.getInt(0);
 								unreadNoticeLayout.setVisibility(View.VISIBLE);
 								unreadNoticeCount.setText(String.valueOf(unreadNotice));
+								if(unreadNotice > 9){
+									unreadNoticeDot.setBackgroundResource(R.drawable.wuye_red_dot2);
+								}else if(unreadNotice < 10){
+									unreadNoticeDot.setBackgroundResource(R.drawable.wuye_red_dot1);
+								}
 							}
 
 							if (data.getInt(1) != 0) {
 								unreadQuery = data.getInt(1);
 								unreadQueryLayout.setVisibility(View.VISIBLE);
 								unreadQueryCount.setText(String.valueOf(unreadQuery));
+								if(unreadQuery > 9){
+									unreadQueryDot.setBackgroundResource(R.drawable.wuye_red_dot2);
+								}else if(unreadQuery < 10){
+									unreadQueryDot.setBackgroundResource(R.drawable.wuye_red_dot1);
+								}
 							}
 
 						} catch (JSONException e) {
