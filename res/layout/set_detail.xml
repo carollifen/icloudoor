@@ -199,10 +199,11 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/btn_reset_pwd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="342.5dp"
-        android:background="#f3f3f3"
+        android:background="@drawable/selector_setting_detail"
         android:orientation="vertical" >
 
         <View
@@ -224,7 +225,6 @@
                 android:textSize="15sp" />
 
             <RelativeLayout
-                android:id="@+id/btn_reset_pwd"
                 android:layout_width="42dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true" >

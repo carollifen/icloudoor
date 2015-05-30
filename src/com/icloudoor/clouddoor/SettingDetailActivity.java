@@ -9,11 +9,12 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class SettingDetailActivity extends Activity {
-	private RelativeLayout TVBtnResetPwd;
+	private LinearLayout TVBtnResetPwd;
 //	private TextView TVBtnChangePhone;
 	
 	private ImageView IVSetDetailShake;
@@ -33,7 +34,7 @@ public class SettingDetailActivity extends Activity {
 //		getActionBar().hide();
 		setContentView(R.layout.set_detail);
 		
-		TVBtnResetPwd = (RelativeLayout) findViewById(R.id.btn_reset_pwd);
+		TVBtnResetPwd = (LinearLayout) findViewById(R.id.btn_reset_pwd);
 //		TVBtnChangePhone = (TextView) findViewById(R.id.btn_change_phone);
 		
 		IVSetDetailShake = (ImageView) findViewById(R.id.btn_set_detail_shake);
