@@ -13,6 +13,8 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "KeyDB.db";
 	public static final String TABLE_NAME = "KeyInfoTable";
 	public static final String Key_TABLE_NAME = "ZoneKeyTable";
+	public static final String ZONE_TABLE_NAME = "ZoneTable";
+	public static final String CAR_TABLE_NAME = "CarKeyTable";
 
 	public MyDataBaseHelper(Context context, String name,
 			CursorFactory factory, int version) {
@@ -31,27 +33,41 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		StringBuffer sBuffer = new StringBuffer();
 		StringBuffer keyBuffer = new StringBuffer();
+		StringBuffer zoneBuffer = new StringBuffer();
+		StringBuffer carBuffer = new StringBuffer();
+		
 		sBuffer.append("CREATE TABLE [" + TABLE_NAME + "] (");
-		// sBuffer.append("[zoneName] TEXT, ");
 		sBuffer.append("[zoneId] TEXT, ");
 		sBuffer.append("[doorName] TEXT, ");
 		sBuffer.append("[doorId] TEXT,");
 		sBuffer.append("[deviceId] TEXT,");
 		sBuffer.append("[doorType] TEXT,");
-		// sBuffer.append("[authType] TEXT,");
 		sBuffer.append("[plateNum] TEXT, ");
 		sBuffer.append("[direction] TEXT, ");
-		sBuffer.append("[carStatus] TEXT, ");
-		sBuffer.append("[carPosStatus] TEXT, ");
 		sBuffer.append("[authFrom] TEXT,");
 		sBuffer.append("[authTo] TEXT)");
-
 		db.execSQL(sBuffer.toString());
+		Log.e("DBHelper", "TABLE onCreate");
 
 		keyBuffer.append("CREATE TABLE [" + Key_TABLE_NAME + "] (");
 		keyBuffer.append("[zoneId] TEXT, ");
 		keyBuffer.append("[zoneAddress] TEXT)");
 		db.execSQL(keyBuffer.toString());
+		Log.e("DBHelper", "TABLE onCreate");
+		
+		zoneBuffer.append("CREATE TABLE [" + ZONE_TABLE_NAME + "](");
+		zoneBuffer.append("[zoneid] TEXT, ");
+		zoneBuffer.append("[zonename] TEXT, ");
+		zoneBuffer.append("[parentzoneid] TEXT)");
+		db.execSQL(zoneBuffer.toString());
+		Log.e("DBHelper", "TABLE onCreate");
+		
+		carBuffer.append("CREATE TABLE [" + CAR_TABLE_NAME + "](");
+		carBuffer.append("[l1ZoneId] TEXT, ");
+		carBuffer.append("[plateNum] TEXT, ");
+		carBuffer.append("[carStatus] TEXT, ");
+		carBuffer.append("[carPosStatus] TEXT)");
+		db.execSQL(carBuffer.toString());
 		Log.e("DBHelper", "TABLE onCreate");
 	}
 

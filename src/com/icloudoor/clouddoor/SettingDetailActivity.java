@@ -109,7 +109,7 @@ public class SettingDetailActivity extends Activity {
 	}
 	
 	public void InitBtns(){
-		canShake = 1;
+		canShake = 0;
 		haveSound = 1;
 		canDisturb = 1;
 		switchToCar = 1;

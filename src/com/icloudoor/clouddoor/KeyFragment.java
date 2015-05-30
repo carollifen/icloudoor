@@ -98,6 +98,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	private SQLiteDatabase mKeyDB;
 	private final String DATABASE_NAME = "KeyDB.db";
 	private final String TABLE_NAME = "KeyInfoTable";
+	private final String CAR_TABLE_NAME = "CarKeyTable";
 
 	private ArrayList<HashMap<String, String>> carDoorList;
 	private ArrayList<HashMap<String, String>> manDoorList;
@@ -965,19 +966,20 @@ public class KeyFragment extends Fragment implements ShakeListener {
 			if(getActivity() != null)
 				Toast.makeText(getActivity(), R.string.low_android_version, Toast.LENGTH_SHORT).show();
 		}
-		
+		//TODO DELETE TEMPARY
 		if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
 			if (DBCount() > 0) {
 				
 				Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME,
 						null);
 				if (mCursor.moveToFirst()) {
+					int zoneIdIndex = mCursor.getColumnIndex("zoneId");
 					int deviceIdIndex = mCursor.getColumnIndex("deviceId");
 					int doorNamemIndex = mCursor.getColumnIndex("doorName");
 					int doorTypeIndex = mCursor.getColumnIndex("doorType");
 					int directionIndex = mCursor.getColumnIndex("direction");
-					int carStatusIndex = mCursor.getColumnIndex("carStatus");
-					int carPosStatusIndex = mCursor.getColumnIndex("carPosStatus");
+//					int carStatusIndex = mCursor.getColumnIndex("carStatus");
+//					int carPosStatusIndex = mCursor.getColumnIndex("carPosStatus");
 
 					do {
 						HashMap<String, String> temp = new HashMap<String, String>();
@@ -985,35 +987,27 @@ public class KeyFragment extends Fragment implements ShakeListener {
 						String doorName = mCursor.getString(doorNamemIndex);
 						String doorType = mCursor.getString(doorTypeIndex);
 						String direction = mCursor.getString(directionIndex);
-						String carStatus = mCursor.getString(carStatusIndex);
-						String carPosStatus = mCursor.getString(carPosStatusIndex);
+//						String carStatus = mCursor.getString(carStatusIndex);
+//						String carPosStatus = mCursor.getString(carPosStatusIndex);
+						String zoneId = mCursor.getString(zoneIdIndex);
 
 						/*  Add new logic for car key
 						 *  select the car doors can be opened, 
 						 *  and all the man doors
 						 */
 						if (doorType.equals("2")) {						
-							if(direction.equals("1")){    // go in
-								if((carStatus.equals("1") || carStatus.equals("2"))     
-										&&    (carPosStatus.equals("2") || carPosStatus.equals("0"))){
-									Log.e(TAG, "add a goin car key");
-									temp.put("CDdeviceid", deviceId);
-									temp.put("CDdoorName", doorName);
-									carDoorList.add(temp);
-								}
-							} else if(direction.equals("2")){   // go out
-								if((carStatus.equals("1") || carStatus.equals("2"))     
-										&&    (carPosStatus.equals("1") || carPosStatus.equals("0"))){
-									Log.e(TAG, "add a goout car key");
-									temp.put("CDdeviceid", deviceId);
-									temp.put("CDdoorName", doorName);
-									carDoorList.add(temp);
-								}
-							}
+							Log.e(TAG, "add a car key");
+							temp.put("CDdeviceid", deviceId);
+							temp.put("CDdoorName", doorName);
+							temp.put("CDdoorType", doorType);
+							temp.put("CDDirection", direction);
+							carDoorList.add(temp);		
 						} else if (doorType.equals("1")) {
 							Log.e(TAG, "add man key");
 							temp.put("MDdeviceid", deviceId);
 							temp.put("MDdoorName", doorName);
+							temp.put("MDdoorType", doorType);
+							temp.put("MDDirection", direction);
 							manDoorList.add(temp);
 						}
 					} while (mCursor.moveToNext());
@@ -1535,7 +1529,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		if(tempDeviceAddr != device.getAddress()){
 			tempDeviceAddr = device.getAddress();
 			
-			if (isChooseCarChannel == 1) {
+//			if (isChooseCarChannel == 1) {
 				for (int i = 0; i < carDoorList.size(); i++) {
 					String tempDID = carDoorList.get(i).get("CDdeviceid");
 					tempDID = tempDID.toUpperCase();
@@ -1559,7 +1553,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 						}
 					}
 				}
-			} else {
+//			} else {
 				for (int i = 0; i < manDoorList.size(); i++) {
 					String tempDID = manDoorList.get(i).get("MDdeviceid");
 					tempDID = tempDID.toUpperCase();
@@ -1583,7 +1577,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 						}
 					}
 				}
-			}
+//			}
 		}
 	}
 	
@@ -1601,67 +1595,191 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //                if (mBTScanning) {
 //                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
 //                }
-				if (!mUartService.connect(mDeviceList.get(deviceIndexToOpen).getAddress())){
-                    mOpenDoorState = 2;
-//                    Log.i("test", "connect failed!");
-                }
+				
+				//TODO
+				if(isChooseCarChannel == 1){
+					for(int index = 0; index < carDoorList.size(); index++){
+						String deviceId = null;
+						String tempDeviceId = null;
+						deviceId = carDoorList.get(index).get("CDdeviceid");
+						tempDeviceId = deviceId.toUpperCase();
+						char[] data = tempDeviceId.toCharArray();
+						String formatDeviceId = String.valueOf(data[0]) + String.valueOf(data[1]) + ":"
+								+ String.valueOf(data[2]) + String.valueOf(data[3]) + ":"
+								+ String.valueOf(data[4]) + String.valueOf(data[5]) + ":"
+								+ String.valueOf(data[6]) + String.valueOf(data[7]) + ":"
+								+ String.valueOf(data[8]) + String.valueOf(data[9]) + ":"
+								+ String.valueOf(data[10]) + String.valueOf(data[11]);
+						
+						if(formatDeviceId.equals(mDeviceList.get(deviceIndexToOpen).getAddress())){
+							if(carDoorList.get(index).get("CDDirection").equals("1")){  // go in
+								if (mKeyDBHelper.tabIsExist(CAR_TABLE_NAME)) {
+									if(DBCountCar() > 0){
+										Cursor mCursor = mKeyDB.rawQuery("select * from " + CAR_TABLE_NAME, null);
+										if(mCursor.moveToFirst()){
+											int carStatusIndex = mCursor.getColumnIndex("carStatus");
+											int carPosStatusIndex = mCursor.getColumnIndex("carPosStatus");
+											int l1ZoneIdIndex = mCursor.getColumnIndex("l1ZoneId");
+											int plateNumIndex = mCursor.getColumnIndex("plateNum");
+											
+											do{
+												String carStatus = mCursor.getString(carStatusIndex);
+												String carPosStatus = mCursor.getString(carPosStatusIndex);
+												final String l1ZoneId = mCursor.getString(l1ZoneIdIndex);
+												final String plateNum = mCursor.getString(plateNumIndex);
+												
+												if((carStatus.equals("1") || carStatus.equals("2"))
+														&& (carPosStatus.equals("0") || carPosStatus.equals("2"))){
+													// can open
+													if (mUartService != null) {
+														mUartService.connect(mDeviceList.get(deviceIndexToOpen).getAddress());
+
+														// 30s
+														new Handler().postDelayed(new Runnable() {
+																			@Override
+																			public void run() {
+																				// update
+																				// the
+																				// carPosStatus
+																				ContentValues value = new ContentValues();
+																				value.put("carPosStatus", "1");
+																				mKeyDB.update(CAR_TABLE_NAME, value, "l1ZoneId=? and plateNum=?",
+																						new String[] {l1ZoneId, plateNum });
+																			}
+																		}, 30 * 1000);
+													}
+														
+												}else{
+													// can not open
+													if(getActivity() != null){
+														Log.e(TAG, "sorry, cannot open");
+														Toast.makeText(getActivity(), R.string.sorry_you_are_in_the_zone, Toast.LENGTH_SHORT).show();
+													}
+												}
+												
+											}while(mCursor.moveToNext());
+										}
+										mCursor.close();
+									}
+								}
+							}else if(carDoorList.get(index).get("CDDirection").equals("2")){  // go out
+								if (mKeyDBHelper.tabIsExist(CAR_TABLE_NAME)) {
+									if(DBCountCar() > 0){
+										Cursor mCursor = mKeyDB.rawQuery("select * from " + CAR_TABLE_NAME, null);
+										if(mCursor.moveToFirst()){
+											int carStatusIndex = mCursor.getColumnIndex("carStatus");
+											int carPosStatusIndex = mCursor.getColumnIndex("carPosStatus");
+											int l1ZoneIdIndex = mCursor.getColumnIndex("l1ZoneId");
+											int plateNumIndex = mCursor.getColumnIndex("plateNum");
+											
+											do{
+												String carStatus = mCursor.getString(carStatusIndex);
+												String carPosStatus = mCursor.getString(carPosStatusIndex);
+												final String l1ZoneId = mCursor.getString(l1ZoneIdIndex);
+												final String plateNum = mCursor.getString(plateNumIndex);
+												
+												if((carStatus.equals("1") || carStatus.equals("2"))
+														&& (carPosStatus.equals("0") || carPosStatus.equals("1"))){
+													// can open
+													mUartService.connect(mDeviceList.get(deviceIndexToOpen).getAddress());
+													
+													
+													// 30s	
+													new Handler().postDelayed(new Runnable() {
+									                    @Override
+									                    public void run() {
+									                    	// update the carPosStatus
+															ContentValues value = new ContentValues();
+															value.put("carPosStatus", "2");
+															mKeyDB.update(CAR_TABLE_NAME, value, "l1ZoneId=?, plateNum=?", new String[]{l1ZoneId, plateNum});
+									                    }
+									                }, 30*1000);																																							
+												}else{
+													// can not open
+													if(getActivity() != null){
+														Log.e(TAG, "sorry, cannot open");
+														Toast.makeText(getActivity(), R.string.sorry_you_are_out_the_zone, Toast.LENGTH_SHORT).show();
+													}
+												}
+												
+											}while(mCursor.moveToNext());
+										}
+										mCursor.close();
+									}
+								}
+							}
+						}
+					}
+				}else{
+					mUartService.connect(mDeviceList.get(deviceIndexToOpen).getAddress());
+				}
+				
+				
+				
+				
+				
+//				if (!mUartService.connect(mDeviceList.get(deviceIndexToOpen).getAddress())){
+//                    mOpenDoorState = 2;
+//                    Log.i(TAG, "connect failed!");
+//                }
 				
 				
 				/*  Add new logic for car key
 				 *  if open the car door, need update the carPosStatus in DB
 				 *  if direction "1", need to update the carPosStatus to "1"
 				 *  if direction "2", need to update the carPosStatus to "2"
+				 *  TODO
 				 */
 //				if(isChooseCarChannel == 1){
-					Cursor cursor = mKeyDB.rawQuery("select * from " + TABLE_NAME, null);
-					
-					if(cursor.moveToFirst()){
-						int directionIndex = cursor.getColumnIndex("direction");
-						int deviceIdIndex = cursor.getColumnIndex("deviceId");
-						int doorTypeIndex  = cursor.getColumnIndex("doorType");
-						
-						do{
-							String direction = cursor.getString(directionIndex);
-							String deviceId = cursor.getString(deviceIdIndex);
-							String doorType = cursor.getString(doorTypeIndex);
-							
-							Log.e("testforcardooropen", deviceId);
-							Log.e("testforcardooropen", mDeviceList.get(deviceIndexToOpen).getAddress());
-							Log.e("testforcardooropen", doorType);
-							
-							//
-							String Tempid;
-							Tempid = deviceId.toUpperCase();
-							char[] data = Tempid.toCharArray();
-							String formatDeviceId = String.valueOf(data[0]) + String.valueOf(data[1]) + ":"
-									+ String.valueOf(data[2]) + String.valueOf(data[3]) + ":"
-									+ String.valueOf(data[4]) + String.valueOf(data[5]) + ":"
-									+ String.valueOf(data[6]) + String.valueOf(data[7]) + ":"
-									+ String.valueOf(data[8]) + String.valueOf(data[9]) + ":"
-									+ String.valueOf(data[10]) + String.valueOf(data[11]);
-							Log.e("testforcardooropen", formatDeviceId);
-							
-							if(formatDeviceId.equals(mDeviceList.get(deviceIndexToOpen).getAddress()) && doorType.equals("2")){
-								ContentValues value = new ContentValues();
-								
-								Log.e("testforcardooropen", direction);
-								
-								if(direction.equals("1")){
-									Log.e("dsdsdsds", "i am here");
-									value.put("carPosStatus", "1");
-									mKeyDB.update("KeyInfoTable", value, "deviceId=?", new String[] {deviceId});
-								}else if(direction.equals("2")){
-									Log.e("dsdsdsds", "i am there");
-									value.put("carPosStatus", "2");
-									mKeyDB.update("KeyInfoTable", value, "deviceId=?", new String[] {deviceId});
-								}
-								
-								break;
-							}
-						}while(cursor.moveToNext());
-							
-					}
-					cursor.close();
+//					Cursor cursor = mKeyDB.rawQuery("select * from " + TABLE_NAME, null);
+//					
+//					if(cursor.moveToFirst()){
+//						int directionIndex = cursor.getColumnIndex("direction");
+//						int deviceIdIndex = cursor.getColumnIndex("deviceId");
+//						int doorTypeIndex  = cursor.getColumnIndex("doorType");
+//						
+//						do{
+//							String direction = cursor.getString(directionIndex);
+//							String deviceId = cursor.getString(deviceIdIndex);
+//							String doorType = cursor.getString(doorTypeIndex);
+//							
+//							Log.e("testforcardooropen", deviceId);
+//							Log.e("testforcardooropen", mDeviceList.get(deviceIndexToOpen).getAddress());
+//							Log.e("testforcardooropen", doorType);
+//							
+//							//
+//							String Tempid;
+//							Tempid = deviceId.toUpperCase();
+//							char[] data = Tempid.toCharArray();
+//							String formatDeviceId = String.valueOf(data[0]) + String.valueOf(data[1]) + ":"
+//									+ String.valueOf(data[2]) + String.valueOf(data[3]) + ":"
+//									+ String.valueOf(data[4]) + String.valueOf(data[5]) + ":"
+//									+ String.valueOf(data[6]) + String.valueOf(data[7]) + ":"
+//									+ String.valueOf(data[8]) + String.valueOf(data[9]) + ":"
+//									+ String.valueOf(data[10]) + String.valueOf(data[11]);
+//							Log.e("testforcardooropen", formatDeviceId);
+//							
+//							if(formatDeviceId.equals(mDeviceList.get(deviceIndexToOpen).getAddress()) && doorType.equals("2")){
+//								ContentValues value = new ContentValues();
+//								
+//								Log.e("testforcardooropen", direction);
+//								
+//								if(direction.equals("1")){
+//									Log.e("dsdsdsds", "i am here");
+//									value.put("carPosStatus", "1");
+//									mKeyDB.update("KeyInfoTable", value, "deviceId=?", new String[] {deviceId});
+//								}else if(direction.equals("2")){
+//									Log.e("dsdsdsds", "i am there");
+//									value.put("carPosStatus", "2");
+//									mKeyDB.update("KeyInfoTable", value, "deviceId=?", new String[] {deviceId});
+//								}
+//								
+//								break;
+//							}
+//						}while(cursor.moveToNext());
+//							
+//					}
+//					cursor.close();
 //				}
 				
                 new Handler().postDelayed(new Runnable() {
@@ -2039,6 +2157,13 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		SQLiteStatement statement = mKeyDB.compileStatement(sql);
 		long count = statement.simpleQueryForLong();
 		return count;
+	}
+	
+	private long DBCountCar() {  
+	    String sql = "SELECT COUNT(*) FROM " + CAR_TABLE_NAME;
+	    SQLiteStatement statement = mKeyDB.compileStatement(sql);
+	    long count = statement.simpleQueryForLong();
+	    return count;
 	}
 	
 	@Override
