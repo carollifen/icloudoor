@@ -15,7 +15,7 @@
     
     <RelativeLayout
         android:id="@+id/open_key_list"
-        android:layout_width="52dp"
+        android:layout_width="48dp"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true" >
 
@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="17dp"
+            android:layout_marginRight="19dp"
             >
             
             <ImageView
@@ -40,17 +40,17 @@
                 android:background="@drawable/red_dot"
                 />
             
-            <TextView
-                android:id="@+id/key_red_dot_num"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="3dp"
-                android:text="3"
-                android:textSize="14sp"
-                android:textColor="#ffffff"
-                />
+<!--             <TextView -->
+<!--                 android:id="@+id/key_red_dot_num" -->
+<!--                 android:layout_width="wrap_content" -->
+<!--                 android:layout_height="wrap_content" -->
+<!--                 android:layout_centerHorizontal="true" -->
+<!--                 android:layout_centerVertical="true" -->
+<!--                 android:layout_marginTop="3dp" -->
+<!--                 android:text="3" -->
+<!--                 android:textSize="14sp" -->
+<!--                 android:textColor="#ffffff" -->
+<!--                 /> -->
             
         </RelativeLayout>
         

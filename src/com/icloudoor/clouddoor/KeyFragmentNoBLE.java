@@ -166,8 +166,8 @@ public class KeyFragmentNoBLE extends Fragment implements ShakeListener {
 	private long mLastRequestTime;
 	private long mCurrentRequestTime;
 	
-	private ImageView keyRedDot;
-	private TextView keyRedDotNum;
+//	private ImageView keyRedDot;
+//	private TextView keyRedDotNum;
 	
 	// for new channel switch
 	private LinearLayout channelSwitchLayout;
@@ -270,10 +270,10 @@ public class KeyFragmentNoBLE extends Fragment implements ShakeListener {
 		contentYi.setSelected(true);
 		contentJi.setSelected(true);
 		
-		keyRedDot = (ImageView) view.findViewById(R.id.key_red_dot);
-		keyRedDotNum = (TextView) view.findViewById(R.id.key_red_dot_num);
-		keyRedDot.setVisibility(View.INVISIBLE); 
-		keyRedDotNum.setText("");
+//		keyRedDot = (ImageView) view.findViewById(R.id.key_red_dot);
+//		keyRedDotNum = (TextView) view.findViewById(R.id.key_red_dot_num);
+//		keyRedDot.setVisibility(View.INVISIBLE); 
+//		keyRedDotNum.setText("");
 		
 		requestWeatherData();
 		

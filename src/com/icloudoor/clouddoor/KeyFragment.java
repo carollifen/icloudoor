@@ -178,7 +178,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	private long mCurrentRequestTime;
 	
 	private ImageView keyRedDot;
-	private TextView keyRedDotNum;
+//	private TextView keyRedDotNum;
 	private int newNum;
 	private String uuid;
 	private URL downLoadKeyURL;
@@ -296,9 +296,9 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		contentJi.setSelected(true);
 		
 		keyRedDot = (ImageView) view.findViewById(R.id.key_red_dot);
-		keyRedDotNum = (TextView) view.findViewById(R.id.key_red_dot_num);
+//		keyRedDotNum = (TextView) view.findViewById(R.id.key_red_dot_num);
 		keyRedDot.setVisibility(View.INVISIBLE); 
-		keyRedDotNum.setText("");
+//		keyRedDotNum.setText("");
 		
 		mQueue = Volley.newRequestQueue(getActivity());
 		sid = loadSid();
@@ -486,7 +486,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 			@Override
 			public void onClick(View v) {
 				keyRedDot.setVisibility(View.INVISIBLE); 
-				keyRedDotNum.setText("");
+//				keyRedDotNum.setText("");
 				
 				Intent intent = new Intent();
 				intent.setClass(getActivity(), KeyList.class);
@@ -578,7 +578,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		
 		if(newNum > 0){
 			keyRedDot.setVisibility(View.VISIBLE); 
-			keyRedDotNum.setText(String.valueOf(newNum));
+//			keyRedDotNum.setText(String.valueOf(newNum));
 		}
 	}
 	
