@@ -151,7 +151,7 @@ public class Login extends Activity implements TextWatcher {
 		//
 		
 		
-		TVLogin.setTextColor(0xFF015b91);
+		TVLogin.setTextColor(0xFF015c92);
 		loginLayout.setEnabled(false);
 //		TVLogin.setEnabled(false);
 		
@@ -434,7 +434,7 @@ public class Login extends Activity implements TextWatcher {
 			loginLayout.setBackgroundResource(R.drawable.selector_login_in);
 //			TVLogin.setEnabled(true);
 		} else {
-			TVLogin.setTextColor(0xFF015b91);
+			TVLogin.setTextColor(0xFF015c92);
 			loginLayout.setEnabled(false);
 			loginLayout.setBackgroundResource(R.drawable.shape_login_btn_disable);
 //			TVLogin.setEnabled(false);
