@@ -12,9 +12,10 @@
         layout="@layout/title_bar_setting_page" />
 
     <RelativeLayout
+        android:id="@+id/btn_show_personal_info"
         android:layout_width="match_parent"
         android:layout_height="83dp"
-        android:background="#ffffff" >
+        android:background="@drawable/selector_setting_detail" >
 
         <com.icloudoor.clouddoor.CircularImage
             android:id="@+id/person_image"
@@ -34,7 +35,6 @@
             android:textSize="15sp" />
 
         <RelativeLayout
-            android:id="@+id/btn_show_personal_info"
             android:layout_width="42dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true" >
@@ -74,7 +74,7 @@
         android:id="@+id/btn_logout"
         android:layout_width="match_parent"
         android:layout_height="47dp"
-        android:background="#ffffff"
+        android:background="@drawable/selector_setting_detail"
         android:gravity="center"
         android:text="退出登录"
         android:textColor="#333333"

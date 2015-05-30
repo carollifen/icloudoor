@@ -112,5 +112,7 @@
     <string name="car_not_lend">该车未在借用状态</string>
     <string name="can_only_have_one_car_key_in_one_district">同一用户在同个小区只能拥有一个车钥匙</string>
     <string name="select_district_first">请先选择小区地址</string>
+    <drawable name="clr_normal">#ffffff</drawable>
+    <drawable name="clr_pressed">#eeeeee</drawable>
 
 </resources>
