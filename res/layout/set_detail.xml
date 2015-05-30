@@ -18,7 +18,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="68dp" >
+            android:layout_height="47dp" >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -47,7 +47,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="68dp" >
+            android:layout_height="47dp" >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -76,7 +76,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="68dp" >
+            android:layout_height="47dp" >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -107,7 +107,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="261.5dp"
+        android:layout_marginTop="198.5dp"
         android:background="#ffffff"
         android:orientation="vertical" >
 
@@ -118,7 +118,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="68dp"
+            android:layout_height="47dp"
             android:orientation="horizontal" >
 
             <View
@@ -202,7 +202,7 @@
         android:id="@+id/btn_reset_pwd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="342.5dp"
+        android:layout_marginTop="258.5dp"
         android:background="@drawable/selector_setting_detail"
         android:orientation="vertical" >
 
@@ -213,7 +213,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="68dp" >
+            android:layout_height="47dp" >
 
             <TextView
                 android:layout_width="wrap_content"
