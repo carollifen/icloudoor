@@ -117,6 +117,8 @@
     
     <drawable name="clr_normal">#ffffff</drawable>
     <drawable name="clr_pressed">#eeeeee</drawable>
+    <drawable name="text_enable">#333333</drawable>
+    <drawable name="text_pressed">#ffffff</drawable>
     
 
 </resources>

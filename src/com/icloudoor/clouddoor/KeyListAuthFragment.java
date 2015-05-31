@@ -309,7 +309,7 @@ public class KeyListAuthFragment extends Fragment {
 		// submit
 		btnSubmitText = (TextView) view.findViewById(R.id.btn_submit_text);
 		btnSubmitText.setBackgroundResource(R.drawable.selector_submit_text_bg);
-	    btnSubmitText.setTextColor(R.drawable.selector_submit_text_bg);
+	    btnSubmitText.setTextColor(getResources().getColorStateList(R.color.test_input_color_selector));
 //		btnSubmitText.setTextColor(ColorDisable);
 //		btnSubmitText.setBackgroundResource(R.drawable.btn_submit_big_disable);
 //		btnSubmitText.setEnabled(false);
