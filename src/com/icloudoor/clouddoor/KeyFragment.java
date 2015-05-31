@@ -56,6 +56,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -63,6 +64,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
@@ -87,7 +89,7 @@ import com.icloudoor.clouddoor.ShakeEventManager;
 import com.icloudoor.clouddoor.UartService;
 import com.icloudoor.clouddoor.ShakeEventManager.ShakeListener;
 import com.icloudoor.clouddoor.animationUtils.MyAnimationLine;
-import com.icloudoor.clouddoor.animationUtils.MyAnimationView;
+//import com.icloudoor.clouddoor.animationUtils.MyAnimationView;
 
 @SuppressLint("NewApi")
 public class KeyFragment extends Fragment implements ShakeListener {
@@ -194,9 +196,9 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	private TextView scanStatus;
 	private ImageView BtnOpenDoor;
 //	private OpenDoorRingView ringView;
-	private ImageView halo;
-	private MyAnimationLine myline;
-    private MyAnimationView myAnimationView;
+//	private ImageView halo;
+//	private MyAnimationLine myline;
+//    private MyAnimationView myAnimationView;
     private Animation animation1;
 
 	// for BLE
@@ -223,6 +225,11 @@ public class KeyFragment extends Fragment implements ShakeListener {
     private volatile boolean stopThread = false;
 
     private MyThread  myThread;
+    
+    private RelativeLayout circleLayout;
+    private ImageView circle;
+    private ImageView radar;
+    
 	public KeyFragment() {
 		// Required empty public constructor
 	}
@@ -332,18 +339,34 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		
 		channelSwitchLayout.addView(csv);	
 		
-		halo = (ImageView) view.findViewById(R.id.halo);
+		circleLayout = (RelativeLayout) view.findViewById(R.id.circle_layout);
+		circle = (ImageView) view.findViewById(R.id.circle);
+		radar = (ImageView) view.findViewById(R.id.radar_light);
+		
+		DisplayMetrics dm = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+		int screenWidth = dm.widthPixels;
+		LayoutParams param = (LayoutParams) circle.getLayoutParams();
+		param.width = screenWidth;
+		param.height = screenWidth;
+		circle.setLayoutParams(param);
+		radar.setLayoutParams(param);
+		
+		
+		
+//		halo = (ImageView) view.findViewById(R.id.halo);
 		Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.tip);
 		LinearInterpolator lin = new LinearInterpolator();
 		animation.setInterpolator(lin);
-		halo.startAnimation(animation);
+//		halo.startAnimation(animation);
 		
-		myline=(MyAnimationLine) view.findViewById(R.id.myAnimationLine);
-        myAnimationView = (MyAnimationView)view.findViewById(R.id.myAnimationView);
+//		myline=(MyAnimationLine) view.findViewById(R.id.myAnimationLine);
+//        myAnimationView = (MyAnimationView)view.findViewById(R.id.myAnimationView);
 		animation1 = AnimationUtils.loadAnimation(getActivity(), R.anim.run);
 		LinearInterpolator lin1 = new LinearInterpolator();
 		animation1.setInterpolator(lin1);
-		myline.startAnimation(animation1);
+//		myline.startAnimation(animation1);
+		radar.startAnimation(animation1);
 		
 		BtnOpenDoor = (ImageView) view.findViewById(R.id.btn_open_door);
 		BtnOpenDoor.setImageResource(R.drawable.door_normalll);
@@ -1179,14 +1202,20 @@ public class KeyFragment extends Fragment implements ShakeListener {
 					if(mDeviceList.size() != 0){
                         scanStatus.setText(R.string.can_shake_to_open_door);
                         myThread.mScanningProid = 9000;
-                        myAnimationView.setVisibility(View.INVISIBLE);
-                        myline.setVisibility(View.INVISIBLE);
-                        myline.clearAnimation();
+//                        myAnimationView.setVisibility(View.INVISIBLE);
+//                        myline.setVisibility(View.INVISIBLE);
+//                        myline.clearAnimation();
+                          circle.setVisibility(View.INVISIBLE);
+                          radar.setVisibility(View.INVISIBLE);
+                          radar.clearAnimation();
                     }else {
                         myThread.mScanningProid = 3000;
-                        myline.startAnimation(animation1);
-                        myline.setVisibility(View.VISIBLE);
-                        myAnimationView.setVisibility(View.VISIBLE);
+//                        myline.startAnimation(animation1);
+//                        myline.setVisibility(View.VISIBLE);
+//                        myAnimationView.setVisibility(View.VISIBLE);
+                        radar.startAnimation(animation1);
+                        circle.setVisibility(View.VISIBLE);
+                        radar.setVisibility(View.VISIBLE);
                     }
 					
 					// add for the case of only one door -- START

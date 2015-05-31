@@ -11,21 +11,38 @@
         layout="@layout/title_bar_key_page" />
 
     <RelativeLayout 
+        android:id="@+id/circle_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="44dp"
         android:background="@drawable/backgroud_halo"
         >
         
-        <com.icloudoor.clouddoor.animationUtils.MyAnimationLine
-            android:id="@+id/myAnimationLine"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+<!--         <com.icloudoor.clouddoor.animationUtils.MyAnimationLine -->
+<!--             android:id="@+id/myAnimationLine" -->
+<!--             android:layout_width="match_parent" -->
+<!--             android:layout_height="match_parent" /> -->
 
-        <com.icloudoor.clouddoor.animationUtils.MyAnimationView
-            android:id="@+id/myAnimationView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+<!--         <com.icloudoor.clouddoor.animationUtils.MyAnimationView -->
+<!--             android:id="@+id/myAnimationView" -->
+<!--             android:layout_width="match_parent" -->
+<!--             android:layout_height="match_parent" /> -->
+
+		<ImageView
+		    android:id="@+id/radar_light"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:background="@drawable/radar_light"
+		    android:layout_centerInParent="true"
+		    />
+
+		<ImageView
+		    android:id="@+id/circle"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:background="@drawable/circle"
+		    android:layout_centerInParent="true"
+		    />
 
         <RelativeLayout
             android:layout_width="250dp"
