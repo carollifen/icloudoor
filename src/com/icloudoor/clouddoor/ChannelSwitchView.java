@@ -34,7 +34,7 @@ public class ChannelSwitchView extends LinearLayout implements OnClickListener {
 	private TextView car;
 	private TextView man;
 	
-	private boolean isChecked = false; // 是否已开
+	private boolean isChecked = true; // 是否已开
 	private boolean checkedChange = false; // isChecked是否有改变
 	private OnCheckedChangeListener onCheckedChangeListener; // 用于监听isChecked是否有改变
 	
