@@ -612,7 +612,7 @@ public class KeyListListFragment extends Fragment {
 						value.put("carStatus", carData.getString("carStatus"));
 						value.put("carPosStatus", carData.getString("carPosStatus"));
 						
-						mKeyDB.update("CarKeyTable", value, "l1ZoneId = ?, plateNum = ?", new String[] {carData.getString("l1ZoneId"), carData.getString("plateNum")});
+						mKeyDB.update("CarKeyTable", value, "l1ZoneId = ? and plateNum = ?", new String[] {carData.getString("l1ZoneId"), carData.getString("plateNum")});
 					}
 				}
 			}
@@ -642,7 +642,7 @@ public class KeyListListFragment extends Fragment {
 							}
 						}
 						if(!keepKey){
-							mKeyDB.delete("CarKeyTable", "l1ZoneId = ?, plateNum = ?", new String[] {l1ZoneId, plateNum});
+							mKeyDB.delete("CarKeyTable", "l1ZoneId = ? and plateNum = ?", new String[] {l1ZoneId, plateNum});
 						}
 					}while(mCursor.moveToNext());
 				}
