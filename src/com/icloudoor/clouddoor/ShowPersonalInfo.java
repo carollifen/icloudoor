@@ -114,8 +114,6 @@ public class ShowPersonalInfo extends Activity {
 		mAreaDB = mAreaDBHelper.getWritableDatabase();	
 		
 		initViews();
-		
-				
 	}
 	
 	public void initViews() {
@@ -161,11 +159,13 @@ public class ShowPersonalInfo extends Activity {
 						intent.setClass(ShowPersonalInfo.this, SetPersonalInfoNotCerti.class);
 					} else if(userStatus == 2){
 						intent.setClass(ShowPersonalInfo.this, SetPersonalInfo.class);
+                        intent.putExtra("Whereis", "settingFace");
 					}
 //					intent.setClass(ShowPersonalInfo.this, ModifyPersonalInfo.class);
 					
 				} else if (personalInfo.getInt("SETINFO", 1) == 0){
 					intent.setClass(ShowPersonalInfo.this, SetPersonalInfo.class);
+                    intent.putExtra("Whereis", "settingFace");
 				}
 				startActivity(intent);
 			}
@@ -230,13 +230,13 @@ public class ShowPersonalInfo extends Activity {
 		return districtName;
 	}
 	
-	@Override
-	public void onStart() {
-		super.onStart();
-		Log.e("TESTTEST", "onStart show");
-		
-		
-	}
+//	@Override
+//	public void onStart() {
+//		super.onStart();
+//		Log.e("TESTTEST", "onStart show");
+//
+//
+//	}
 	
 	@Override
 	public void onResume(){
@@ -245,10 +245,8 @@ public class ShowPersonalInfo extends Activity {
 		
 		SharedPreferences homeKeyEvent = getSharedPreferences("HOMEKEY", 0);
 		int homePressed = homeKeyEvent.getInt("homePressed", 0);
-
 		SharedPreferences setSign = getSharedPreferences("SETTING", 0);
 		int useSign = setSign.getInt("useSign", 0);
-
 		if (homePressed == 1 && useSign == 1) {
 			Intent intent = new Intent();
 			intent.setClass(ShowPersonalInfo.this, VerifyGestureActivity.class);
@@ -268,13 +266,13 @@ public class ShowPersonalInfo extends Activity {
 		
 		if(personalInfo.getInt("SETINFO", 1) == 1) {
 			mQueue = Volley.newRequestQueue(this);
-		sid = loadSid();
-		try {
-			getInfoURL = new URL(HOST + "/user/manage/getProfile.do" + "?sid=" + sid);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
+		    sid = loadSid();
+		    try {
+			    getInfoURL = new URL(HOST + "/user/manage/getProfile.do" + "?sid=" + sid);
+		    } catch (MalformedURLException e) {
+			    e.printStackTrace();
+		    }
+		    MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
 				Method.POST, getInfoURL.toString(), null,
 				new Response.Listener<JSONObject>() {
 
@@ -293,7 +291,6 @@ public class ShowPersonalInfo extends Activity {
 						Log.e("TEST", response.toString());
 						
 						if(statusCode == 1){
-							
 							try {
 								data = response.getJSONObject("data");
 								

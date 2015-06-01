@@ -104,6 +104,7 @@ public class SetPersonalInfo extends Activity {
 	
 	private String NAME;
 	private String ID;
+    private String whereFrom;
 	
 	private String Name, Nickname, Age, PersonalID, province, city, district, year, month, day, BirthDay;
 	private int Sex, provinceId, cityId, districtId;
@@ -129,6 +130,7 @@ public class SetPersonalInfo extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 //		getActionBar().hide();
+        whereFrom = getIntent().getStringExtra("Whereis");
 		setContentView(R.layout.set_person_info);
 		
 		back = (RelativeLayout) findViewById(R.id.btn_back);
@@ -402,11 +404,11 @@ public class SetPersonalInfo extends Activity {
 //									Editor editor1 = loginStatus.edit();
 //									editor1.putString("NAME", Name);
 //									editor1.commit();
-									
-									Intent intent = new Intent();
-									intent.setClass(SetPersonalInfo.this, CloudDoorMainActivity.class);
-									startActivity(intent);
-									
+									if (whereFrom == null) {
+                                        Intent intent = new Intent();
+                                        intent.setClass(SetPersonalInfo.this, CloudDoorMainActivity.class);
+                                        startActivity(intent);
+                                    }
 									SetPersonalInfo.this.finish();
 								} else if (statusCode == -1) {
 									Toast.makeText(getApplicationContext(), R.string.wrong_params, Toast.LENGTH_SHORT).show();
@@ -668,6 +670,21 @@ public class SetPersonalInfo extends Activity {
 		Sex = 2;
 		sexMan.setImageResource(R.drawable.not_select);
 		sexWoman.setImageResource(R.drawable.select);
+
+        SharedPreferences saveProfile = getSharedPreferences("PROFILE", MODE_PRIVATE);
+//        realName.setText(saveProfile.getString("NAME", ""));
+        nickName.setText(saveProfile.getString("NICKNAME", ""));
+//        personalID.setText(saveProfile.getString("ID", ""));
+//        saveProfile.getString("PROVINCE", "");
+//        saveProfile.getString("CITY", "");
+//        saveProfile.getString("DISTRICT", "");
+//        saveProfile.getString("PROVINCEID", "");
+//        saveProfile.getString("CITYID", "");
+//        saveProfile.getString("DISTRICTID", "");
+//        saveProfile.getString("SEX", getString(R.string.male));
+        birthYear.setText(saveProfile.getString("YEAR", ""));
+        birthMonth.setText(saveProfile.getString("MONTH", ""));
+        birthDay.setText(saveProfile.getString("DAY", ""));
 	}
 	
 	private void setSpinner(){
