@@ -1333,22 +1333,22 @@ public class KeyFragment extends Fragment implements ShakeListener {
 					}
 					// add for the case of only one door -- END		
 					
-					if (mDeviceList != null && mDeviceList.size() > 1) {
-
-						int maxRssiIndex = 0;
-						int maxRssi = -128;
-
-						for (int i = 0; i < mDeviceList.size(); i++) {
-							Log.e("TEST", "checking rssi");
-							String tempAdd = mDeviceList.get(i).getAddress();
-							int tempRssi = mDevRssiValues.get(tempAdd);
-							if (tempRssi > maxRssi) {
-								maxRssi = tempRssi;
-								maxRssiIndex = i;
-							}
-						}
-						deviceIndexToOpen = maxRssiIndex;
-					}
+//					if (mDeviceList != null && mDeviceList.size() > 1) {
+//
+//						int maxRssiIndex = 0;
+//						int maxRssi = -128;
+//
+//						for (int i = 0; i < mDeviceList.size(); i++) {
+//							Log.e("TEST", "checking rssi");
+//							String tempAdd = mDeviceList.get(i).getAddress();
+//							int tempRssi = mDevRssiValues.get(tempAdd);
+//							if (tempRssi > maxRssi) {
+//								maxRssi = tempRssi;
+//								maxRssiIndex = i;
+//							}
+//						}
+//						deviceIndexToOpen = maxRssiIndex;
+//					}
 					
 					if (mDeviceList != null && mDeviceList.size() > 1) {
 						onlyOneDoor = false;
