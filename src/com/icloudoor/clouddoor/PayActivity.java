@@ -18,7 +18,7 @@ public class PayActivity extends Activity {
 	private RelativeLayout back;
 	private WebView payWebView;
 	private String sid;
-	private String url = "http://zone.icloudoor.com/icloudoor-web/user/prop/zone/payment/pay.do";
+	private String url = "https://zone.icloudoor.com/icloudoor-web/user/prop/zone/payment/pay.do";
 	private WebSettings webSetting;
 	
 	@Override

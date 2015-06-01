@@ -33,6 +33,7 @@ import com.icloudoor.clouddoor.Entities.Part;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -41,10 +42,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -105,6 +109,8 @@ public class SetPersonalInfoNotCerti extends Activity {
 	private EditText birthDay;
 	private EditText personalID;
 	
+    private String whereFrom;
+	
 	private String Name, Nickname, Age, PersonalID, province, city, district, year, month, day, BirthDay;
 	private int Sex, provinceId, cityId, districtId;
 	private String portraitUrl;
@@ -114,7 +120,7 @@ public class SetPersonalInfoNotCerti extends Activity {
 	
 	private RequestQueue mQueue;
 	private URL setInfoURL;
-	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
+	private String HOST = "https://zone.icloudoor.com/icloudoor-web";
 	private String sid;
 	private int statusCode;
 	
@@ -128,11 +134,16 @@ public class SetPersonalInfoNotCerti extends Activity {
 			+ "/Cloudoor/CacheImage/";
 	private String imageName = "myImage.jpg";
 	
+	private static final int CAMERA_REQUEST_CODE = 1;
+	private static final int PICTURE_REQUEST_CODE = 2;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 //		getActionBar().hide();
 		setContentView(R.layout.set_person_info_not_certi);
+		
+        whereFrom = getIntent().getStringExtra("Whereis");
 		
 		back = (RelativeLayout) findViewById(R.id.btn_back);
 		back.setOnClickListener(new OnClickListener(){
@@ -153,7 +164,12 @@ public class SetPersonalInfoNotCerti extends Activity {
 		File f = new File(PATH + imageName);
 		if (f.exists()) {
 			Log.e(TAG, "use local");
-			Bitmap bm = BitmapFactory.decodeFile(PATH + imageName);
+			BitmapFactory.Options opts=new BitmapFactory.Options();
+			opts.inTempStorage = new byte[100 * 1024];
+			opts.inPreferredConfig = Bitmap.Config.RGB_565;
+			opts.inPurgeable = true;
+			opts.inSampleSize = 4;
+			Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
 			personImage.setImageBitmap(bm);
 		}
 		//
@@ -299,9 +315,10 @@ public class SetPersonalInfoNotCerti extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent();
-				intent.setClass(SetPersonalInfoNotCerti.this, TakePictureActivity.class);	
-				startActivityForResult(intent, 0);
+//				Intent intent = new Intent();
+//				intent.setClass(SetPersonalInfoNotCerti.this, TakePictureActivity.class);	
+//				startActivityForResult(intent, 0);
+				openOptionsMenu();
 			}
 			
 		});
@@ -384,9 +401,11 @@ public class SetPersonalInfoNotCerti extends Activity {
 									editor1.putString("NAME", Name);
 									editor1.commit();
 									
-									Intent intent = new Intent();
-									intent.setClass(SetPersonalInfoNotCerti.this, CloudDoorMainActivity.class);
-									startActivity(intent);
+									if (whereFrom == null) {
+										Intent intent = new Intent();
+										intent.setClass(SetPersonalInfoNotCerti.this, CloudDoorMainActivity.class);
+										startActivity(intent);
+									}
 									
 									SetPersonalInfoNotCerti.this.finish();
 								} else if (statusCode == -1) {
@@ -442,18 +461,30 @@ public class SetPersonalInfoNotCerti extends Activity {
 	@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		
          if(requestCode == 0 && resultCode == RESULT_OK) {
         	 
-        	 Toast.makeText(this, R.string.uploading_image, Toast.LENGTH_LONG).show();
+        	 final Uri uri = data.getData();
+        	 Log.e(TAG, "uri: " + getRealPathFromURI(uri));
         	 
-        	 File f = new File(PATH + imageName);
-        	 if(f.exists()){
-        		 Log.e(TAG, "use local");
-        		 Bitmap bm = BitmapFactory.decodeFile(PATH + imageName);
-        		 personImage.setImageBitmap(bm);
-        	 }
-        	 
-        	 
+        	 BitmapFactory.Options opts=new BitmapFactory.Options();
+ 			 opts.inTempStorage = new byte[100 * 1024];
+ 			 opts.inPreferredConfig = Bitmap.Config.RGB_565;
+ 			 opts.inPurgeable = true;
+ 			 opts.inSampleSize = 4;
+ 			 Bitmap bm = BitmapFactory.decodeFile(getRealPathFromURI(uri), opts);
+ 			 
+ 			if(bm.getWidth() < bm.getHeight()){
+				bm = zoomImage(bm, 400, 400);
+			}else{
+				bm = getRotateBitmap(bm, 90);
+				bm = zoomImage(bm, 400, 400);
+			}
+ 			
+ 			 TakePicFileUtil.getInstance().saveBitmap(bm);
+ 			personImage.setImageBitmap(bm);
+
             // upload image
         	 new Thread() {
 
@@ -467,8 +498,80 @@ public class SetPersonalInfoNotCerti extends Activity {
 						}
 
 						HttpClient httpClient = new DefaultHttpClient();
-						HttpPost postRequest = new HttpPost(HOST
-								+ "/user/api/uploadPortrait.do" + "?sid=" + sid);
+						HttpPost postRequest = new HttpPost(HOST + "/user/api/uploadPortrait.do" + "?sid=" + sid);
+
+						File file = null;
+						file = new File(getRealPathFromURI(uri));
+						Part[] parts = null;
+						FilePart filePart = null;
+						try {
+							filePart = new FilePart("portrait", file);
+						} catch (FileNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+						parts = new Part[] { filePart };
+
+						postRequest.setEntity(new MultipartEntity(parts));
+						try {
+							HttpResponse response = httpClient.execute(postRequest);
+							BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
+							String sResponse;
+							StringBuilder s = new StringBuilder();
+							while ((sResponse = reader.readLine()) != null) {
+								s = s.append(sResponse);
+							}
+							Log.e("TEst StringBuilder", s.toString());
+							
+							//
+							JSONObject jsObj = new JSONObject(s.toString());
+							JSONObject data = jsObj.getJSONObject("data");
+							portraitUrl = data.getString("portraitUrl");
+							Log.e(TAG, portraitUrl);
+							
+						} catch (ClientProtocolException e) {
+							e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+
+				}.start();
+        } else if(requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null){
+        	final Uri uri = data.getData();
+			BitmapFactory.Options opts=new BitmapFactory.Options();
+			opts.inTempStorage = new byte[100 * 1024];
+			opts.inPreferredConfig = Bitmap.Config.RGB_565;
+			opts.inPurgeable = true;
+			opts.inSampleSize = 4;
+			Bitmap bm = BitmapFactory.decodeFile(getRealPathFromURI(uri), opts);
+        	
+			if(bm.getWidth() < bm.getHeight()){
+				bm = zoomImage(bm, 400, 400);
+			}else{
+				bm = getRotateBitmap(bm, 90);
+				bm = zoomImage(bm, 400, 400);
+			}
+			
+        	TakePicFileUtil.getInstance().saveBitmap(bm);
+			personImage.setImageBitmap(bm);
+
+       	 	new Thread() {
+
+					@Override
+					public void run() {
+						
+						try {
+							sleep(1000);
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						}
+
+						HttpClient httpClient = new DefaultHttpClient();
+						HttpPost postRequest = new HttpPost(HOST + "/user/api/uploadPortrait.do" + "?sid=" + sid);
 
 						File file = null;
 						file = new File(PATH + imageName);
@@ -485,11 +588,8 @@ public class SetPersonalInfoNotCerti extends Activity {
 
 						postRequest.setEntity(new MultipartEntity(parts));
 						try {
-							HttpResponse response = httpClient
-									.execute(postRequest);
-							BufferedReader reader = new BufferedReader(
-									new InputStreamReader(response.getEntity()
-											.getContent(), "UTF-8"));
+							HttpResponse response = httpClient.execute(postRequest);
+							BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
 							String sResponse;
 							StringBuilder s = new StringBuilder();
 							while ((sResponse = reader.readLine()) != null) {
@@ -525,7 +625,12 @@ public class SetPersonalInfoNotCerti extends Activity {
 		Log.e(TAG, PATH + imageName);
 		if(f.exists()){
 			Log.e(TAG, "use local");
-			Bitmap bm = BitmapFactory.decodeFile(PATH + imageName);
+			BitmapFactory.Options opts=new BitmapFactory.Options();
+			opts.inTempStorage = new byte[100 * 1024];
+			opts.inPreferredConfig = Bitmap.Config.RGB_565;
+			opts.inPurgeable = true;
+			opts.inSampleSize = 4;
+			Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
 			personImage.setImageBitmap(bm);
 		}else{
 			// request bitmap in the new thread
@@ -561,8 +666,13 @@ public class SetPersonalInfoNotCerti extends Activity {
 			try {
 				org.apache.http.HttpResponse httpResponse = httpClient
 						.execute(httpGet);
+				BitmapFactory.Options opts=new BitmapFactory.Options();
+				opts.inTempStorage = new byte[100 * 1024];
+				opts.inPreferredConfig = Bitmap.Config.RGB_565;
+				opts.inPurgeable = true;
+				opts.inSampleSize = 4;
 				bitmap = BitmapFactory.decodeStream(httpResponse.getEntity()
-						.getContent());
+						.getContent(), null, opts);
 			} catch (Exception e) {
 				mHandler.obtainMessage(MSG_FAILURE).sendToTarget();
 				return;
@@ -603,12 +713,10 @@ public class SetPersonalInfoNotCerti extends Activity {
 			int tempPId = mCursorC.getInt(provinceIdIndex);
 			int tempCId = mCursorC.getInt(cityIdIndex);
 			while (mCursorC.moveToNext()) {
-				if(mCursorC.getInt(provinceIdIndex) == tempPId
-						&& mCursorC.getInt(cityIdIndex) != tempCId){
+				if(mCursorC.getInt(provinceIdIndex) == tempPId && mCursorC.getInt(cityIdIndex) != tempCId){
 					tempCId = mCursorC.getInt(cityIdIndex);
 					tempCcount++;
-				}else if(mCursorC.getInt(provinceIdIndex) != tempPId
-						&& mCursorC.getInt(cityIdIndex) != tempCId){
+				}else if(mCursorC.getInt(provinceIdIndex) != tempPId && mCursorC.getInt(cityIdIndex) != tempCId){
 					tempPId = mCursorC.getInt(provinceIdIndex);
 					tempCId = mCursorC.getInt(cityIdIndex);
 					if(tempCcount > maxClength) {
@@ -625,18 +733,15 @@ public class SetPersonalInfoNotCerti extends Activity {
 			int tempPId = mCursorD.getInt(provinceIdIndex);
 			int tempCId = mCursorD.getInt(cityIdIndex);
 			while (mCursorD.moveToNext()) {
-				if(mCursorD.getInt(provinceIdIndex) == tempPId
-						&& mCursorD.getInt(cityIdIndex) == tempCId){
+				if(mCursorD.getInt(provinceIdIndex) == tempPId && mCursorD.getInt(cityIdIndex) == tempCId){
 					tempDcount++;
-				}else if(mCursorD.getInt(provinceIdIndex) == tempPId
-						&& mCursorD.getInt(cityIdIndex) != tempCId){
+				}else if(mCursorD.getInt(provinceIdIndex) == tempPId && mCursorD.getInt(cityIdIndex) != tempCId){
 					tempCId = mCursorD.getInt(cityIdIndex);
 					if(tempDcount > maxDlength) {
 						maxDlength = tempDcount;
 					}
 					tempDcount = 1;
-				}else if(mCursorD.getInt(provinceIdIndex) != tempPId
-						&& mCursorD.getInt(cityIdIndex) != tempCId){
+				}else if(mCursorD.getInt(provinceIdIndex) != tempPId && mCursorD.getInt(cityIdIndex) != tempCId){
 					tempPId = mCursorD.getInt(provinceIdIndex);
 					tempCId = mCursorD.getInt(cityIdIndex);
 					if(tempDcount > maxDlength) {
@@ -704,6 +809,14 @@ public class SetPersonalInfoNotCerti extends Activity {
 		Sex = 2;
 		sexMan.setImageResource(R.drawable.not_select);
 		sexWoman.setImageResource(R.drawable.select);
+		
+        SharedPreferences saveProfile = getSharedPreferences("PROFILE", MODE_PRIVATE);
+      realName.setText(saveProfile.getString("NAME", ""));
+      nickName.setText(saveProfile.getString("NICKNAME", ""));
+      personalID.setText(saveProfile.getString("ID", ""));
+      birthYear.setText(saveProfile.getString("YEAR", ""));
+      birthMonth.setText(saveProfile.getString("MONTH", ""));
+      birthDay.setText(saveProfile.getString("DAY", ""));
 	}
 	
 	private void setSpinner(){
@@ -760,5 +873,77 @@ public class SetPersonalInfoNotCerti extends Activity {
         }
 		return super.onKeyDown(keyCode, event);
 
+	}
+	
+	 public boolean onCreateOptionsMenu(Menu menu) {
+		 super .onCreateOptionsMenu(menu); 
+
+		 menu.add(0, Menu.FIRST+1, 1, "拍照");
+		 menu.add(0, Menu.FIRST+2, 2, "从手机相册中选择");
+		 menu.add(0, Menu.FIRST+3, 3, "取消");
+		 
+		 return true ;
+	 }
+	 
+	public boolean onOptionsItemSelected(MenuItem item) {
+		super.onOptionsItemSelected(item);
+
+		switch (item.getItemId()) {
+		case Menu.FIRST + 1:
+			startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE), 1);
+			break;
+		case Menu.FIRST + 2:
+			Intent intent = new Intent();
+			intent.setAction(Intent.ACTION_PICK);
+			intent.setType("image/*");
+			startActivityForResult(intent, 0);
+			break;
+		case Menu.FIRST + 3:
+		}
+
+		return true;
+	}
+	 
+//	private String getRealPathFromURI(Uri contentUri) {
+//		String[] proj = { MediaStore.Images.Media.DATA };
+//		CursorLoader loader = new CursorLoader(this, contentUri, proj, null,
+//				null, null);
+//		Cursor cursor = loader.loadInBackground();
+//		int column_index = cursor
+//				.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+//		cursor.moveToFirst();
+//		return cursor.getString(column_index);
+//	}
+	
+	public String getRealPathFromURI(Uri contentUri) {
+        String[] proj = { MediaStore.Images.Media.DATA };
+        Cursor cursor = managedQuery(contentUri, proj, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }
+
+	public static Bitmap zoomImage(Bitmap bgimage, double newWidth,
+			double newHeight) {
+
+		float width = bgimage.getWidth();
+		float height = bgimage.getHeight();
+
+		Matrix matrix = new Matrix();
+
+		float scaleWidth = ((float) newWidth) / width;
+		float scaleHeight = ((float) newHeight) / height;
+
+		matrix.postScale(scaleWidth, scaleHeight);
+		Bitmap bitmap = Bitmap.createBitmap(bgimage, 0, 0, (int) width,
+				(int) height, matrix, true);
+		return bitmap;
+	}
+	
+	public static Bitmap getRotateBitmap(Bitmap b, float rotateDegree){
+		Matrix matrix = new Matrix();
+		matrix.postRotate((float)rotateDegree);
+		Bitmap rotaBitmap = Bitmap.createBitmap(b, 0, 0, b.getWidth(), b.getHeight(), matrix, false);
+		return rotaBitmap;
 	}
 }

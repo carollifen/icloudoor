@@ -59,7 +59,7 @@ public class Login extends Activity implements TextWatcher {
 
 	private String phoneNum, password;
 
-	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
+	private String HOST = "https://zone.icloudoor.com/icloudoor-web";
 
 	private int loginStatusCode;
 
@@ -247,10 +247,8 @@ public class Login extends Activity implements TextWatcher {
 										editor.commit();
 
 										try {
-											JSONObject data = response
-													.getJSONObject("data");
-											JSONObject info = data
-													.getJSONObject("info");
+											JSONObject data = response.getJSONObject("data");
+											JSONObject info = data.getJSONObject("info");
 
 											name = info.getString("userName");
 											nickname = info.getString("nickname");
@@ -277,6 +275,35 @@ public class Login extends Activity implements TextWatcher {
 											editor.putString("USERID", userId);
 											editor.putInt("STATUS", userStatus);
 											editor.commit();
+											
+											//
+											Intent intent = new Intent();
+
+											SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
+											setPersonal = personalInfo.getInt("SETINFO", 1);
+
+											if (setPersonal == 0 || name.length() == 0 || sex == 0 || provinceId == 0 || cityId == 0 || districtId == 0 || birth.length() == 0 || id.length() == 0) {
+												Log.e("jump to set", "in login activity");
+												
+												if(userStatus == 2) {
+													intent.setClass(Login.this, SetPersonalInfo.class);
+													startActivity(intent);
+												} else if(userStatus == 1) {
+													intent.setClass(Login.this, SetPersonalInfoNotCerti.class);
+													startActivity(intent);
+												}
+													
+											}
+
+											if (setPersonal == 1) {
+												intent.setClass(Login.this, CloudDoorMainActivity.class);
+												startActivity(intent);
+											}
+											//
+											
+
+											finish();
+											
 
 										} catch (JSONException e) {
 											e.printStackTrace();
@@ -286,41 +313,7 @@ public class Login extends Activity implements TextWatcher {
 												new Runnable() {
 													@Override
 													public void run() {
-														Intent intent = new Intent();
-
-														SharedPreferences personalInfo = getSharedPreferences(
-																"PERSONSLINFO",
-																MODE_PRIVATE);
-														setPersonal = personalInfo
-																.getInt("SETINFO",
-																		1);
-
-														if (setPersonal == 0
-																|| name.length() == 0
-																|| sex == 0
-																|| provinceId == 0
-																|| cityId == 0
-																|| districtId == 0
-																|| birth.length() == 0
-																|| id.length() == 0) {
-															Log.e("jump to set",
-																	"in login activity");
-															
-															if(userStatus == 2) {
-																intent.setClass(getApplicationContext(), SetPersonalInfo.class);
-															} else if(userStatus == 1) {
-																intent.setClass(getApplicationContext(), SetPersonalInfoNotCerti.class);
-															}
-																
-														}
-
-														if (setPersonal == 1) {
-															intent.setClass(getApplicationContext(), CloudDoorMainActivity.class);
-														}
-
-														startActivity(intent);
-
-														finish();
+														
 													}
 												}, 1000);
 

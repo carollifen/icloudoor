@@ -43,7 +43,7 @@ public class ResetPwdActivity extends Activity implements TextWatcher {
 	private String oldPwd, newPwd, confirmPwd;
 
 	private int statusCode;
-	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
+	private String HOST = "https://zone.icloudoor.com/icloudoor-web";
 	private String sid = null;
 	
 	@Override

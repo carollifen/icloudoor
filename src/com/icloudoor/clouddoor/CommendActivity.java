@@ -22,7 +22,7 @@ public class CommendActivity extends Activity {
 	private int TYPE_GOOD=1;
 	
 	private WebSettings webSetting;
-	private String url = "http://zone.icloudoor.com/icloudoor-web/user/prop/zone/cp/page.do";
+	private String url = "https://zone.icloudoor.com/icloudoor-web/user/prop/zone/cp/page.do";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

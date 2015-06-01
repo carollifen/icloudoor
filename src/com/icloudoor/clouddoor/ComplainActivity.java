@@ -20,7 +20,7 @@ public class ComplainActivity extends Activity {
 	private int TYPE_BAD = 2;
 
 	private WebSettings webSetting;
-	private String url = "http://zone.icloudoor.com/icloudoor-web/user/prop/zone/cp/page.do";
+	private String url = "https://zone.icloudoor.com/icloudoor-web/user/prop/zone/cp/page.do";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

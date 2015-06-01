@@ -155,7 +155,7 @@ public class KeyFragmentNoBLE extends Fragment implements ShakeListener {
 	private String Key = "XSI7AKYYBY";
 	private RequestQueue mQueue;
 	
-	private String lhlHOST = "http://zone.icloudoor.com/icloudoor-web";
+	private String lhlHOST = "https://zone.icloudoor.com/icloudoor-web";
 	private URL lhlURL;
 	private int lhlCode;
 	private String sid;

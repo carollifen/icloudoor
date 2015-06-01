@@ -50,7 +50,7 @@ public class ShowPersonalInfo extends Activity {
 	private String TAG = this.getClass().getSimpleName();
 
 	private RequestQueue mQueue;
-	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
+	private String HOST = "https://zone.icloudoor.com/icloudoor-web";
 	private URL getInfoURL;
 	private int statusCode;
 	private String sid;
@@ -150,27 +150,190 @@ public class ShowPersonalInfo extends Activity {
 
 			@Override
 			public void onClick(View v) {
+				
+				Log.e(TAG, "onClick");
+				
 				Intent intent = new Intent();
 				
 				SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
 				if(personalInfo.getInt("SETINFO", 1) == 1){
 					
+					Log.e(TAG, "onClick1");
+					
 					if(userStatus == 1) {
+						Log.e(TAG, "onClick2");
 						intent.setClass(ShowPersonalInfo.this, SetPersonalInfoNotCerti.class);
+						startActivityForResult(intent, 0);
 					} else if(userStatus == 2){
+						Log.e(TAG, "onClick3");
 						intent.setClass(ShowPersonalInfo.this, SetPersonalInfo.class);
                         intent.putExtra("Whereis", "settingFace");
+                        startActivityForResult(intent, 0);
 					}
 //					intent.setClass(ShowPersonalInfo.this, ModifyPersonalInfo.class);
 					
 				} else if (personalInfo.getInt("SETINFO", 1) == 0){
+					Log.e(TAG, "onClick4");
 					intent.setClass(ShowPersonalInfo.this, SetPersonalInfo.class);
                     intent.putExtra("Whereis", "settingFace");
+                    startActivityForResult(intent, 0);
 				}
-				startActivity(intent);
+				
 			}
 			
 		});
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		if (requestCode == 0 && resultCode == RESULT_OK) {
+			mQueue = Volley.newRequestQueue(this);
+			sid = loadSid();
+			try {
+				getInfoURL = new URL(HOST + "/user/manage/getProfile.do" + "?sid=" + sid);
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+			MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
+					Method.POST, getInfoURL.toString(), null,
+					new Response.Listener<JSONObject>() {
+
+						@Override
+						public void onResponse(JSONObject response) {
+							try {
+								if (response.getString("sid") != null) {
+									sid = response.getString("sid");
+									saveSid(sid);
+								}
+								statusCode = response.getInt("code");
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
+
+							Log.e("TEST", response.toString());
+
+							if (statusCode == 1) {
+								try {
+									JSONObject Data = response.getJSONObject("data");
+
+									name = Data.getString("userName");
+									nickname = Data.getString("nickname");
+									birthday = Data.getString("birthday");
+									id = Data.getString("idCardNo");
+									sex = Data.getInt("sex");
+									provinceid = Data.getInt("provinceId");
+									cityid = Data.getInt("cityId");
+									districtid = Data.getInt("districtId");
+									portraitUrl = Data.getString("portraitUrl");
+
+									SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
+									Editor edit = loginStatus.edit();
+									edit.putString("URL", portraitUrl);
+									edit.commit();
+
+									SharedPreferences saveProfile = getSharedPreferences("PROFILE", MODE_PRIVATE);
+									Editor editor = saveProfile.edit();
+									editor.putString("NAME", name);
+									editor.putString("NICKNAME", nickname);
+									editor.putString("ID", id);
+									editor.putString("PROVINCE", province);
+									editor.putString("CITY", city);
+									editor.putString("DISTRICT", district);
+									editor.putInt("PROVINCEID", provinceid);
+									editor.putInt("CITYID", cityid);
+									editor.putInt("DISTRICTID", districtid);
+									editor.putInt("SEX", sex);
+									editor.putString("YEAR", birthday.substring(0, 4));
+									editor.putString("MONTH", birthday.substring(5, 7));
+									editor.putString("DAY", birthday.substring(8));
+									editor.commit();
+
+									File f = new File(PATH + imageName);
+									Log.e(TAG, PATH + imageName);
+									if (f.exists()) {
+										Log.e(TAG, "use local");
+										BitmapFactory.Options opts = new BitmapFactory.Options();
+										opts.inTempStorage = new byte[100 * 1024];
+										opts.inPreferredConfig = Bitmap.Config.RGB_565;
+										opts.inPurgeable = true;
+										opts.inSampleSize = 4;
+										Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
+										image.setImageBitmap(bm);
+									} else {
+										// request bitmap in the new thread
+										if (portraitUrl != null) {
+											Log.e(TAG, "use net");
+											if (mThread == null) {
+												mThread = new Thread(runnable);
+												mThread.start();
+											}
+										}
+									}
+
+									if (provinceid != 0) {
+										province = getProvinceName(provinceid);
+										TVprovince.setText(province);
+									}
+
+									if (cityid != 0) {
+										city = getCityName(cityid);
+										TVcity.setText(city);
+									}
+
+									if (districtid != 0) {
+										district = getDistrictName(districtid);
+										TVdistrict.setText(district);
+									}
+
+									if (name != null)
+										TVName.setText(name);
+									if (nickname != null)
+										TVNickName.setText(nickname);
+
+									if (sex == 1) {
+										TVSex.setText(R.string.male);
+									} else if (sex == 2) {
+										TVSex.setText(R.string.female);
+									}
+
+									if (id != null) {
+										formatID = changeNum(id);
+										TVid.setText(formatID);
+									}
+
+									if (birthday != null) {
+										TVyear.setText(birthday.substring(0, 4));
+										TVmonth.setText(birthday.substring(5, 7));
+										TVday.setText(birthday.substring(8));
+									}
+
+								} catch (JSONException e) {
+									e.printStackTrace();
+								}
+							} else if (statusCode == -1) {
+								Toast.makeText(getApplicationContext(),
+										R.string.wrong_params,
+										Toast.LENGTH_SHORT).show();
+							} else if (statusCode == -2) {
+								Toast.makeText(getApplicationContext(),
+										R.string.not_login, Toast.LENGTH_SHORT)
+										.show();
+							} else if (statusCode == -99) {
+								Toast.makeText(getApplicationContext(),
+										R.string.unknown_err,
+										Toast.LENGTH_SHORT).show();
+							}
+						}
+					}, new Response.ErrorListener() {
+
+						@Override
+						public void onErrorResponse(VolleyError error) {
+
+						}
+					});
+			mQueue.add(mJsonRequest);
+		}
 	}
 
 	public String getProvinceName(int provinceId) {
@@ -261,25 +424,21 @@ public class ShowPersonalInfo extends Activity {
 			certiText.setText(R.string.certi);
 		}
 		
-		
-		SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
-		
-		if(personalInfo.getInt("SETINFO", 1) == 1) {
-			mQueue = Volley.newRequestQueue(this);
-		    sid = loadSid();
-		    try {
-			    getInfoURL = new URL(HOST + "/user/manage/getProfile.do" + "?sid=" + sid);
-		    } catch (MalformedURLException e) {
-			    e.printStackTrace();
-		    }
-		    MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
+		mQueue = Volley.newRequestQueue(this);
+		sid = loadSid();
+		try {
+			getInfoURL = new URL(HOST + "/user/manage/getProfile.do" + "?sid=" + sid);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
 				Method.POST, getInfoURL.toString(), null,
 				new Response.Listener<JSONObject>() {
 
 					@Override
 					public void onResponse(JSONObject response) {
 						try {
-							if(response.getString("sid") != null){
+							if (response.getString("sid") != null) {
 								sid = response.getString("sid");
 								saveSid(sid);
 							}
@@ -287,30 +446,29 @@ public class ShowPersonalInfo extends Activity {
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
-						
+
 						Log.e("TEST", response.toString());
-						
-						if(statusCode == 1){
+
+						if (statusCode == 1) {
 							try {
-								data = response.getJSONObject("data");
-								
-								name = data.getString("userName");
-								nickname = data.getString("nickname");
-								birthday = data.getString("birthday");
-								id = data.getString("idCardNo");
-								sex = data.getInt("sex");
-								provinceid = data.getInt("provinceId");
-								cityid = data.getInt("cityId");
-								districtid = data.getInt("districtId");
-								portraitUrl = data.getString("portraitUrl");
-								
+								JSONObject Data = response.getJSONObject("data");
+
+								name = Data.getString("userName");
+								nickname = Data.getString("nickname");
+								birthday = Data.getString("birthday");
+								id = Data.getString("idCardNo");
+								sex = Data.getInt("sex");
+								provinceid = Data.getInt("provinceId");
+								cityid = Data.getInt("cityId");
+								districtid = Data.getInt("districtId");
+								portraitUrl = Data.getString("portraitUrl");
+
 								SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
 								Editor edit = loginStatus.edit();
 								edit.putString("URL", portraitUrl);
 								edit.commit();
-								
-								SharedPreferences saveProfile = getSharedPreferences("PROFILE",
-										MODE_PRIVATE);
+
+								SharedPreferences saveProfile = getSharedPreferences("PROFILE", MODE_PRIVATE);
 								Editor editor = saveProfile.edit();
 								editor.putString("NAME", name);
 								editor.putString("NICKNAME", nickname);
@@ -326,17 +484,21 @@ public class ShowPersonalInfo extends Activity {
 								editor.putString("MONTH", birthday.substring(5, 7));
 								editor.putString("DAY", birthday.substring(8));
 								editor.commit();
-								
-								//
+
 								File f = new File(PATH + imageName);
 								Log.e(TAG, PATH + imageName);
-								if(f.exists()){
+								if (f.exists()) {
 									Log.e(TAG, "use local");
-									Bitmap bm = BitmapFactory.decodeFile(PATH + imageName);
+									BitmapFactory.Options opts = new BitmapFactory.Options();
+									opts.inTempStorage = new byte[100 * 1024];
+									opts.inPreferredConfig = Bitmap.Config.RGB_565;
+									opts.inPurgeable = true;
+									opts.inSampleSize = 4;
+									Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
 									image.setImageBitmap(bm);
-								}else{
+								} else {
 									// request bitmap in the new thread
-									if(portraitUrl != null){
+									if (portraitUrl != null) {
 										Log.e(TAG, "use net");
 										if (mThread == null) {
 											mThread = new Thread(runnable);
@@ -344,56 +506,55 @@ public class ShowPersonalInfo extends Activity {
 										}
 									}
 								}
-						
-								if(provinceid != 0){
+
+								if (provinceid != 0) {
 									province = getProvinceName(provinceid);
 									TVprovince.setText(province);
 								}
-									
-								if(cityid != 0){
+
+								if (cityid != 0) {
 									city = getCityName(cityid);
 									TVcity.setText(city);
 								}
-									
-								if(districtid != 0){
+
+								if (districtid != 0) {
 									district = getDistrictName(districtid);
 									TVdistrict.setText(district);
 								}
-												
-								if(name != null)
+
+								if (name != null)
 									TVName.setText(name);
-								if(nickname != null)
+								if (nickname != null)
 									TVNickName.setText(nickname);
-								
-								if(sex == 1){
+
+								if (sex == 1) {
 									TVSex.setText(R.string.male);
-//									IVSexImage.setImageResource(R.drawable.sex_blue);
-								}else if(sex == 2){
+								} else if (sex == 2) {
 									TVSex.setText(R.string.female);
-//									IVSexImage.setImageResource(R.drawable.sex_red);
 								}
-								
-								if(id != null){
+
+								if (id != null) {
 									formatID = changeNum(id);
 									TVid.setText(formatID);
 								}
-									
-								
-								if(birthday != null){
+
+								if (birthday != null) {
 									TVyear.setText(birthday.substring(0, 4));
 									TVmonth.setText(birthday.substring(5, 7));
 									TVday.setText(birthday.substring(8));
 								}
-									
+
 							} catch (JSONException e) {
 								e.printStackTrace();
 							}
-						}else if (statusCode == -1) {
+						} else if (statusCode == -1) {
 							Toast.makeText(getApplicationContext(), R.string.wrong_params, Toast.LENGTH_SHORT).show();
 						} else if (statusCode == -2) {
 							Toast.makeText(getApplicationContext(), R.string.not_login, Toast.LENGTH_SHORT).show();
 						} else if (statusCode == -99) {
-							Toast.makeText(getApplicationContext(), R.string.unknown_err, Toast.LENGTH_SHORT).show();
+							Toast.makeText(getApplicationContext(),
+									R.string.unknown_err,
+									Toast.LENGTH_SHORT).show();
 						}
 					}
 				}, new Response.ErrorListener() {
@@ -404,19 +565,6 @@ public class ShowPersonalInfo extends Activity {
 					}
 				});
 		mQueue.add(mJsonRequest);
-	} else {
-		TVName.setText("");
-		TVNickName.setText("");
-		TVSex.setText(R.string.male);
-//		IVSexImage.setImageResource(R.drawable.sex_blue);
-		TVprovince.setText("");
-		TVcity.setText("");
-		TVdistrict.setText("");
-		TVid.setText("");
-		TVyear.setText("");
-		TVmonth.setText("");
-		TVday.setText("");
-	}
 }
 	
 	private Handler mHandler = new Handler() {
@@ -441,11 +589,14 @@ public class ShowPersonalInfo extends Activity {
 			HttpGet httpGet = new HttpGet(portraitUrl);
 			final Bitmap bitmap;
 			try {
-				org.apache.http.HttpResponse httpResponse = httpClient
-						.execute(httpGet);
+				org.apache.http.HttpResponse httpResponse = httpClient.execute(httpGet);
 
-				bitmap = BitmapFactory.decodeStream(httpResponse.getEntity()
-						.getContent());
+				BitmapFactory.Options opts=new BitmapFactory.Options();
+				opts.inTempStorage = new byte[100 * 1024];
+				opts.inPreferredConfig = Bitmap.Config.RGB_565;
+				opts.inPurgeable = true;
+				opts.inSampleSize = 4;
+				bitmap = BitmapFactory.decodeStream(httpResponse.getEntity().getContent(), null, opts);
 			} catch (Exception e) {
 				mHandler.obtainMessage(MSG_FAILURE).sendToTarget();
 				return;

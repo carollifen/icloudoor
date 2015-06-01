@@ -66,7 +66,7 @@ public class SettingFragment extends Fragment {
 	private MyOnClickListener myClickListener;
 
 	private RequestQueue mQueue;
-	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
+	private String HOST = "https://zone.icloudoor.com/icloudoor-web";
 	private URL logOutURL;
 	private String sid = null;
 	private int statusCode;
@@ -121,7 +121,8 @@ public class SettingFragment extends Fragment {
 		
 //		changeNum();
 //		showPhoneNum.setText(phone);
-		showName.setText(name);
+		if(name != null)
+			showName.setText(name);
 		
 		logOut = (TextView) view.findViewById(R.id.btn_logout);
 
@@ -139,12 +140,18 @@ public class SettingFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+		SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
+		portraitUrl = loginStatus.getString("URL", null);	
 		File f = new File(PATH + imageName);
 		Log.e(TAG, PATH + imageName);
 		if(f.exists()){
 			Log.e(TAG, "use local");
-			Bitmap bm = BitmapFactory.decodeFile(PATH + imageName);
+			BitmapFactory.Options opts=new BitmapFactory.Options();
+			opts.inTempStorage = new byte[100 * 1024];
+			opts.inPreferredConfig = Bitmap.Config.RGB_565;
+			opts.inPurgeable = true;
+			opts.inSampleSize = 4;
+			Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
 			image.setImageBitmap(bm);
 		}else{
 			// request bitmap in the new thread
@@ -182,8 +189,14 @@ public class SettingFragment extends Fragment {
 				org.apache.http.HttpResponse httpResponse = httpClient
 						.execute(httpGet);
 
+				BitmapFactory.Options opts=new BitmapFactory.Options();
+				opts.inTempStorage = new byte[100 * 1024];
+				opts.inPreferredConfig = Bitmap.Config.RGB_565;
+				opts.inPurgeable = true;
+				opts.inSampleSize = 4;
+				
 				bitmap = BitmapFactory.decodeStream(httpResponse.getEntity()
-						.getContent());
+						.getContent(), null, opts);
 			} catch (Exception e) {
 				mHandler.obtainMessage(MSG_FAILURE).sendToTarget();
 				return;
@@ -260,8 +273,7 @@ public class SettingFragment extends Fragment {
                                         statusCode = response.getInt("code");
 
                                         isLogin = 0;
-                                        SharedPreferences loginStatus = getActivity()
-                                                .getSharedPreferences("LOGINSTATUS", 0);
+                                        SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
                                         Editor editor1 = loginStatus.edit();
                                         editor1.putInt("LOGIN", isLogin);
                                         editor1.commit();
@@ -292,17 +304,6 @@ public class SettingFragment extends Fragment {
 		}
 
 	}
-
-//	public void changeNum(){
-//		if(phone != null){	
-//			StringBuilder sb = new StringBuilder(phone); 
-//			sb.setCharAt(3, '*');
-//			sb.setCharAt(4, '*');
-//			sb.setCharAt(5, '*'); 
-//			sb.setCharAt(6, '*');
-//			phone = sb.toString();
-//		}
-//	}
 	
 	public void saveSid(String key, String value) {
 		if(getActivity() != null){
@@ -340,8 +341,7 @@ public class SettingFragment extends Fragment {
             if (hasUpdate) {
                 DialogHelper.Confirm(getActivity(),
                         getText(R.string.dialog_update_title),
-                        getText(R.string.dialog_update_msg).toString() + updateInfo +
-                                getText(R.string.dialog_update_msg2).toString(),
+                        getText(R.string.dialog_update_msg).toString() + updateInfo +  getText(R.string.dialog_update_msg2).toString(),
                         getText(R.string.dialog_update_btnupdate),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {

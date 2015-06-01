@@ -104,7 +104,7 @@ public class CloudDoorMainActivity extends FragmentActivity {
 	
 	// for Umeng Push Service
 	private RequestQueue mRequestQueue;
- 	private String url="http://zone.icloudoor.com/icloudoor-web/user/api/getTags.do";
+ 	private String url="https://zone.icloudoor.com/icloudoor-web/user/api/getTags.do";
  	private String tag;
  	private String sid;
  	private PushAgent mPushAgent;

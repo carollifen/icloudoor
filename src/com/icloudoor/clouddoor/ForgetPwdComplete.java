@@ -44,7 +44,7 @@ public class ForgetPwdComplete extends Activity implements TextWatcher{
 	private URL registerURL;
 	private RequestQueue mQueue;	
 	private int statusCode;
-	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
+	private String HOST = "https://zone.icloudoor.com/icloudoor-web";
 	private String sid = null;
 	
 	// for new ui
