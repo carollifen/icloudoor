@@ -50,6 +50,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -136,6 +137,8 @@ public class SetPersonalInfoNotCerti extends Activity {
 	
 	private static final int CAMERA_REQUEST_CODE = 1;
 	private static final int PICTURE_REQUEST_CODE = 2;
+	
+	private SelectPicPopupWindow menuWindow;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -318,7 +321,10 @@ public class SetPersonalInfoNotCerti extends Activity {
 //				Intent intent = new Intent();
 //				intent.setClass(SetPersonalInfoNotCerti.this, TakePictureActivity.class);	
 //				startActivityForResult(intent, 0);
-				openOptionsMenu();
+				
+				menuWindow = new SelectPicPopupWindow(SetPersonalInfoNotCerti.this, itemsOnClick); 
+				menuWindow.showAtLocation(SetPersonalInfoNotCerti.this.findViewById(R.id.main), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
+//				openOptionsMenu();
 			}
 			
 		});
@@ -457,6 +463,29 @@ public class SetPersonalInfoNotCerti extends Activity {
 			}			
 		});
 	}
+	
+	private OnClickListener itemsOnClick = new OnClickListener() {
+
+		public void onClick(View v) {
+			menuWindow.dismiss();
+			switch (v.getId()) {
+			case R.id.btn_take_photo:
+				startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE), 1);
+				break;
+			case R.id.btn_pick_photo:
+				Intent intent = new Intent();
+				intent.setAction(Intent.ACTION_PICK);
+				intent.setType("image/*");
+				startActivityForResult(intent, 0);
+				break;
+			default:
+				menuWindow.dismiss();
+				break;
+			}
+
+		}
+
+	};	
 	
 	@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -875,34 +904,34 @@ public class SetPersonalInfoNotCerti extends Activity {
 
 	}
 	
-	 public boolean onCreateOptionsMenu(Menu menu) {
-		 super .onCreateOptionsMenu(menu); 
-
-		 menu.add(0, Menu.FIRST+1, 1, "拍照");
-		 menu.add(0, Menu.FIRST+2, 2, "从手机相册中选择");
-		 menu.add(0, Menu.FIRST+3, 3, "取消");
-		 
-		 return true ;
-	 }
-	 
-	public boolean onOptionsItemSelected(MenuItem item) {
-		super.onOptionsItemSelected(item);
-
-		switch (item.getItemId()) {
-		case Menu.FIRST + 1:
-			startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE), 1);
-			break;
-		case Menu.FIRST + 2:
-			Intent intent = new Intent();
-			intent.setAction(Intent.ACTION_PICK);
-			intent.setType("image/*");
-			startActivityForResult(intent, 0);
-			break;
-		case Menu.FIRST + 3:
-		}
-
-		return true;
-	}
+//	 public boolean onCreateOptionsMenu(Menu menu) {
+//		 super .onCreateOptionsMenu(menu); 
+//
+//		 menu.add(0, Menu.FIRST+1, 1, "拍照");
+//		 menu.add(0, Menu.FIRST+2, 2, "从手机相册中选择");
+//		 menu.add(0, Menu.FIRST+3, 3, "取消");
+//		 
+//		 return true ;
+//	 }
+//	 
+//	public boolean onOptionsItemSelected(MenuItem item) {
+//		super.onOptionsItemSelected(item);
+//
+//		switch (item.getItemId()) {
+//		case Menu.FIRST + 1:
+//			startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE), 1);
+//			break;
+//		case Menu.FIRST + 2:
+//			Intent intent = new Intent();
+//			intent.setAction(Intent.ACTION_PICK);
+//			intent.setType("image/*");
+//			startActivityForResult(intent, 0);
+//			break;
+//		case Menu.FIRST + 3:
+//		}
+//
+//		return true;
+//	}
 	 
 //	private String getRealPathFromURI(Uri contentUri) {
 //		String[] proj = { MediaStore.Images.Media.DATA };

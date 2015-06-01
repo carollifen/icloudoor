@@ -43,6 +43,7 @@ import android.database.sqlite.SQLiteStatement;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -50,15 +51,19 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -139,6 +144,8 @@ public class SetPersonalInfo extends Activity {
 
 	private static final int CAMERA_REQUEST_CODE = 1;
 	private static final int PICTURE_REQUEST_CODE = 2;
+	
+	private SelectPicPopupWindow menuWindow;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -345,7 +352,10 @@ public class SetPersonalInfo extends Activity {
 				// intent.setClass(SetPersonalInfo.this,
 				// TakePictureActivity.class);
 				// startActivityForResult(intent, 0);
-				openOptionsMenu();
+
+				menuWindow = new SelectPicPopupWindow(SetPersonalInfo.this, itemsOnClick); 
+				menuWindow.showAtLocation(SetPersonalInfo.this.findViewById(R.id.main), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
+//				openOptionsMenu();
 			}
 
 		});
@@ -488,6 +498,29 @@ public class SetPersonalInfo extends Activity {
 		});
 	}
 
+	private OnClickListener itemsOnClick = new OnClickListener() {
+
+		public void onClick(View v) {
+			menuWindow.dismiss();
+			switch (v.getId()) {
+			case R.id.btn_take_photo:
+				startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE), 1);
+				break;
+			case R.id.btn_pick_photo:
+				Intent intent = new Intent();
+				intent.setAction(Intent.ACTION_PICK);
+				intent.setType("image/*");
+				startActivityForResult(intent, 0);
+				break;
+			default:
+				menuWindow.dismiss();
+				break;
+			}
+
+		}
+
+	};
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
@@ -904,35 +937,35 @@ public class SetPersonalInfo extends Activity {
 
 	}
 
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-
-		menu.add(0, Menu.FIRST + 1, 1, "拍照");
-		menu.add(0, Menu.FIRST + 2, 2, "从手机相册中选择");
-		menu.add(0, Menu.FIRST + 3, 3, "取消");
-
-		return true;
-	}
-
-	public boolean onOptionsItemSelected(MenuItem item) {
-		super.onOptionsItemSelected(item);
-
-		switch (item.getItemId()) {
-		case Menu.FIRST + 1:
-			startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE),
-					1);
-			break;
-		case Menu.FIRST + 2:
-			Intent intent = new Intent();
-			intent.setAction(Intent.ACTION_PICK);
-			intent.setType("image/*");
-			startActivityForResult(intent, 0);
-			break;
-		case Menu.FIRST + 3:
-		}
-
-		return true;
-	}
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		super.onCreateOptionsMenu(menu);
+//
+//		menu.add(0, Menu.FIRST + 1, 1, "拍照");
+//		menu.add(0, Menu.FIRST + 2, 2, "从手机相册中选择");
+//		menu.add(0, Menu.FIRST + 3, 3, "取消");
+//
+//		return true;
+//	}
+//
+//	public boolean onOptionsItemSelected(MenuItem item) {
+//		super.onOptionsItemSelected(item);
+//
+//		switch (item.getItemId()) {
+//		case Menu.FIRST + 1:
+//			startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE),
+//					1);
+//			break;
+//		case Menu.FIRST + 2:
+//			Intent intent = new Intent();
+//			intent.setAction(Intent.ACTION_PICK);
+//			intent.setType("image/*");
+//			startActivityForResult(intent, 0);
+//			break;
+//		case Menu.FIRST + 3:
+//		}
+//
+//		return true;
+//	}
 
 //	private String getRealPathFromURI(Uri contentUri) {
 //		String[] proj = { MediaStore.Images.Media.DATA };
