@@ -79,6 +79,7 @@ import com.icloudoor.clouddoor.ChannelSwitchView.OnCheckedChangeListener;
 import com.icloudoor.clouddoor.ShakeEventManager;
 import com.icloudoor.clouddoor.UartService;
 import com.icloudoor.clouddoor.ShakeEventManager.ShakeListener;
+import com.icloudoor.clouddoor.SwitchButton.OnSwitchListener;
 
 @SuppressLint("NewApi")
 public class KeyFragmentNoBLE extends Fragment implements ShakeListener {
@@ -170,8 +171,9 @@ public class KeyFragmentNoBLE extends Fragment implements ShakeListener {
 //	private TextView keyRedDotNum;
 	
 	// for new channel switch
-	private LinearLayout channelSwitchLayout;
-	private ChannelSwitchView csv;
+	private SwitchButton switchBtn;
+//	private LinearLayout channelSwitchLayout;
+//	private ChannelSwitchView csv;
 	private int isChooseCarChannel = 1;
 	private boolean onlyOneDoor = false;
 	private TextView doorName;
@@ -278,12 +280,12 @@ public class KeyFragmentNoBLE extends Fragment implements ShakeListener {
 		requestWeatherData();
 		
 		// for new channel switch
-		channelSwitchLayout = (LinearLayout) view.findViewById(R.id.channel_switch_layout);
-		csv = new ChannelSwitchView(getActivity());
-		csv.setOnCheckedChangeListener(new OnCheckedChangeListener(){
-
-			@Override
-			public void onCheckedChanged(boolean isChecked) {
+//		channelSwitchLayout = (LinearLayout) view.findViewById(R.id.channel_switch_layout);
+//		csv = new ChannelSwitchView(getActivity());
+//		csv.setOnCheckedChangeListener(new OnCheckedChangeListener(){
+//
+//			@Override
+//			public void onCheckedChanged(boolean isChecked) {
 //				isChooseCarChannel = getState(isChecked);
 //				
 //				Log.e(TAG, "channel: " + String.valueOf(isChooseCarChannel));
@@ -294,11 +296,29 @@ public class KeyFragmentNoBLE extends Fragment implements ShakeListener {
 //				}
 //					
 //				onlyOneDoor = !onlyOneDoor;
-			}
-			
-		});
+//			}
+//			
+//		});
 		
-		channelSwitchLayout.addView(csv);	
+//		channelSwitchLayout.addView(csv);
+		//
+		switchBtn = (SwitchButton) view.findViewById(R.id.btn_switch);
+		if(isChooseCarChannel == 1){
+			switchBtn.setSwitch(false, 0);
+		}else{
+			switchBtn.setSwitch(true, 0);
+		}
+			
+		switchBtn.setOnSwitchListener(new OnSwitchListener() {
+			@Override
+			public boolean onSwitch(SwitchButton v, boolean isRight) {	
+				if(isRight)
+					isChooseCarChannel = 0;
+				else
+					isChooseCarChannel = 1;
+				return false;
+			}
+		});
 		
 		BtnOpenDoor = (ImageView) view.findViewById(R.id.btn_open_door);
 //		ringView = (OpenDoorRingView) view.findViewById(R.id.open_door_halo);

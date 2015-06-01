@@ -75,14 +75,23 @@
             android:textColor="#ffffff"
             android:textSize="12sp" />
 
-        <LinearLayout
-            android:id="@+id/channel_switch_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+        <com.icloudoor.clouddoor.SwitchButton
+	    android:id="@+id/btn_switch"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="105dp" >
-        </LinearLayout>
+            android:layout_marginBottom="105dp"
+	    />
+        
+<!--         <LinearLayout -->
+<!--             android:id="@+id/channel_switch_layout" -->
+<!--             android:layout_width="wrap_content" -->
+<!--             android:layout_height="wrap_content" -->
+<!--             android:layout_alignParentBottom="true" -->
+<!--             android:layout_centerHorizontal="true" -->
+<!--             android:layout_marginBottom="105dp" > -->
+<!--         </LinearLayout> -->
 </RelativeLayout>
     
     <LinearLayout

@@ -86,6 +86,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.icloudoor.clouddoor.ChannelSwitchView.OnCheckedChangeListener;
 import com.icloudoor.clouddoor.ShakeEventManager;
+import com.icloudoor.clouddoor.SwitchButton.OnSwitchListener;
 import com.icloudoor.clouddoor.UartService;
 import com.icloudoor.clouddoor.ShakeEventManager.ShakeListener;
 import com.icloudoor.clouddoor.animationUtils.MyAnimationLine;
@@ -186,8 +187,9 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	private URL downLoadKeyURL;
 	
 	// for new channel switch
-	private LinearLayout channelSwitchLayout;
-	private ChannelSwitchView csv;
+	private SwitchButton switchBtn;
+//	private LinearLayout channelSwitchLayout;
+//	private ChannelSwitchView csv;
 	private int isChooseCarChannel;   // 1 for car; 2 for man
     private int mOpenDoorState;
 	private boolean onlyOneDoor = false;
@@ -316,28 +318,59 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		requestWeatherData();
 		
 		// for new channel switch
-		channelSwitchLayout = (LinearLayout) view.findViewById(R.id.channel_switch_layout);
-		csv = new ChannelSwitchView(getActivity());
-		csv.setOnCheckedChangeListener(new OnCheckedChangeListener(){
-
-			@Override
-			public void onCheckedChanged(boolean isChecked) {
-				isChooseCarChannel = getState(isChecked);
-				
-				Log.e(TAG, "channel: " + String.valueOf(isChooseCarChannel));
-				Log.e(TAG, String.valueOf(onlyOneDoor));
-								
-				if(!mBTScanning){
-					populateDeviceList();
-                    Log.e(TAG, "start scanning");
-				}
-					
-				//onlyOneDoor = !onlyOneDoor;
-			}
+//		channelSwitchLayout = (LinearLayout) view.findViewById(R.id.channel_switch_layout);
+//		csv = new ChannelSwitchView(getActivity());
+//		csv.setOnCheckedChangeListener(new OnCheckedChangeListener(){
+//
+//			@Override
+//			public void onCheckedChanged(boolean isChecked) {
+//				isChooseCarChannel = getState(isChecked);
+//				
+//				Log.e(TAG, "channel: " + String.valueOf(isChooseCarChannel));
+//				Log.e(TAG, String.valueOf(onlyOneDoor));
+//								
+//				if(!mBTScanning){
+//					populateDeviceList();
+//                    Log.e(TAG, "start scanning");
+//				}
+//					
+//				//onlyOneDoor = !onlyOneDoor;
+//			}
+//			
+//		});
+//		
+//		channelSwitchLayout.addView(csv);
+		//
+		switchBtn = (SwitchButton) view.findViewById(R.id.btn_switch);
+		if(isChooseCarChannel == 1){
+			switchBtn.setSwitch(false, 0);
+			Log.e(TAG, String.valueOf(isChooseCarChannel));
+		}else{
+			switchBtn.setSwitch(true, 0);
+			Log.e(TAG, String.valueOf(isChooseCarChannel));
+		}
 			
+		switchBtn.setOnSwitchListener(new OnSwitchListener() {
+			@Override
+			public boolean onSwitch(SwitchButton v, boolean isRight) {
+				if (isRight) {
+					isChooseCarChannel = 0;
+					if (!mBTScanning) {
+						populateDeviceList();
+						Log.e(TAG, "start scanning");
+					}
+					Log.e(TAG, String.valueOf(isChooseCarChannel));
+				} else {
+					isChooseCarChannel = 1;
+					if (!mBTScanning) {
+						populateDeviceList();
+						Log.e(TAG, "start scanning");
+					}
+					Log.e(TAG, String.valueOf(isChooseCarChannel));
+				}
+				return false;
+			}
 		});
-		
-		channelSwitchLayout.addView(csv);	
 		
 		circleLayout = (RelativeLayout) view.findViewById(R.id.circle_layout);
 		circle = (ImageView) view.findViewById(R.id.circle);
@@ -1249,11 +1282,11 @@ public class KeyFragment extends Fragment implements ShakeListener {
 								doorName.setText(carDoorList.get(i).get("CDdoorName"));
                                 doorNameFlag.setVisibility(View.VISIBLE);
 								
-								csv.changeChecked(true);
+//								csv.changeChecked(true);
 //								onlyOneDoor = false;
                                 findKey = true;
 								isChooseCarChannel = 1;
-								
+								switchBtn.setSwitch(false);
 								break;
 							}
 						}
@@ -1287,10 +1320,11 @@ public class KeyFragment extends Fragment implements ShakeListener {
                                     doorName.setText(manDoorList.get(i).get("MDdoorName"));
                                     doorNameFlag.setVisibility(View.VISIBLE);
 
-                                    csv.changeChecked(false);
+//                                    csv.changeChecked(false);
 //								onlyOneDoor = false;
 
                                     isChooseCarChannel = 0;
+                                    switchBtn.setSwitch(true);
 
                                     break;
                                 }
