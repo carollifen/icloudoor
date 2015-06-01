@@ -402,7 +402,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		radar.startAnimation(animation1);
 		
 		BtnOpenDoor = (ImageView) view.findViewById(R.id.btn_open_door);
-		BtnOpenDoor.setImageResource(R.drawable.door_normalll);
+		BtnOpenDoor.setImageResource(R.drawable.door_normalll_new);
 		BtnOpenDoor.setEnabled(false);
 //		ringView = (OpenDoorRingView) view.findViewById(R.id.open_door_halo);
 //		ringView.setVisibility(View.INVISIBLE);
@@ -1195,7 +1195,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	private void populateDeviceList() {
 		Log.e("BLE", "populateDeviceList");
 		
-		BtnOpenDoor.setImageResource(R.drawable.door_normalll);
+		BtnOpenDoor.setImageResource(R.drawable.door_normalll_new);
 		BtnOpenDoor.setEnabled(false);
 		
 //		IvOpenDoorLogo.setEnabled(false);
@@ -1223,6 +1223,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		if (enable) {
 			// Stops scanning after a pre-defined scan period.
 			new Handler().postDelayed(new Runnable() {
+				@SuppressLint("NewApi")
 				@Override
 				public void run() {
                     boolean findKey = false;
