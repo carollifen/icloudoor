@@ -55,6 +55,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.icloudoor.clouddoor.WuYeDialog.WuYeDialogCallBack;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengRegistrar;
 import com.umeng.message.tag.TagManager;
@@ -395,17 +396,35 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		mFragmenetTransaction = mFragmentManager.beginTransaction();
 		switch (index) {
 		case R.id.bottom_wuye_layout:
-			bottomTvKey.setTextColor(COLOR_GRAY);
-			bottomTvMsg.setTextColor(COLOR_GRAY);
-			bottomTvSetting.setTextColor(COLOR_GRAY);
-			bottomTvWuye.setTextColor(COLOR_BLACK);
+	
+			SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS",
+					MODE_PRIVATE);
+			int userstatus;
+			userstatus = loginStatus.getInt("STATUS", 1);
+			if (userstatus == 1) {
+				new WuYeDialog(this, R.style.add_dialog, "hh",
+						new WuYeDialogCallBack() {
+							@Override
+							public void back() {
+								// TODO Auto-generated method stub
 
-			bottomIvMsg.setImageResource(R.drawable.msg_normal);
-			bottomIvKey.setImageResource(R.drawable.key_normal);
-			bottomIvSetting.setImageResource(R.drawable.my_normal);
-			bottomIvWuye.setImageResource(R.drawable.wuye_selected);
+							}
+						}).show();
+			} else if(userstatus == 2) {
+				bottomTvKey.setTextColor(COLOR_GRAY);
+				bottomTvMsg.setTextColor(COLOR_GRAY);
+				bottomTvSetting.setTextColor(COLOR_GRAY);
+				bottomTvWuye.setTextColor(COLOR_BLACK);
+
+				bottomIvMsg.setImageResource(R.drawable.msg_normal);
+				bottomIvKey.setImageResource(R.drawable.key_normal);
+				bottomIvSetting.setImageResource(R.drawable.my_normal);
+				bottomIvWuye.setImageResource(R.drawable.wuye_selected);
+				
+				mFragmenetTransaction.replace(R.id.id_content, mWuyeFragment);
+			}
 			
-			mFragmenetTransaction.replace(R.id.id_content, mWuyeFragment);
+			
 			break;
 		case R.id.bottom_msg_layout:
 			bottomTvKey.setTextColor(COLOR_GRAY);
