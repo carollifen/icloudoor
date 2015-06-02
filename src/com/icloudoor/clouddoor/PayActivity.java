@@ -4,14 +4,14 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class PayActivity extends Activity {
 
@@ -27,6 +27,8 @@ public class PayActivity extends Activity {
 		setContentView(R.layout.activity_pay);
 		
 		sid = loadSid();
+		
+		final TextView Title = (TextView) findViewById(R.id.page_title);
 		
 		payWebView = (WebView) findViewById(R.id.id_pay);
 		webSetting = payWebView.getSettings();
@@ -55,6 +57,16 @@ public class PayActivity extends Activity {
 			}
 			
 		});
+		
+		WebChromeClient wcc = new WebChromeClient(){
+			@Override
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
+                Title.setText(title);
+			}
+		};
+		
+		payWebView.setWebChromeClient(wcc);
 	}
 	
 	class webViewClient extends WebViewClient{        //override shouldOverrideUrlLoading method to use the webview to response when click the link     

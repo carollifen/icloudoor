@@ -35,9 +35,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.JavascriptInterface;
 import android.webkit.URLUtil;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -101,20 +103,18 @@ public class ReportToRepairActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_report_to_repair);
 
+		final TextView Title = (TextView) findViewById(R.id.page_title);
+		
 		back = (RelativeLayout) findViewById(R.id.btn_back);
 		back.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				StringBuilder sb = new StringBuilder();
-				String metho = "Tool.showWidget";
-				sb.append("javascript:").append(metho).append('(')
-						.append("'dialog'").append(",").append("'")
-						.append("ÊÇ·ñ·µ»ØÊ×Ò³").append("');");
+				String metho = "backPagePop();";
+				sb.append("javascript:").append(metho);
 				Log.e(TAG, sb.toString());
 				fixwebview.loadUrl(sb.toString());
-
-				// finish();
 			}
 
 		});
@@ -134,9 +134,18 @@ public class ReportToRepairActivity extends Activity {
 		sid = loadSid();
 
 		fixwebview.addJavascriptInterface(new Camera(), "cloudoorNative");
-		//fixwebview.addJavascriptInterface(new close(), "cloudoorNative");
 		fixwebview.loadUrl(url + "?sid=" + sid);
 		sid = loadSid();
+		
+		WebChromeClient wcc = new WebChromeClient(){
+			@Override
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
+                Title.setText(title);
+			}
+		};
+		
+		fixwebview.setWebChromeClient(wcc);
 
 	}
 

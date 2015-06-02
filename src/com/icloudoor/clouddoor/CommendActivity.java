@@ -8,9 +8,12 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class CommendActivity extends Activity {
 
@@ -29,20 +32,14 @@ public class CommendActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_commend);
 
+		final TextView Title = (TextView) findViewById(R.id.page_title);
+		
 		back = (RelativeLayout) findViewById(R.id.btn_back);
-		back.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				finish();
-			}
-			
-		});
 		
 		PushAgent.getInstance(this).onAppStart();
 		sid = loadSid();
 		praiseWebView = (WebView) findViewById(R.id.id_praise);
-
+		praiseWebView.addJavascriptInterface(new close(), "cloudoorNative");
 		webSetting = praiseWebView.getSettings();
 
 		webSetting.setUseWideViewPort(true);
@@ -53,6 +50,28 @@ public class CommendActivity extends Activity {
 		webSetting.setLoadsImagesAutomatically(true);
 		webSetting.setBuiltInZoomControls(true);
 		praiseWebView.loadUrl(url + "?sid=" + sid + "&type=" + TYPE_GOOD);
+		
+		WebChromeClient wcc = new WebChromeClient(){
+			@Override
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
+                Title.setText(title);
+			}
+		};
+		
+		praiseWebView.setWebChromeClient(wcc);
+		
+		back.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				StringBuilder sb = new StringBuilder();
+				String metho = "backPagePop();";
+				sb.append("javascript:").append(metho);
+				praiseWebView.loadUrl(sb.toString());
+			}
+
+		});
 	}
 	
 	public void saveSid(String sid) {
@@ -69,4 +88,11 @@ public class CommendActivity extends Activity {
 		return loadSid.getString("SID", null);
 	}
 
+	public class close {
+
+		@JavascriptInterface
+		public void closeWebBrowser() {
+			CommendActivity.this.finish();
+		}
+	}
 }

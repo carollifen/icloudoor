@@ -23,11 +23,12 @@
         </RelativeLayout>
 
         <TextView
+            android:id="@+id/page_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="联系物业"
+            android:text=""
             android:textColor="#ffffff"
             android:textSize="18sp" />
     </RelativeLayout>

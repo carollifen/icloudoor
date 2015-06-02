@@ -6,10 +6,12 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.umeng.message.PushAgent;
 
@@ -40,6 +42,8 @@ public class NoticeActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_notice);
 
+		final TextView Title = (TextView) findViewById(R.id.page_title);
+		
 		back = (RelativeLayout) findViewById(R.id.btn_back);
 
 		PushAgent.getInstance(this).onAppStart();
@@ -80,6 +84,15 @@ public class NoticeActivity extends Activity {
 			}
 
 		});
+		
+		WebChromeClient wcc = new WebChromeClient(){
+			@Override
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
+                Title.setText(title);
+			}
+		};
+		anouncePageWebView.setWebChromeClient(wcc);
 	}
 
 	class webViewClient extends WebViewClient { // override

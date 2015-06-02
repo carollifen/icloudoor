@@ -20,6 +20,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class ContactWuyeActivity extends Activity {
 
@@ -50,6 +51,8 @@ public class ContactWuyeActivity extends Activity {
 			
 		});
 		
+		final TextView Title = (TextView) findViewById(R.id.page_title);
+		
 		webview = (WebView) findViewById(R.id.webview);
 
 		sid = loadSid();
@@ -76,6 +79,15 @@ public class ContactWuyeActivity extends Activity {
 				return true;
 			}
 		});
+		
+		WebChromeClient wcc = new WebChromeClient(){
+			@Override
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
+                Title.setText(title);
+			}
+		};
+		webview.setWebChromeClient(wcc);
 	}
 
 	public void saveSid(String sid) {

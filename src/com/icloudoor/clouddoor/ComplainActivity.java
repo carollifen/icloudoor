@@ -6,9 +6,12 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class ComplainActivity extends Activity {
 
@@ -27,17 +30,14 @@ public class ComplainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_complain);
 
+		final TextView Title = (TextView) findViewById(R.id.page_title);
+		
 		back = (RelativeLayout) findViewById(R.id.btn_back);
-		back.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				finish();
-			}
-			
-		});
 		
 		complainWebView = (WebView) findViewById(R.id.id_complain);
+		
+		complainWebView.addJavascriptInterface(new close(), "cloudoorNative");
+		
 		webSetting = complainWebView.getSettings();
 
 		webSetting.setUseWideViewPort(true);
@@ -50,7 +50,29 @@ public class ComplainActivity extends Activity {
 
 		sid = loadSid();
 
+		back.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				StringBuilder sb = new StringBuilder();
+				String metho = "backPagePop();";
+				sb.append("javascript:").append(metho);
+				complainWebView.loadUrl(sb.toString());
+			}
+
+		});
+
 		complainWebView.loadUrl(url + "?sid=" + sid + "&type=" + TYPE_BAD);
+		
+		WebChromeClient wcc = new WebChromeClient(){
+			@Override
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
+                Title.setText(title);
+			}
+		};
+		
+		complainWebView.setWebChromeClient(wcc);
 	}
 	
 	public void saveSid(String sid) {
@@ -67,4 +89,11 @@ public class ComplainActivity extends Activity {
 		return loadSid.getString("SID", null);
 	}
 
+	public class close {
+
+		@JavascriptInterface
+		public void closeWebBrowser() {
+			ComplainActivity.this.finish();
+		}
+	}
 }

@@ -8,9 +8,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class BillActivity extends Activity {
 
@@ -24,6 +26,8 @@ public class BillActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_bill);
+		
+		final TextView Title = (TextView) findViewById(R.id.page_title);
 		
 		back = (RelativeLayout) findViewById(R.id.btn_back);
 		back.setOnClickListener(new OnClickListener(){
@@ -49,6 +53,16 @@ public class BillActivity extends Activity {
 		webSetting.setBuiltInZoomControls(true);
 
 		billWebView.loadUrl(url + "?sid=" + sid);
+		
+		WebChromeClient wcc = new WebChromeClient(){
+			@Override
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
+                Title.setText(title);
+			}
+		};
+		
+		billWebView.setWebChromeClient(wcc);
 	}
 	
 	public void saveSid(String sid) {

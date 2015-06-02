@@ -6,10 +6,13 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.umeng.message.PushAgent;
 
@@ -40,11 +43,13 @@ public class QueryActivity extends Activity {
 
 		sid = loadSid();
 
+		final TextView Title = (TextView) findViewById(R.id.page_title);
+		
 		back = (RelativeLayout) findViewById(R.id.btn_back);
 
 		PushAgent.getInstance(this).onAppStart();
 		surveyWebView = (WebView) findViewById(R.id.id_survey);
-
+		surveyWebView.addJavascriptInterface(new close(), "cloudoorNative");
 		webSetting = surveyWebView.getSettings();
 
 		webSetting.setUseWideViewPort(true);
@@ -69,13 +74,23 @@ public class QueryActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				if (surveyWebView.canGoBack())
-					surveyWebView.goBack();
-				else
-					finish();
+				StringBuilder sb = new StringBuilder();
+				String metho = "backPagePop();";
+				sb.append("javascript:").append(metho);
+				surveyWebView.loadUrl(sb.toString());
 			}
 
 		});
+		
+		WebChromeClient wcc = new WebChromeClient(){
+			@Override
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
+                Title.setText(title);
+			}
+		};
+		
+		surveyWebView.setWebChromeClient(wcc);
 	}
 
 	class webViewClient extends WebViewClient { // override
@@ -100,5 +115,13 @@ public class QueryActivity extends Activity {
 	public String loadSid() {
 		SharedPreferences loadSid = getSharedPreferences("SAVEDSID", 0);
 		return loadSid.getString("SID", null);
+	}
+	
+	public class close {
+
+		@JavascriptInterface
+		public void closeWebBrowser() {
+			QueryActivity.this.finish();
+		}
 	}
 }
