@@ -388,9 +388,9 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		
 		
 //		halo = (ImageView) view.findViewById(R.id.halo);
-		Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.tip);
-		LinearInterpolator lin = new LinearInterpolator();
-		animation.setInterpolator(lin);
+//		Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.tip);
+//		LinearInterpolator lin = new LinearInterpolator();
+//		animation.setInterpolator(lin);
 //		halo.startAnimation(animation);
 		
 //		myline=(MyAnimationLine) view.findViewById(R.id.myAnimationLine);
@@ -1206,6 +1206,10 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //		TvCarNumber.setTextColor(0xFFffffff);
 //		IvSearchKey.setBackgroundResource(R.drawable.btn_gray);
 //		IvOpenDoorLogo.setImageResource(R.drawable.btn_serch_1);
+		
+		radar.startAnimation(animation1);
+        circle.setVisibility(View.VISIBLE);
+        radar.setVisibility(View.VISIBLE);
 		
 		doorName.setText("");
         doorNameFlag.setVisibility(View.INVISIBLE);
