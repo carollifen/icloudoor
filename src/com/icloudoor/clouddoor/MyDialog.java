@@ -61,7 +61,7 @@ public class MyDialog extends Dialog {
 					
 					@Override
 					public void afterTextChanged(Editable s) {
-						if(pswEditText.getText().toString().length() > 7){
+						if(pswEditText.getText().toString().length() > 5){
 							bound.setTextColor(0xFFFFFFFF);
 							bound.setEnabled(true);
 						} else {
