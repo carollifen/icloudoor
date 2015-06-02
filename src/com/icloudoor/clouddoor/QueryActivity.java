@@ -6,6 +6,7 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -87,6 +88,15 @@ public class QueryActivity extends Activity {
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
                 Title.setText(title);
+			}
+			
+			@Override
+			public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+				// TODO Auto-generated method stub
+				if (consoleMessage.message().contains("backPagePop is not defined")) {
+					finish();
+				}
+				return super.onConsoleMessage(consoleMessage);
 			}
 		};
 		

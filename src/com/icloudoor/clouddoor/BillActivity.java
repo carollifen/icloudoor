@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.ConsoleMessage;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -59,6 +60,15 @@ public class BillActivity extends Activity {
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
                 Title.setText(title);
+			}
+			
+			@Override
+			public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+				// TODO Auto-generated method stub
+				if (consoleMessage.message().contains("backPagePop is not defined")) {
+					finish();
+				}
+				return super.onConsoleMessage(consoleMessage);
 			}
 		};
 		
