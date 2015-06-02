@@ -91,12 +91,9 @@ public class WuyeFragment extends Fragment {
 		mQueue = Volley.newRequestQueue(getActivity());
 		sid = loadSid();
 
-		WuyeWidgePush1 = (ImageView) view
-				.findViewById(R.id.Iv_wuye_widge_push1);
-		WuyeWidgePush2 = (ImageView) view
-				.findViewById(R.id.Iv_wuye_widge_push2);
-		WuyeWidgePush3 = (ImageView) view
-				.findViewById(R.id.Iv_wuye_widge_push3);
+		WuyeWidgePush1 = (ImageView) view.findViewById(R.id.Iv_wuye_widge_push1);
+		WuyeWidgePush2 = (ImageView) view.findViewById(R.id.Iv_wuye_widge_push2);
+		WuyeWidgePush3 = (ImageView) view.findViewById(R.id.Iv_wuye_widge_push3);
 
 		BtnLianxiwuye = (ImageView) view.findViewById(R.id.btn_lianxiwuye);
 		BtnNotice = (ImageView) view.findViewById(R.id.btn_notice);
@@ -231,7 +228,6 @@ public class WuyeFragment extends Fragment {
 		// start auto scroll when onResume
 		viewPager.startAutoScroll();
 
-		// for test
 		try {
 			bannerURL = new URL(
 					"https://zone.icloudoor.com/icloudoor-web/user/prop/zone/getBannerRotate.do"
@@ -260,16 +256,12 @@ public class WuyeFragment extends Fragment {
 											String bg = data.getJSONObject(0).getString("bgColor");
 											String content = data.getJSONObject(0).getString("content");
 											String title = data.getJSONObject(0).getString("title");
-											String date = data.getJSONObject(0)
-													.getString("createDate");
-											// String company =
-											// data.getJSONObject(0).getString("propertyCompany");
+											String date = data.getJSONObject(0).getString("createDate");
+
 											editor.putString("1bg", bg);
 											editor.putString("1content", content);
 											editor.putString("1title", title);
 											editor.putString("1date", date);
-											// editor.putString("1company",
-											// company);
 											editor.putString("1type", "1");
 										} else if (data.getJSONObject(0).getString("type").equals("2")) {
 											String url = data.getJSONObject(0).getString("photoUrl");
@@ -284,12 +276,11 @@ public class WuyeFragment extends Fragment {
 											String content = data.getJSONObject(0).getString("content");
 											String title = data.getJSONObject(0).getString("title");
 											String date = data.getJSONObject(0).getString("createDate");
-											// String company = data.getJSONObject(0).getString("propertyCompany");
+
 											editor.putString("1bg", bg);
 											editor.putString("1content", content);
 											editor.putString("1title", title);
 											editor.putString("1date", date);
-											// editor.putString("1company", company);
 											editor.putString("1type", "1");
 										} else if (data.getJSONObject(0).getString("type").equals("2")) {
 											String url = data.getJSONObject(0).getString("photoUrl");
@@ -304,12 +295,11 @@ public class WuyeFragment extends Fragment {
 											String content = data.getJSONObject(1).getString("content");
 											String title = data.getJSONObject(1).getString("title");
 											String date = data.getJSONObject(1).getString("createDate");
-											// String company = data.getJSONObject(1).getString("propertyCompany");
+
 											editor.putString("2bg", bg);
 											editor.putString("2content", content);
 											editor.putString("2title", title);
 											editor.putString("2date", date);
-											// editor.putString("2company", company);
 											editor.putString("2type", "1");
 										} else if (data.getJSONObject(1).getString("type").equals("2")) {
 											String url = data.getJSONObject(1).getString("photoUrl");
@@ -327,12 +317,11 @@ public class WuyeFragment extends Fragment {
 											String content = data.getJSONObject(0).getString("content");
 											String title = data.getJSONObject(0).getString("title");
 											String date = data.getJSONObject(0).getString("createDate");
-											// String company = data.getJSONObject(0).getString("propertyCompany");
+											
 											editor.putString("1bg", bg);
 											editor.putString("1content", content);
 											editor.putString("1title", title);
 											editor.putString("1date", date);
-											// editor.putString("1company", company);
 											editor.putString("1type", "1");
 										} else if (data.getJSONObject(0).getString("type").equals("2")) {
 											String url = data.getJSONObject(0).getString("photoUrl");
@@ -347,12 +336,11 @@ public class WuyeFragment extends Fragment {
 											String content = data.getJSONObject(1).getString("content");
 											String title = data.getJSONObject(1).getString("title");
 											String date = data.getJSONObject(1).getString("createDate");
-											// String company = data.getJSONObject(1).getString("propertyCompany");
+
 											editor.putString("2bg", bg);
 											editor.putString("2content", content);
 											editor.putString("2title", title);
 											editor.putString("2date", date);
-											// editor.putString("2company", company);
 											editor.putString("2type", "1");
 										} else if (data.getJSONObject(1).getString("type").equals("2")) {
 											String url = data.getJSONObject(1).getString("photoUrl");
@@ -367,12 +355,11 @@ public class WuyeFragment extends Fragment {
 											String content = data.getJSONObject(2).getString("content");
 											String title = data.getJSONObject(2).getString("title");
 											String date = data.getJSONObject(2).getString("createDate");
-											// String company = data.getJSONObject(2).getString("propertyCompany");
+
 											editor.putString("3bg", bg);
 											editor.putString("3content", content);
 											editor.putString("3title", title);
 											editor.putString("3date", date);
-											// editor.putString("3company", company);
 											editor.putString("3type", "1");
 										} else if (data.getJSONObject(2).getString("type").equals("2")) {
 											String url = data.getJSONObject(2).getString("photoUrl");

@@ -14,7 +14,7 @@
     <string name="input_wrong_certi_code">验证码错误</string>
     <string name="certi_code_overdue">验证码已失效，请重新获取</string>
     <string name="phone_num_have_been_registerred">该手机号已被注册</string>
-    <string name="weak_pwd">密码强度不够，请输入新密码</string>
+    <string name="weak_pwd">请填写6-20位新密码</string>
     <string name="not_login">用户未登录，请重新登录</string>
     <string name="unknown_err">未知错误，请重试</string>
     <string name="have_no_key_authorised">该用户未授权任何门锁信息</string>
@@ -116,6 +116,9 @@
     <string name="sorry_you_are_out_the_zone">你已不在此小区内</string>
     <string name="nick_name_already">该昵称已被使用</string>
     <string name="not_enough_params">请补全资料后再提交</string>
+    <string name="regi_success">注册成功</string>
+    <string name="weather_not_available">天气信息不可用</string>
+    <string name="input_wrong">请输入数字或大小写字母</string>
     
     <drawable name="clr_normal">#ffffff</drawable>
     <drawable name="clr_pressed">#eeeeee</drawable>

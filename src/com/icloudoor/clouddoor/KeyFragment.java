@@ -904,9 +904,16 @@ public class KeyFragment extends Fragment implements ShakeListener {
                                 }
                                 weatherTemperature.setText(now.getString("temperature") + String.valueOf(centigrade));
 								weatherStatus.setText(now.getString("text"));
+								weatherTemperature.setTextSize(35);
+								weatherStatus.setTextSize(12);
+							} else {
+								weatherTemperature.setText(getString(R.string.weather_not_available));
+								weatherTemperature.setTextSize(16);
 							}
 						} catch (JSONException e) {
 							e.printStackTrace();
+							weatherTemperature.setText(getString(R.string.weather_not_available));
+							weatherTemperature.setTextSize(16);
 						}
 					}
 				}, new Response.ErrorListener() {
@@ -924,8 +931,19 @@ public class KeyFragment extends Fragment implements ShakeListener {
 			mQueue.add(mWeatherRequest);
 		} else {
 			SharedPreferences loadWeather = getActivity().getSharedPreferences("SAVEDWEATHER", 0);
-            weatherTemperature.setText(loadWeather.getString("Day1Temp", "N/A") + String.valueOf(centigrade)); //TODO
-			weatherStatus.setText(loadWeather.getString("Day1Weather", "N/A"));
+			
+			if(loadWeather.getString("Day1Temp", "N/A").equals("N/A")){
+				Log.e(TAG, "n/a");
+				weatherTemperature.setText(getString(R.string.weather_not_available));
+				weatherTemperature.setTextSize(16);
+			}else{
+				weatherTemperature.setText(loadWeather.getString("Day1Temp", "N/A") + String.valueOf(centigrade)); //TODO
+				weatherStatus.setText(loadWeather.getString("Day1Weather", "N/A"));
+				
+				weatherTemperature.setTextSize(35);
+				weatherStatus.setTextSize(12);
+			}
+			
 		}
 
 	}
@@ -941,9 +959,17 @@ public class KeyFragment extends Fragment implements ShakeListener {
 				Log.e(TAG, "click left");
 				if(showDay == 1) {    // now the day two weather, to show the day one weather
 					showDay--;
-                    weatherTemperature.setText(loadWeather.getString("Day1Temp", "N/A") + String.valueOf(centigrade));
-					weatherStatus.setText(loadWeather.getString("Day1Weather", "N/A"));
-					
+					if(loadWeather.getString("Day1Temp", "N/A").equals("N/A")){
+						weatherTemperature.setText(getString(R.string.weather_not_available));
+						weatherTemperature.setTextSize(16);
+					}else{
+						weatherTemperature.setText(loadWeather.getString("Day1Temp", "N/A") + String.valueOf(centigrade));
+						weatherStatus.setText(loadWeather.getString("Day1Weather", "N/A"));
+						
+						weatherTemperature.setTextSize(35);
+						weatherStatus.setTextSize(12);
+					}
+
 					contentYi.setText(loadLHL.getString("D1YI", null));
 					contentJi.setText(loadLHL.getString("D1JI", null));
 					
@@ -951,9 +977,17 @@ public class KeyFragment extends Fragment implements ShakeListener {
 					weatherBtnRight.setVisibility(View.VISIBLE);
 				} else if(showDay == 2) {   // now the day three weather, to show the day two weather
 					showDay--;
-                    weatherTemperature.setText(loadWeather.getString("Day2TempHigh", "N/A") + String.valueOf(centigrade));
-					weatherStatus.setText(loadWeather.getString("Day2Weather", "N/A"));
-
+					if(loadWeather.getString("Day2TempHigh", "N/A").equals("N/A")){
+						weatherTemperature.setText(getString(R.string.weather_not_available));
+						weatherTemperature.setTextSize(16);
+					}else{
+						weatherTemperature.setText(loadWeather.getString("Day2TempHigh", "N/A") + String.valueOf(centigrade));
+						weatherStatus.setText(loadWeather.getString("Day2Weather", "N/A"));
+						
+						weatherTemperature.setTextSize(35);
+						weatherStatus.setTextSize(12);
+					}
+                    
 					contentYi.setText(loadLHL.getString("D2YI", null));
 					contentJi.setText(loadLHL.getString("D2JI", null));
 					
@@ -964,9 +998,17 @@ public class KeyFragment extends Fragment implements ShakeListener {
 				Log.e(TAG, "click right");
 				if(showDay == 0) {    // now the day one weather, to show the day two weather
 					showDay++;
-                    weatherTemperature.setText(loadWeather.getString("Day2TempHigh", "N/A") + String.valueOf(centigrade));
-					weatherStatus.setText(loadWeather.getString("Day2Weather", "N/A"));
-	
+					if(loadWeather.getString("Day2TempHigh", "N/A").equals("N/A")){
+						weatherTemperature.setText(getString(R.string.weather_not_available));
+						weatherTemperature.setTextSize(16);
+					}else{
+						weatherTemperature.setText(loadWeather.getString("Day2TempHigh", "N/A") + String.valueOf(centigrade));
+						weatherStatus.setText(loadWeather.getString("Day2Weather", "N/A"));
+						
+						weatherTemperature.setTextSize(35);
+						weatherStatus.setTextSize(12);
+					}
+                    
 					contentYi.setText(loadLHL.getString("D2YI", null));
 					contentJi.setText(loadLHL.getString("D2JI", null));
 					
@@ -974,9 +1016,17 @@ public class KeyFragment extends Fragment implements ShakeListener {
 					weatherBtnRight.setVisibility(View.VISIBLE);
 				} else if(showDay == 1) {   // now the day two weather, to show the day three weather
 					showDay++;
-                    weatherTemperature.setText(loadWeather.getString("Day3TempHigh", "N/A") + String.valueOf(centigrade));
-					weatherStatus.setText(loadWeather.getString("Day3Weather", "N/A"));
-			
+					if(loadWeather.getString("Day3TempHigh", "N/A").equals("N/A")){
+						weatherTemperature.setText(getString(R.string.weather_not_available));
+						weatherTemperature.setTextSize(16);
+					}else{
+						weatherTemperature.setText(loadWeather.getString("Day3TempHigh", "N/A") + String.valueOf(centigrade));
+						weatherStatus.setText(loadWeather.getString("Day3Weather", "N/A"));
+						
+						weatherTemperature.setTextSize(35);
+						weatherStatus.setTextSize(12);
+					}
+                    
 					contentYi.setText(loadLHL.getString("D3YI", null));
 					contentJi.setText(loadLHL.getString("D3JI", null));
 					
@@ -1779,7 +1829,9 @@ public class KeyFragment extends Fragment implements ShakeListener {
 						}
 					}
 				}else{
-					mUartService.connect(mDeviceList.get(deviceIndexToOpen).getAddress());
+					if (mUartService != null) {
+						mUartService.connect(mDeviceList.get(deviceIndexToOpen).getAddress());
+					}
 				}
 				
 				

@@ -111,7 +111,7 @@ public class SettingDetailActivity extends Activity {
 	
 	public void InitBtns(){
 		SharedPreferences setting = getSharedPreferences("SETTING", 0);		
-		canShake = setting.getInt("shake", 0);
+		canShake = setting.getInt("shake", 1);
 		haveSound = setting.getInt("sound", 1);
 		canDisturb = setting.getInt("disturb", 1);
 		switchToCar = setting.getInt("chooseCar", 1);

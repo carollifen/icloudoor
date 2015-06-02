@@ -266,10 +266,10 @@ public class SettingFragment extends Fragment {
                                 @Override
                                 public void onResponse(JSONObject response) {
                                     try {
-                                        if (response.getString("sid") != null) {
-                                            sid = response.getString("sid");
-                                            saveSid("SID", sid);
-                                        }
+//                                        if (response.getString("sid") != null) {
+//                                            sid = response.getString("sid");
+                                            saveSid("SID", null);
+//                                        }
                                         statusCode = response.getInt("code");
 
                                         isLogin = 0;
@@ -277,10 +277,11 @@ public class SettingFragment extends Fragment {
                                         Editor editor1 = loginStatus.edit();
                                         editor1.putInt("LOGIN", isLogin);
                                         editor1.commit();
+ 
                                         Intent intent3 = new Intent();
                                         intent3.setClass(getActivity(), Login.class);
                                         startActivity(intent3);
-
+                                                                            
                                         CloudDoorMainActivity mainActivity = (CloudDoorMainActivity) getActivity();
                                         mainActivity.finish();
                                     } catch (JSONException e) {

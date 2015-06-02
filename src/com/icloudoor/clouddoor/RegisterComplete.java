@@ -169,16 +169,10 @@ public class RegisterComplete extends Activity implements TextWatcher {
 									} catch (JSONException e) {
 										e.printStackTrace();
 									}
-									Log.e("TEST",
-											"statusCode: "
-													+ String.valueOf(statusCode));
-									Log.e("TEST",
-											"response: " + response.toString());
+									Log.e("TEST","statusCode: "+ String.valueOf(statusCode));
+									Log.e("TEST","response: " + response.toString());
 									try {
-										Log.e("TEST",
-												"sid: "
-														+ response
-																.getString("sid"));
+										Log.e("TEST","sid: "+ response.getString("sid"));
 									} catch (JSONException e) {
 										e.printStackTrace();
 									}
@@ -192,7 +186,7 @@ public class RegisterComplete extends Activity implements TextWatcher {
 										Editor editor = personalInfo.edit();
 										editor.putInt("SETINFO", 0);
 										editor.commit();
-										
+
 										setResult(RESULT_OK);
 										finish();
 									} else if (statusCode == -40) {
@@ -256,6 +250,32 @@ public class RegisterComplete extends Activity implements TextWatcher {
 
 	@Override
 	public void afterTextChanged(Editable s) {
+
+		String temp = s.toString();
+		
+		if(temp.length() > 1){
+			String tem = temp.substring(temp.length()-1, temp.length());
+			char[] temC = tem.toCharArray();
+			int mid = temC[0];
+			
+			if((mid>=48 && mid<=57) || (mid>=65&&mid<=90) || (mid>97&&mid<=122)){
+				
+			}else{
+				s.delete(temp.length()-1, temp.length());
+				Toast.makeText(this, R.string.input_wrong, Toast.LENGTH_SHORT).show();
+			}
+		}else if(temp.length() == 1){
+			char[] temC = temp.toCharArray();
+			int mid = temC[0];
+			
+			if((mid>=48 && mid<=57) || (mid>=65&&mid<=90) || (mid>97&&mid<=122)){
+				
+			}else{
+				s.clear();
+				Toast.makeText(this, R.string.input_wrong, Toast.LENGTH_SHORT).show();
+			}
+		}
+		
 		if(ETInputPwd.getText().toString().length() > 5 && ETConfirmPwd.getText().toString().length() > 5){
 			TVRegiComplete.setTextColor(getResources().getColorStateList(R.color.text_confirm_pwd));
 			regiCompleteLayout.setEnabled(true);

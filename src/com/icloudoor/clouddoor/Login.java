@@ -42,6 +42,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class Login extends Activity implements TextWatcher {
+	
+	private String TAG = this.getClass().getSimpleName();
+	
 	private EditText ETInputPhoneNum;
 	private EditText ETInputPwd;
 	private TextView TVLogin;
@@ -473,5 +476,4 @@ public class Login extends Activity implements TextWatcher {
 			}
 		}
 	};
-
 }

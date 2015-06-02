@@ -29,8 +29,9 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
-            android:hint="请输入手机号码"
+            android:hint="请输入11位手机号码"
             android:textColor="#999999" 
+            android:maxLength="11"
             android:background="@null"
            />
        <RelativeLayout 
