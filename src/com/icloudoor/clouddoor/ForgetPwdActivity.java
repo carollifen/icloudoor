@@ -35,6 +35,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ForgetPwdActivity extends Activity implements TextWatcher {
+	private String TAG = this.getClass().getSimpleName();
+	
 	private TextView TVGetCertiCode;
 	private EditText ETInputPhoneNum;
 	private EditText ETInputCertiCode;
@@ -49,7 +51,7 @@ public class ForgetPwdActivity extends Activity implements TextWatcher {
 	private int ConfirmCertiStatusCode;
 	private String sid = null;
 
-	private String HOST = "https://zone.icloudoor.com/icloudoor-web";
+	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
 	
 	// for new ui
 	private RelativeLayout phoneLayout;
@@ -168,7 +170,7 @@ public class ForgetPwdActivity extends Activity implements TextWatcher {
 
 							@Override
 							public void onErrorResponse(VolleyError error) {
-								
+								Log.e(TAG, error.toString());
 							}
 						}){
 					@Override

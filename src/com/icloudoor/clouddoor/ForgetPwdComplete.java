@@ -36,7 +36,7 @@ import android.widget.Toast;
 
 public class ForgetPwdComplete extends Activity implements TextWatcher{
 	private EditText ETInputPwd;
-//	private EditText ETConfirmPwd;
+	private EditText ETConfirmPwd;
 	private TextView TVConfirm;
 	private String inputPwd, confirmPwd;
 	private RelativeLayout BtnBack;
@@ -49,10 +49,11 @@ public class ForgetPwdComplete extends Activity implements TextWatcher{
 	
 	// for new ui
 	private RelativeLayout pwdLayout;
+	private RelativeLayout pwdAgainLayout;
 	private RelativeLayout forgetCompleteLayout;
-	private RelativeLayout ShowPwd;
-	private ImageView IVPwdIcon;
-	private boolean isHiddenPwd;
+//	private RelativeLayout ShowPwd;
+//	private ImageView IVPwdIcon;
+//	private boolean isHiddenPwd;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +62,7 @@ public class ForgetPwdComplete extends Activity implements TextWatcher{
 		setContentView(R.layout.find_pwd_complete);
 		
 		ETInputPwd = (EditText) findViewById(R.id.forget_pwd_input_new_pwd);
-//		ETConfirmPwd = (EditText) findViewById(R.id.forget_pwd_confirm_pwd);
+		ETConfirmPwd = (EditText) findViewById(R.id.forget_pwd_input_new_pwd_again);
 		TVConfirm = (TextView) findViewById(R.id.forget_pwd_confirm);
 		
 		//for new ui
@@ -69,51 +70,56 @@ public class ForgetPwdComplete extends Activity implements TextWatcher{
 				getWindowManager().getDefaultDisplay().getMetrics(dm);
 				int screenWidth = dm.widthPixels;
 				
-				ShowPwd = (RelativeLayout) findViewById(R.id.show_pwd);
-				IVPwdIcon = (ImageView) findViewById(R.id.btn_show_pwd);
+//				ShowPwd = (RelativeLayout) findViewById(R.id.show_pwd);
+//				IVPwdIcon = (ImageView) findViewById(R.id.btn_show_pwd);
 				pwdLayout = (RelativeLayout) findViewById(R.id.regi_input_pwd_layout);
+				pwdAgainLayout = (RelativeLayout) findViewById(R.id.regi_input_pwd_again_layout);
 				forgetCompleteLayout = (RelativeLayout) findViewById(R.id.regi_complete_layout);
 				
 				RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) pwdLayout.getLayoutParams();
 				RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) forgetCompleteLayout.getLayoutParams();
+				RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) pwdAgainLayout.getLayoutParams();
 				params.width = screenWidth - 48*2;
 				params1.width = screenWidth - 48*2;
+				params2.width = screenWidth - 48*2;
 				pwdLayout.setLayoutParams(params);
 				forgetCompleteLayout.setLayoutParams(params1);
+				pwdAgainLayout.setLayoutParams(params2);
 				
 				pwdLayout.setBackgroundResource(R.drawable.shape_input_certi_code);
+				pwdAgainLayout.setBackgroundResource(R.drawable.shape_input_certi_code);
 				forgetCompleteLayout.setBackgroundResource(R.drawable.shape_regi_complete_disable);
 				
 				TVConfirm.setTextColor(0xFF999999);
 				forgetCompleteLayout.setEnabled(false);
 				
-				isHiddenPwd = true;
-				IVPwdIcon.setImageResource(R.drawable.hide_pwd_new);
-				ShowPwd.setOnClickListener(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						if (isHiddenPwd) {
-							isHiddenPwd = false;
-							ETInputPwd.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-							IVPwdIcon.setImageResource(R.drawable.show_pwd_new);
-						} else {
-							isHiddenPwd = true;
-							ETInputPwd.setTransformationMethod(PasswordTransformationMethod.getInstance());
-							IVPwdIcon.setImageResource(R.drawable.hide_pwd_new);
-						}
-
-					}
-
-				});
+//				isHiddenPwd = true;
+//				IVPwdIcon.setImageResource(R.drawable.hide_pwd_new);
+//				ShowPwd.setOnClickListener(new OnClickListener() {
+//
+//					@Override
+//					public void onClick(View v) {
+//						if (isHiddenPwd) {
+//							isHiddenPwd = false;
+//							ETInputPwd.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+//							IVPwdIcon.setImageResource(R.drawable.show_pwd_new);
+//						} else {
+//							isHiddenPwd = true;
+//							ETInputPwd.setTransformationMethod(PasswordTransformationMethod.getInstance());
+//							IVPwdIcon.setImageResource(R.drawable.hide_pwd_new);
+//						}
+//
+//					}
+//
+//				});
 				
 				//
 		
-//		TVConfirm.setTextColor(0xFFcccccc);
-//		TVConfirm.setEnabled(false);
+		TVConfirm.setTextColor(0xFF999999);
+		forgetCompleteLayout.setEnabled(false);
 		
 		ETInputPwd.addTextChangedListener(this);
-//		ETConfirmPwd.addTextChangedListener(this);
+		ETConfirmPwd.addTextChangedListener(this);
 		
 		BtnBack = (RelativeLayout) findViewById(R.id.btn_back);
 		BtnBack.setOnClickListener(new OnClickListener(){
@@ -144,8 +150,8 @@ public class ForgetPwdComplete extends Activity implements TextWatcher{
 				}
 				
 				inputPwd = ETInputPwd.getText().toString();
-//				confirmPwd = ETConfirmPwd.getText().toString();
-//				if(inputPwd.equals(confirmPwd)){
+				confirmPwd = ETConfirmPwd.getText().toString();
+				if(inputPwd.equals(confirmPwd)){
 					MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
 							Method.POST, registerURL.toString(), null,
 							new Response.Listener<JSONObject>() {
@@ -197,8 +203,8 @@ public class ForgetPwdComplete extends Activity implements TextWatcher{
 						}
 					};
 					mQueue.add(mJsonRequest);
-//				}else
-//					Toast.makeText(v.getContext(), R.string.diff_pwd, Toast.LENGTH_SHORT).show();
+				}else
+					Toast.makeText(v.getContext(), R.string.diff_pwd, Toast.LENGTH_SHORT).show();
 			}
 			
 		});
@@ -231,8 +237,8 @@ public class ForgetPwdComplete extends Activity implements TextWatcher{
 	   
 	@Override
 	public void afterTextChanged(Editable s) {
-		if(ETInputPwd.getText().toString().length() > 7){
-			TVConfirm.setTextColor(0xFF0065a1);
+		if(ETInputPwd.getText().toString().length() > 5 && ETConfirmPwd.getText().toString().length() > 5){
+			TVConfirm.setTextColor(getResources().getColorStateList(R.color.text_confirm_pwd));
 			forgetCompleteLayout.setEnabled(true);
 			forgetCompleteLayout.setBackgroundResource(R.drawable.selector_next_step);
 		} else {
