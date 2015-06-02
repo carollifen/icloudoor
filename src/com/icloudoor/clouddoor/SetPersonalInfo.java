@@ -447,11 +447,13 @@ public class SetPersonalInfo extends Activity {
 									setResult(RESULT_OK);
 									SetPersonalInfo.this.finish();
 								} else if (statusCode == -1) {
-									Toast.makeText(getApplicationContext(), R.string.wrong_params, Toast.LENGTH_SHORT).show();
+									Toast.makeText(getApplicationContext(), R.string.not_enough_params, Toast.LENGTH_SHORT).show();
 								} else if (statusCode == -2) {
 									Toast.makeText(getApplicationContext(), R.string.not_login, Toast.LENGTH_SHORT).show();
 								} else if (statusCode == -99) {
 									Toast.makeText(getApplicationContext(), R.string.unknown_err, Toast.LENGTH_SHORT).show();
+								} else if (statusCode == -42) {
+									Toast.makeText(getApplicationContext(), R.string.nick_name_already, Toast.LENGTH_SHORT).show();
 								}
 
 							}
