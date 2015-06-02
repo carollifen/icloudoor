@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.TimeZone;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -141,6 +142,8 @@ public class KeyFragmentNoBLE extends Fragment implements ShakeListener {
 	private TextView contentYi;
 	private TextView contentJi;
 	private int showDay;  // 0 for day one; 1 for day two; 2 for day three
+	private String D1, D2, D3;
+	private TextView date;
 
 	private LocationManager locationManager;
 	private double longitude = 0.0;
@@ -241,6 +244,7 @@ public class KeyFragmentNoBLE extends Fragment implements ShakeListener {
 //		myPageChangeListener = new MyPageChangeListener();
 		
 		// for new UI weather
+		date = (TextView) view.findViewById(R.id.date);
 		weatherWidge = (LinearLayout) view.findViewById(R.id.weather_widge);
 		weatherWidge.setOnClickListener(new OnClickListener(){
 
@@ -266,7 +270,7 @@ public class KeyFragmentNoBLE extends Fragment implements ShakeListener {
 		
 		weatherTemp = (TextView) view.findViewById(R.id.weather_temp);
 		weatherStatus = (TextView) view.findViewById(R.id.weather_status);
-		weatherStatus.setGravity(Gravity.RIGHT);
+		weatherStatus.setSelected(true);
 		contentYi = (TextView) view.findViewById(R.id.weather_yi);
 		contentJi = (TextView) view.findViewById(R.id.weather_ji);
 		contentYi.setSelected(true);
@@ -530,9 +534,116 @@ public class KeyFragmentNoBLE extends Fragment implements ShakeListener {
 			}
 		}
 	};
+	
+	public boolean isBigMonth(int m) {
+		if(m == 1 || m == 3 || m == 5 || m == 7 || m == 8 || m == 10 || m == 12) 
+			return true;	
+		return false;
+	}
+	
+	public boolean isSmallMonth(int m) {
+		if(m == 4 || m == 6 || m == 9 || m == 11) 
+			return true;	
+		return false;
+	}
+	
+	public boolean isLeapYear(int y) {
+		if((y%4==0 && y%100!=0) || y%400==0) 
+			return true;	
+		return false;
+	}
 
 	@SuppressLint("SimpleDateFormat")
 	public void requestWeatherData() {
+		
+		final Calendar c =  Calendar.getInstance();
+		c.setTimeZone(TimeZone.getTimeZone("GMT+8:00")); 
+		
+		D1 = String.valueOf(c.get(Calendar.MONTH) + 1) + getString(R.string.month)
+				+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)) + getString(R.string.day);
+		
+		if(isBigMonth(c.get(Calendar.MONTH) + 1)){                 
+			if(c.get(Calendar.DAY_OF_MONTH) == 31){
+				if((c.get(Calendar.MONTH) + 1) == 12){   
+					D2 = String.valueOf(1) + getString(R.string.month)
+							+ String.valueOf(1) + getString(R.string.day);
+				}else{
+					D2 = String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + getString(R.string.month) 
+							+ String.valueOf(1) + getString(R.string.day);
+				}
+			}else{
+				D2 = String.valueOf(c.get(Calendar.MONTH) + 1) + getString(R.string.month) 
+						+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)+1) + getString(R.string.day);	
+			}
+		}else if(isSmallMonth(c.get(Calendar.MONTH) + 1)){     
+			if(c.get(Calendar.DAY_OF_MONTH) == 30){
+				D2 = String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + getString(R.string.month) 
+						+ String.valueOf(1) + getString(R.string.day);
+			}else{
+				D2 = String.valueOf(c.get(Calendar.MONTH) + 1) + getString(R.string.month) 
+						+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)+1) + getString(R.string.day);
+			}
+		}else if(isLeapYear(c.get(Calendar.MONTH) + 1)) {        
+			if(c.get(Calendar.DAY_OF_MONTH) == 29){
+				D2 = String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + getString(R.string.month) 
+						+ String.valueOf(1) + getString(R.string.day);
+			}else{
+				D2 = String.valueOf(c.get(Calendar.MONTH) + 1) + getString(R.string.month) 
+						+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)+1) + getString(R.string.day);
+			}
+		}else if(!(isLeapYear(c.get(Calendar.MONTH) + 1))){     
+			if(c.get(Calendar.DAY_OF_MONTH) == 28){
+				D2 = String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + getString(R.string.month) 
+						+ String.valueOf(1) + getString(R.string.day);
+			}else{
+				D2 = String.valueOf(c.get(Calendar.MONTH) + 1) + getString(R.string.month) 
+						+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)+1) + getString(R.string.day);
+			}
+		}
+		
+		if(isBigMonth(c.get(Calendar.MONTH) + 1)){                 
+			if(c.get(Calendar.DAY_OF_MONTH) == 31 || c.get(Calendar.DAY_OF_MONTH) == 30){
+				if((c.get(Calendar.MONTH) + 1) == 12){  
+					D3 = String.valueOf(1) + getString(R.string.month)
+							+ String.valueOf((c.get(Calendar.DAY_OF_MONTH)+2)%31) + getString(R.string.day);
+				}else{
+					D3 = String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + getString(R.string.month) 
+							+ String.valueOf((c.get(Calendar.DAY_OF_MONTH)+2)%31) + getString(R.string.day);
+				}
+			}else{
+				D3 = String.valueOf(c.get(Calendar.MONTH) + 1) + getString(R.string.month) 
+						+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)+2) + getString(R.string.day);	
+			}
+		}else if(isSmallMonth(c.get(Calendar.MONTH) + 1)){     
+			if(c.get(Calendar.DAY_OF_MONTH) == 30 || c.get(Calendar.DAY_OF_MONTH) == 29){
+				D3 = String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + getString(R.string.month) 
+						+ String.valueOf((c.get(Calendar.DAY_OF_MONTH)+2)%30) + getString(R.string.day);
+			}else{
+				D3 = String.valueOf(c.get(Calendar.MONTH) + 1) + getString(R.string.month) 
+						+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)+2) + getString(R.string.day);
+			}
+		}else if(isLeapYear(c.get(Calendar.MONTH) + 1)) {        
+			if(c.get(Calendar.DAY_OF_MONTH) == 29 || c.get(Calendar.DAY_OF_MONTH) == 28){
+				D3 = String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + getString(R.string.month) 
+						+ String.valueOf((c.get(Calendar.DAY_OF_MONTH)+2)%29) + getString(R.string.day);
+			}else{
+				D3 = String.valueOf(c.get(Calendar.MONTH) + 1) + getString(R.string.month) 
+						+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)+2) + getString(R.string.day);
+			}
+		}else if(!(isLeapYear(c.get(Calendar.MONTH) + 1))){     
+			if(c.get(Calendar.DAY_OF_MONTH) == 28 || c.get(Calendar.DAY_OF_MONTH) == 27){
+				D3 = String.valueOf(c.get(Calendar.MONTH) + 1 + 1) + getString(R.string.month) 
+						+ String.valueOf((c.get(Calendar.DAY_OF_MONTH)+2)%28) + getString(R.string.day);
+			}else{
+				D3 = String.valueOf(c.get(Calendar.MONTH) + 1) + getString(R.string.month) 
+						+ String.valueOf(c.get(Calendar.DAY_OF_MONTH)+2) + getString(R.string.day);
+			}
+		}	
+		
+		Log.e(TAG, D1 + " " + D2 + " " + D3);
+		
+		date.setText(D1);
+		
 		// To get the longitude and latitude
 		locationManager = (LocationManager) getActivity().getSystemService(
 				Context.LOCATION_SERVICE);
@@ -727,16 +838,20 @@ public class KeyFragmentNoBLE extends Fragment implements ShakeListener {
 								
 								weatherTemp.setText(now.getString("temperature") + String.valueOf(centigrade));
 								weatherStatus.setText(now.getString("text"));
+							}else {
+								weatherTemp.setText(getString(R.string.weather_not_available));
+								weatherTemp.setTextSize(16);
 							}
 						} catch (JSONException e) {
-							e.printStackTrace();
+							e.printStackTrace();	
 						}
 					}
 				}, new Response.ErrorListener() {
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
-
+						weatherTemp.setText(getString(R.string.weather_not_available));
+						weatherTemp.setTextSize(16);
 					}
 				}) {
 		};
@@ -747,8 +862,19 @@ public class KeyFragmentNoBLE extends Fragment implements ShakeListener {
 			mQueue.add(mWeatherRequest);
 		} else {
 			SharedPreferences loadWeather = getActivity().getSharedPreferences("SAVEDWEATHER", 0);
-			weatherTemp.setText(loadWeather.getString("Day1Temp", "N/A") + String.valueOf(centigrade)); //TODO
-			weatherStatus.setText(loadWeather.getString("Day1Weather", "N/A"));
+			
+			if(loadWeather.getString("Day1Temp", "N/A").equals("N/A")){
+				Log.e(TAG, "n/a");
+				weatherTemp.setText(getString(R.string.weather_not_available));
+				weatherTemp.setTextSize(16);
+			}else{
+				weatherTemp.setText(loadWeather.getString("Day1Temp", "N/A") + String.valueOf(centigrade)); //TODO
+				weatherStatus.setText(loadWeather.getString("Day1Weather", "N/A"));
+				
+				weatherTemp.setTextSize(35);
+				weatherStatus.setTextSize(12);
+			}
+			
 		}
 
 	}
@@ -764,8 +890,18 @@ public class KeyFragmentNoBLE extends Fragment implements ShakeListener {
 				Log.e(TAG, "click left");
 				if(showDay == 1) {    // now the day two weather, to show the day one weather
 					showDay--;
-					weatherTemp.setText(loadWeather.getString("Day1Temp", "N/A") + String.valueOf(centigrade));
-					weatherStatus.setText(loadWeather.getString("Day1Weather", "N/A"));
+					if(loadWeather.getString("Day1Temp", "N/A").equals("N/A")){
+						weatherTemp.setText(getString(R.string.weather_not_available));
+						weatherTemp.setTextSize(16);
+					}else{
+						weatherTemp.setText(loadWeather.getString("Day1Temp", "N/A") + String.valueOf(centigrade));
+						weatherStatus.setText(loadWeather.getString("Day1Weather", "N/A"));
+						
+						weatherTemp.setTextSize(35);
+						weatherStatus.setTextSize(12);
+					}
+
+					date.setText(D1);
 					
 					contentYi.setText(loadLHL.getString("D1YI", null));
 					contentJi.setText(loadLHL.getString("D1JI", null));
@@ -774,8 +910,18 @@ public class KeyFragmentNoBLE extends Fragment implements ShakeListener {
 					weatherBtnRight.setVisibility(View.VISIBLE);
 				} else if(showDay == 2) {   // now the day three weather, to show the day two weather
 					showDay--;
-					weatherTemp.setText(loadWeather.getString("Day2TempHigh", "N/A") + String.valueOf(centigrade));
-					weatherStatus.setText(loadWeather.getString("Day2Weather", "N/A"));
+					if(loadWeather.getString("Day2TempHigh", "N/A").equals("N/A")){
+						weatherTemp.setText(getString(R.string.weather_not_available));
+						weatherTemp.setTextSize(16);
+					}else{
+						weatherTemp.setText(loadWeather.getString("Day2TempHigh", "N/A") + String.valueOf(centigrade));
+						weatherStatus.setText(loadWeather.getString("Day2Weather", "N/A"));
+						
+						weatherTemp.setTextSize(35);
+						weatherStatus.setTextSize(12);
+					}
+					
+					date.setText(D2);
 
 					contentYi.setText(loadLHL.getString("D2YI", null));
 					contentJi.setText(loadLHL.getString("D2JI", null));
@@ -787,8 +933,18 @@ public class KeyFragmentNoBLE extends Fragment implements ShakeListener {
 				Log.e(TAG, "click right");
 				if(showDay == 0) {    // now the day one weather, to show the day two weather
 					showDay++;
-					weatherTemp.setText(loadWeather.getString("Day2TempHigh", "N/A") + String.valueOf(centigrade));
-					weatherStatus.setText(loadWeather.getString("Day2Weather", "N/A"));
+					if(loadWeather.getString("Day2TempHigh", "N/A").equals("N/A")){
+						weatherTemp.setText(getString(R.string.weather_not_available));
+						weatherTemp.setTextSize(16);
+					}else{
+						weatherTemp.setText(loadWeather.getString("Day2TempHigh", "N/A") + String.valueOf(centigrade));
+						weatherStatus.setText(loadWeather.getString("Day2Weather", "N/A"));
+						
+						weatherTemp.setTextSize(35);
+						weatherStatus.setTextSize(12);
+					}
+					
+					date.setText(D2);
 	
 					contentYi.setText(loadLHL.getString("D2YI", null));
 					contentJi.setText(loadLHL.getString("D2JI", null));
@@ -797,8 +953,18 @@ public class KeyFragmentNoBLE extends Fragment implements ShakeListener {
 					weatherBtnRight.setVisibility(View.VISIBLE);
 				} else if(showDay == 1) {   // now the day two weather, to show the day three weather
 					showDay++;
-					weatherTemp.setText(loadWeather.getString("Day3TempHigh", "N/A") + String.valueOf(centigrade));
-					weatherStatus.setText(loadWeather.getString("Day3Weather", "N/A"));
+					if(loadWeather.getString("Day3TempHigh", "N/A").equals("N/A")){
+						weatherTemp.setText(getString(R.string.weather_not_available));
+						weatherTemp.setTextSize(16);
+					}else{
+						weatherTemp.setText(loadWeather.getString("Day3TempHigh", "N/A") + String.valueOf(centigrade));
+						weatherStatus.setText(loadWeather.getString("Day3Weather", "N/A"));
+						
+						weatherTemp.setTextSize(35);
+						weatherStatus.setTextSize(12);
+					}
+                    
+					date.setText(D3);
 			
 					contentYi.setText(loadLHL.getString("D3YI", null));
 					contentJi.setText(loadLHL.getString("D3JI", null));
