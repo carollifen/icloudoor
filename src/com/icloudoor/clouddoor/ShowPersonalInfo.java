@@ -480,9 +480,11 @@ public class ShowPersonalInfo extends Activity {
 								editor.putInt("CITYID", cityid);
 								editor.putInt("DISTRICTID", districtid);
 								editor.putInt("SEX", sex);
-								editor.putString("YEAR", birthday.substring(0, 4));
-								editor.putString("MONTH", birthday.substring(5, 7));
-								editor.putString("DAY", birthday.substring(8));
+								if(birthday.length() > 0){
+									editor.putString("YEAR", birthday.substring(0, 4));
+									editor.putString("MONTH", birthday.substring(5, 7));
+									editor.putString("DAY", birthday.substring(8));
+								}
 								editor.commit();
 
 								File f = new File(PATH + imageName);
@@ -522,9 +524,9 @@ public class ShowPersonalInfo extends Activity {
 									TVdistrict.setText(district);
 								}
 
-								if (name != null)
+								if (name.length() > 0)
 									TVName.setText(name);
-								if (nickname != null)
+								if (nickname.length() > 0)
 									TVNickName.setText(nickname);
 
 								if (sex == 1) {
@@ -533,12 +535,12 @@ public class ShowPersonalInfo extends Activity {
 									TVSex.setText(R.string.female);
 								}
 
-								if (id != null) {
+								if (id.length() > 0) {
 									formatID = changeNum(id);
 									TVid.setText(formatID);
 								}
 
-								if (birthday != null) {
+								if (birthday.length() > 0) {
 									TVyear.setText(birthday.substring(0, 4));
 									TVmonth.setText(birthday.substring(5, 7));
 									TVday.setText(birthday.substring(8));
