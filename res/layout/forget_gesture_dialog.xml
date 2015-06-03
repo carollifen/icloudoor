@@ -1,65 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout 
- xmlns:android="http://schemas.android.com/apk/res/android"
- android:layout_height="148dp" 
- android:layout_width="208dp"
-  android:layout_gravity="center_horizontal"
- 
- android:orientation="vertical"
- android:id="@+id/dialog">
- <TextView 
-     android:id="@+id/dialog_title"
-     android:layout_width="match_parent"
-     android:layout_height="40dp"
-     android:text="请输入登陆密码"
-     android:textSize="13sp"
-     android:textColor="#666666"
-     android:gravity="center"/>
- 
- <View 
-     android:layout_width="192dp"
-     android:layout_height="0.5dp"
-     android:layout_gravity="center_horizontal"
-     android:background="#cccccc"
-     />
- 
- <EditText android:layout_height="36dp"
-  android:layout_width="192dp"
-  android:layout_gravity="center_horizontal" 
-  android:id="@+id/pswEdit" 
-  android:password="true"
-  android:hint=" 登陆密码"
-  android:editable="true"
-  android:background="@drawable/edit_psw"
-  android:layout_marginTop="14dp"/>
- 
- <LinearLayout 
-     
-     android:orientation="horizontal"
-      android:layout_width="208dp"
-     android:layout_marginTop="14dp"
-    
-    
-     android:layout_height="match_parent"
-     >
-     <TextView
-         android:id="@+id/cancle"
-         android:layout_marginLeft="9dp"
-         android:layout_width="88dp"
-         android:layout_height="match_parent"
-    	 android:layout_marginBottom="14dp"
-         android:background="@drawable/cancle_tv"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog"
+    android:layout_width="208dp"
+    android:layout_height="148dp"
+    android:layout_gravity="center_horizontal"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:gravity="center"
-        android:text="取消"/>
-      <TextView 
-         android:id="@+id/bound"
-         android:layout_width="88dp"
-         android:layout_height="match_parent"
-         android:layout_marginLeft="14dp"
-         android:layout_marginBottom="14dp"
-        android:gravity="center"
-        android:background="@drawable/bound_tv"
-        android:text="确定"/>
- </LinearLayout>
+        android:text="请输入登录密码"
+        android:textColor="#666666"
+        android:textSize="13sp" />
+
+    <View
+        android:layout_width="192dp"
+        android:layout_height="0.5dp"
+        android:layout_gravity="center_horizontal"
+        android:background="#cccccc" />
+
+    <EditText
+        android:id="@+id/pswEdit"
+        android:layout_width="192dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/edit_psw"
+        android:editable="true"
+        android:hint="登录密码"
+        android:password="true" />
+
+    <LinearLayout
+        android:layout_width="208dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="14dp"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/cancle"
+            android:layout_width="88dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="14dp"
+            android:layout_marginLeft="9dp"
+            android:background="@drawable/cancle_tv"
+            android:gravity="center"
+            android:text="取消" />
+
+        <TextView
+            android:id="@+id/bound"
+            android:layout_width="88dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="14dp"
+            android:layout_marginLeft="14dp"
+            android:background="@drawable/bound_tv"
+            android:gravity="center"
+            android:text="确定" />
+    </LinearLayout>
 
 </LinearLayout>
