@@ -143,8 +143,7 @@ public class ForgetPwdComplete extends Activity implements TextWatcher{
 			@Override
 			public void onClick(View v) {
 				try {
-					registerURL = new URL(HOST + "/user/manage/changePassword2.do"
-							+ "?sid=" + sid);
+					registerURL = new URL(HOST + "/user/manage/changePassword2.do" + "?sid=" + sid);
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				}
@@ -178,6 +177,11 @@ public class ForgetPwdComplete extends Activity implements TextWatcher{
 //										Intent intent = new Intent();
 //										intent.setClass(getApplicationContext(), Login.class);
 //										startActivity(intent);
+										
+										SharedPreferences RegiPhone = getSharedPreferences("REGIPHONE", 0);
+							         	Editor editor = RegiPhone.edit();
+							         	editor.putString("PWD", confirmPwd);
+							         	editor.commit();
 										
 										setResult(RESULT_OK);
 										finish();

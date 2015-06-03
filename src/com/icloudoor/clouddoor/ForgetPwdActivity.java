@@ -23,6 +23,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
@@ -62,7 +63,25 @@ public class ForgetPwdActivity extends Activity implements TextWatcher {
 	private RelativeLayout nextLayout;
 	
 	private boolean isBackKey;
+		
+	//
+	private int loginStatusCode;
+	private URL loginURL = null;
 	
+	private int isLogin;
+	
+	private int setPersonal;
+	
+	private String name = null;
+	private String nickname = null;
+	private String id = null;
+	private String birth = null;
+	private int sex = 0, provinceId = 0, cityId = 0, districtId = 0;
+	private String portraitUrl, userId;
+	private int userStatus;
+	
+	private String phoneNum;
+	private String password;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -259,9 +278,171 @@ public class ForgetPwdActivity extends Activity implements TextWatcher {
          	editor.putString("PHONE", ETInputPhoneNum.getText().toString());
          	editor.commit();
          	
+         	setResult(RESULT_OK);
+         	// TODO
+            /*
+             * automatically login and jump to MainActivity()
+             */
+            LoginAuto();
+         	
             finish();
         }
     }
+	
+	public void LoginAuto(){
+		
+		sid = loadSid();
+
+		try {
+			loginURL = new URL(HOST + "/user/manage/login.do" + "?sid=" + sid);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		
+		if ("NET_WORKS".equals(loadSid("NETSTATE"))) {
+			Toast.makeText(getApplicationContext(), R.string.login_ing,
+					Toast.LENGTH_SHORT).show();
+
+			try {
+				loginURL = new URL(HOST + "/user/manage/login.do"
+						+ "?sid=" + sid);
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+			
+			SharedPreferences RegiPhone = getSharedPreferences("REGIPHONE", 0);
+			
+			phoneNum = RegiPhone.getString("PHONE", "");
+			password = RegiPhone.getString("PWD", "");
+			MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(Method.POST, loginURL.toString(), null,
+					new Response.Listener<JSONObject>() {
+
+						@Override
+						public void onResponse(JSONObject response) {
+							try {
+								if (response.getString("sid") != null) {
+									sid = response.getString("sid");
+									saveSid(sid);
+								}
+								loginStatusCode = response.getInt("code");
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
+							Log.e("TEST", response.toString());
+
+							if (loginStatusCode == 1) {
+
+								isLogin = 1;
+								SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
+								Editor editor = loginStatus.edit();
+								
+								editor.putInt("LOGIN", isLogin);
+								editor.putString("PHONENUM", phoneNum);
+								editor.putString("PASSWARD", password);
+								editor.commit();
+
+								SharedPreferences firstLoginShare=getSharedPreferences("FIRSTLOGINSHARE", 0);
+								Editor mEditor=firstLoginShare.edit();
+								mEditor.putBoolean("FIRSTLOGIN", true).commit();
+								try {
+									JSONObject data = response.getJSONObject("data");
+									JSONObject info = data.getJSONObject("info");
+
+									name = info.getString("userName");
+									nickname = info.getString("nickname");
+									id = info.getString("idCardNo");
+									birth = info.getString("birthday");
+									sex = info.getInt("sex");
+									provinceId = info.getInt("provinceId");
+									cityId = info.getInt("cityId");
+									districtId = info.getInt("districtId");
+
+									portraitUrl = info.getString("portraitUrl");
+									userId = info.getString("userId");
+									userStatus = info.getInt("userStatus");     //1 for not approved user; 2 for approved user
+
+									editor.putString("NAME", name);
+									editor.putString("NICKNAME",nickname);
+									editor.putString("ID", id);
+									editor.putString("BIRTH", birth);
+									editor.putInt("SEX", sex);
+									editor.putInt("PROVINCE",provinceId);
+									editor.putInt("CITY", cityId);
+									editor.putInt("DIS", districtId);
+									editor.putString("URL", portraitUrl);
+									editor.putString("USERID", userId);
+									editor.putInt("STATUS", userStatus);
+									editor.commit();
+									
+									//
+									Intent intent = new Intent();
+
+									SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
+									setPersonal = personalInfo.getInt("SETINFO", 1);
+
+									if (setPersonal == 0 || name.length() == 0 || sex == 0 || provinceId == 0 || cityId == 0 || districtId == 0 || birth.length() == 0 || id.length() == 0) {
+										Log.e("jump to set", "in login activity");
+										
+										if(userStatus == 2) {
+											intent.setClass(ForgetPwdActivity.this, SetPersonalInfo.class);
+											startActivity(intent);
+										} else if(userStatus == 1) {
+											intent.setClass(ForgetPwdActivity.this, SetPersonalInfoNotCerti.class);
+											startActivity(intent);
+										}
+											
+									}
+
+									if (setPersonal == 1) {
+										intent.setClass(ForgetPwdActivity.this, CloudDoorMainActivity.class);
+										startActivity(intent);
+									}
+
+									finish();
+									
+
+								} catch (JSONException e) {
+									e.printStackTrace();
+								}
+
+
+								SharedPreferences downPic = getSharedPreferences("DOWNPIC", 0);
+								Editor editor1 = downPic.edit();
+								editor1.putInt("PIC", 0);
+								editor1.commit();
+								
+							} else if (loginStatusCode == -71) {
+								Toast.makeText(getApplicationContext(),
+										R.string.login_fail,
+										Toast.LENGTH_SHORT).show();
+							}
+						}
+					}, new Response.ErrorListener() {
+
+						@Override
+						public void onErrorResponse(VolleyError error) {
+
+						}
+					}) {
+				@Override
+				protected Map<String, String> getParams()
+						throws AuthFailureError {
+					Map<String, String> map = new HashMap<String, String>();
+					map.put("mobile", phoneNum);
+					map.put("password", password);
+					return map;
+				}
+			};
+			mQueue.add(mJsonRequest);
+		} else {
+			if (getApplicationContext() != null) {
+				Toast.makeText(getApplicationContext(),
+						R.string.no_network, Toast.LENGTH_SHORT).show();
+			}
+		}
+		
+		
+	}
 	
 	class TimeCount extends CountDownTimer {
 		public TimeCount(long millisInFuture, long countDownInterval) {
@@ -335,6 +516,11 @@ public class ForgetPwdActivity extends Activity implements TextWatcher {
 	public String loadSid() {
 		SharedPreferences loadSid = getSharedPreferences("SAVEDSID", 0);
 		return loadSid.getString("SID", null);
+	}
+	
+	public String loadSid(String key) {
+		SharedPreferences loadSid = getSharedPreferences("SAVEDSID", 0);
+		return loadSid.getString(key, null);
 	}
 
 	@Override

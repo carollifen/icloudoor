@@ -200,7 +200,7 @@ public class Login extends Activity implements TextWatcher {
 			public void onClick(View v) {
 				Intent intent = new Intent();
 				intent.setClass(v.getContext(), ForgetPwdActivity.class);
-				startActivity(intent);
+				startActivityForResult(intent, 0);
 			}
 
 		});
@@ -308,7 +308,6 @@ public class Login extends Activity implements TextWatcher {
 												startActivity(intent);
 											}
 											//
-											
 
 											finish();
 											
@@ -391,6 +390,15 @@ public class Login extends Activity implements TextWatcher {
      	editor.commit();
 	}
 
+	@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+         if(requestCode == 0 && resultCode == RESULT_OK) {
+
+            finish();
+        }
+    }
+	
 	@Override
 	protected void onResume() {
 	    super.onResume();
