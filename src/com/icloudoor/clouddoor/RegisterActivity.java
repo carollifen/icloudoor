@@ -4,6 +4,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,17 +18,26 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
 import android.app.Activity;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.database.ContentObserver;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -40,7 +51,7 @@ public class RegisterActivity extends Activity implements TextWatcher {
 	private URL requestCertiCodeURL, verifyCertiCodeURL;
 	private RequestQueue mQueue;
 	private RelativeLayout BtnBack;
-	
+	private SmsContent content;
 	private TimeCount counter;
 
 	private int RequestCertiStatusCode;
@@ -125,7 +136,9 @@ public class RegisterActivity extends Activity implements TextWatcher {
 			}
 			
 		});
-		
+
+        content = new SmsContent(new Handler());
+        this.getContentResolver().registerContentObserver(Uri.parse("content://sms/"), true, content);
 		counter = new TimeCount(60000, 1000);
 		getCertiCodeLayout.setOnClickListener(new OnClickListener() {
 
@@ -133,65 +146,70 @@ public class RegisterActivity extends Activity implements TextWatcher {
 			public void onClick(View v) {
 				
 				Log.e("TEST***", "Button1 Clicked!!!");
+                if (ETInputPhoneNum.getText().toString().length() > 11){
+                    Toast.makeText(getApplicationContext(), R.string.error_phonenumb_over, Toast.LENGTH_SHORT).show();
+                }else {
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm.isActive()) {
+                        imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+                    }
+                    counter.start();
+                    try {
+                        requestCertiCodeURL = new URL(HOST
+                                + "/user/manage/sendVerifyCode.do" + "?sid=" + sid);
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
 
-				counter.start();
-				try {
-					requestCertiCodeURL = new URL(HOST
-							+ "/user/manage/sendVerifyCode.do"+"?sid="+sid);
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-				}
+                    MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
+                            Method.POST, requestCertiCodeURL.toString(), null,
+                            new Response.Listener<JSONObject>() {
 
-				MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
-						Method.POST, requestCertiCodeURL.toString(), null,
-						new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        if (response.getString("sid") != null)
+                                            sid = response.getString("sid");
+                                        RequestCertiStatusCode = response.getInt("code");
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    Log.e("TEST",
+                                            "RequestCertiStatusCode: "
+                                                    + String.valueOf(RequestCertiStatusCode));
+                                    Log.e("TEST", "response:" + response.toString());
+                                    try {
+                                        Log.e("TEST", "sid:" + response.getString("sid"));
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    if (RequestCertiStatusCode == -20) {
+                                        Toast.makeText(getApplicationContext(),
+                                                R.string.send_too_many_a_day, Toast.LENGTH_SHORT)
+                                                .show();
+                                    } else if (RequestCertiStatusCode == -21) {
+                                        Toast.makeText(getApplicationContext(),
+                                                R.string.send_too_frequently, Toast.LENGTH_SHORT)
+                                                .show();
+                                    }
+                                }
 
-							@Override
-							public void onResponse(JSONObject response) {
-								try {
-									if (response.getString("sid") != null) 
-										sid = response.getString("sid");
-									RequestCertiStatusCode = response
-											.getInt("code");
-								} catch (JSONException e) {
-									e.printStackTrace();
-								}
-								Log.e("TEST",
-										"RequestCertiStatusCode: "
-												+ String.valueOf(RequestCertiStatusCode));
-								Log.e("TEST", "response:" + response.toString());
-								try {
-									Log.e("TEST", "sid:" + response.getString("sid"));
-								} catch (JSONException e) {
-									e.printStackTrace();
-								}
-								if (RequestCertiStatusCode == -20) {
-									Toast.makeText(getApplicationContext(),
-											R.string.send_too_many_a_day, Toast.LENGTH_SHORT)
-											.show();
-								} else if (RequestCertiStatusCode == -21) {
-									Toast.makeText(getApplicationContext(),
-											R.string.send_too_frequently, Toast.LENGTH_SHORT)
-											.show();
-								}
-							}
-							
-						}, new Response.ErrorListener() {
+                            }, new Response.ErrorListener() {
 
-							@Override
-							public void onErrorResponse(VolleyError error) {
-							}
-						}) {
-					@Override
-					protected Map<String, String> getParams()
-							throws AuthFailureError {
-						Map<String, String> map = new HashMap<String, String>();
-						map.put("mobile", ETInputPhoneNum.getText().toString());
-						return map;
-					}
-				};
-				mQueue.add(mJsonRequest);
-
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                        }
+                    }) {
+                        @Override
+                        protected Map<String, String> getParams()
+                                throws AuthFailureError {
+                            Map<String, String> map = new HashMap<String, String>();
+                            map.put("mobile", ETInputPhoneNum.getText().toString());
+                            return map;
+                        }
+                    };
+                    mQueue.add(mJsonRequest);
+                }
 			}
 
 		});
@@ -220,8 +238,7 @@ public class RegisterActivity extends Activity implements TextWatcher {
 										sid = response.getString("sid");
 										saveSid(sid);
 									}
-									ConfirmCertiStatusCode = response
-											.getInt("code");
+									ConfirmCertiStatusCode = response.getInt("code");
 								} catch (JSONException e) {
 									e.printStackTrace();
 								}
@@ -280,7 +297,7 @@ public class RegisterActivity extends Activity implements TextWatcher {
 
 	class TimeCount extends CountDownTimer {
 		public TimeCount(long millisInFuture, long countDownInterval) {
-		super(millisInFuture, countDownInterval);
+		    super(millisInFuture, countDownInterval);
 		}
 		@Override
 		public void onFinish() {
@@ -301,7 +318,67 @@ public class RegisterActivity extends Activity implements TextWatcher {
 			TVGetCertiCode.setText(getString(R.string.have_send) + '\n' + "(" + millisUntilFinished /1000+")");
 		}
 	}
-	
+
+    class SmsContent extends ContentObserver {
+        private Cursor cursor = null;
+        private String subString = null;
+
+        public SmsContent(Handler handler){
+            super(handler);
+            // TODO Auto-generated constructor stub
+        }
+
+        @SuppressWarnings("deprecation")
+        @Override
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+            cursor = managedQuery(Uri.parse("content://sms/inbox"),
+                    new String[] { "_id", "address", "read", "body" },
+                    /*" address=? and read=?"*/null,
+                    /*new String[] { "10690023192088", "0" }*/null, "_id desc");
+            if (cursor != null && cursor.getCount() > 0){
+                ContentValues values = new ContentValues();
+                values.put("read", "1");
+                cursor.moveToNext();
+                int smsbodyColumn = cursor.getColumnIndex("body");
+                String smsBody = cursor.getString(smsbodyColumn);
+                if (smsBody.toString().length() > 10) {
+                    subString = smsBody.substring(0, 6);
+//                Log.e("test22", subString);
+                    int ret = subString.compareTo(getString(R.string.sms_content_to_compare));
+                    if (ret == 0) {
+                        ETInputCertiCode.setText(getDynamicPassword(smsBody));
+                        ETInputCertiCode.clearFocus();
+                    }
+                }
+            }
+
+            if (Build.VERSION.SDK_INT < 14) {
+                cursor.close();
+            }
+        }
+
+        /**
+         *
+         * @param str Content of the message
+         *
+         * @return get the verify code (5-bit)
+         */
+        public String getDynamicPassword(String str) {
+            // verify code is 5 bits
+            Pattern continuousNumberPattern = Pattern.compile("(?<![0-9])([0-9]{"
+                    + 5 + "})(?![0-9])");
+            Matcher m = continuousNumberPattern.matcher(str);
+            String dynamicPassword = "";
+            while (m.find()) {
+                System.out.print(m.group());
+                dynamicPassword = m.group();
+            }
+
+            return dynamicPassword;
+        }
+    }
+
 	@Override
 	protected void onResume() {
 	    super.onResume();
@@ -356,5 +433,10 @@ public class RegisterActivity extends Activity implements TextWatcher {
 //			TVNextStep.setEnabled(false);
 		}
 	}
-	
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        this.getContentResolver().unregisterContentObserver(content);
+    }
 }

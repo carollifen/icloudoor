@@ -16,6 +16,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -28,6 +29,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -280,6 +282,10 @@ public class RegisterComplete extends Activity implements TextWatcher {
 			TVRegiComplete.setTextColor(getResources().getColorStateList(R.color.text_confirm_pwd));
 			regiCompleteLayout.setEnabled(true);
 			regiCompleteLayout.setBackgroundResource(R.drawable.selector_next_step);
+            if (ETConfirmPwd.getText().toString().equals(ETInputPwd.getText().toString())){
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+            }
 		} else {
 			TVRegiComplete.setTextColor(0xFF999999);
 			regiCompleteLayout.setEnabled(false);

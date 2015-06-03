@@ -134,6 +134,9 @@ public class Login extends Activity implements TextWatcher {
 					phoneLayout.setBackgroundResource(R.drawable.shape_login_input);
 				}else{
 					phoneLayout.setBackgroundResource(R.drawable.shape_login_input_normal);
+                    if (ETInputPhoneNum.getText().toString().length() != 11){
+                        Toast.makeText(getApplicationContext(), R.string.error_phonenumb_over, Toast.LENGTH_SHORT).show();
+                    }
 				}
 			}
 			
@@ -379,9 +382,6 @@ public class Login extends Activity implements TextWatcher {
 					}
 				}
 			}
-				
-				
-
 		});
 	}
 

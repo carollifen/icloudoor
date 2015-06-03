@@ -925,21 +925,21 @@ public class KeyFragment extends Fragment implements ShakeListener {
 								JSONObject Day1 = (JSONObject) data.get(0);
 								JSONObject Day2 = (JSONObject) data.get(1);
 								JSONObject Day3 = (JSONObject) data.get(2);
-								
-								SharedPreferences savedLHL = getActivity().getSharedPreferences("SAVEDLHL",
-										0);
-								Editor editor = savedLHL.edit();
-								editor.putString("D1YI", Day1.getString("yi"));
-								editor.putString("D1JI", Day1.getString("ji"));
-								editor.putString("D1YINLI", Day1.getString("yinli"));
-								editor.putString("D2YI", Day2.getString("yi"));
-								editor.putString("D2JI", Day2.getString("ji"));
-								editor.putString("D2YINLI", Day2.getString("yinli"));
-								editor.putString("D3YI", Day3.getString("yi"));
-								editor.putString("D3JI", Day3.getString("ji"));
-								editor.putString("D3YINLI", Day3.getString("yinli"));
-								editor.commit();
-								
+								if (getActivity() != null) {
+                                    SharedPreferences savedLHL = getActivity().getSharedPreferences("SAVEDLHL",
+                                            0);
+                                    Editor editor = savedLHL.edit();
+                                    editor.putString("D1YI", Day1.getString("yi"));
+                                    editor.putString("D1JI", Day1.getString("ji"));
+                                    editor.putString("D1YINLI", Day1.getString("yinli"));
+                                    editor.putString("D2YI", Day2.getString("yi"));
+                                    editor.putString("D2JI", Day2.getString("ji"));
+                                    editor.putString("D2YINLI", Day2.getString("yinli"));
+                                    editor.putString("D3YI", Day3.getString("yi"));
+                                    editor.putString("D3JI", Day3.getString("ji"));
+                                    editor.putString("D3YINLI", Day3.getString("yinli"));
+                                    editor.commit();
+                                }
 								contentYi.setText(Day1.getString("yi"));
 								contentJi.setText(Day1.getString("ji"));
 								

@@ -119,6 +119,8 @@
     <string name="regi_success">注册成功</string>
     <string name="weather_not_available">更新中</string>
     <string name="input_wrong">请输入数字或大小写字母</string>
+    <string name="error_phonenumb_over">请输入正确的电话号码</string>
+    <string name="sms_content_to_compare">【非攻科技】</string>
     
     <drawable name="clr_normal">#ffffff</drawable>
     <drawable name="clr_pressed">#eeeeee</drawable>
