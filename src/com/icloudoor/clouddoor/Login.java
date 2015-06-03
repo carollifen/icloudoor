@@ -401,6 +401,10 @@ public class Login extends Activity implements TextWatcher {
 	    if(RegiPhone.getString("PHONE", "").length() > 0){
 	    	ETInputPhoneNum.setText(RegiPhone.getString("PHONE", null));
 	    	ETInputPwd.requestFocus();
+	    	
+	    	Editor editor = RegiPhone.edit();
+	    	editor.putString("PHONE", "");
+	    	editor.commit();
 	    }
 	}
 
