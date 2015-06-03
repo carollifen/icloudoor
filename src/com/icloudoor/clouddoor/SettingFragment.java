@@ -279,6 +279,9 @@ public class SettingFragment extends Fragment {
                                         editor1.commit();
  
                                         Intent intent3 = new Intent();
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("phone", loginStatus.getString("PHONENUM", ""));
+                                        intent3.putExtras(bundle);
                                         intent3.setClass(getActivity(), Login.class);
                                         startActivity(intent3);
                                                                             

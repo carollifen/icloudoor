@@ -943,11 +943,13 @@ public class KeyFragment extends Fragment implements ShakeListener {
 								contentYi.setText(Day1.getString("yi"));
 								contentJi.setText(Day1.getString("ji"));
 								
-								SharedPreferences saveRequestLHL = getActivity().getSharedPreferences("LHLREQUESTDATE",
-										0);
-								Editor editor1 = saveRequestLHL.edit();
-								editor1.putString("LHLlastrequestdate", day1);
-								editor1.commit();
+								if (getActivity() != null) {
+									SharedPreferences saveRequestLHL = getActivity().getSharedPreferences("LHLREQUESTDATE",
+											0);
+									Editor editor1 = saveRequestLHL.edit();
+									editor1.putString("LHLlastrequestdate", day1);
+									editor1.commit();
+								}	
 							}
 						} catch (JSONException e) {
 							e.printStackTrace();

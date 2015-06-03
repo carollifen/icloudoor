@@ -154,9 +154,6 @@ public class Login extends Activity implements TextWatcher {
 			
 		});
 		
-		//
-		
-		
 //		TVLogin.setTextColor(0xFF015c92);
 		TVLogin.setTextColor(0xFFf3f3f3);
 		loginLayout.setEnabled(false);
@@ -395,6 +392,14 @@ public class Login extends Activity implements TextWatcher {
 	    super.onResume();
 	    ETInputPhoneNum.setText("");
 	    ETInputPwd.setText("");
+	    
+		//
+		Bundle bundle = this.getIntent().getExtras();
+		if(bundle != null){
+			String phone = bundle.getString("phone");
+			ETInputPhoneNum.setText(phone.toString());
+			ETInputPwd.requestFocus();
+		}
 	    
 	    SharedPreferences RegiPhone = getSharedPreferences("REGIPHONE", 0);
 	    String phone = RegiPhone.getString("PHONE", "");
