@@ -1015,8 +1015,8 @@ public class KeyFragment extends Fragment implements ShakeListener {
                                 }
                                 weatherTemperature.setText(now.getString("temperature") + String.valueOf(centigrade));
 								weatherStatus.setText(now.getString("text"));
-								weatherTemperature.setTextSize(35);
-								weatherStatus.setTextSize(12);
+								weatherTemperature.setTextSize(19);
+								weatherStatus.setTextSize(13);
 							} else {
 								weatherTemperature.setText(getString(R.string.weather_not_available));
 								weatherTemperature.setTextSize(16);
@@ -1043,15 +1043,14 @@ public class KeyFragment extends Fragment implements ShakeListener {
 			SharedPreferences loadWeather = getActivity().getSharedPreferences("SAVEDWEATHER", 0);
 			
 			if(loadWeather.getString("Day1Temp", "N/A").equals("N/A")){
-				Log.e(TAG, "n/a");
 				weatherTemperature.setText(getString(R.string.weather_not_available));
 				weatherTemperature.setTextSize(16);
 			}else{
 				weatherTemperature.setText(loadWeather.getString("Day1Temp", "N/A") + String.valueOf(centigrade)); //TODO
 				weatherStatus.setText(loadWeather.getString("Day1Weather", "N/A"));
 				
-				weatherTemperature.setTextSize(35);
-				weatherStatus.setTextSize(12);
+				weatherTemperature.setTextSize(19);
+				weatherStatus.setTextSize(13);
 			}
 			
 		}
@@ -1076,8 +1075,8 @@ public class KeyFragment extends Fragment implements ShakeListener {
 						weatherTemperature.setText(loadWeather.getString("Day1Temp", "N/A") + String.valueOf(centigrade));
 						weatherStatus.setText(loadWeather.getString("Day1Weather", "N/A"));
 						
-						weatherTemperature.setTextSize(35);
-						weatherStatus.setTextSize(12);
+						weatherTemperature.setTextSize(19);
+						weatherStatus.setTextSize(13);
 					}
 
 					date.setText(D1);
@@ -1096,8 +1095,8 @@ public class KeyFragment extends Fragment implements ShakeListener {
 						weatherTemperature.setText(loadWeather.getString("Day2TempHigh", "N/A") + String.valueOf(centigrade));
 						weatherStatus.setText(loadWeather.getString("Day2Weather", "N/A"));
 						
-						weatherTemperature.setTextSize(35);
-						weatherStatus.setTextSize(12);
+						weatherTemperature.setTextSize(19);
+						weatherStatus.setTextSize(13);
 					}
 					
 					date.setText(D2);
@@ -1119,8 +1118,8 @@ public class KeyFragment extends Fragment implements ShakeListener {
 						weatherTemperature.setText(loadWeather.getString("Day2TempHigh", "N/A") + String.valueOf(centigrade));
 						weatherStatus.setText(loadWeather.getString("Day2Weather", "N/A"));
 						
-						weatherTemperature.setTextSize(35);
-						weatherStatus.setTextSize(12);
+						weatherTemperature.setTextSize(19);
+						weatherStatus.setTextSize(13);
 					}
 					
 					date.setText(D2);
@@ -1139,8 +1138,8 @@ public class KeyFragment extends Fragment implements ShakeListener {
 						weatherTemperature.setText(loadWeather.getString("Day3TempHigh", "N/A") + String.valueOf(centigrade));
 						weatherStatus.setText(loadWeather.getString("Day3Weather", "N/A"));
 						
-						weatherTemperature.setTextSize(35);
-						weatherStatus.setTextSize(12);
+						weatherTemperature.setTextSize(19);
+						weatherStatus.setTextSize(13);
 					}
                     
 					date.setText(D3);
