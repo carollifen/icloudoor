@@ -111,13 +111,8 @@ public class WuyeWidgeFragment2 extends Fragment {
 				if(temp.equals(banner.getString("2url", null))){
 					File f = new File(PATH + "/" + imageName);
 					Log.e(TAG, "use local");
-					
-					BitmapFactory.Options opts = new BitmapFactory.Options();
-					opts.inTempStorage = new byte[100 * 1024];
-					opts.inPreferredConfig = Bitmap.Config.RGB_565;
-					opts.inPurgeable = true;
-					opts.inSampleSize = 4;
-					Bitmap bm = BitmapFactory.decodeFile(PATH + "/" + imageName, opts);
+
+					Bitmap bm = BitmapFactory.decodeFile(PATH + "/" + imageName);
 					bgImage.setImageBitmap(bm);
 				}else{
 					File f = new File(PATH + "/" + imageName);
@@ -191,15 +186,9 @@ public class WuyeWidgeFragment2 extends Fragment {
 			try {
 				org.apache.http.HttpResponse httpResponse = httpClient
 						.execute(httpGet);
-
-				BitmapFactory.Options opts = new BitmapFactory.Options();
-				opts.inTempStorage = new byte[100 * 1024];
-				opts.inPreferredConfig = Bitmap.Config.RGB_565;
-				opts.inPurgeable = true;
-				opts.inSampleSize = 4;
 				
 				bitmap = BitmapFactory.decodeStream(httpResponse.getEntity()
-						.getContent(), null, opts);
+						.getContent());
 			} catch (Exception e) {
 				mHandler.obtainMessage(MSG_FAILURE).sendToTarget();
 				return;
