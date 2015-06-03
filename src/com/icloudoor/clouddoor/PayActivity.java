@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.ConsoleMessage;
@@ -99,5 +100,15 @@ public class PayActivity extends Activity {
 	public String loadSid() {
 		SharedPreferences loadSid = getSharedPreferences("SAVEDSID", 0);
 		return loadSid.getString("SID", null);
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		 if (keyCode == KeyEvent.KEYCODE_BACK && payWebView.canGoBack()) {
+			 payWebView.goBack();
+			 return true;
+			}
+				
+		return super.onKeyDown(keyCode, event);
 	}
 }

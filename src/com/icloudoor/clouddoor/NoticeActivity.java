@@ -1,9 +1,12 @@
 package com.icloudoor.clouddoor;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.ConsoleMessage;
@@ -18,6 +21,8 @@ import com.umeng.message.PushAgent;
 
 public class NoticeActivity extends Activity {
 
+	private String TAG = this.getClass().getSimpleName();
+	
 	private SharedPreferences noticeUrlShare;
 	private Editor noticeUrlEditor;
 
@@ -129,4 +134,13 @@ public class NoticeActivity extends Activity {
 		return loadSid.getString("SID", null);
 	}
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		 if (keyCode == KeyEvent.KEYCODE_BACK && anouncePageWebView.canGoBack()) {
+			 anouncePageWebView.goBack();
+			 return true;
+			}
+				
+		return super.onKeyDown(keyCode, event);
+	}	
 }
