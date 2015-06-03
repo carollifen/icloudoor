@@ -286,6 +286,11 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		// save image to file
 		SharedPreferences downPic = getSharedPreferences("DOWNPIC", 0);
 		if (downPic.getInt("PIC", 0) == 0) {
+
+			File f = new File(PATH + "/" + jpegName);
+			if(f.exists())
+				f.delete();
+			
 			SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS",
 					MODE_PRIVATE);
 			imageURL = loginStatus.getString("URL", null);
