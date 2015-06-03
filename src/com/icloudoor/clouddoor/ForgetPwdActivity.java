@@ -27,6 +27,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -60,11 +61,15 @@ public class ForgetPwdActivity extends Activity implements TextWatcher {
 	private RelativeLayout inputCertiCodeLayout;
 	private RelativeLayout nextLayout;
 	
+	private boolean isBackKey;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 //		getActionBar().hide();
 		setContentView(R.layout.find_pwd);
+		
+		isBackKey = false;
 		
 		mQueue = Volley.newRequestQueue(this);
 		
@@ -122,6 +127,7 @@ public class ForgetPwdActivity extends Activity implements TextWatcher {
 
 			@Override
 			public void onClick(View v) {
+				isBackKey = true;
 				finish();
 			}
 			
@@ -286,6 +292,37 @@ public class ForgetPwdActivity extends Activity implements TextWatcher {
 	    super.onResume();
 	    ETInputPhoneNum.setText("");
 	    ETInputCertiCode.setText("");
+	    
+	    if (isBackKey == false) {
+			SharedPreferences tempInfo = getSharedPreferences("tempInfo", 0);
+			ETInputPhoneNum.setText(tempInfo.getString("phone", ""));
+			ETInputCertiCode.setText(tempInfo.getString("code", ""));
+
+			Editor editor = tempInfo.edit();
+			editor.putString("phone", "");
+			editor.putString("code", "");
+			editor.commit();
+		}
+	}
+	
+	public void onPause(){
+		super.onPause();
+		
+		Log.e(TAG, "onpause");
+		
+		Log.e(TAG, String.valueOf(isBackKey));
+		
+		if (isBackKey == false) {
+			Log.e(TAG, "saving");
+			SharedPreferences tempInfo = getSharedPreferences("tempInfo", 0);
+			Editor editor = tempInfo.edit();
+			editor.putString("phone", ETInputPhoneNum.getText().toString());
+			editor.putString("code", ETInputCertiCode.getText().toString());
+			editor.commit();
+		} else {
+			isBackKey = false;
+		}
+
 	}
 	
 	public void saveSid(String sid) {
@@ -332,5 +369,18 @@ public class ForgetPwdActivity extends Activity implements TextWatcher {
 			TVGotoNext.setTextColor(0xFF999999);
 //			TVGotoNext.setEnabled(false);
 		}
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (event.getAction() == KeyEvent.ACTION_DOWN
+				&& KeyEvent.KEYCODE_BACK == keyCode) {
+			Log.e(TAG, "backkey");
+
+			isBackKey = true;
+
+			Log.e(TAG, String.valueOf(isBackKey));
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }
