@@ -478,42 +478,6 @@ public class KeyListAuthFragment extends Fragment {
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		// if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
-		// Log.e("TESTTESTDBDB", "have the table");
-		// if (DBCount() > 0) {
-		// Log.e("TESTTESTDBDB", "table is not empty");
-		// //人门
-		// Cursor manKeyCursor =
-		// mKeyDB.rawQuery("select * from KeyInfoTable where doorType=?", new
-		// String[]{"1"});
-		// if (manKeyCursor.moveToFirst())
-		// {do{
-		// Map<String , String > manMap=new HashMap<String, String>();
-		// manMap.put("mankeyItem",
-		// manKeyCursor.getString(manKeyCursor.getColumnIndex("doorName")));
-		// mankeylist.add(manMap);
-		// }while(manKeyCursor.moveToNext());
-		//
-		// //初始化为显示人门
-		// LVkeylist.setAdapter(new SimpleAdapter(getActivity(),mankeylist,
-		// R.layout.keylist_child, new String[]{"mankeyItem"}, new
-		// int[]{R.id.id_keyname}));
-		// }
-		// //车门
-		// Cursor carKeyCursor =
-		// mKeyDB.rawQuery("select * from KeyInfoTable where doorType=?", new
-		// String[]{"2"});
-		// if (carKeyCursor.moveToFirst())
-		// {do{
-		// Map<String , String > carMap=new HashMap<String, String>();
-		// carMap.put("carkeyItem",
-		// manKeyCursor.getString(manKeyCursor.getColumnIndex("doorName")));
-		// mankeylist.add(carMap);
-		// }while(manKeyCursor.moveToNext());
-		//
-		// }
-		// }
-		// }
 
 		sid = loadSid();
 
@@ -528,7 +492,7 @@ public class KeyListAuthFragment extends Fragment {
 					
 					if(response.getInt("code") == 1){
 						JSONArray zoneArr = response.getJSONArray("data");
-						Log.e("responseTest", response.toString());
+						
 						for (int i = 0; i < zoneArr.length(); i++) {
 							String zoneId = zoneArr.getJSONObject(i).getString("zoneUserId");
 							String zoneAdd = zoneArr.getJSONObject(i).getString("address");
@@ -545,6 +509,10 @@ public class KeyListAuthFragment extends Fragment {
 							} catch (Exception e) {
 								Log.e("dbdbdbd", "数据已经存在");
 							}
+						}
+						
+						if(zoneArr.length() == 1){
+							TVkeyname.setText(zoneArr.getJSONObject(0).getString("address"));
 						}
 					}
 					
