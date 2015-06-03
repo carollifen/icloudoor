@@ -117,6 +117,7 @@
     <string name="nick_name_already">该昵称已被使用</string>
     <string name="not_enough_params">请补全资料后再提交</string>
     <string name="regi_success">注册成功</string>
+    <string name="forget_success">重置密码成功</string>
     <string name="weather_not_available">更新中</string>
     <string name="input_wrong">请输入数字或大小写字母</string>
     <string name="error_phonenumb_over">请输入正确的电话号码</string>

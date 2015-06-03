@@ -162,24 +162,24 @@ public class RegisterComplete extends Activity implements TextWatcher {
 
 								@Override
 								public void onResponse(JSONObject response) {
+								
 									try {
-										if (response.getString("sid") != null) {
-											sid = response.getString("sid");
-											saveSid(sid);
-										}
 										statusCode = response.getInt("code");
-									} catch (JSONException e) {
-										e.printStackTrace();
-									}
-									Log.e("TEST","statusCode: "+ String.valueOf(statusCode));
-									Log.e("TEST","response: " + response.toString());
-									try {
-										Log.e("TEST","sid: "+ response.getString("sid"));
-									} catch (JSONException e) {
-										e.printStackTrace();
+									} catch (JSONException e1) {
+										e1.printStackTrace();
 									}
 
 									if (statusCode == 1) {
+										try {
+											if (response.getString("sid") != null) {
+												sid = response.getString("sid");
+												saveSid(sid);
+											}
+										} catch (JSONException e) {
+											e.printStackTrace();
+										}
+										Toast.makeText(getApplicationContext(), R.string.regi_success, Toast.LENGTH_SHORT).show();
+										
 //										Intent intent = new Intent();
 //										intent.setClass(getApplicationContext(), Login.class);
 //										startActivity(intent);
@@ -192,12 +192,9 @@ public class RegisterComplete extends Activity implements TextWatcher {
 										setResult(RESULT_OK);
 										finish();
 									} else if (statusCode == -40) {
-										Toast.makeText(getApplicationContext(),
-												R.string.phone_num_have_been_registerred,
-												Toast.LENGTH_SHORT).show();
+										Toast.makeText(getApplicationContext(), R.string.phone_num_have_been_registerred, Toast.LENGTH_SHORT).show();
 									} else if (statusCode == -41) {
-										Toast.makeText(getApplicationContext(), R.string.weak_pwd,
-												Toast.LENGTH_SHORT).show();
+										Toast.makeText(getApplicationContext(), R.string.weak_pwd, Toast.LENGTH_SHORT).show();
 									}
 								}
 							}, new Response.ErrorListener() {
