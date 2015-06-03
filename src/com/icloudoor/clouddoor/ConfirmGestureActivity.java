@@ -1,5 +1,6 @@
 package com.icloudoor.clouddoor;
 
+import com.icloudoor.clouddoor.ForGetDialog.ForGetDialogInterface;
 import com.icloudoor.clouddoor.SetGestureDrawLineView.SetGestureCallBack;
 
 import android.app.Activity;
@@ -138,23 +139,34 @@ public class ConfirmGestureActivity extends Activity implements OnClickListener 
 		}
 		if(v.getId()==R.id.confirm_with_passw)
 		{
-			MyDialog mdialog =new MyDialog(ConfirmGestureActivity.this,R.style.add_dialog, getString(R.string.login_pwd) , new MyDialog.OnCustomDialogListener() {
+			
+			new ForGetDialog(ConfirmGestureActivity.this, R.style.add_dialog, null, new ForGetDialogInterface() {
 				
 				@Override
 				public void back(int haveset) {
-					
-					SharedPreferences setSign = getSharedPreferences("SETSIGN", 0);
-					Editor editor = setSign.edit();
-					editor.putInt("HAVESETSIGN", 0);
-					editor.commit();
-					SharedPreferences setting = getSharedPreferences(
-							"SETTING", MODE_PRIVATE);
-					Editor useSigneditor = setting.edit();
-					useSigneditor.putInt("useSign", 0);
-					useSigneditor.commit();
+					// TODO Auto-generated method stub
+					Intent intent=new Intent(ConfirmGestureActivity.this,SetGestureActivity.class);
+					startActivity(intent);
 				}
-			});
-			mdialog.show();
+			}).show();
+			
+//			MyDialog mdialog =new MyDialog(ConfirmGestureActivity.this,R.style.add_dialog, getString(R.string.login_pwd) , new MyDialog.OnCustomDialogListener() {
+//				
+//				@Override
+//				public void back(int haveset) {
+//					
+//					SharedPreferences setSign = getSharedPreferences("SETSIGN", 0);
+//					Editor editor = setSign.edit();
+//					editor.putInt("HAVESETSIGN", 0);
+//					editor.commit();
+//					SharedPreferences setting = getSharedPreferences(
+//							"SETTING", MODE_PRIVATE);
+//					Editor useSigneditor = setting.edit();
+//					useSigneditor.putInt("useSign", 0);
+//					useSigneditor.commit();
+//				}
+//			});
+//			mdialog.show();
 		}
 	}
 	
