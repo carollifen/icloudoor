@@ -1169,26 +1169,27 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		super.onResume();
 		Log.e("TEST", "keyFragment onResume()");
 		
-		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-		if(currentapiVersion >= 18){
-			// BLE
-			if (!getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-				Toast.makeText(getActivity(), R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
-			}
 
-			BluetoothManager mBluetoothManager = (BluetoothManager) getActivity().getSystemService(Context.BLUETOOTH_SERVICE);
-			mBluetoothAdapter = mBluetoothManager.getAdapter();
-
-			if (mBluetoothAdapter == null) {
-				if (getActivity() != null)
-					Toast.makeText(getActivity(), R.string.bt_not_supported, Toast.LENGTH_SHORT).show();
-			}
-			checkBlueToothState();
-			service_init();
-		} else {
-			if(getActivity() != null)
-				Toast.makeText(getActivity(), R.string.low_android_version, Toast.LENGTH_SHORT).show();
+		// BLE
+		if (!getActivity().getPackageManager().hasSystemFeature(
+				PackageManager.FEATURE_BLUETOOTH_LE)) {
+			Toast.makeText(getActivity(), R.string.ble_not_supported,
+					Toast.LENGTH_SHORT).show();
 		}
+
+		BluetoothManager mBluetoothManager = (BluetoothManager) getActivity()
+				.getSystemService(Context.BLUETOOTH_SERVICE);
+		mBluetoothAdapter = mBluetoothManager.getAdapter();
+
+		if (mBluetoothAdapter == null) {
+			if (getActivity() != null)
+				Toast.makeText(getActivity(), R.string.bt_not_supported,
+						Toast.LENGTH_SHORT).show();
+		}
+		
+		checkBlueToothState();
+		service_init();
+
 		//TODO DELETE TEMPARY
 		if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
 			if (DBCount() > 0) {

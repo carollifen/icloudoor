@@ -13,6 +13,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -106,14 +107,24 @@ public class WuyeWidgeFragment3 extends Fragment {
 			
 		} else if (banner.getString("3type", "0").equals("2")) {
 
-			File f = new File(PATH + "/" + imageName);
-			if (f.exists()) {
-				Log.e(TAG, "use local");
-				Bitmap bm = BitmapFactory.decodeFile(PATH + "/" + imageName);
-				bgImage.setImageBitmap(bm);
-			} else {
-				if (banner.getString("3url", null) != null) {
-
+			SharedPreferences tempurl = getActivity().getSharedPreferences("TEMPURL3", 0);
+			Editor editor = tempurl.edit();
+			String temp = tempurl.getString("URL", "");
+			if(temp.length() > 0){
+				if(temp.equals(banner.getString("3url", null))){
+					File f = new File(PATH + "/" + imageName);
+					Log.e(TAG, "use local");
+					BitmapFactory.Options opts = new BitmapFactory.Options();
+					opts.inTempStorage = new byte[100 * 1024];
+					opts.inPreferredConfig = Bitmap.Config.RGB_565;
+					opts.inPurgeable = true;
+					opts.inSampleSize = 4;
+					Bitmap bm = BitmapFactory.decodeFile(PATH + "/" + imageName, opts);
+					bgImage.setImageBitmap(bm);
+				}else{
+					File f = new File(PATH + "/" + imageName);
+					if(f.exists()) 
+						f.delete();
 					portraitUrl = banner.getString("3url", null);
 
 					Log.e(TAG, portraitUrl);
@@ -122,9 +133,24 @@ public class WuyeWidgeFragment3 extends Fragment {
 						mThread = new Thread(runnable);
 						mThread.start();
 					}
+					
+					editor.putString("URL", portraitUrl);
+					editor.commit();
 				}
+			}else{
+				portraitUrl = banner.getString("3url", null);
+
+				Log.e(TAG, portraitUrl);
+
+				if (mThread == null) {
+					mThread = new Thread(runnable);
+					mThread.start();
+				}
+				
+				editor.putString("URL", portraitUrl);
+				editor.commit();
 			}
-			
+
 			if (banner.getString("3link", null).length() > 0) {
 				link = banner.getString("3link", null);
 				bgImage.setOnClickListener(new OnClickListener() {
@@ -171,8 +197,14 @@ public class WuyeWidgeFragment3 extends Fragment {
 				org.apache.http.HttpResponse httpResponse = httpClient
 						.execute(httpGet);
 
+				BitmapFactory.Options opts = new BitmapFactory.Options();
+				opts.inTempStorage = new byte[100 * 1024];
+				opts.inPreferredConfig = Bitmap.Config.RGB_565;
+				opts.inPurgeable = true;
+				opts.inSampleSize = 4;
+				
 				bitmap = BitmapFactory.decodeStream(httpResponse.getEntity()
-						.getContent());
+						.getContent(), null, opts);
 			} catch (Exception e) {
 				mHandler.obtainMessage(MSG_FAILURE).sendToTarget();
 				return;
@@ -186,7 +218,7 @@ public class WuyeWidgeFragment3 extends Fragment {
 			try {
 				FileOutputStream out = new FileOutputStream(PATH + "/"
 						+ imageName);
-				bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+				bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
 				out.flush();
 				out.close();
 			} catch (FileNotFoundException e) {
