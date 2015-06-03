@@ -63,6 +63,7 @@ public class ResetPwdActivity extends Activity implements TextWatcher {
 //		TVResetDone.setTextColor(0xFFcccccc);
 		TVResetDone.setEnabled(false);
 		
+		ETInputOldPwd.addTextChangedListener(this);
 		ETInputNewPwd.addTextChangedListener(this);
 		ETConfirmNewPwd.addTextChangedListener(this);
 		
@@ -202,6 +203,32 @@ public class ResetPwdActivity extends Activity implements TextWatcher {
 
 	@Override
 	public void afterTextChanged(Editable s) {
+		
+		String temp = s.toString();
+		
+		if(temp.length() > 1){
+			String tem = temp.substring(temp.length()-1, temp.length());
+			char[] temC = tem.toCharArray();
+			int mid = temC[0];
+			
+			if((mid>=48 && mid<=57) || (mid>=65&&mid<=90) || (mid>97&&mid<=122)){
+				
+			}else{
+				s.delete(temp.length()-1, temp.length());
+				Toast.makeText(this, R.string.input_wrong, Toast.LENGTH_SHORT).show();
+			}
+		}else if(temp.length() == 1){
+			char[] temC = temp.toCharArray();
+			int mid = temC[0];
+			
+			if((mid>=48 && mid<=57) || (mid>=65&&mid<=90) || (mid>97&&mid<=122)){
+				
+			}else{
+				s.clear();
+				Toast.makeText(this, R.string.input_wrong, Toast.LENGTH_SHORT).show();
+			}
+		}
+		
 		if(ETInputNewPwd.getText().toString().length() > 5 && ETConfirmNewPwd.getText().toString().length() > 5 && ETInputOldPwd.getText().toString().length() > 5){
 //			TVResetDone.setTextColor(0xFFffffff);
 			TVResetDone.setEnabled(true);
