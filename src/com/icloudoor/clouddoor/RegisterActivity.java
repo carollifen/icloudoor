@@ -291,6 +291,11 @@ public class RegisterActivity extends Activity implements TextWatcher {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // TODO Auto-generated method stub
          if(requestCode == 0 && resultCode == RESULT_OK) {
+        	SharedPreferences RegiPhone = getSharedPreferences("REGIPHONE", 0);
+          	Editor editor = RegiPhone.edit();
+          	editor.putString("PHONE", ETInputPhoneNum.getText().toString());
+          	editor.commit();
+          	
             finish();
         }
     }

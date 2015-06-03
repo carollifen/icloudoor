@@ -383,6 +383,11 @@ public class Login extends Activity implements TextWatcher {
 				}
 			}
 		});
+		
+		SharedPreferences RegiPhone = getSharedPreferences("REGIPHONE", 0);
+     	Editor editor = RegiPhone.edit();
+     	editor.putString("PHONE", "");
+     	editor.commit();
 	}
 
 	@Override
@@ -390,6 +395,13 @@ public class Login extends Activity implements TextWatcher {
 	    super.onResume();
 	    ETInputPhoneNum.setText("");
 	    ETInputPwd.setText("");
+	    
+	    SharedPreferences RegiPhone = getSharedPreferences("REGIPHONE", 0);
+	    String phone = RegiPhone.getString("PHONE", "");
+	    if(RegiPhone.getString("PHONE", "").length() > 0){
+	    	ETInputPhoneNum.setText(RegiPhone.getString("PHONE", null));
+	    	ETInputPwd.requestFocus();
+	    }
 	}
 
 	protected void onDestroy() {
