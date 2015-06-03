@@ -1,7 +1,10 @@
 package com.icloudoor.clouddoor;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -28,11 +31,22 @@ public class SignActivity extends Activity{
 	
 	private RelativeLayout mlayout;
 	
+	private Broadcast mFinishActivityBroadcast;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 //		getActionBar().hide();
 		setContentView(R.layout.set_detail_set_sign);
+		
+		mFinishActivityBroadcast=	new Broadcast();
+		 IntentFilter intentFilter = new IntentFilter();
+		    intentFilter.addAction("com.icloudoor.clouddoor.ACTION_FINISH");
+		    registerReceiver(mFinishActivityBroadcast, intentFilter);
+
+
+
+		
 		mlayout=(RelativeLayout) findViewById(R.id.forget_layout);
 		inflater = LayoutInflater.from(this);
 		
@@ -401,6 +415,25 @@ public class SignActivity extends Activity{
 			
 			
 		}
+	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		unregisterReceiver(mFinishActivityBroadcast);
+		
+	}
+	
+	class Broadcast extends BroadcastReceiver
+	{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			SignActivity.this.finish();
+		}
+		
 	}
 	
 	

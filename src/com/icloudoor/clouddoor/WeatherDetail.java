@@ -3,15 +3,16 @@ package com.icloudoor.clouddoor;
 import java.util.Calendar;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -58,10 +59,19 @@ public class WeatherDetail extends Activity {
 	public char centigrade = 176;
 	public final Calendar c = Calendar.getInstance();
 	
+	private Broadcast mFinishActivityBroadcast;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_weather_detail);
+		
+		mFinishActivityBroadcast=	new Broadcast();
+		 IntentFilter intentFilter = new IntentFilter();
+		    intentFilter.addAction("com.icloudoor.clouddoor.ACTION_FINISH");
+		    registerReceiver(mFinishActivityBroadcast, intentFilter);
+
+
 		
 		back = (RelativeLayout) findViewById(R.id.btn_back);
 		back.setOnClickListener(new OnClickListener(){
@@ -160,4 +170,23 @@ public class WeatherDetail extends Activity {
 		return week;
 	}
 
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		unregisterReceiver(mFinishActivityBroadcast);
+		
+	}
+	
+	class Broadcast extends BroadcastReceiver
+	{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			WeatherDetail.this.finish();
+		}
+		
+	}
+	
 }

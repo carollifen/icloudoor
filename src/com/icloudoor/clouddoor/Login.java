@@ -245,11 +245,15 @@ public class Login extends Activity implements TextWatcher {
 										isLogin = 1;
 										SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
 										Editor editor = loginStatus.edit();
+										
 										editor.putInt("LOGIN", isLogin);
 										editor.putString("PHONENUM", phoneNum);
 										editor.putString("PASSWARD", password);
 										editor.commit();
 
+										SharedPreferences firstLoginShare=getSharedPreferences("FIRSTLOGINSHARE", 0);
+										Editor mEditor=firstLoginShare.edit();
+										mEditor.putBoolean("FIRSTLOGIN", true).commit();
 										try {
 											JSONObject data = response.getJSONObject("data");
 											JSONObject info = data.getJSONObject("info");

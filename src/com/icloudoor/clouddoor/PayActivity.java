@@ -1,6 +1,10 @@
 package com.icloudoor.clouddoor;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -22,11 +26,21 @@ public class PayActivity extends Activity {
 	private String sid;
 	private String url = "https://zone.icloudoor.com/icloudoor-web/user/prop/zone/payment/pay.do";
 	private WebSettings webSetting;
+	private Broadcast mFinishActivityBroadcast;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pay);
+		
+	
+		mFinishActivityBroadcast=	new Broadcast();
+		 IntentFilter intentFilter = new IntentFilter();
+		    intentFilter.addAction("com.icloudoor.clouddoor.ACTION_FINISH");
+		    registerReceiver(mFinishActivityBroadcast, intentFilter);
+
+
+
 		
 		sid = loadSid();
 		
@@ -111,4 +125,39 @@ public class PayActivity extends Activity {
 				
 		return super.onKeyDown(keyCode, event);
 	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		
+		SharedPreferences homeKeyEvent = getSharedPreferences("HOMEKEY", 0);
+		int homePressed = homeKeyEvent.getInt("homePressed", 0);
+
+		SharedPreferences Sign = getSharedPreferences("SETTING", 0);
+		int usesign = Sign.getInt("useSign", 0);
+
+		if (homePressed == 1 && usesign == 1) {
+			Intent intent = new Intent();
+			intent.setClass(PayActivity.this, VerifyGestureActivity.class);
+			startActivity(intent);
+		}	}
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		unregisterReceiver(mFinishActivityBroadcast);
+		
+	}
+	
+	class Broadcast extends BroadcastReceiver
+	{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+		PayActivity.this.finish();
+		}
+		
+	}
+	
 }

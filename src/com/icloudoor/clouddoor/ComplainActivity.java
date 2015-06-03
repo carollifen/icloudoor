@@ -1,6 +1,10 @@
 package com.icloudoor.clouddoor;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -24,12 +28,23 @@ public class ComplainActivity extends Activity {
 	private int TYPE_BAD = 2;
 
 	private WebSettings webSetting;
+	
+	
 	private String url = "https://zone.icloudoor.com/icloudoor-web/user/prop/zone/cp/page.do";
+
+	private Broadcast mFinishActivityBroadcast;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_complain);
+		
+		mFinishActivityBroadcast=	new Broadcast();
+		 IntentFilter intentFilter = new IntentFilter();
+		    intentFilter.addAction("com.icloudoor.clouddoor.ACTION_FINISH");
+		    registerReceiver(mFinishActivityBroadcast, intentFilter);
+
+
 
 		final TextView Title = (TextView) findViewById(R.id.page_title);
 		
@@ -105,5 +120,40 @@ public class ComplainActivity extends Activity {
 		public void closeWebBrowser() {
 			ComplainActivity.this.finish();
 		}
+	}
+	
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		
+		SharedPreferences homeKeyEvent = getSharedPreferences("HOMEKEY", 0);
+		int homePressed = homeKeyEvent.getInt("homePressed", 0);
+
+		SharedPreferences Sign = getSharedPreferences("SETTING", 0);
+		int usesign = Sign.getInt("useSign", 0);
+
+		if (homePressed == 1 && usesign == 1) {
+			Intent intent = new Intent();
+			intent.setClass(ComplainActivity.this, VerifyGestureActivity.class);
+			startActivity(intent);
+		}	}
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		unregisterReceiver(mFinishActivityBroadcast);
+		
+	}
+	
+	class Broadcast extends BroadcastReceiver
+	{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			ComplainActivity.this.finish();
+		}
+		
 	}
 }

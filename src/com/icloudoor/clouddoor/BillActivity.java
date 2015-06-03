@@ -1,11 +1,13 @@
 package com.icloudoor.clouddoor;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.ConsoleMessage;
@@ -22,11 +24,18 @@ public class BillActivity extends Activity {
 	private String sid;
 	private String url = "https://zone.icloudoor.com/icloudoor-web/user/prop/zone/payment/bill.do";
 	private WebSettings webSetting;
-	
+	private Broadcast mFinishActivityBroadcast;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_bill);
+		
+		mFinishActivityBroadcast=	new Broadcast();
+		 IntentFilter intentFilter = new IntentFilter();
+		    intentFilter.addAction("com.icloudoor.clouddoor.ACTION_FINISH");
+		    registerReceiver(mFinishActivityBroadcast, intentFilter);
+
+
 		
 		final TextView Title = (TextView) findViewById(R.id.page_title);
 		
@@ -87,5 +96,40 @@ public class BillActivity extends Activity {
 	public String loadSid() {
 		SharedPreferences loadSid = getSharedPreferences("SAVEDSID", 0);
 		return loadSid.getString("SID", null);
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		
+		SharedPreferences homeKeyEvent = getSharedPreferences("HOMEKEY", 0);
+		int homePressed = homeKeyEvent.getInt("homePressed", 0);
+
+		SharedPreferences Sign = getSharedPreferences("SETTING", 0);
+		int usesign = Sign.getInt("useSign", 0);
+
+		if (homePressed == 1 && usesign == 1) {
+			Intent intent = new Intent();
+			intent.setClass(BillActivity.this, VerifyGestureActivity.class);
+			startActivity(intent);
+		}	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		unregisterReceiver(mFinishActivityBroadcast);
+		
+	}
+	
+	class Broadcast extends BroadcastReceiver
+	{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			BillActivity.this.finish();
+		}
+		
 	}
 }

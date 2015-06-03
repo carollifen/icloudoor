@@ -125,12 +125,22 @@ public class KeyList extends FragmentActivity{
 	public FragmentTransaction mFragmenetTransaction;
 	public MyOnClickListener myClickListener;
 	
+	private Broadcast mFinishActivityBroadcast;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 //		getActionBar().hide();
 		setContentView(R.layout.key_list);
-		
+		mFinishActivityBroadcast=	new Broadcast();
+		 IntentFilter intentFilter = new IntentFilter();
+		    intentFilter.addAction("com.icloudoor.clouddoor.ACTION_FINISH");
+		    registerReceiver(mFinishActivityBroadcast, intentFilter);
+
+
+
+
+
 		/*
 		mKeyList = (ListView) findViewById(R.id.key_listview);
 		*/
@@ -828,5 +838,22 @@ public class KeyList extends FragmentActivity{
 		return hasData;
 	}
 	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		unregisterReceiver(mFinishActivityBroadcast);
+		
+	}
 	
+	class Broadcast extends BroadcastReceiver
+	{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			KeyList.this.finish();
+		}
+		
+	}
 }

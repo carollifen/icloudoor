@@ -1,6 +1,18 @@
 package com.icloudoor.clouddoor;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.Request.Method;
+import com.android.volley.toolbox.Volley;
 import com.icloudoor.clouddoor.SetGestureDrawLineView.SetGestureCallBack;
+import com.umeng.common.message.Log;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -23,14 +35,20 @@ public class VerifyGestureActivity extends Activity {
 	private FrameLayout mGestureContainer;
 	private SetGestureContentView mGestureContentView;
 	private String gesturePwd;
+	private RequestQueue mQueue;
+	private String sid;
+	
+	private Broadcast mFinishActivityBroadcast;
+
 	
 	private TextView phoneNum;
 	private String phone;
+    private URL logOutURL;
 	
 	private TextView IVmanageGesture;
  	private TextView IVpswLogin;
 	
- 	private int times=3;
+ 	private int times=5;
  	
  	private TextView textTip;
  	
@@ -41,6 +59,13 @@ public class VerifyGestureActivity extends Activity {
 //		getActionBar().hide();
 		setContentView(R.layout.activity_verify_gesture);
 		
+		IntentFilter intentFilter = new IntentFilter();
+	    intentFilter.addAction("com.icloudoor.clouddoor.ACTION_FINISH");
+	    registerReceiver(mFinishActivityBroadcast, intentFilter);
+
+
+		
+		mQueue = Volley.newRequestQueue(this);
 //		mback=(RelativeLayout) findViewById(R.id.verify_gesture_btn_back);
 		
 		textTip=(TextView) findViewById(R.id.tip_text);
@@ -137,6 +162,64 @@ public class VerifyGestureActivity extends Activity {
 					textTip.setText(getString(R.string.no_more_try_input_pwd));
 					textTip.setTextColor(0xFFEE2C2C);
 					textTip.setTextSize(17);
+					 if ("NET_WORKS".equals(loadSid("NETSTATE"))) {
+		                    sid = loadSid("SID");
+
+		                    try {
+		                        logOutURL = new URL("https://zone.icloudoor.com/icloudoor-web" + "/user/manage/logout.do"
+		                                + "?sid=" + sid);
+		                    } catch (MalformedURLException e) {
+		                        e.printStackTrace();
+		                    }
+		                    MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
+		                            Method.POST, logOutURL.toString(), null,
+		                            new Response.Listener<JSONObject>() {
+
+		                                @Override
+		                                
+		                                public void onResponse(JSONObject response) {
+		                                    try {
+		                                    	Log.e("logout", response.toString()+"sdmfl;knsad;lfglsadjm'l");
+//		                                        if (response.getString("sid") != null) {
+//		                                            sid = response.getString("sid");
+		                                            saveSid("SID", null);
+//		                                        }
+		                                           
+		                                 //   int    statusCode = response.getInt("code");
+		                                    if(response.getInt("code")==1)
+
+		                                    {  int  isLogin = 0;
+		                                        SharedPreferences loginStatus = VerifyGestureActivity.this.getSharedPreferences("LOGINSTATUS", 0);
+		                                        Editor editor1 = loginStatus.edit();
+		                                        editor1.putInt("LOGIN", isLogin);
+		                                        editor1.commit();
+		 
+		                                        Intent intent3 = new Intent();
+		                                        Bundle bundle = new Bundle();
+		                                        bundle.putString("phone", loginStatus.getString("PHONENUM", ""));
+		                                        intent3.putExtras(bundle);
+		                                     //   intent3.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		                                        intent3.setClass(VerifyGestureActivity.this, Login.class);
+		                                        startActivity(intent3);
+		                                        Intent broadcastIntent = new Intent();
+		                                        broadcastIntent.setAction("com.icloudoor.clouddoor.ACTION_FINISH");
+		                                        sendBroadcast(broadcastIntent);
+		                                        VerifyGestureActivity.this.finish();      }                             
+		                                     
+		                                    } catch (JSONException e) {
+		                                        e.printStackTrace();
+		                                    }
+		                                }
+		                            }, new Response.ErrorListener() {
+
+		                        @Override
+		                        public void onErrorResponse(VolleyError error) {
+		                        }
+		                    });
+		                    mQueue.add(mJsonRequest);
+		                 
+		                
+		                }
 				
 				}
 				mGestureContentView.clearDrawlineState(1000L);
@@ -192,9 +275,22 @@ public class VerifyGestureActivity extends Activity {
 //	}
 	
 	
+	class Broadcast extends BroadcastReceiver
+	{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			VerifyGestureActivity.this.finish();
+		}
+		
+	}
+	
 	public void onDestroy() {
 		super.onDestroy();
 		unregisterReceiver(KillVerifyActivityBroadcast);
+		//unregisterReceiver(mFinishActivityBroadcast);
+		
 	}
 	
 	public String loadSign(){
@@ -214,4 +310,21 @@ public class VerifyGestureActivity extends Activity {
 		}
 		return super.onKeyDown(keyCode, event);
 	}
+	
+	public void saveSid(String key, String value) {
+		if(VerifyGestureActivity.this != null){
+			SharedPreferences savedSid = VerifyGestureActivity.this.getSharedPreferences(
+					"SAVEDSID", 0);
+			Editor editor = savedSid.edit();
+			editor.putString(key, value);
+			editor.commit();
+		}
+	}
+
+	public String loadSid(String key) {
+		SharedPreferences loadSid = VerifyGestureActivity.this.getSharedPreferences(
+				"SAVEDSID", 0);
+		return loadSid.getString(key, null);
+	}
+
 }

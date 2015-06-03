@@ -24,6 +24,8 @@ public class ConfirmGestureActivity extends Activity implements OnClickListener 
 	private TextView confirmWithPsw;
 	
 	private RelativeLayout mback;
+	
+	private Broadcast mFinishActivityBroadcast;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -31,6 +33,16 @@ public class ConfirmGestureActivity extends Activity implements OnClickListener 
 //		getActionBar().hide();
 		
 		setContentView(R.layout.activity_confirmgesture);
+		
+		mFinishActivityBroadcast=	new Broadcast();
+		 IntentFilter intentFilter = new IntentFilter();
+		    intentFilter.addAction("com.icloudoor.clouddoor.ACTION_FINISH");
+		    registerReceiver(mFinishActivityBroadcast, intentFilter);
+
+
+
+
+
 		
 		mback=(RelativeLayout) findViewById(R.id.confirm_gesture_btn_back);
 		
@@ -115,10 +127,6 @@ public class ConfirmGestureActivity extends Activity implements OnClickListener 
 		}
 	}
 	
-	public void onDestroy() {
-		super.onDestroy();
-		unregisterReceiver(KillConfirmActivityBroadcast);
-	}
 	
 	@Override
 	public void onClick(View v) {
@@ -149,4 +157,25 @@ public class ConfirmGestureActivity extends Activity implements OnClickListener 
 			mdialog.show();
 		}
 	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		unregisterReceiver(mFinishActivityBroadcast);
+		unregisterReceiver(KillConfirmActivityBroadcast);
+		
+	}
+	
+	class Broadcast extends BroadcastReceiver
+	{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			ConfirmGestureActivity.this.finish();
+		}
+		
+	}
+	
 }

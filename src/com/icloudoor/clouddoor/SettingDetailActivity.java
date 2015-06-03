@@ -1,17 +1,20 @@
 package com.icloudoor.clouddoor;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 public class SettingDetailActivity extends Activity {
 	private LinearLayout TVBtnResetPwd;
@@ -24,6 +27,7 @@ public class SettingDetailActivity extends Activity {
 	private ImageView IVSwitchMan;
 	
 	private RelativeLayout IVBack;
+	private Broadcast mFinishActivityBroadcast;
 	
 	private int canShake, haveSound, canDisturb, switchToCar;
 	private MyBtnOnClickListener mMyBtnOnClickListener;
@@ -33,6 +37,11 @@ public class SettingDetailActivity extends Activity {
 		super.onCreate(savedInstanceState);
 //		getActionBar().hide();
 		setContentView(R.layout.set_detail);
+		mFinishActivityBroadcast=	new Broadcast();
+		 IntentFilter intentFilter = new IntentFilter();
+		    intentFilter.addAction("com.icloudoor.clouddoor.ACTION_FINISH");
+		    registerReceiver(mFinishActivityBroadcast, intentFilter);
+		    //** snip **//
 		
 		TVBtnResetPwd = (LinearLayout) findViewById(R.id.btn_reset_pwd);
 //		TVBtnChangePhone = (TextView) findViewById(R.id.btn_change_phone);
@@ -202,6 +211,27 @@ public class SettingDetailActivity extends Activity {
 		
 	}
 	
+	
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		unregisterReceiver(mFinishActivityBroadcast);
+		
+	}
+	
+	class Broadcast extends BroadcastReceiver
+	{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			SettingDetailActivity.this.finish();
+		}
+		
+	}
+
 	@Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) { 

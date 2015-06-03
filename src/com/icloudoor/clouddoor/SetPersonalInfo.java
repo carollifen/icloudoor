@@ -32,9 +32,10 @@ import com.icloudoor.clouddoor.Entities.MultipartEntity;
 import com.icloudoor.clouddoor.Entities.Part;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
@@ -71,6 +72,8 @@ import android.widget.Toast;
 
 public class SetPersonalInfo extends Activity {
 
+	private Broadcast mFinishActivityBroadcast;
+	
 	private String TAG = this.getClass().getSimpleName();
 
 	private MyAreaDBHelper mAreaDBHelper;
@@ -153,6 +156,13 @@ public class SetPersonalInfo extends Activity {
 		// getActionBar().hide();
 		whereFrom = getIntent().getStringExtra("Whereis");
 		setContentView(R.layout.set_person_info);
+		
+		mFinishActivityBroadcast=	new Broadcast();
+		 IntentFilter intentFilter = new IntentFilter();
+		    intentFilter.addAction("com.icloudoor.clouddoor.ACTION_FINISH");
+		    registerReceiver(mFinishActivityBroadcast, intentFilter);
+
+
 
 		back = (RelativeLayout) findViewById(R.id.btn_back);
 		back.setOnClickListener(new OnClickListener() {
@@ -748,10 +758,7 @@ public class SetPersonalInfo extends Activity {
 		}
 	};
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-	}
+	
 
 	public void initSpinnerData() {
 		Cursor mCursorP = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
@@ -1011,4 +1018,24 @@ public class SetPersonalInfo extends Activity {
 		Bitmap rotaBitmap = Bitmap.createBitmap(b, 0, 0, b.getWidth(), b.getHeight(), matrix, false);
 		return rotaBitmap;
 	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		unregisterReceiver(mFinishActivityBroadcast);
+		
+	}
+	
+	class Broadcast extends BroadcastReceiver
+	{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			SetPersonalInfo.this.finish();
+		}
+		
+	}
+	
 }

@@ -20,7 +20,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
@@ -98,11 +101,20 @@ public class ReportToRepairActivity extends Activity {
 	private String postToServer;
 
 	private WebSettings webSetting;
+	private Broadcast mFinishActivityBroadcast;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_report_to_repair);
+		
+		mFinishActivityBroadcast=	new Broadcast();
+		 IntentFilter intentFilter = new IntentFilter();
+		    intentFilter.addAction("com.icloudoor.clouddoor.ACTION_FINISH");
+		    registerReceiver(mFinishActivityBroadcast, intentFilter);
+
+
 
 		final TextView Title = (TextView) findViewById(R.id.page_title);
 		
@@ -402,4 +414,39 @@ public class ReportToRepairActivity extends Activity {
 
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		
+		SharedPreferences homeKeyEvent = getSharedPreferences("HOMEKEY", 0);
+		int homePressed = homeKeyEvent.getInt("homePressed", 0);
+
+		SharedPreferences Sign = getSharedPreferences("SETTING", 0);
+		int usesign = Sign.getInt("useSign", 0);
+
+		if (homePressed == 1 && usesign == 1) {
+			Intent intent = new Intent();
+			intent.setClass(ReportToRepairActivity.this, VerifyGestureActivity.class);
+			startActivity(intent);
+		}	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		unregisterReceiver(mFinishActivityBroadcast);
+		
+	}
+	
+	class Broadcast extends BroadcastReceiver
+	{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			ReportToRepairActivity.this.finish();
+		}
+		
+	}
+	
 }

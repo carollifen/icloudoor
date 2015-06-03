@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -72,6 +73,8 @@ public class CloudDoorMainActivity extends FragmentActivity {
 	private SettingFragment mSettingFragment;
 	private WuyeFragment mWuyeFragment;
 
+	private Broadcast mFinishActivityBroadcast;
+	
 	private RelativeLayout bottomWuye;
 	private RelativeLayout bottomMsg;
 	private RelativeLayout bottomKey;
@@ -116,6 +119,7 @@ public class CloudDoorMainActivity extends FragmentActivity {
 	private String imageURL;
 	private String PATH = Environment.getExternalStorageDirectory().getAbsolutePath()
 			+ "/Cloudoor/CacheImage";
+	private String jpegName = "myImage.jpg";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +130,13 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		// for Umeng Push Service
 		mPushAgent = PushAgent.getInstance(getApplicationContext());
 		mPushAgent.enable();
+		
+		mFinishActivityBroadcast=	new Broadcast();
+		 IntentFilter intentFilter = new IntentFilter();
+		    intentFilter.addAction("com.icloudoor.clouddoor.ACTION_FINISH");
+		  
+		    registerReceiver(mFinishActivityBroadcast, intentFilter);
+		
 		String device_token = UmengRegistrar
 				.getRegistrationId(getApplicationContext());
 		Log.e("devicetoken", device_token);
@@ -276,13 +287,20 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		SharedPreferences setSign = getSharedPreferences("SETTING", 0);
 		int useSign = setSign.getInt("useSign", 0);
 		
+		SharedPreferences firstLoginShare=getSharedPreferences("FIRSTLOGINSHARE", 0);
+		Editor mEditor=firstLoginShare.edit();
+		
+	if(!(firstLoginShare.getBoolean("FIRSTLOGIN", true)))
+	{	
 		if(homePressed == 1 && useSign == 1) {
 
 			Intent intent = new Intent();
 			intent.setClass(getApplicationContext(), VerifyGestureActivity.class);
 			startActivity(intent);
+			
 		}
-		
+	}
+	mEditor.putBoolean("FIRSTLOGIN", false).commit();
 		// save image to file
 		SharedPreferences downPic = getSharedPreferences("DOWNPIC", 0);
 		if (downPic.getInt("PIC", 0) == 0) {
@@ -316,10 +334,10 @@ public class CloudDoorMainActivity extends FragmentActivity {
 				if(!f.exists())
 					f.mkdirs();
 				
-				String jpegName = PATH + "/" + "myImage.jpg";
+//				String jpegName = PATH + "/" + jpegName;
 				
 				try {
-					FileOutputStream fout = new FileOutputStream(jpegName);
+					FileOutputStream fout = new FileOutputStream(PATH + "/" + jpegName);
 					BufferedOutputStream bos = new BufferedOutputStream(fout);
 					bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
 					bos.flush();
@@ -362,12 +380,9 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		}
 	};
 	
-	public void onDestroy() {
-        Log.e(TAG, "onDestroy");
-		unregisterReceiver(mHomeKeyEventReceiver);
-        unregisterReceiver(mConnectionStatusReceiver);
-        super.onDestroy();
-    }
+	
+	
+	
  
 	public class MyOnClickListener implements OnClickListener {
 		@Override
@@ -591,4 +606,26 @@ public class CloudDoorMainActivity extends FragmentActivity {
         editor.putString(key, value);
         editor.commit();
     }
+    
+    class Broadcast extends BroadcastReceiver
+	{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			CloudDoorMainActivity.this.finish();
+		}
+		
+	}
+	
+	
+	public void onDestroy() {
+        Log.e(TAG, "onDestroy");
+        super.onDestroy();
+		unregisterReceiver(mHomeKeyEventReceiver);
+        unregisterReceiver(mConnectionStatusReceiver);
+        unregisterReceiver(mFinishActivityBroadcast);
+        
+    }
+    
 }

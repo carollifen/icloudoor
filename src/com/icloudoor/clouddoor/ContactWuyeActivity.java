@@ -8,7 +8,10 @@ import org.json.JSONObject;
 import com.android.volley.RequestQueue;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
@@ -34,13 +37,18 @@ public class ContactWuyeActivity extends Activity {
 	private RequestQueue requestQueue;
 	
 	private String phonenum;
-	
+	private Broadcast mFinishActivityBroadcast;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 //		getActionBar().hide();
 		setContentView(R.layout.activity_contact_wuye);
+
+		mFinishActivityBroadcast=	new Broadcast();
+		 IntentFilter intentFilter = new IntentFilter();
+		    intentFilter.addAction("com.icloudoor.clouddoor.ACTION_FINISH");
+		    registerReceiver(mFinishActivityBroadcast, intentFilter);
 
 		back = (RelativeLayout) findViewById(R.id.btn_back);
 		back.setOnClickListener(new OnClickListener(){
@@ -136,5 +144,40 @@ public class ContactWuyeActivity extends Activity {
 		}
 
 	}
+	@Override
+	public void onResume() {
+		super.onResume();
+		
+		SharedPreferences homeKeyEvent = getSharedPreferences("HOMEKEY", 0);
+		int homePressed = homeKeyEvent.getInt("homePressed", 0);
 
+		SharedPreferences Sign = getSharedPreferences("SETTING", 0);
+		int usesign = Sign.getInt("useSign", 0);
+
+		if (homePressed == 1 && usesign == 1) {
+			Intent intent = new Intent();
+			intent.setClass(ContactWuyeActivity.this, VerifyGestureActivity.class);
+			startActivity(intent);
+		}	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		unregisterReceiver(mFinishActivityBroadcast);
+		
+	}
+	
+	class Broadcast extends BroadcastReceiver
+	{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			ContactWuyeActivity.this.finish();
+		}
+		
+	}
+	
+	
 }

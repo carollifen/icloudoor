@@ -1,8 +1,10 @@
 package com.icloudoor.clouddoor;
 
-import com.umeng.message.PushAgent;
-
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -16,6 +18,8 @@ import android.webkit.WebView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.umeng.message.PushAgent;
+
 public class CommendActivity extends Activity {
 
 	private RelativeLayout back;
@@ -27,11 +31,18 @@ public class CommendActivity extends Activity {
 	
 	private WebSettings webSetting;
 	private String url = "https://zone.icloudoor.com/icloudoor-web/user/prop/zone/cp/page.do";
-
+	private Broadcast mFinishActivityBroadcast;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_commend);
+		
+		mFinishActivityBroadcast=	new Broadcast();
+		 IntentFilter intentFilter = new IntentFilter();
+		    intentFilter.addAction("com.icloudoor.clouddoor.ACTION_FINISH");
+		    registerReceiver(mFinishActivityBroadcast, intentFilter);
+
+
 
 		final TextView Title = (TextView) findViewById(R.id.page_title);
 		
@@ -105,4 +116,41 @@ public class CommendActivity extends Activity {
 			CommendActivity.this.finish();
 		}
 	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		
+		SharedPreferences homeKeyEvent = getSharedPreferences("HOMEKEY", 0);
+		int homePressed = homeKeyEvent.getInt("homePressed", 0);
+
+		SharedPreferences Sign = getSharedPreferences("SETTING", 0);
+		int usesign = Sign.getInt("useSign", 0);
+
+		if (homePressed == 1 && usesign == 1) {
+			Intent intent = new Intent();
+			intent.setClass(CommendActivity.this, VerifyGestureActivity.class);
+			startActivity(intent);
+		}	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		unregisterReceiver(mFinishActivityBroadcast);
+		
+	}
+	
+	class Broadcast extends BroadcastReceiver
+	{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			CommendActivity.this.finish();
+		}
+		
+	}
+	
+	
 }
