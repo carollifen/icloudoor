@@ -71,18 +71,17 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="165dp"
+            android:layout_marginBottom="140dp"
             android:textColor="#ffffff"
             android:textSize="12sp" />
-
+        
         <com.icloudoor.clouddoor.SwitchButton
-	    android:id="@+id/btn_switch"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentBottom="true"
+            android:id="@+id/btn_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="105dp"
-	    />
+            android:layout_marginBottom="80dp" />
         
 <!--         <LinearLayout -->
 <!--             android:id="@+id/channel_switch_layout" -->
@@ -289,7 +288,7 @@
             android:layout_marginLeft="19dp"
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
-            android:text="广州市番禺区锦绣香江牡丹园北门"
+            android:text=""
             android:textSize="14sp"
             android:textColor="#ffffff"
             />
