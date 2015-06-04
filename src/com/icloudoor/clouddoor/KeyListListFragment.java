@@ -169,6 +169,7 @@ public class KeyListListFragment extends Fragment {
 								
 								if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
 									if (DBCount() > 0) {
+										Log.e(TAG, String.valueOf(DBCount()));
 										Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME, null);
 										if (mCursor.moveToFirst()) {
 											int authFromIndex = mCursor.getColumnIndex("authFrom");
@@ -601,8 +602,8 @@ public class KeyListListFragment extends Fragment {
 					value.put("carPosStatus", carData.getString("carPosStatus"));
 					mKeyDB.insert(CAR_TABLE_NAME, null, value);
 					
-					// refresh the carPosStatus to "0" if carPosStatus not "0" when you get the new temp car key
-					if(!carData.getString("carPosStatus").equals("0")){
+					// refresh the carPosStatus to "0" if carPosStatus not "0" and you hava a car key (own or borrowed) when you get the new car key
+					if(!carData.getString("carPosStatus").equals("0") && !carData.getString("carStatus").equals("3")){
 						updatePosStatus(carData.getString("l1ZoneId"), carData.getString("plateNum"));
 					}
 				}else{   // update old

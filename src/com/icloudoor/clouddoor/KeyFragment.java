@@ -91,7 +91,7 @@ import com.icloudoor.clouddoor.ShakeEventManager;
 import com.icloudoor.clouddoor.SwitchButton.OnSwitchListener;
 import com.icloudoor.clouddoor.UartService;
 import com.icloudoor.clouddoor.ShakeEventManager.ShakeListener;
-import com.icloudoor.clouddoor.animationUtils.MyAnimationLine;
+//import com.icloudoor.clouddoor.animationUtils.MyAnimationLine;
 //import com.icloudoor.clouddoor.animationUtils.MyAnimationView;
 
 @SuppressLint("NewApi")
@@ -405,7 +405,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		LinearInterpolator lin1 = new LinearInterpolator();
 		animation1.setInterpolator(lin1);
 //		myline.startAnimation(animation1);
-		radar.startAnimation(animation1);
+//		radar.startAnimation(animation1);
 		
 		BtnOpenDoor = (ImageView) view.findViewById(R.id.btn_open_door);
 		BtnOpenDoor.setImageResource(R.drawable.door_normalll_new);
@@ -417,16 +417,22 @@ public class KeyFragment extends Fragment implements ShakeListener {
 
 			@Override
 			public void onClick(View v) {
-                if (mOpenDoorState == 0) {
-                    mOpenDoorState = 1; // doing opendoor
-                    Log.i("test", "doOpenDoor");
-                    
-                    if(haveSound == 1){
-                    	playOpenDoorSound();
-                    }
+				
+				if(btStateOpen == false){
+					Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+		            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+				}else {
+					 if (mOpenDoorState == 0) {
+		                    mOpenDoorState = 1; // doing opendoor
+		                    Log.i("test", "doOpenDoor");
+		                    
+		                    if(haveSound == 1){
+		                    	playOpenDoorSound();
+		                    }
 
-                    doOpenDoor(btStateOpen); //ONLY FOR TEST
-                }
+		                    doOpenDoor(btStateOpen); //ONLY FOR TEST
+		                }
+				}   
 			}
 			
 		});
@@ -1202,7 +1208,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
                     Log.i(TAG, "myThread111");
                     myThread = new MyThread();
                     myThread.start();
-                    populateDeviceList(btStateOpen);
+                    //populateDeviceList(btStateOpen);
                     // if(getActivity() != null)
                     // Toast.makeText(getActivity(), R.string.bt_enabled,
                     // Toast.LENGTH_SHORT).show();
@@ -1288,7 +1294,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
     private  class MyThread extends Thread {
 
         private volatile boolean stopThread = false;
-        private volatile long mScanningProid = 9000;
+        private volatile long mScanningProid = 3000;
 
         public void stopThread() {
             this.stopThread = true;
@@ -1303,6 +1309,9 @@ public class KeyFragment extends Fragment implements ShakeListener {
                 Log.i("ThreadTest", Thread.currentThread().getId() + "myThread");
                 try {
                     Thread.sleep(mScanningProid);
+                    if (mScanningProid == 9000){
+                        Thread.sleep(mScanningProid);
+                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -1323,10 +1332,13 @@ public class KeyFragment extends Fragment implements ShakeListener {
                     myThread = new MyThread();
                     myThread.start();
 
-                    populateDeviceList(btStateOpen);
+                    //populateDeviceList(btStateOpen);
                     service_init();
                 }
             }
+        }else if(requestCode == REQUEST_ENABLE_BT && resultCode == 0){
+        	BtnOpenDoor.setEnabled(true);
+        	BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
         }
     }
 
@@ -1453,7 +1465,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //                        myline.startAnimation(animation1);
 //                        myline.setVisibility(View.VISIBLE);
 //                        myAnimationView.setVisibility(View.VISIBLE);
-                        radar.startAnimation(animation1);
+                        //radar.startAnimation(animation1);
                         circle.setVisibility(View.VISIBLE);
                         radar.setVisibility(View.VISIBLE);
                     }
@@ -1961,7 +1973,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
                                                                 // update the carPosStatus
                                                                 ContentValues value = new ContentValues();
                                                                 value.put("carPosStatus", "2");
-                                                                mKeyDB.update(CAR_TABLE_NAME, value, "l1ZoneId=?, plateNum=?", new String[]{l1ZoneId, plateNum});
+                                                                mKeyDB.update(CAR_TABLE_NAME, value, "l1ZoneId=? and plateNum=?", new String[]{l1ZoneId, plateNum});
                                                             }
                                                         }, 30 * 1000);
                                                     } else {
@@ -2210,7 +2222,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
                     Log.i(TAG, "myThread111");
                     myThread = new MyThread();
                     myThread.start();
-					populateDeviceList(btStateOpen);
+					//populateDeviceList(btStateOpen);
 					break;
 
 				case BluetoothAdapter.STATE_TURNING_ON:

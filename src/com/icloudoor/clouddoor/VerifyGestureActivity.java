@@ -290,7 +290,6 @@ public class VerifyGestureActivity extends Activity {
 		super.onDestroy();
 		unregisterReceiver(KillVerifyActivityBroadcast);
 		unregisterReceiver(mFinishActivityBroadcast);
-		
 	}
 	
 	public String loadSign(){

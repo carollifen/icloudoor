@@ -51,7 +51,8 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
 
 		keyBuffer.append("CREATE TABLE [" + Key_TABLE_NAME + "] (");
 		keyBuffer.append("[zoneId] TEXT, ");
-		keyBuffer.append("[zoneAddress] TEXT)");
+		keyBuffer.append("[zoneAddress] TEXT,");
+		keyBuffer.append("[l1ZoneId] TEXT)");
 		db.execSQL(keyBuffer.toString());
 		Log.e("DBHelper", "TABLE onCreate");
 		

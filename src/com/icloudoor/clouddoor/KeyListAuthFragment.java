@@ -185,9 +185,11 @@ public class KeyListAuthFragment extends Fragment {
 						new String[] { TVkeyname.getText().toString() });
 				if (cursor.moveToFirst()) {
 					String zoneid = cursor.getString(cursor.getColumnIndex("zoneId"));
+					String l1ZoneId = cursor.getString(cursor.getColumnIndex("l1ZoneId"));
 					Log.e("ididididid", zoneid);
 
 					meditor.putString("ZONEID", zoneid);
+					meditor.putString("l1ZoneId", l1ZoneId);
 					meditor.commit();
 				}
                 cursor.close();
@@ -333,10 +335,8 @@ public class KeyListAuthFragment extends Fragment {
 				if (isChooseCarKey) {
 					
 					if (carNumAndPhoneNumShare.getString("CARNUM", null) != null) {
-						Cursor carPositionCursor = mKeyDB.rawQuery(
-								"select * from KeyInfoTable where plateNum=?",
-								new String[] { carNumAndPhoneNumShare
-										.getString("CARNUM", null) });
+						Cursor carPositionCursor = mKeyDB.rawQuery("select * from CarKeyTable where plateNum=? and l1ZoneId=?",
+								new String[] { carNumAndPhoneNumShare.getString("CARNUM", null),  zoneIdShare.getString("l1ZoneId", null)});
 						if (carPositionCursor.moveToFirst()) {
 							do {
 								carPosition = carPositionCursor.getString(carPositionCursor
@@ -490,13 +490,15 @@ public class KeyListAuthFragment extends Fragment {
 				// TODO Auto-generated method stub
 				try {
 					
+					Log.e(TAG, response.toString());
+					
 					if(response.getInt("code") == 1){
 						JSONArray zoneArr = response.getJSONArray("data");
 						
 						for (int i = 0; i < zoneArr.length(); i++) {
 							String zoneId = zoneArr.getJSONObject(i).getString("zoneUserId");
 							String zoneAdd = zoneArr.getJSONObject(i).getString("address");
-
+							String l1ZoneId = zoneArr.getJSONObject(i).getString("l1ZoneId");
 							Log.e("address", zoneAdd);
 							Map<String, String> zoneMap = new HashMap<String, String>();
 							zoneMap.put("zoneName", zoneAdd);
@@ -504,6 +506,7 @@ public class KeyListAuthFragment extends Fragment {
 							ContentValues value = new ContentValues();
 							value.put("zoneId", zoneId);
 							value.put("zoneAddress", zoneAdd);
+							value.put("l1ZoneId", l1ZoneId);
 							try {
 								mKeyDB.insert(TABLE_NAME, null, value);
 							} catch (Exception e) {
