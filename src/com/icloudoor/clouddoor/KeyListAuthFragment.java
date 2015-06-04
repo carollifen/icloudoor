@@ -181,6 +181,7 @@ public class KeyListAuthFragment extends Fragment {
 				IVselectkeyItem = (ImageView) view.findViewById(R.id.select_keyicon);
 
 				TVkeyname.setText(TVListItem.getText().toString());
+				TVkeyname.setTextColor(0xFF333333);
 				Cursor cursor = mKeyDB.rawQuery("select * from ZoneKeyTable where zoneAddress=?",
 						new String[] { TVkeyname.getText().toString() });
 				if (cursor.moveToFirst()) {
@@ -516,6 +517,9 @@ public class KeyListAuthFragment extends Fragment {
 						
 						if(zoneArr.length() == 1){
 							TVkeyname.setText(zoneArr.getJSONObject(0).getString("address"));
+						} else if(zoneArr.length() > 1){
+							TVkeyname.setText(R.string.plz_choose_district);
+							TVkeyname.setTextColor(0xFF999999);
 						}
 					}
 					

@@ -122,6 +122,7 @@
     <string name="input_wrong">请输入数字或大小写字母</string>
     <string name="error_phonenumb_over">请输入正确的电话号码</string>
     <string name="sms_content_to_compare">【非攻科技】</string>
+    <string name="plz_choose_district">请选择小区</string>
     
     <drawable name="clr_normal">#ffffff</drawable>
     <drawable name="clr_pressed">#eeeeee</drawable>
