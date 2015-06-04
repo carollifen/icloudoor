@@ -181,7 +181,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	private String lastRequestLHL;
 	private boolean haveRequestLHL = false;
     private boolean mBTScanning = false;
-    private boolean btStateOpen = false;
+    private boolean mBtStateOpen = false;
 	
 	private long mLastRequestTime;
 	private long mCurrentRequestTime;
@@ -336,7 +336,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //				Log.e(TAG, String.valueOf(onlyOneDoor));
 //								
 //				if(!mBTScanning){
-//					populateDeviceList(btStateOpen);
+//					populateDeviceList(mBtStateOpen);
 //                    Log.e(TAG, "start scanning");
 //				}
 //					
@@ -362,14 +362,14 @@ public class KeyFragment extends Fragment implements ShakeListener {
 				if (isRight) {
 					isChooseCarChannel = 0;
 					if (!mBTScanning) {
-						populateDeviceList(btStateOpen);
+						populateDeviceList(mBtStateOpen);
 						Log.e(TAG, "start scanning");
 					}
 					Log.e(TAG, String.valueOf(isChooseCarChannel));
 				} else {
 					isChooseCarChannel = 1;
 					if (!mBTScanning) {
-						populateDeviceList(btStateOpen);
+						populateDeviceList(mBtStateOpen);
 						Log.e(TAG, "start scanning");
 					}
 					Log.e(TAG, String.valueOf(isChooseCarChannel));
@@ -418,7 +418,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 			@Override
 			public void onClick(View v) {
 				
-				if(btStateOpen == false){
+				if(mBtStateOpen == false){
 					Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 		            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 				}else {
@@ -430,7 +430,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		                    	playOpenDoorSound();
 		                    }
 
-		                    doOpenDoor(btStateOpen); //ONLY FOR TEST
+		                    doOpenDoor(mBtStateOpen); //ONLY FOR TEST
 		                }
 				}   
 			}
@@ -528,14 +528,14 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //					IvChooseCar.setAlpha(alpha_transparent);
 //					IvChooseMan.setAlpha(alpha_opaque);
 //					isChooseCarChannel = 0;
-//					populateDeviceList(btStateOpen);
+//					populateDeviceList(mBtStateOpen);
 //				} else {
 //					TvChooseCar.setTextColor(COLOR_CHANNEL_CHOOSE);
 //					TvChooseMan.setTextColor(COLOR_CHANNEL_NOT_CHOOSE);
 //					IvChooseCar.setAlpha(alpha_opaque);
 //					IvChooseMan.setAlpha(alpha_transparent);
 //					isChooseCarChannel = 1;
-//					populateDeviceList(btStateOpen);
+//					populateDeviceList(mBtStateOpen);
 //				}
 //			}
 //		});
@@ -543,7 +543,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //		IvOpenDoorLogo.setOnClickListener(new OnClickListener() {
 //			@Override
 //			public void onClick(View v) {
-//				doOpenDoor(btStateOpen);
+//				doOpenDoor(mBtStateOpen);
 //				if (haveSound == 1) {
 //					playOpenDoorSound();
 //				}
@@ -1189,7 +1189,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
                         if (mOpenDoorState == 0) {
                             Log.i(TAG, "Thread handler");
                             if (mBluetoothAdapter.isEnabled()) {
-                                populateDeviceList(btStateOpen);
+                                populateDeviceList(mBtStateOpen);
                             }
                         }
                         break;
@@ -1204,11 +1204,11 @@ public class KeyFragment extends Fragment implements ShakeListener {
             if (mBluetoothAdapter.isEnabled()) {
                 if (mBluetoothAdapter.isDiscovering()) {
                 } else {
-                    btStateOpen = true;
+                    mBtStateOpen = true;
                     Log.i(TAG, "myThread111");
                     myThread = new MyThread();
                     myThread.start();
-                    //populateDeviceList(btStateOpen);
+                    //populateDeviceList(mBtStateOpen);
                     // if(getActivity() != null)
                     // Toast.makeText(getActivity(), R.string.bt_enabled,
                     // Toast.LENGTH_SHORT).show();
@@ -1327,16 +1327,17 @@ public class KeyFragment extends Fragment implements ShakeListener {
             if (mBluetoothAdapter.isEnabled()) {
                 if (mBluetoothAdapter.isDiscovering()) {
                 } else{
-                    btStateOpen = true;
+                    mBtStateOpen = true;
                     Log.i(TAG, "myThread111");
                     myThread = new MyThread();
                     myThread.start();
 
-                    //populateDeviceList(btStateOpen);
+                    //populateDeviceList(mBtStateOpen);
                     service_init();
                 }
             }
         }else if(requestCode == REQUEST_ENABLE_BT && resultCode == 0){
+            mBtStateOpen = false;
         	BtnOpenDoor.setEnabled(true);
         	BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
         }
@@ -1393,7 +1394,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //			if (mBluetoothAdapter.isEnabled()) {
 //				if (mBluetoothAdapter.isDiscovering()) {
 //				} else{
-//					populateDeviceList(btStateOpen);
+//					populateDeviceList(mBtStateOpen);
 //					// if(getActivity() != null)
 //					// Toast.makeText(getActivity(), R.string.bt_enabled,
 //					// Toast.LENGTH_SHORT).show();
@@ -2078,12 +2079,12 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //                    @Override
 //                    public void run() {
 //                        if (mOpenDoorState == 0) {
-//                            populateDeviceList(btStateOpen);
+//                            populateDeviceList(mBtStateOpen);
 //                        }
 //                    }
 //                }, 10000);
 
-//				populateDeviceList(btStateOpen);
+//				populateDeviceList(mBtStateOpen);
                 }
             }
         }
@@ -2209,7 +2210,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 				switch (state) {
 				case BluetoothAdapter.STATE_OFF:
 					Log.e("BLE", "BluetoothAdapter.STATE_OFF");
-                    btStateOpen = false;
+                    mBtStateOpen = false;
 					break;
 
 				case BluetoothAdapter.STATE_TURNING_OFF:
@@ -2218,11 +2219,11 @@ public class KeyFragment extends Fragment implements ShakeListener {
 
 				case BluetoothAdapter.STATE_ON:
 					Log.e("BLE", "BluetoothAdapter.STATE_ON");
-                    btStateOpen = true;
+                    mBtStateOpen = true;
                     Log.i(TAG, "myThread111");
                     myThread = new MyThread();
                     myThread.start();
-					//populateDeviceList(btStateOpen);
+					//populateDeviceList(mBtStateOpen);
 					break;
 
 				case BluetoothAdapter.STATE_TURNING_ON:
@@ -2415,7 +2416,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	public void onShake() {
 		if (canShake == 1) {
 			Log.e("TEST", "shaking");
-			doOpenDoor(btStateOpen);
+			doOpenDoor(mBtStateOpen);
 		}
 	}
 

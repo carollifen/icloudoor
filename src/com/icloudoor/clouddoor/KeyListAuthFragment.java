@@ -602,6 +602,12 @@ public class KeyListAuthFragment extends Fragment {
 	}
 
     @Override
+    public void onDestroy() {
+        mKeyDB.close();
+        super.onDestroy();
+    }
+
+    @Override
     public void onDetach() {
         try {
             Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
