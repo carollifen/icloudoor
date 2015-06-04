@@ -103,7 +103,6 @@ public class ReportToRepairActivity extends Activity {
 	private WebSettings webSetting;
 	private Broadcast mFinishActivityBroadcast;
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

@@ -245,7 +245,6 @@ public class Login extends Activity implements TextWatcher {
 										isLogin = 1;
 										SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
 										Editor editor = loginStatus.edit();
-										
 										editor.putInt("LOGIN", isLogin);
 										editor.putString("PHONENUM", phoneNum);
 										editor.putString("PASSWARD", password);

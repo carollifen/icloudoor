@@ -289,7 +289,7 @@ public class VerifyGestureActivity extends Activity {
 	public void onDestroy() {
 		super.onDestroy();
 		unregisterReceiver(KillVerifyActivityBroadcast);
-		//unregisterReceiver(mFinishActivityBroadcast);
+		unregisterReceiver(mFinishActivityBroadcast);
 		
 	}
 	

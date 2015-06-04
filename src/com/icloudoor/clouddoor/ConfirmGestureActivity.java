@@ -128,7 +128,6 @@ public class ConfirmGestureActivity extends Activity implements OnClickListener 
 		}
 	}
 	
-	
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -187,7 +186,5 @@ public class ConfirmGestureActivity extends Activity implements OnClickListener 
 			// TODO Auto-generated method stub
 			ConfirmGestureActivity.this.finish();
 		}
-		
 	}
-	
 }

@@ -261,7 +261,12 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		mFragmentManager = getSupportFragmentManager();
 		mFragmenetTransaction = mFragmentManager.beginTransaction();
 		if(currentVersion >= 18){
-			mFragmenetTransaction.replace(R.id.id_content, mKeyFragment).commit();
+            // BLE
+            if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+                mFragmenetTransaction.replace(R.id.id_content, mKeyFragmentNoBLE).commit();
+            }else {
+                mFragmenetTransaction.replace(R.id.id_content, mKeyFragment).commit();
+            }
 		}else{
 			mFragmenetTransaction.replace(R.id.id_content, mKeyFragmentNoBLE).commit();
 		}
@@ -293,11 +298,9 @@ public class CloudDoorMainActivity extends FragmentActivity {
 	if(!(firstLoginShare.getBoolean("FIRSTLOGIN", true)))
 	{	
 		if(homePressed == 1 && useSign == 1) {
-
 			Intent intent = new Intent();
 			intent.setClass(getApplicationContext(), VerifyGestureActivity.class);
 			startActivity(intent);
-			
 		}
 	}
 	mEditor.putBoolean("FIRSTLOGIN", false).commit();
@@ -333,9 +336,7 @@ public class CloudDoorMainActivity extends FragmentActivity {
 				f = new File(PATH);
 				if(!f.exists())
 					f.mkdirs();
-				
-//				String jpegName = PATH + "/" + jpegName;
-				
+
 				try {
 					FileOutputStream fout = new FileOutputStream(PATH + "/" + jpegName);
 					BufferedOutputStream bos = new BufferedOutputStream(fout);

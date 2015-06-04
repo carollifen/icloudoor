@@ -82,7 +82,8 @@ public class RegisterActivity extends Activity implements TextWatcher {
 		Log.e(TAG, "oncreate");
 
 		isBackKey = false;
-		
+		mQueue = Volley.newRequestQueue(this);
+
 		ETInputPhoneNum = (EditText) findViewById(R.id.regi_input_phone_num);
 		ETInputCertiCode = (EditText) findViewById(R.id.regi_input_certi_code);
 		TVGetCertiCode = (TextView) findViewById(R.id.btn_regi_get_certi_code);

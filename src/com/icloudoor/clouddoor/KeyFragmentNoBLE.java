@@ -53,6 +53,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -60,6 +61,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup.LayoutParams;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -170,7 +175,7 @@ public class KeyFragmentNoBLE extends Fragment implements ShakeListener {
 	private long mLastRequestTime;
 	private long mCurrentRequestTime;
 	
-//	private ImageView keyRedDot;
+	private ImageView keyRedDot;
 //	private TextView keyRedDotNum;
 	
 	// for new channel switch
@@ -183,6 +188,10 @@ public class KeyFragmentNoBLE extends Fragment implements ShakeListener {
 	private TextView scanStatus;
 	private ImageView BtnOpenDoor;
 	private OpenDoorRingView ringView;
+	
+	private RelativeLayout circleLayout;
+    private ImageView circle;
+    private ImageView radar;
 
 	// for BLE
 //	private static final int REQUEST_ENABLE_BT = 0;
@@ -276,9 +285,9 @@ public class KeyFragmentNoBLE extends Fragment implements ShakeListener {
 		contentYi.setSelected(true);
 		contentJi.setSelected(true);
 		
-//		keyRedDot = (ImageView) view.findViewById(R.id.key_red_dot);
+		keyRedDot = (ImageView) view.findViewById(R.id.key_red_dot);
 //		keyRedDotNum = (TextView) view.findViewById(R.id.key_red_dot_num);
-//		keyRedDot.setVisibility(View.INVISIBLE); 
+		keyRedDot.setVisibility(View.INVISIBLE); 
 //		keyRedDotNum.setText("");
 		
 		requestWeatherData();
@@ -306,6 +315,25 @@ public class KeyFragmentNoBLE extends Fragment implements ShakeListener {
 		
 //		channelSwitchLayout.addView(csv);
 		//
+		
+		circleLayout = (RelativeLayout) view.findViewById(R.id.circle_layout);
+		circle = (ImageView) view.findViewById(R.id.circle);
+		radar = (ImageView) view.findViewById(R.id.radar_light);
+		
+		DisplayMetrics dm = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+		int screenWidth = dm.widthPixels;
+		LayoutParams param = (LayoutParams) circle.getLayoutParams();
+		param.width = screenWidth;
+		param.height = screenWidth;
+		circle.setLayoutParams(param);
+		radar.setLayoutParams(param);
+		
+		Animation animation1 = AnimationUtils.loadAnimation(getActivity(), R.anim.run);
+		LinearInterpolator lin1 = new LinearInterpolator();
+		animation1.setInterpolator(lin1);
+		radar.startAnimation(animation1);
+		
 		switchBtn = (SwitchButton) view.findViewById(R.id.btn_switch);
 		if(isChooseCarChannel == 1){
 			switchBtn.setSwitch(false, 0);

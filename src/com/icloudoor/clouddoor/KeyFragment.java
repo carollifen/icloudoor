@@ -52,6 +52,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -130,6 +131,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	private int haveSound;
 	private int canShake;
 	private boolean isFindKey;
+    private Vibrator vibrator;
 
 	private float alpha_transparent = 0.0f;
 	private float alpha_opaque = 1.0f;
@@ -179,6 +181,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	private String lastRequestLHL;
 	private boolean haveRequestLHL = false;
     private boolean mBTScanning = false;
+    private boolean btStateOpen = false;
 	
 	private long mLastRequestTime;
 	private long mCurrentRequestTime;
@@ -227,9 +230,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 
 	private String tempDeviceAddr = null;
     private Handler mHandler;
-    private volatile boolean stopThread = false;
-
-    private MyThread  myThread;
+    private MyThread  myThread = null;
     
     private RelativeLayout circleLayout;
     private ImageView circle;
@@ -244,6 +245,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 			Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.key_page, container, false);
+        vibrator = (Vibrator)getActivity().getSystemService(Context.VIBRATOR_SERVICE);
 
 		mKeyDBHelper = new MyDataBaseHelper(getActivity(), DATABASE_NAME);
 		mKeyDB = mKeyDBHelper.getWritableDatabase();
@@ -334,7 +336,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //				Log.e(TAG, String.valueOf(onlyOneDoor));
 //								
 //				if(!mBTScanning){
-//					populateDeviceList();
+//					populateDeviceList(btStateOpen);
 //                    Log.e(TAG, "start scanning");
 //				}
 //					
@@ -360,14 +362,14 @@ public class KeyFragment extends Fragment implements ShakeListener {
 				if (isRight) {
 					isChooseCarChannel = 0;
 					if (!mBTScanning) {
-						populateDeviceList();
+						populateDeviceList(btStateOpen);
 						Log.e(TAG, "start scanning");
 					}
 					Log.e(TAG, String.valueOf(isChooseCarChannel));
 				} else {
 					isChooseCarChannel = 1;
 					if (!mBTScanning) {
-						populateDeviceList();
+						populateDeviceList(btStateOpen);
 						Log.e(TAG, "start scanning");
 					}
 					Log.e(TAG, String.valueOf(isChooseCarChannel));
@@ -423,7 +425,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
                     	playOpenDoorSound();
                     }
 
-                    doOpenDoor(); //ONLY FOR TEST
+                    doOpenDoor(btStateOpen); //ONLY FOR TEST
                 }
 			}
 			
@@ -520,14 +522,14 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //					IvChooseCar.setAlpha(alpha_transparent);
 //					IvChooseMan.setAlpha(alpha_opaque);
 //					isChooseCarChannel = 0;
-//					populateDeviceList();
+//					populateDeviceList(btStateOpen);
 //				} else {
 //					TvChooseCar.setTextColor(COLOR_CHANNEL_CHOOSE);
 //					TvChooseMan.setTextColor(COLOR_CHANNEL_NOT_CHOOSE);
 //					IvChooseCar.setAlpha(alpha_opaque);
 //					IvChooseMan.setAlpha(alpha_transparent);
 //					isChooseCarChannel = 1;
-//					populateDeviceList();
+//					populateDeviceList(btStateOpen);
 //				}
 //			}
 //		});
@@ -535,7 +537,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //		IvOpenDoorLogo.setOnClickListener(new OnClickListener() {
 //			@Override
 //			public void onClick(View v) {
-//				doOpenDoor();
+//				doOpenDoor(btStateOpen);
 //				if (haveSound == 1) {
 //					playOpenDoorSound();
 //				}
@@ -1159,38 +1161,66 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	
 	@Override
 	public void onStart() {
-        stopThread = false;
+        Log.e("TEST63", "keyFragment onStart()");
 		super.onStart();
 		IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
 		filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
 		filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-	}
+
+        BluetoothManager mBluetoothManager = (BluetoothManager) getActivity()
+                .getSystemService(Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = mBluetoothManager.getAdapter();
+        if (mBluetoothAdapter == null) {
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.bt_not_supported, Toast.LENGTH_SHORT).show();
+        }
+
+        mHandler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                switch(msg.what) {
+                    case 10:
+                        if (mOpenDoorState == 0) {
+                            Log.i(TAG, "Thread handler");
+                            if (mBluetoothAdapter.isEnabled()) {
+                                populateDeviceList(btStateOpen);
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                super.handleMessage(msg);
+            }
+        };
+
+        if (mBluetoothAdapter.isEnabled()) {
+            if (mBluetoothAdapter.isEnabled()) {
+                if (mBluetoothAdapter.isDiscovering()) {
+                } else {
+                    btStateOpen = true;
+                    Log.i(TAG, "myThread111");
+                    myThread = new MyThread();
+                    myThread.start();
+                    populateDeviceList(btStateOpen);
+                    // if(getActivity() != null)
+                    // Toast.makeText(getActivity(), R.string.bt_enabled,
+                    // Toast.LENGTH_SHORT).show();
+                    service_init();
+                }
+            }
+        } else {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        }
+    }
 
 	@Override
 	public void onResume() {
 		super.onResume();
 		Log.e("TEST", "keyFragment onResume()");
-		
 
-		// BLE
-		if (!getActivity().getPackageManager().hasSystemFeature(
-				PackageManager.FEATURE_BLUETOOTH_LE)) {
-			Toast.makeText(getActivity(), R.string.ble_not_supported,
-					Toast.LENGTH_SHORT).show();
-		}
-
-		BluetoothManager mBluetoothManager = (BluetoothManager) getActivity()
-				.getSystemService(Context.BLUETOOTH_SERVICE);
-		mBluetoothAdapter = mBluetoothManager.getAdapter();
-
-		if (mBluetoothAdapter == null) {
-			if (getActivity() != null)
-				Toast.makeText(getActivity(), R.string.bt_not_supported,
-						Toast.LENGTH_SHORT).show();
-		}
-		
-		checkBlueToothState();
-		service_init();
+//		checkBlueToothState();
 
 		//TODO DELETE TEMPARY
 		if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
@@ -1241,27 +1271,6 @@ public class KeyFragment extends Fragment implements ShakeListener {
                 mCursor.close();
 			}
 		}
-        mHandler = new Handler(){
-            @Override
-            public void handleMessage(Message msg) {
-                switch(msg.what) {
-                    case 10:
-                        if (mOpenDoorState == 0) {
-                            Log.i(TAG, "Thread handler");
-                            populateDeviceList();
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                super.handleMessage(msg);
-            }
-        };
-            Log.i(TAG, "myThread111");
-
-                 myThread = new MyThread();
-                myThread.start();
-
 
 //        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
 //            @Override
@@ -1301,12 +1310,34 @@ public class KeyFragment extends Fragment implements ShakeListener {
         }
     }
 
-	@Override
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.e("test63", "onActivityResult ");
+        if (requestCode == REQUEST_ENABLE_BT && resultCode == 1){
+            if (mBluetoothAdapter.isEnabled()) {
+                if (mBluetoothAdapter.isDiscovering()) {
+                } else{
+                    btStateOpen = true;
+                    Log.i(TAG, "myThread111");
+                    myThread = new MyThread();
+                    myThread.start();
+
+                    populateDeviceList(btStateOpen);
+                    service_init();
+                }
+            }
+        }
+    }
+
+    @Override
 	public void onPause() {
 		super.onPause();
 		if(mBluetoothAdapter.isEnabled())
 			scanLeDevice(false);
-        myThread.stopThread();
+        if (myThread != null) {
+            myThread.stopThread();
+        }
 	}
 
 	@Override
@@ -1341,33 +1372,33 @@ public class KeyFragment extends Fragment implements ShakeListener {
 				UARTStatusChangeReceiver, makeGattUpdateIntentFilter());
 	}
 
-	private void checkBlueToothState() {
-		Log.e("BLE", "checkBlueToothState");
-		if (mBluetoothAdapter == null) {
-			if (getActivity() != null)
-				Toast.makeText(getActivity(), R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
-		} else {
-			if (mBluetoothAdapter.isEnabled()) {
-				if (mBluetoothAdapter.isDiscovering()) {
-				} else{
-					populateDeviceList();
-					// if(getActivity() != null)
-					// Toast.makeText(getActivity(), R.string.bt_enabled,
-					// Toast.LENGTH_SHORT).show();
-				}
-			} else {
-				Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-				startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-			}
-		}
-	}
+//	private void checkBlueToothState() {
+//		Log.e("BLE", "checkBlueToothState");
+//		if (mBluetoothAdapter == null) {
+//			if (getActivity() != null)
+//				Toast.makeText(getActivity(), R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
+//		} else {
+//			if (mBluetoothAdapter.isEnabled()) {
+//				if (mBluetoothAdapter.isDiscovering()) {
+//				} else{
+//					populateDeviceList(btStateOpen);
+//					// if(getActivity() != null)
+//					// Toast.makeText(getActivity(), R.string.bt_enabled,
+//					// Toast.LENGTH_SHORT).show();
+//				}
+//			} else {
+//				Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//				startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+//			}
+//		}
+//	}
 
-	private void populateDeviceList() {
+	private void populateDeviceList(final boolean btStateOpen) {
 		Log.e("BLE", "populateDeviceList");
-		
-		BtnOpenDoor.setImageResource(R.drawable.door_normalll_new);
-		BtnOpenDoor.setEnabled(false);
-		
+		if (btStateOpen) {
+            BtnOpenDoor.setImageResource(R.drawable.door_normalll_new);
+            BtnOpenDoor.setEnabled(false);
+
 //		IvOpenDoorLogo.setEnabled(false);
 //		TvDistrictDoor.setText(R.string.searching_key);
 //		TvDistrictDoor.setTextSize(18);
@@ -1376,20 +1407,21 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //		TvCarNumber.setTextColor(0xFFffffff);
 //		IvSearchKey.setBackgroundResource(R.drawable.btn_gray);
 //		IvOpenDoorLogo.setImageResource(R.drawable.btn_serch_1);
-		
-		radar.startAnimation(animation1);
-        circle.setVisibility(View.VISIBLE);
-        radar.setVisibility(View.VISIBLE);
-		
-		doorName.setText("");
-        doorNameFlag.setVisibility(View.INVISIBLE);
-		
-		mDeviceList = new ArrayList<BluetoothDevice>();
-		mDeviceAdapter = new DeviceAdapter(getActivity(), mDeviceList);
-		mDevRssiValues = new HashMap<String, Integer>();
-		scanLeDevice(true);
 
-		scanStatus.setText(R.string.scanning);
+            radar.startAnimation(animation1);
+            circle.setVisibility(View.VISIBLE);
+            radar.setVisibility(View.VISIBLE);
+
+            doorName.setText("");
+            doorNameFlag.setVisibility(View.INVISIBLE);
+
+            mDeviceList = new ArrayList<BluetoothDevice>();
+            mDeviceAdapter = new DeviceAdapter(getActivity(), mDeviceList);
+            mDevRssiValues = new HashMap<String, Integer>();
+            scanLeDevice(true);
+
+            scanStatus.setText(R.string.scanning);
+        }
 	}
 
 	private void scanLeDevice(final boolean enable) {
@@ -1819,145 +1851,142 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		}
 	}
 	
-	private void doOpenDoor() {
-		Log.e("BLE", "doOpenDoor");
+	private void doOpenDoor(final boolean btStateOpen) {
+        Log.e("BLE", "doOpenDoor");
 //		IvOpenDoorLogo.setEnabled(false);
-		// if(getActivity() != null)
-		// Toast.makeText(getActivity(), R.string.door_open,
-		// Toast.LENGTH_SHORT).show();
-		
-		onlyOneDoor = !onlyOneDoor;
-		
-		if (mDeviceList != null && mDeviceList.size() > 0) {
-			if (mDeviceList.get(deviceIndexToOpen).getAddress() != null) {
+        // if(getActivity() != null)
+        // Toast.makeText(getActivity(), R.string.door_open,
+        // Toast.LENGTH_SHORT).show();
+        if (btStateOpen) {
+            onlyOneDoor = !onlyOneDoor;
+
+            if (mDeviceList != null && mDeviceList.size() > 0) {
+                if (mDeviceList.get(deviceIndexToOpen).getAddress() != null) {
 //                if (mBTScanning) {
 //                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
 //                }
-				
-				//TODO
-				if(isChooseCarChannel == 1){
-					for(int index = 0; index < carDoorList.size(); index++){
-						String deviceId = null;
-						String tempDeviceId = null;
-						deviceId = carDoorList.get(index).get("CDdeviceid");
-						tempDeviceId = deviceId.toUpperCase();
-						char[] data = tempDeviceId.toCharArray();
-						String formatDeviceId = String.valueOf(data[0]) + String.valueOf(data[1]) + ":"
-								+ String.valueOf(data[2]) + String.valueOf(data[3]) + ":"
-								+ String.valueOf(data[4]) + String.valueOf(data[5]) + ":"
-								+ String.valueOf(data[6]) + String.valueOf(data[7]) + ":"
-								+ String.valueOf(data[8]) + String.valueOf(data[9]) + ":"
-								+ String.valueOf(data[10]) + String.valueOf(data[11]);
-						
-						if(formatDeviceId.equals(mDeviceList.get(deviceIndexToOpen).getAddress())){
-							if(carDoorList.get(index).get("CDDirection").equals("1")){  // go in
-								if (mKeyDBHelper.tabIsExist(CAR_TABLE_NAME)) {
-									if(DBCountCar() > 0){
-										Cursor mCursor = mKeyDB.rawQuery("select * from " + CAR_TABLE_NAME, null);
-										if(mCursor.moveToFirst()){
-											int carStatusIndex = mCursor.getColumnIndex("carStatus");
-											int carPosStatusIndex = mCursor.getColumnIndex("carPosStatus");
-											int l1ZoneIdIndex = mCursor.getColumnIndex("l1ZoneId");
-											int plateNumIndex = mCursor.getColumnIndex("plateNum");
-											
-											do{
-												String carStatus = mCursor.getString(carStatusIndex);
-												String carPosStatus = mCursor.getString(carPosStatusIndex);
-												final String l1ZoneId = mCursor.getString(l1ZoneIdIndex);
-												final String plateNum = mCursor.getString(plateNumIndex);
-												
-												if((carStatus.equals("1") || carStatus.equals("2"))
-														&& (carPosStatus.equals("0") || carPosStatus.equals("2"))){
-													// can open
-													if (mUartService != null) {
-														mUartService.connect(mDeviceList.get(deviceIndexToOpen).getAddress());
 
-														// 30s
-														new Handler().postDelayed(new Runnable() {
-																			@Override
-																			public void run() {
-																				// update
-																				// the
-																				// carPosStatus
-																				ContentValues value = new ContentValues();
-																				value.put("carPosStatus", "1");
-																				mKeyDB.update(CAR_TABLE_NAME, value, "l1ZoneId=? and plateNum=?",
-																						new String[] {l1ZoneId, plateNum });
-																			}
-																		}, 30 * 1000);
-													}
-														
-												}else{
-													// can not open
-													if(getActivity() != null){
-														Log.e(TAG, "sorry, cannot open");
-														Toast.makeText(getActivity(), R.string.sorry_you_are_in_the_zone, Toast.LENGTH_SHORT).show();
-													}
-												}
-												
-											}while(mCursor.moveToNext());
-										}
-										mCursor.close();
-									}
-								}
-							}else if(carDoorList.get(index).get("CDDirection").equals("2")){  // go out
-								if (mKeyDBHelper.tabIsExist(CAR_TABLE_NAME)) {
-									if(DBCountCar() > 0){
-										Cursor mCursor = mKeyDB.rawQuery("select * from " + CAR_TABLE_NAME, null);
-										if(mCursor.moveToFirst()){
-											int carStatusIndex = mCursor.getColumnIndex("carStatus");
-											int carPosStatusIndex = mCursor.getColumnIndex("carPosStatus");
-											int l1ZoneIdIndex = mCursor.getColumnIndex("l1ZoneId");
-											int plateNumIndex = mCursor.getColumnIndex("plateNum");
-											
-											do{
-												String carStatus = mCursor.getString(carStatusIndex);
-												String carPosStatus = mCursor.getString(carPosStatusIndex);
-												final String l1ZoneId = mCursor.getString(l1ZoneIdIndex);
-												final String plateNum = mCursor.getString(plateNumIndex);
-												
-												if((carStatus.equals("1") || carStatus.equals("2"))
-														&& (carPosStatus.equals("0") || carPosStatus.equals("1"))){
-													// can open
-													mUartService.connect(mDeviceList.get(deviceIndexToOpen).getAddress());
-													
-													
-													// 30s	
-													new Handler().postDelayed(new Runnable() {
-									                    @Override
-									                    public void run() {
-									                    	// update the carPosStatus
-															ContentValues value = new ContentValues();
-															value.put("carPosStatus", "2");
-															mKeyDB.update(CAR_TABLE_NAME, value, "l1ZoneId=?, plateNum=?", new String[]{l1ZoneId, plateNum});
-									                    }
-									                }, 30*1000);																																							
-												}else{
-													// can not open
-													if(getActivity() != null){
-														Log.e(TAG, "sorry, cannot open");
-														Toast.makeText(getActivity(), R.string.sorry_you_are_out_the_zone, Toast.LENGTH_SHORT).show();
-													}
-												}
-												
-											}while(mCursor.moveToNext());
-										}
-										mCursor.close();
-									}
-								}
-							}
-						}
-					}
-				}else{
-					if (mUartService != null) {
-						mUartService.connect(mDeviceList.get(deviceIndexToOpen).getAddress());
-					}
-				}
-				
-				
-				
-				
-				
+                    //TODO
+                    if (isChooseCarChannel == 1) {
+                        for (int index = 0; index < carDoorList.size(); index++) {
+                            String deviceId = null;
+                            String tempDeviceId = null;
+                            deviceId = carDoorList.get(index).get("CDdeviceid");
+                            tempDeviceId = deviceId.toUpperCase();
+                            char[] data = tempDeviceId.toCharArray();
+                            String formatDeviceId = String.valueOf(data[0]) + String.valueOf(data[1]) + ":"
+                                    + String.valueOf(data[2]) + String.valueOf(data[3]) + ":"
+                                    + String.valueOf(data[4]) + String.valueOf(data[5]) + ":"
+                                    + String.valueOf(data[6]) + String.valueOf(data[7]) + ":"
+                                    + String.valueOf(data[8]) + String.valueOf(data[9]) + ":"
+                                    + String.valueOf(data[10]) + String.valueOf(data[11]);
+
+                            if (formatDeviceId.equals(mDeviceList.get(deviceIndexToOpen).getAddress())) {
+                                if (carDoorList.get(index).get("CDDirection").equals("1")) {  // go in
+                                    if (mKeyDBHelper.tabIsExist(CAR_TABLE_NAME)) {
+                                        if (DBCountCar() > 0) {
+                                            Cursor mCursor = mKeyDB.rawQuery("select * from " + CAR_TABLE_NAME, null);
+                                            if (mCursor.moveToFirst()) {
+                                                int carStatusIndex = mCursor.getColumnIndex("carStatus");
+                                                int carPosStatusIndex = mCursor.getColumnIndex("carPosStatus");
+                                                int l1ZoneIdIndex = mCursor.getColumnIndex("l1ZoneId");
+                                                int plateNumIndex = mCursor.getColumnIndex("plateNum");
+
+                                                do {
+                                                    String carStatus = mCursor.getString(carStatusIndex);
+                                                    String carPosStatus = mCursor.getString(carPosStatusIndex);
+                                                    final String l1ZoneId = mCursor.getString(l1ZoneIdIndex);
+                                                    final String plateNum = mCursor.getString(plateNumIndex);
+
+                                                    if ((carStatus.equals("1") || carStatus.equals("2"))
+                                                            && (carPosStatus.equals("0") || carPosStatus.equals("2"))) {
+                                                        // can open
+                                                        if (mUartService != null) {
+                                                            mUartService.connect(mDeviceList.get(deviceIndexToOpen).getAddress());
+
+                                                            // 30s
+                                                            new Handler().postDelayed(new Runnable() {
+                                                                @Override
+                                                                public void run() {
+                                                                    // update
+                                                                    // the
+                                                                    // carPosStatus
+                                                                    ContentValues value = new ContentValues();
+                                                                    value.put("carPosStatus", "1");
+                                                                    mKeyDB.update(CAR_TABLE_NAME, value, "l1ZoneId=? and plateNum=?",
+                                                                            new String[]{l1ZoneId, plateNum});
+                                                                }
+                                                            }, 30 * 1000);
+                                                        }
+
+                                                    } else {
+                                                        // can not open
+                                                        if (getActivity() != null) {
+                                                            Log.e(TAG, "sorry, cannot open");
+                                                            Toast.makeText(getActivity(), R.string.sorry_you_are_in_the_zone, Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+
+                                                } while (mCursor.moveToNext());
+                                            }
+                                            mCursor.close();
+                                        }
+                                    }
+                                } else if (carDoorList.get(index).get("CDDirection").equals("2")) {  // go out
+                                    if (mKeyDBHelper.tabIsExist(CAR_TABLE_NAME)) {
+                                        if (DBCountCar() > 0) {
+                                            Cursor mCursor = mKeyDB.rawQuery("select * from " + CAR_TABLE_NAME, null);
+                                            if (mCursor.moveToFirst()) {
+                                                int carStatusIndex = mCursor.getColumnIndex("carStatus");
+                                                int carPosStatusIndex = mCursor.getColumnIndex("carPosStatus");
+                                                int l1ZoneIdIndex = mCursor.getColumnIndex("l1ZoneId");
+                                                int plateNumIndex = mCursor.getColumnIndex("plateNum");
+
+                                                do {
+                                                    String carStatus = mCursor.getString(carStatusIndex);
+                                                    String carPosStatus = mCursor.getString(carPosStatusIndex);
+                                                    final String l1ZoneId = mCursor.getString(l1ZoneIdIndex);
+                                                    final String plateNum = mCursor.getString(plateNumIndex);
+
+                                                    if ((carStatus.equals("1") || carStatus.equals("2"))
+                                                            && (carPosStatus.equals("0") || carPosStatus.equals("1"))) {
+                                                        // can open
+                                                        mUartService.connect(mDeviceList.get(deviceIndexToOpen).getAddress());
+
+
+                                                        // 30s
+                                                        new Handler().postDelayed(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                // update the carPosStatus
+                                                                ContentValues value = new ContentValues();
+                                                                value.put("carPosStatus", "2");
+                                                                mKeyDB.update(CAR_TABLE_NAME, value, "l1ZoneId=?, plateNum=?", new String[]{l1ZoneId, plateNum});
+                                                            }
+                                                        }, 30 * 1000);
+                                                    } else {
+                                                        // can not open
+                                                        if (getActivity() != null) {
+                                                            Log.e(TAG, "sorry, cannot open");
+                                                            Toast.makeText(getActivity(), R.string.sorry_you_are_out_the_zone, Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+
+                                                } while (mCursor.moveToNext());
+                                            }
+                                            mCursor.close();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        if (mUartService != null) {
+                            mUartService.connect(mDeviceList.get(deviceIndexToOpen).getAddress());
+                        }
+                    }
+
+
 //				if (!mUartService.connect(mDeviceList.get(deviceIndexToOpen).getAddress())){
 //                    mOpenDoorState = 2;
 //                    Log.i(TAG, "connect failed!");
@@ -2021,31 +2050,32 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //					}
 //					cursor.close();
 //				}
-				
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(mOpenDoorState != 0) {
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mOpenDoorState != 0) {
 //                            Toast.makeText(getActivity(), R.string.open_door_fail, Toast.LENGTH_SHORT).show();
 //                            Log.e("test for open door", "fail");
-                            mOpenDoorState = 0;
+                                mOpenDoorState = 0;
+                            }
                         }
-                    }
-                }, 5000);
+                    }, 5000);
 
 //                new Handler().postDelayed(new Runnable() {
 //                    @Override
 //                    public void run() {
 //                        if (mOpenDoorState == 0) {
-//                            populateDeviceList();
+//                            populateDeviceList(btStateOpen);
 //                        }
 //                    }
 //                }, 10000);
 
-//				populateDeviceList();				
-			}
-		}
-	}
+//				populateDeviceList(btStateOpen);
+                }
+            }
+        }
+    }
 
 	private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
 
@@ -2167,6 +2197,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 				switch (state) {
 				case BluetoothAdapter.STATE_OFF:
 					Log.e("BLE", "BluetoothAdapter.STATE_OFF");
+                    btStateOpen = false;
 					break;
 
 				case BluetoothAdapter.STATE_TURNING_OFF:
@@ -2175,7 +2206,11 @@ public class KeyFragment extends Fragment implements ShakeListener {
 
 				case BluetoothAdapter.STATE_ON:
 					Log.e("BLE", "BluetoothAdapter.STATE_ON");
-					populateDeviceList();
+                    btStateOpen = true;
+                    Log.i(TAG, "myThread111");
+                    myThread = new MyThread();
+                    myThread.start();
+					populateDeviceList(btStateOpen);
 					break;
 
 				case BluetoothAdapter.STATE_TURNING_ON:
@@ -2282,6 +2317,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //                getActivity().runOnUiThread(new Runnable() {
 //					public void run() {
                 if (txValue[0] == 0x10) {
+                    vibrator.vibrate(500);
                     // door had opened. go on ...
                     Toast.makeText(getActivity(), R.string.open_door_success, Toast.LENGTH_SHORT).show();
                     mOpenDoorState = 0;
@@ -2292,6 +2328,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //                                                mOpenDoorState = 0;
 //                                            }
 //                                        }, 3000);
+
                 }
 //					}
 //                });
@@ -2302,10 +2339,14 @@ public class KeyFragment extends Fragment implements ShakeListener {
             }
 		}
 	};
-	
-	
 
-	private ServiceConnection mServiceConnection = new ServiceConnection() {
+    @Override
+    public void onStop() {
+        super.onStop();
+        vibrator.cancel();
+    }
+
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName className,
 				IBinder rawBinder) {
 			Log.e("BLE", "onServiceConnected");
@@ -2362,7 +2403,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	public void onShake() {
 		if (canShake == 1) {
 			Log.e("TEST", "shaking");
-			doOpenDoor();
+			doOpenDoor(btStateOpen);
 		}
 	}
 
