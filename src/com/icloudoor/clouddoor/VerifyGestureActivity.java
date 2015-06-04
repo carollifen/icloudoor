@@ -11,6 +11,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.Request.Method;
 import com.android.volley.toolbox.Volley;
+import com.icloudoor.clouddoor.CloudDoorMainActivity.Broadcast;
 import com.icloudoor.clouddoor.SetGestureDrawLineView.SetGestureCallBack;
 import com.umeng.common.message.Log;
 
@@ -61,6 +62,7 @@ public class VerifyGestureActivity extends Activity {
 		
 		IntentFilter intentFilter = new IntentFilter();
 	    intentFilter.addAction("com.icloudoor.clouddoor.ACTION_FINISH");
+	    mFinishActivityBroadcast=	new Broadcast();
 	    registerReceiver(mFinishActivityBroadcast, intentFilter);
 
 
