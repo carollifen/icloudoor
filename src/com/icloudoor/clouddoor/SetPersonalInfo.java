@@ -353,7 +353,7 @@ public class SetPersonalInfo extends Activity {
 
 				});
 
-		addImage.setOnClickListener(new OnClickListener() {
+		personImage.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
