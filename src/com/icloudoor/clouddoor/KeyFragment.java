@@ -1932,6 +1932,10 @@ public class KeyFragment extends Fragment implements ShakeListener {
                                                             }, 30 * 1000);
                                                         }
 
+                                                    } else if(carStatus.equals("3")){
+                                                    	if (getActivity() != null) {
+                                                            Toast.makeText(getActivity(), R.string.car_already_lend, Toast.LENGTH_SHORT).show();
+                                                        }
                                                     } else {
                                                         // can not open
                                                         if (getActivity() != null) {
@@ -1977,6 +1981,10 @@ public class KeyFragment extends Fragment implements ShakeListener {
                                                                 mKeyDB.update(CAR_TABLE_NAME, value, "l1ZoneId=? and plateNum=?", new String[]{l1ZoneId, plateNum});
                                                             }
                                                         }, 30 * 1000);
+                                                    } else if(carStatus.equals("3")){
+                                                    	if (getActivity() != null) {
+                                                            Toast.makeText(getActivity(), R.string.car_already_lend, Toast.LENGTH_SHORT).show();
+                                                        }
                                                     } else {
                                                         // can not open
                                                         if (getActivity() != null) {

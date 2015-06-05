@@ -362,6 +362,15 @@ public class KeyListAuthFragment extends Fragment {
 											if(response.getString("sid") != null){
 												saveSid(response.getString("sid"));
 											}
+											
+											if(getActivity() != null){
+												Toast.makeText(getActivity(), R.string.auth_successful, Toast.LENGTH_SHORT).show();
+											}
+											
+											//when succeed to lend the key, refresh the "carStatus" to "3" in the database
+											ContentValues value = new ContentValues();
+											value.put("carStatus", "3");
+											mKeyDB.update("CarKeyTable", value, "plateNum=? and l1ZoneId=?", new String[] { carNumAndPhoneNumShare.getString("CARNUM", null),  zoneIdShare.getString("l1ZoneId", null)});
 										}
 										
 										if(response.getInt("code") == -100){
