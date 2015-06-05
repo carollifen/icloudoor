@@ -78,6 +78,8 @@ public class NoticeActivity extends Activity {
 		anouncewebSetting.setLoadsImagesAutomatically(true);
 		anouncewebSetting.setBuiltInZoomControls(true);
 
+		anouncewebSetting.setCacheMode(anouncewebSetting.LOAD_NO_CACHE);
+		
 		anouncePageWebView.setWebViewClient(new webViewClient());
 
 		sid = loadSid();
