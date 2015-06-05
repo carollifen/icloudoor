@@ -154,8 +154,7 @@ public class RegisterActivity extends Activity implements TextWatcher {
 
 			@Override
 			public void onClick(View v) {
-				
-				Log.e("TEST***", "Button1 Clicked!!!");
+
                 if (ETInputPhoneNum.getText().toString().length() > 11){
                     Toast.makeText(getApplicationContext(), R.string.error_phonenumb_over, Toast.LENGTH_SHORT).show();
                 }else {
@@ -165,8 +164,7 @@ public class RegisterActivity extends Activity implements TextWatcher {
                     }
                     counter.start();
                     try {
-                        requestCertiCodeURL = new URL(HOST
-                                + "/user/manage/sendVerifyCode.do" + "?sid=" + sid);
+                        requestCertiCodeURL = new URL(HOST + "/user/manage/sendVerifyCode.do" + "?sid=" + sid);
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
                     }
@@ -184,15 +182,9 @@ public class RegisterActivity extends Activity implements TextWatcher {
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-                                    Log.e("TEST",
-                                            "RequestCertiStatusCode: "
-                                                    + String.valueOf(RequestCertiStatusCode));
+
                                     Log.e("TEST", "response:" + response.toString());
-                                    try {
-                                        Log.e("TEST", "sid:" + response.getString("sid"));
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
+
                                     if (RequestCertiStatusCode == -20) {
                                         Toast.makeText(getApplicationContext(),
                                                 R.string.send_too_many_a_day, Toast.LENGTH_SHORT)
@@ -228,12 +220,8 @@ public class RegisterActivity extends Activity implements TextWatcher {
 			@Override
 			public void onClick(View v) {
 				
-				Log.e("TEST***", "Button2 Clicked!!!");
-				
 				try {
-					verifyCertiCodeURL = new URL(HOST
-							+ "/user/manage/confirmVerifyCode.do" + "?sid="
-							+ sid);
+					verifyCertiCodeURL = new URL(HOST + "/user/manage/confirmVerifyCode4Reg.do" + "?sid=" + sid);
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				}
@@ -244,27 +232,22 @@ public class RegisterActivity extends Activity implements TextWatcher {
 							@Override
 							public void onResponse(JSONObject response) {
 								try {
-									if (response.getString("sid") != null) {
-										sid = response.getString("sid");
-										saveSid(sid);
-									}
 									ConfirmCertiStatusCode = response.getInt("code");
 								} catch (JSONException e) {
 									e.printStackTrace();
 								}
-								Log.e("TEST",
-										"ConfirmCertiStatusCode: "
-												+ String.valueOf(ConfirmCertiStatusCode));
-								Log.e("TEST", "response:" + response.toString());
-								try {
-									Log.e("TEST", "sid:" + response.getString("sid"));
-								} catch (JSONException e) {
-									e.printStackTrace();
-								}
+
 								if (ConfirmCertiStatusCode == 1) {
+									try {
+										if (response.getString("sid") != null) {
+											sid = response.getString("sid");
+											saveSid(sid);
+										}
+									} catch (JSONException e) {
+										e.printStackTrace();
+									}
 									Intent intent = new Intent();
 									intent.setClass(getApplicationContext(), RegisterComplete.class);
-									Log.e("TEST***", "Button Clicked -- ready to send the intent !!!!");
 									startActivityForResult(intent, 0);
 								} else if (ConfirmCertiStatusCode == -30) {
 									Toast.makeText(getApplicationContext(),
@@ -272,6 +255,17 @@ public class RegisterActivity extends Activity implements TextWatcher {
 											.show();
 								} else if (ConfirmCertiStatusCode == -31) {
 									Toast.makeText(getApplicationContext(), R.string.certi_code_overdue,
+											Toast.LENGTH_SHORT).show();
+								} else if(ConfirmCertiStatusCode == -40) {
+									Toast.makeText(getApplicationContext(), R.string.phone_num_have_been_registerred,
+											Toast.LENGTH_LONG).show();
+									SharedPreferences RegiPhone = getSharedPreferences("REGIPHONE", 0);
+						          	Editor editor = RegiPhone.edit();
+						          	editor.putString("PHONE", ETInputPhoneNum.getText().toString());
+						          	editor.commit();
+									finish();
+								} else if(ConfirmCertiStatusCode == -99){
+									Toast.makeText(getApplicationContext(), R.string.error_in_send_sms,
 											Toast.LENGTH_SHORT).show();
 								}
 							}
