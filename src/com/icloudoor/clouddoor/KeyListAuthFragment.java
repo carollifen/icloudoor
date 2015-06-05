@@ -429,7 +429,12 @@ public class KeyListAuthFragment extends Fragment {
 											if(response.getString("sid") != null){
 												saveSid(response.getString("sid"));
 											}
+											
+											if(getActivity() != null){
+												Toast.makeText(getActivity(), R.string.auth_successful, Toast.LENGTH_SHORT).show();
+											}
 										}
+										
 										
 										if(response.getInt("code") == -101){
 											Toast.makeText(getActivity(), R.string.user_not_regis, Toast.LENGTH_SHORT).show();
@@ -462,12 +467,9 @@ public class KeyListAuthFragment extends Fragment {
 							StringBuilder ss = new StringBuilder();
 							Map<String, String> map = new HashMap<String, String>();
 
-							map.put("zoneUserId",
-									zoneIdShare.getString("ZONEID", null));
-							map.put("authDate",
-									dateAndPhoneShare.getString("DATE", null));
-							map.put("toMobile", dateAndPhoneShare.getString(
-									"PHONENUM", null));
+							map.put("zoneUserId", zoneIdShare.getString("ZONEID", null));
+							map.put("authDate", dateAndPhoneShare.getString("DATE", null));
+							map.put("toMobile", dateAndPhoneShare.getString("PHONENUM", null));
 
 							return map;
 						}
@@ -526,6 +528,9 @@ public class KeyListAuthFragment extends Fragment {
 						
 						if(zoneArr.length() == 1){
 							TVkeyname.setText(zoneArr.getJSONObject(0).getString("address"));
+							meditor.putString("ZONEID", zoneArr.getJSONObject(0).getString("zoneId"));
+							meditor.putString("l1ZoneId", zoneArr.getJSONObject(0).getString("l1ZoneId"));
+							meditor.commit();
 						} else if(zoneArr.length() > 1){
 							TVkeyname.setText(R.string.plz_choose_district);
 							TVkeyname.setTextColor(0xFF999999);

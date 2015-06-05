@@ -91,6 +91,12 @@ public class VerifyGestureActivity extends Activity {
 						getString(R.string.login_pwd), new MyDialog.OnCustomDialogListener() {
 							@Override
 							public void back(int haveset) {
+								
+								SharedPreferences firstLoginShare=getSharedPreferences("FIRSTLOGINSHARE", 0);
+								Editor mEditor=firstLoginShare.edit();
+								mEditor.putBoolean("FIRSTLOGIN", true).commit();
+
+								
 								Intent cloudIntent = new Intent(
 										VerifyGestureActivity.this,
 										CloudDoorMainActivity.class);
