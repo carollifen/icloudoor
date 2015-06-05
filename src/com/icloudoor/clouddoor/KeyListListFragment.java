@@ -171,15 +171,15 @@ public class KeyListListFragment extends Fragment {
 									if (DBCount() > 0) {
 										Log.e(TAG, String.valueOf(DBCount()));
 										Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME, null);
-										if (mCursor.moveToFirst()) {
+										if (mCursor.moveToFirst()) {	
 											int authFromIndex = mCursor.getColumnIndex("authFrom");
 											int authToIndex = mCursor.getColumnIndex("authTo");
 											int doorNamemIndex = mCursor.getColumnIndex("doorName");
 											int doorTypeIndex = mCursor.getColumnIndex("doorType");
 											int zoneIdIndex = mCursor.getColumnIndex("zoneId");
 											int carNumIndex = mCursor.getColumnIndex("plateNum");
-											
-											do{
+
+											do{						
 												String doorName = mCursor.getString(doorNamemIndex);
 												String authFrom = mCursor.getString(authFromIndex);
 												String authTo = mCursor.getString(authToIndex);
@@ -188,7 +188,8 @@ public class KeyListListFragment extends Fragment {
 												String carNum = mCursor.getString(carNumIndex);
 												
 												HashMap<String, String> keyFromDB = new HashMap<String, String>();
-												if(doorType.equals("1")){							
+												if(doorType.equals("1")){			
+													Log.e(TAG, "add to list");
 													keyFromDB.put("Door", doorName);
 													keyFromDB.put("BEGIN", authFrom);
 													keyFromDB.put("END", authTo);
@@ -209,16 +210,34 @@ public class KeyListListFragment extends Fragment {
 																	String plateNum = mCursorCar.getString(plateNumIndex);
 																	String carStatus = mCursorCar.getString(carStatusIndex);
 																	
+																	Log.e(TAG, carNum + " : " + plateNum);
+																	
 																	if(zoneId.equals(l1ZoneId) && carNum.equals(plateNum)){
+																		Log.e(TAG, "add to list2");
 																		if(carStatus.equals("2")){ //temp car key
 																			blankView.setVisibility(View.VISIBLE);
-																			HashMap<String, String> tempKeyFromDB = new HashMap<String, String>();
-																			tempKeyFromDB.put("Door", doorName);
-																			tempKeyFromDB.put("CARNUM", plateNum);
-																			tempKeyFromDB.put("POSSTATUS", carStatus);
-																			tempKeyFromDB.put("ZONEID", l1ZoneId); //TODO
-																			tempDoorNameList.add(tempKeyFromDB);
-																			mTempAdapter.notifyDataSetChanged();
+
+																			if(tempDoorNameList.size() == 0){
+																				HashMap<String, String> tempKeyFromDB = new HashMap<String, String>();
+																				tempKeyFromDB.put("Door", doorName);
+																				tempKeyFromDB.put("CARNUM", plateNum);
+																				tempKeyFromDB.put("POSSTATUS", carStatus);
+																				tempKeyFromDB.put("ZONEID", l1ZoneId); // TODO
+																				tempDoorNameList.add(tempKeyFromDB);
+																				mTempAdapter.notifyDataSetChanged();
+																			}else if(tempDoorNameList.size() > 0){
+																				for(int index = 0; index < tempDoorNameList.size(); index++){
+																					if(!tempDoorNameList.get(index).get("CARNUM").equals(plateNum) && !tempDoorNameList.get(index).get("ZONEID").equals(l1ZoneId)){
+																						HashMap<String, String> tempKeyFromDB = new HashMap<String, String>();
+																						tempKeyFromDB.put("Door", doorName);
+																						tempKeyFromDB.put("CARNUM", plateNum);
+																						tempKeyFromDB.put("POSSTATUS", carStatus);
+																						tempKeyFromDB.put("ZONEID", l1ZoneId); // TODO
+																						tempDoorNameList.add(tempKeyFromDB);
+																						mTempAdapter.notifyDataSetChanged();
+																					}
+																				}
+																			}
 																		}else{
 																			keyFromDB.put("Door", doorName);
 																			keyFromDB.put("BEGIN", authFrom);
@@ -449,12 +468,14 @@ public class KeyListListFragment extends Fragment {
 					value.put("authTo", doorData.getString("authTo"));
 					
 					if (doorData.getString("doorType").equals("1")) {
+						Log.e(TAG, "add a 1");
 						value.put("direction", "none");
 						value.put("plateNum", "none");
 //						value.put("carStatus", "none");
 //						value.put("carPosStatus", "none");
 						mKeyDB.insert(TABLE_NAME, null, value);
 					} else if (doorData.getString("doorType").equals("2")){
+						Log.e(TAG, "add a 2");
 //						JSONArray cars = data.getJSONArray("cars");
 //						Log.e(TAG, "cars  " + String.valueOf(cars.length()));
 //						for (int i = 0; i < cars.length(); i++) {
@@ -481,6 +502,7 @@ public class KeyListListFragment extends Fragment {
 //							}
 //						}
 					}
+					Log.e(TAG, "after parse: " + String.valueOf(DBCount()));
 				} else {            // update the old key status
 				
 //					if(doorData.getString("doorType").equals("1")){
@@ -534,6 +556,7 @@ public class KeyListListFragment extends Fragment {
 						}	
 						
 						if(!keepKey){
+							Log.e(TAG, "delete a");
 							//delete in the table
 							mKeyDB.delete("KeyInfoTable", "deviceId = ?", new String[] {deviceId});
 						}
@@ -552,6 +575,7 @@ public class KeyListListFragment extends Fragment {
 			
 			if(zoneData.getString("zoneId").length() > 0){
 				if(!hasZoneData(mKeyDB, zoneData.getString("zoneId"))){   // insert new
+					Log.e(TAG, "add a zone");
 					value.put("zoneid", zoneData.getString("zoneId"));		
 					value.put("zonename", zoneData.getString("zoneName"));
 					value.put("parentzoneid", zoneData.getString("parentZoneId"));
@@ -582,6 +606,7 @@ public class KeyListListFragment extends Fragment {
 						}		
 						
 						if(!keepKey){
+							Log.e(TAG, "delete a zone");
 							mKeyDB.delete("ZoneTable", "zoneId = ?", new String[] {zoneid});
 						}
 					}while(mCursor.moveToNext());
@@ -597,6 +622,7 @@ public class KeyListListFragment extends Fragment {
 			
 			if(carData.getString("l1ZoneId").length() > 0){
 				if(!hasCarData(mKeyDB, carData.getString("l1ZoneId"), carData.getString("plateNum"))){   // insert new
+					Log.e(TAG, "add a car");
 					ContentValues value = new ContentValues();
 					value.put("l1ZoneId", carData.getString("l1ZoneId"));
 					value.put("plateNum", carData.getString("plateNum"));
@@ -622,36 +648,41 @@ public class KeyListListFragment extends Fragment {
 		}
 		
 		// delete old
-		if (mKeyDBHelper.tabIsExist(CAR_TABLE_NAME)) {
-			if(DBCountCar() > 0){
-				Cursor mCursor = mKeyDB.rawQuery("select * from " + CAR_TABLE_NAME, null);
-				if(mCursor.moveToFirst()){
-					boolean keepKey = false;
-					int l1ZoneIdIndex = mCursor.getColumnIndex("l1ZoneId");
-					int plateNumIndex = mCursor.getColumnIndex("plateNum");
-					
-					String l1ZoneId = mCursor.getString(l1ZoneIdIndex);
-					String plateNum = mCursor.getString(plateNumIndex);
-					
-					do{
-						for (int index = 0; index < cars.length(); index++) {
-							JSONObject carData = (JSONObject) cars.get(index);
-							
-							if(carData.getString("l1ZoneId").length() > 0){
-								if(carData.getString("l1ZoneId").equals(l1ZoneId) && carData.getString("plateNum").equals(plateNum)){
-									keepKey = true;
-									break;
+		
+			if (mKeyDBHelper.tabIsExist("CarKeyTable")) {
+				if(DBCountCar() > 0){
+					Cursor mCursor = mKeyDB.rawQuery("select * from " + "CarKeyTable", null);
+					if(mCursor.moveToFirst()){
+						boolean keepKey = false;
+						int l1ZoneIdIndex = mCursor.getColumnIndex("l1ZoneId");
+						int plateNumIndex = mCursor.getColumnIndex("plateNum");
+						
+						String l1ZoneId = mCursor.getString(l1ZoneIdIndex);
+						String plateNum = mCursor.getString(plateNumIndex);
+						
+						do{
+							for (int index = 0; index < cars.length(); index++) {
+								JSONObject carData = (JSONObject) cars.get(index);
+								
+								if(carData.getString("l1ZoneId").length() > 0){
+									if(carData.getString("l1ZoneId").equals(l1ZoneId) && carData.getString("plateNum").equals(plateNum)){
+										keepKey = true;
+										break;
+									}
 								}
 							}
-						}
-						if(!keepKey){
-							mKeyDB.delete("CarKeyTable", "l1ZoneId = ? and plateNum = ?", new String[] {l1ZoneId, plateNum});
-						}
-					}while(mCursor.moveToNext());
+							if(!keepKey){
+								Log.e(TAG, "delete a car");
+								mKeyDB.delete("CarKeyTable", "l1ZoneId = ? and plateNum = ?", new String[] {l1ZoneId, plateNum});
+								mKeyDB.delete("KeyInfoTable", "zoneId = ? and plateNum = ?", new String[] {l1ZoneId, plateNum});
+							}
+						}while(mCursor.moveToNext());
+					}
+					mCursor.close();
 				}
-				mCursor.close();
 			}
-		}
+		
+		
 		// for cars table -- END
 	}
 	
@@ -819,7 +850,30 @@ public class KeyListListFragment extends Fragment {
 			
 			holder.carNum.setSelected(true);
 			holder.carNum.setText(tempDoorNameList.get(position).get("CARNUM"));
-			holder.tempDoorName.setText(tempDoorNameList.get(position).get("Door"));
+			
+			//TODO
+			Cursor mCursor = mKeyDB.rawQuery("select * from " + "ZoneTable", null);
+			if(mCursor.moveToFirst()){
+				
+				int zonenameIndex = mCursor.getColumnIndex("zonename");
+				int zoneidIndex = mCursor.getColumnIndex("zoneid");
+				String zonename = mCursor.getString(zonenameIndex);
+				String zoneid = mCursor.getString(zoneidIndex);
+				
+				do{
+					
+					if(zoneid.equals(tempDoorNameList.get(position).get("ZONEID"))){
+						holder.tempDoorName.setText(zonename);
+						break;
+					}
+
+				}while(mCursor.moveToNext());
+			}
+			mCursor.close();
+			
+			
+			
+//			holder.tempDoorName.setText(tempDoorNameList.get(position).get("Door"));
 			
 			final String zoneid = tempDoorNameList.get(position).get("ZONEID");
 			final String carnum = tempDoorNameList.get(position).get("CARNUM");
@@ -855,14 +909,6 @@ public class KeyListListFragment extends Fragment {
 												
 												mKeyDB.delete("KeyInfoTable", "zoneId = ? and plateNum=?", new String[] {tempDoorNameList.get(position).get("ZONEID"), tempDoorNameList.get(position).get("CARNUM")});
 												tempDoorNameList.remove(position);
-												
-												for(int index = 0; index < tempDoorNameList.size(); index++){
-													if(tempDoorNameList.get(index).get("ZONEID").equals(tempDoorNameList.get(position).get("ZONEID"))
-															&& tempDoorNameList.get(index).get("CARNUM").equals(tempDoorNameList.get(position).get("CARNUM"))){
-														tempDoorNameList.remove(index);
-													}
-												}
-												
 												mTempAdapter.notifyDataSetChanged();
 												if(tempDoorNameList.size() == 0){
 													blankView.setVisibility(View.GONE);
