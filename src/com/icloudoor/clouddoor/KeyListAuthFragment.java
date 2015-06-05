@@ -528,7 +528,7 @@ public class KeyListAuthFragment extends Fragment {
 						
 						if(zoneArr.length() == 1){
 							TVkeyname.setText(zoneArr.getJSONObject(0).getString("address"));
-							meditor.putString("ZONEID", zoneArr.getJSONObject(0).getString("zoneId"));
+							meditor.putString("ZONEID", zoneArr.getJSONObject(0).getString("zoneUserId"));
 							meditor.putString("l1ZoneId", zoneArr.getJSONObject(0).getString("l1ZoneId"));
 							meditor.commit();
 						} else if(zoneArr.length() > 1){
