@@ -215,6 +215,8 @@ public class KeyListListFragment extends Fragment {
 																			HashMap<String, String> tempKeyFromDB = new HashMap<String, String>();
 																			tempKeyFromDB.put("Door", doorName);
 																			tempKeyFromDB.put("CARNUM", plateNum);
+																			tempKeyFromDB.put("POSSTATUS", carStatus);
+																			tempKeyFromDB.put("ZONEID", l1ZoneId); //TODO
 																			tempDoorNameList.add(tempKeyFromDB);
 																			mTempAdapter.notifyDataSetChanged();
 																		}else{
@@ -851,8 +853,16 @@ public class KeyListListFragment extends Fragment {
 													saveSid(response.getString("sid"));
 												}
 												
-												mKeyDB.delete("KeyInfoTable", "deviceId = ?", new String[] {tempDoorNameList.get(position).get("DEVICEID")});
+												mKeyDB.delete("KeyInfoTable", "zoneId = ? and plateNum=?", new String[] {tempDoorNameList.get(position).get("ZONEID"), tempDoorNameList.get(position).get("CARNUM")});
 												tempDoorNameList.remove(position);
+												
+												for(int index = 0; index < tempDoorNameList.size(); index++){
+													if(tempDoorNameList.get(index).get("ZONEID").equals(tempDoorNameList.get(position).get("ZONEID"))
+															&& tempDoorNameList.get(index).get("CARNUM").equals(tempDoorNameList.get(position).get("CARNUM"))){
+														tempDoorNameList.remove(index);
+													}
+												}
+												
 												mTempAdapter.notifyDataSetChanged();
 												if(tempDoorNameList.size() == 0){
 													blankView.setVisibility(View.GONE);
