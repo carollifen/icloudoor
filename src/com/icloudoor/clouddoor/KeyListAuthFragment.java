@@ -161,13 +161,13 @@ public class KeyListAuthFragment extends Fragment {
 		mKeyDBHelper = new MyDataBaseHelper(getActivity(), DATABASE_NAME);
 		mKeyDB = mKeyDBHelper.getReadableDatabase();
 
-		ArrayList<Map<String, String>> mlist = new ArrayList<Map<String, String>>();
-		for (int i = 3; i >= 0; i--) {
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("keyname", " 锦绣香江大门" + i);
-			mlist.add(map);
-		}
-		LVkeylist.setVisibility(View.GONE);
+//		ArrayList<Map<String, String>> mlist = new ArrayList<Map<String, String>>();
+//		for (int i = 3; i >= 0; i--) {
+//			Map<String, String> map = new HashMap<String, String>();
+//			map.put("keyname", " 锦绣香江大门" + i);
+//			mlist.add(map);
+//		}
+//		LVkeylist.setVisibility(View.GONE);
 
 		// LVkeylist.setAdapter(new MykeyListAdapter(getActivity(), mlist) );
 
