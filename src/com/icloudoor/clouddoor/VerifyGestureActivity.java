@@ -96,7 +96,6 @@ public class VerifyGestureActivity extends Activity {
 								Editor mEditor=firstLoginShare.edit();
 								mEditor.putBoolean("FIRSTLOGIN", true).commit();
 
-								
 								Intent cloudIntent = new Intent(
 										VerifyGestureActivity.this,
 										CloudDoorMainActivity.class);

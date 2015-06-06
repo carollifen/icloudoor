@@ -1188,9 +1188,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
                     case 10:
                         if (mOpenDoorState == 0) {
                             Log.i(TAG, "Thread handler");
-                            if (mBluetoothAdapter.isEnabled()) {
-                                populateDeviceList(mBtStateOpen);
-                            }
+                            populateDeviceList(mBtStateOpen);
                         }
                         break;
                     default:
@@ -1225,7 +1223,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	public void onResume() {
 		super.onResume();
 		Log.e("TEST", "keyFragment onResume()");
-
+        mOpenDoorState = 0;
 //		checkBlueToothState();
 
 		//TODO DELETE TEMPARY

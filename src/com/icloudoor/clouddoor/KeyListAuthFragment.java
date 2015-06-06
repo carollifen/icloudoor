@@ -435,7 +435,6 @@ public class KeyListAuthFragment extends Fragment {
 											}
 										}
 										
-										
 										if(response.getInt("code") == -101){
 											Toast.makeText(getActivity(), R.string.user_not_regis, Toast.LENGTH_SHORT).show();
 										}else if(response.getInt("code") == -102){

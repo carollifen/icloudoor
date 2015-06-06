@@ -37,6 +37,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,11 +53,9 @@ public class Login extends Activity implements TextWatcher {
 	private TextView TVGoToRegi;
 	private RelativeLayout ShowPwd;
 	private ImageView IVPwdIcon;
-
+    private ProgressBar pbLoginBar;
 	private boolean isHiddenPwd = true;
-	boolean hasInputPhoneNum = false;
-	boolean hasInputPwd = false;
-	
+
 	private URL loginURL;
 	private RequestQueue mQueue;
 
@@ -89,7 +88,8 @@ public class Login extends Activity implements TextWatcher {
 		super.onCreate(savedInstanceState);
 //		getActionBar().hide();
 		setContentView(R.layout.login);
-
+        pbLoginBar = (ProgressBar) findViewById(R.id.loginBar);
+        pbLoginBar.setVisibility(View.INVISIBLE);
 		registerReceiver(mConnectionStatusReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 		
 		mQueue = Volley.newRequestQueue(this);
@@ -211,6 +211,7 @@ public class Login extends Activity implements TextWatcher {
 			public void onClick(View v) {
 
 				if ("NET_WORKS".equals(loadSid("NETSTATE"))) {
+                    pbLoginBar.setVisibility(View.VISIBLE);
 					Toast.makeText(getApplicationContext(), R.string.login_ing,
 							Toast.LENGTH_SHORT).show();
 
@@ -240,8 +241,8 @@ public class Login extends Activity implements TextWatcher {
 									}
 									Log.e("TEST", response.toString());
 
+                                    pbLoginBar.setVisibility(View.INVISIBLE);
 									if (loginStatusCode == 1) {
-
 										isLogin = 1;
 										SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
 										Editor editor = loginStatus.edit();

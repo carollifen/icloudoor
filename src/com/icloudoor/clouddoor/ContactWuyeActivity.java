@@ -5,6 +5,8 @@ import java.net.URL;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.android.volley.RequestQueue;
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -23,8 +25,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.android.volley.RequestQueue;
 
 public class ContactWuyeActivity extends Activity {
 

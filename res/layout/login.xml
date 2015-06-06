@@ -92,6 +92,14 @@
             android:textSize="17sp" />
     </RelativeLayout>
 
+    <ProgressBar
+        android:id="@+id/loginBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@android:style/Widget.ProgressBar"
+        android:layout_below="@+id/login_btn_layout"
+        android:layout_centerHorizontal="true" />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -945,47 +945,6 @@ public class SetPersonalInfo extends Activity {
 		return super.onKeyDown(keyCode, event);
 
 	}
-
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		super.onCreateOptionsMenu(menu);
-//
-//		menu.add(0, Menu.FIRST + 1, 1, "拍照");
-//		menu.add(0, Menu.FIRST + 2, 2, "从手机相册中选择");
-//		menu.add(0, Menu.FIRST + 3, 3, "取消");
-//
-//		return true;
-//	}
-//
-//	public boolean onOptionsItemSelected(MenuItem item) {
-//		super.onOptionsItemSelected(item);
-//
-//		switch (item.getItemId()) {
-//		case Menu.FIRST + 1:
-//			startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE),
-//					1);
-//			break;
-//		case Menu.FIRST + 2:
-//			Intent intent = new Intent();
-//			intent.setAction(Intent.ACTION_PICK);
-//			intent.setType("image/*");
-//			startActivityForResult(intent, 0);
-//			break;
-//		case Menu.FIRST + 3:
-//		}
-//
-//		return true;
-//	}
-
-//	private String getRealPathFromURI(Uri contentUri) {
-//		String[] proj = { MediaStore.Images.Media.DATA };
-//		CursorLoader loader = new CursorLoader(this, contentUri, proj, null,
-//				null, null);
-//		Cursor cursor = loader.loadInBackground();
-//		int column_index = cursor
-//				.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-//		cursor.moveToFirst();
-//		return cursor.getString(column_index);
-//	}
 	
 	public String getRealPathFromURI(Uri contentUri) {
         String[] proj = { MediaStore.Images.Media.DATA };

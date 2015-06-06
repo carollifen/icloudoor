@@ -116,7 +116,7 @@ public class SettingFragment extends Fragment {
 //				Map<String, String> contact = info.getContact();
 //				if (contact == null)
 //				contact = new HashMap<String, String>();
-//				String contact_info = "?¨ª????";
+//				String contact_info = "?¡§a????";
 //				//contact.put("name", contact_info);
 //
 //			//	contact.put("email", "*******");
