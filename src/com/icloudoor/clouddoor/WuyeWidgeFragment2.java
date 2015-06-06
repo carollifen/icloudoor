@@ -94,7 +94,7 @@ public class WuyeWidgeFragment2 extends Fragment {
 			TVnamedate.setText(banner.getString("2date", null));
 
 			if (banner.getString("2content", null) != null) {
-				String formatContent = ToDBC(banner.getString("1content", null)).replace("\t", "         ");
+				String formatContent = ToDBC(banner.getString("2content", null)).replace("\t", "         ");
 				TVcontent.setText(formatContent);
 			}
 			
