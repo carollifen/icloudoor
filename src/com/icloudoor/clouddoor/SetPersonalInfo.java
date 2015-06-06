@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +35,9 @@ import com.icloudoor.clouddoor.Entities.Part;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -49,8 +53,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Images.Media;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -65,6 +71,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -150,6 +157,10 @@ public class SetPersonalInfo extends Activity {
 	
 	private SelectPicPopupWindow menuWindow;
 
+	Uri photoUri = null, uri = null;
+	
+	private ProgressBar upLoadBar;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -157,12 +168,13 @@ public class SetPersonalInfo extends Activity {
 		whereFrom = getIntent().getStringExtra("Whereis");
 		setContentView(R.layout.set_person_info);
 		
+		upLoadBar = (ProgressBar) findViewById(R.id.uploadBar);
+		upLoadBar.setVisibility(View.INVISIBLE);
+		
 		mFinishActivityBroadcast=	new Broadcast();
 		 IntentFilter intentFilter = new IntentFilter();
 		    intentFilter.addAction("com.icloudoor.clouddoor.ACTION_FINISH");
 		    registerReceiver(mFinishActivityBroadcast, intentFilter);
-
-
 
 		back = (RelativeLayout) findViewById(R.id.btn_back);
 		back.setOnClickListener(new OnClickListener() {
@@ -516,7 +528,18 @@ public class SetPersonalInfo extends Activity {
 			menuWindow.dismiss();
 			switch (v.getId()) {
 			case R.id.btn_take_photo:
-				startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE), 1);
+//				startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE), 1);
+				Intent intent1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+				SimpleDateFormat timeStampFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+				String filename = timeStampFormat.format(new Date());
+				ContentValues values = new ContentValues();
+				values.put(Media.TITLE, filename);
+
+				photoUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+				intent1.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+
+				startActivityForResult(intent1, 1);
 				break;
 			case R.id.btn_pick_photo:
 				Intent intent = new Intent();
@@ -536,7 +559,6 @@ public class SetPersonalInfo extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
-		super.onActivityResult(requestCode, resultCode, data);
 
 		if (requestCode == 0 && resultCode == RESULT_OK) {
 
@@ -565,6 +587,13 @@ public class SetPersonalInfo extends Activity {
 
 				@Override
 				public void run() {
+					
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							upLoadBar.setVisibility(View.VISIBLE);
+						}
+					});
 					
 					Log.e(TAG, "thread run");
 					
@@ -603,9 +632,20 @@ public class SetPersonalInfo extends Activity {
 
 						//
 						JSONObject jsObj = new JSONObject(s.toString());
-						JSONObject data = jsObj.getJSONObject("data");
-						portraitUrl = data.getString("portraitUrl");
-						Log.e(TAG, portraitUrl);
+
+						if (jsObj.getInt("code") == 1) {
+							JSONObject data = jsObj.getJSONObject("data");
+							portraitUrl = data.getString("portraitUrl");
+							Log.e(TAG, portraitUrl);
+
+							runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									Log.e(TAG, "run here");
+									upLoadBar.setVisibility(View.INVISIBLE);
+								}
+							});
+						}
 
 					} catch (ClientProtocolException e) {
 						e.printStackTrace();
@@ -618,9 +658,23 @@ public class SetPersonalInfo extends Activity {
 
 			}.start();
 		} else if (requestCode == CAMERA_REQUEST_CODE
-				&& resultCode == Activity.RESULT_OK && data != null) {
+				&& resultCode == Activity.RESULT_OK) {
+
+			 if (data != null && data.getData() != null) {
+				 Log.e(TAG, "data: " + data.toString());
+				 uri = data.getData();
+				 Log.e(TAG, "1uri: " + uri.toString());
+			 }
+			 
+			if (uri == null) {
+				if (photoUri != null) {
+					uri = photoUri;
+					Log.e(TAG, "2uri: " + uri.toString());
+				}
+			}
+					
+//			final Uri uri = data.getData();
 			
-			final Uri uri = data.getData();
 			BitmapFactory.Options opts=new BitmapFactory.Options();
 			opts.inTempStorage = new byte[100 * 1024];
 			opts.inPreferredConfig = Bitmap.Config.RGB_565;
@@ -642,7 +696,14 @@ public class SetPersonalInfo extends Activity {
 
 				@Override
 				public void run() {
-
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							upLoadBar.setVisibility(View.VISIBLE);
+						}
+					});
+					Log.e(TAG, "thread run1");
+					
 					try {
 						sleep(1000);
 					} catch (InterruptedException e1) {
@@ -678,10 +739,20 @@ public class SetPersonalInfo extends Activity {
 
 						//
 						JSONObject jsObj = new JSONObject(s.toString());
-						JSONObject data = jsObj.getJSONObject("data");
-						portraitUrl = data.getString("portraitUrl");
-						Log.e(TAG, portraitUrl);
-
+						
+						if(jsObj.getInt("code") == 1){
+							JSONObject data = jsObj.getJSONObject("data");
+							portraitUrl = data.getString("portraitUrl");
+							Log.e(TAG, portraitUrl);
+							
+							runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									Log.e(TAG, "run here");
+									upLoadBar.setVisibility(View.INVISIBLE);
+								}
+							});
+						}
 					} catch (ClientProtocolException e) {
 						e.printStackTrace();
 					} catch (IOException e) {
@@ -693,6 +764,7 @@ public class SetPersonalInfo extends Activity {
 
 			}.start();
 		}
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	public void onResume() {

@@ -54,10 +54,10 @@ public class TakePicFileUtil {
 		
 		String jpegName = path + "/" + "myImage.jpg";
 		
-		File f = null;
-		f = new File(jpegName);
-		if(f.exists())
-			f.delete();
+//		File f = null;
+//		f = new File(jpegName);
+//		if(f.exists())
+//			f.delete();
 		
 		try {
 			Log.e(TAG, "save pic");
