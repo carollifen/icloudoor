@@ -41,6 +41,10 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -95,7 +99,7 @@ import com.icloudoor.clouddoor.ShakeEventManager.ShakeListener;
 //import com.icloudoor.clouddoor.animationUtils.MyAnimationView;
 
 @SuppressLint("NewApi")
-public class KeyFragment extends Fragment implements ShakeListener {
+public class KeyFragment extends Fragment {
 
 	private String TAG = this.getClass().getSimpleName();
 	
@@ -235,6 +239,14 @@ public class KeyFragment extends Fragment implements ShakeListener {
     private RelativeLayout circleLayout;
     private ImageView circle;
     private ImageView radar;
+    
+    
+    /*
+     * new shake
+     */
+    private SensorManager sensorManager;
+    private static final int SENSOR_SHAKE = 10;
+    
     
 	public KeyFragment() {
 		// Required empty public constructor
@@ -478,10 +490,16 @@ public class KeyFragment extends Fragment implements ShakeListener {
 //		checkBlueToothState();
 //		service_init();
 
-		mShakeMgr = new ShakeEventManager(getActivity());
-		mShakeMgr.setListener(KeyFragment.this);
-		mShakeMgr.init(getActivity());
+//		mShakeMgr = new ShakeEventManager(getActivity());
+//		mShakeMgr.setListener(KeyFragment.this);
+//		mShakeMgr.init(getActivity());
 			
+		/*
+		 * for new shake
+		 */
+		sensorManager = (SensorManager) getActivity().getSystemService(getActivity().SENSOR_SERVICE);
+		
+		
 		carDoorList = new ArrayList<HashMap<String, String>>();
 		manDoorList = new ArrayList<HashMap<String, String>>();
 //		if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
@@ -1222,6 +1240,11 @@ public class KeyFragment extends Fragment implements ShakeListener {
 	@Override
 	public void onResume() {
 		super.onResume();
+		
+		if (sensorManager != null) {
+            sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL); 
+        } 
+		
 		Log.e("TEST", "keyFragment onResume()");
         mOpenDoorState = 0;
 //		checkBlueToothState();
@@ -1292,7 +1315,9 @@ public class KeyFragment extends Fragment implements ShakeListener {
     private  class MyThread extends Thread {
 
         private volatile boolean stopThread = false;
-        private volatile long mScanningProid = 3000;
+		private volatile boolean mKeyFindState = false;
+        private final long mScanningProidShort = 3000;
+		private final long mScanningProidLong = 6000;
 
         public void stopThread() {
             this.stopThread = true;
@@ -1306,9 +1331,9 @@ public class KeyFragment extends Fragment implements ShakeListener {
                 mHandler.sendMessage(msg);
                 Log.i("ThreadTest", Thread.currentThread().getId() + "myThread");
                 try {
-                    Thread.sleep(mScanningProid);
-                    if (mScanningProid == 9000){
-                        Thread.sleep(mScanningProid);
+                    Thread.sleep(mScanningProidShort);
+                    if (mKeyFindState == true){
+                        Thread.sleep(mScanningProidLong);
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -1452,7 +1477,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
 					
 					if(mDeviceList.size() != 0){
                         scanStatus.setText(R.string.can_shake_to_open_door);
-                        myThread.mScanningProid = 9000;
+						myThread.mKeyFindState = true;
 //                        myAnimationView.setVisibility(View.INVISIBLE);
 //                        myline.setVisibility(View.INVISIBLE);
 //                        myline.clearAnimation();
@@ -1460,7 +1485,7 @@ public class KeyFragment extends Fragment implements ShakeListener {
                           radar.setVisibility(View.INVISIBLE);
                           radar.clearAnimation();
                     }else {
-                        myThread.mScanningProid = 3000;
+						myThread.mKeyFindState = false;
 //                        myline.startAnimation(animation1);
 //                        myline.setVisibility(View.VISIBLE);
 //                        myAnimationView.setVisibility(View.VISIBLE);
@@ -2363,6 +2388,10 @@ public class KeyFragment extends Fragment implements ShakeListener {
     public void onStop() {
         super.onStop();
         vibrator.cancel();
+        
+        if (sensorManager != null) {
+            sensorManager.unregisterListener(sensorEventListener); 
+        } 
     }
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -2416,14 +2445,6 @@ public class KeyFragment extends Fragment implements ShakeListener {
 			return null;
 		}
 
-	}
-
-	@Override
-	public void onShake() {
-		if (canShake == 1) {
-			Log.e("TEST", "shaking");
-			doOpenDoor(mBtStateOpen);
-		}
 	}
 
 	public void playOpenDoorSound() {
@@ -2521,4 +2542,58 @@ public class KeyFragment extends Fragment implements ShakeListener {
 		SharedPreferences loadUUID = getActivity().getSharedPreferences("SAVEDUUID", 0);
 		return loadUUID.getString("UUID", null);
 	}
+	
+	/*
+	 * for new shake
+	 */
+    private SensorEventListener sensorEventListener = new SensorEventListener() { 
+ 
+        @Override 
+        public void onSensorChanged(SensorEvent event) {  
+            float[] values = event.values; 
+            float x = values[0]; 
+            float y = values[1]; 
+            float z = values[2];  
+            Log.i(TAG, "x轴方向的重力加速度" + x +  "；y轴方向的重力加速度" + y +  "；z轴方向的重力加速度" + z);  
+            int medumValue = 19;         
+        if (Math.abs(x) > medumValue || Math.abs(y) > medumValue || Math.abs(z) > medumValue) { 
+                Message msg = new Message(); 
+                msg.what = SENSOR_SHAKE; 
+                handler.sendMessage(msg); 
+            } 
+        } 
+ 
+        @Override 
+        public void onAccuracyChanged(Sensor sensor, int accuracy) { 
+ 
+        }
+    }; 
+ 
+    /**
+     * when shake, do something
+     */ 
+    Handler handler = new Handler() { 
+        @Override 
+        public void handleMessage(Message msg) { 
+            super.handleMessage(msg); 
+            switch (msg.what) { 
+            case SENSOR_SHAKE: 
+            	if(mBtStateOpen == false){
+					Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+		            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+				}else {
+					 if (mOpenDoorState == 0) {
+		                    mOpenDoorState = 1;
+		                    Log.i("test", "doOpenDoor");
+		                    
+		                    if(canShake == 1){
+		                    	doOpenDoor(mBtStateOpen);
+		                    }
+		                }
+				}  
+                break; 
+            } 
+        } 
+ 
+    }; 
 }
