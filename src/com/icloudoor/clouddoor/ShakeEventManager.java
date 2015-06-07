@@ -10,7 +10,7 @@ import android.hardware.SensorManager;
 public class ShakeEventManager implements SensorEventListener {
 
 
-    private static final int SPEED_SHRESHOLD = 9500;
+    private static final int SPEED_SHRESHOLD = 9000;
 
     private static final int UPTATE_INTERVAL_TIME = 85;
 

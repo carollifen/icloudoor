@@ -494,9 +494,8 @@ public class KeyFragment extends Fragment {
 		mShakeMgr.setOnShakeListener(new OnShakeListener() {
 			@Override
 			public void onShake() {
-				Toast.makeText(getActivity(), "test", Toast.LENGTH_SHORT).show();
-
 				if(canShake == 1){
+					Toast.makeText(getActivity(), "test", Toast.LENGTH_SHORT).show();
 					if(mBtStateOpen == false){
 						Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 						startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
