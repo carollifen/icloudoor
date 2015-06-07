@@ -94,7 +94,7 @@ import com.icloudoor.clouddoor.ChannelSwitchView.OnCheckedChangeListener;
 import com.icloudoor.clouddoor.ShakeEventManager;
 import com.icloudoor.clouddoor.SwitchButton.OnSwitchListener;
 import com.icloudoor.clouddoor.UartService;
-import com.icloudoor.clouddoor.ShakeEventManager.ShakeListener;
+import com.icloudoor.clouddoor.ShakeEventManager.OnShakeListener;
 //import com.icloudoor.clouddoor.animationUtils.MyAnimationLine;
 //import com.icloudoor.clouddoor.animationUtils.MyAnimationView;
 
@@ -244,8 +244,8 @@ public class KeyFragment extends Fragment {
     /*
      * new shake
      */
-    private SensorManager sensorManager;
-    private static final int SENSOR_SHAKE = 10;
+//    private SensorManager sensorManager;
+//    private static final int SENSOR_SHAKE = 10;
     
     
 	public KeyFragment() {
@@ -490,14 +490,32 @@ public class KeyFragment extends Fragment {
 //		checkBlueToothState();
 //		service_init();
 
-//		mShakeMgr = new ShakeEventManager(getActivity());
-//		mShakeMgr.setListener(KeyFragment.this);
-//		mShakeMgr.init(getActivity());
+		mShakeMgr = new ShakeEventManager(getActivity());
+		mShakeMgr.setOnShakeListener(new OnShakeListener() {
+			@Override
+			public void onShake() {
+				Toast.makeText(getActivity(), "test", Toast.LENGTH_SHORT).show();
+
+				if(canShake == 1){
+					if(mBtStateOpen == false){
+						Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+						startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+					}else {
+						if (mOpenDoorState == 0) {
+							mOpenDoorState = 1;
+							Log.i("test", "doOpenDoor");
+
+							doOpenDoor(mBtStateOpen);
+						}
+					}
+				}
+			}
+		});
 			
 		/*
 		 * for new shake
 		 */
-		sensorManager = (SensorManager) getActivity().getSystemService(getActivity().SENSOR_SERVICE);
+//		sensorManager = (SensorManager) getActivity().getSystemService(getActivity().SENSOR_SERVICE);
 		
 		
 		carDoorList = new ArrayList<HashMap<String, String>>();
@@ -1241,9 +1259,9 @@ public class KeyFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		
-		if (sensorManager != null) {
-            sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL); 
-        } 
+//		if (sensorManager != null) {
+//            sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+//        }
 		
 		Log.e("TEST", "keyFragment onResume()");
         mOpenDoorState = 0;
@@ -2389,9 +2407,9 @@ public class KeyFragment extends Fragment {
         super.onStop();
         vibrator.cancel();
         
-        if (sensorManager != null) {
-            sensorManager.unregisterListener(sensorEventListener); 
-        } 
+//        if (sensorManager != null) {
+//            sensorManager.unregisterListener(sensorEventListener);
+//        }
     }
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -2546,54 +2564,53 @@ public class KeyFragment extends Fragment {
 	/*
 	 * for new shake
 	 */
-    private SensorEventListener sensorEventListener = new SensorEventListener() { 
- 
-        @Override 
-        public void onSensorChanged(SensorEvent event) {  
-            float[] values = event.values; 
-            float x = values[0]; 
-            float y = values[1]; 
-            float z = values[2];  
-            Log.i(TAG, "x轴方向的重力加速度" + x +  "；y轴方向的重力加速度" + y +  "；z轴方向的重力加速度" + z);  
-            int medumValue = 19;         
-        if (Math.abs(x) > medumValue || Math.abs(y) > medumValue || Math.abs(z) > medumValue) { 
-                Message msg = new Message(); 
-                msg.what = SENSOR_SHAKE; 
-                handler.sendMessage(msg); 
-            } 
-        } 
- 
-        @Override 
-        public void onAccuracyChanged(Sensor sensor, int accuracy) { 
- 
-        }
-    }; 
+//    private SensorEventListener sensorEventListener = new SensorEventListener() {
+//
+//        @Override
+//        public void onSensorChanged(SensorEvent event) {
+//            float[] values = event.values;
+//            float x = values[0];
+//            float y = values[1];
+//            float z = values[2];
+//            int medumValue = 19;
+//        if (Math.abs(x) > medumValue || Math.abs(y) > medumValue || Math.abs(z) > medumValue) {
+//                Message msg = new Message();
+//                msg.what = SENSOR_SHAKE;
+//                handler.sendMessage(msg);
+//            }
+//        }
+//
+//        @Override
+//        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+//
+//        }
+//    };
  
     /**
      * when shake, do something
      */ 
-    Handler handler = new Handler() { 
-        @Override 
-        public void handleMessage(Message msg) { 
-            super.handleMessage(msg); 
-            switch (msg.what) { 
-            case SENSOR_SHAKE: 
-            	if(mBtStateOpen == false){
-					Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-		            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-				}else {
-					 if (mOpenDoorState == 0) {
-		                    mOpenDoorState = 1;
-		                    Log.i("test", "doOpenDoor");
-		                    
-		                    if(canShake == 1){
-		                    	doOpenDoor(mBtStateOpen);
-		                    }
-		                }
-				}  
-                break; 
-            } 
-        } 
- 
-    }; 
+//    Handler handler = new Handler() {
+//        @Override
+//        public void handleMessage(Message msg) {
+//            super.handleMessage(msg);
+//            switch (msg.what) {
+//            case SENSOR_SHAKE:
+//            	if(mBtStateOpen == false){
+//					Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//		            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+//				}else {
+//					 if (mOpenDoorState == 0) {
+//		                    mOpenDoorState = 1;
+//		                    Log.i("test", "doOpenDoor");
+//
+//		                    if(canShake == 1){
+//		                    	doOpenDoor(mBtStateOpen);
+//		                    }
+//		                }
+//				}
+//                break;
+//            }
+//        }
+//
+//    };
 }
