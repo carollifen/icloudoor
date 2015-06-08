@@ -120,6 +120,109 @@ public class KeyListListFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
+		
+		// TODO show the keys	
+		doorNameList = new ArrayList<HashMap<String, String>>();
+		mAdapter = new KeyListAdapter(getActivity(), doorNameList);
+		mKeyList.setAdapter(mAdapter);
+		
+		tempDoorNameList = new ArrayList<HashMap<String, String>>();
+		mTempAdapter = new TempKeyListAdapter(getActivity(), tempDoorNameList);
+		mTempKeyList.setAdapter(mTempAdapter);
+		
+		if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
+			if (DBCount() > 0) {
+				Log.e(TAG, String.valueOf(DBCount()));
+				Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME, null);
+				if (mCursor.moveToFirst()) {	
+					int authFromIndex = mCursor.getColumnIndex("authFrom");
+					int authToIndex = mCursor.getColumnIndex("authTo");
+					int doorNamemIndex = mCursor.getColumnIndex("doorName");
+					int doorTypeIndex = mCursor.getColumnIndex("doorType");
+					int zoneIdIndex = mCursor.getColumnIndex("zoneId");
+					int carNumIndex = mCursor.getColumnIndex("plateNum");
+
+					do{						
+						String doorName = mCursor.getString(doorNamemIndex);
+						String authFrom = mCursor.getString(authFromIndex);
+						String authTo = mCursor.getString(authToIndex);
+						String doorType = mCursor.getString(doorTypeIndex);
+						String zoneId = mCursor.getString(zoneIdIndex);
+						String carNum = mCursor.getString(carNumIndex);
+						
+						HashMap<String, String> keyFromDB = new HashMap<String, String>();
+						if(doorType.equals("1")){			
+							Log.e(TAG, "add to list");
+							keyFromDB.put("Door", doorName);
+							keyFromDB.put("BEGIN", authFrom);
+							keyFromDB.put("END", authTo);
+							keyFromDB.put("STATUS", "none");
+							doorNameList.add(keyFromDB);
+							mAdapter.notifyDataSetChanged();
+						}else if(doorType.equals("2")){
+							if (mKeyDBHelper.tabIsExist(CAR_TABLE_NAME)) {
+								if(DBCountCar() > 0){
+									Cursor mCursorCar = mKeyDB.rawQuery("select * from " + CAR_TABLE_NAME, null);
+									if (mCursorCar.moveToFirst()) {
+										
+										int l1ZoneIdIndex = mCursorCar.getColumnIndex("l1ZoneId");
+										int plateNumIndex = mCursorCar.getColumnIndex("plateNum");
+										int carStatusIndex = mCursorCar.getColumnIndex("carStatus");
+										do{
+											String l1ZoneId = mCursorCar.getString(l1ZoneIdIndex);
+											String plateNum = mCursorCar.getString(plateNumIndex);
+											String carStatus = mCursorCar.getString(carStatusIndex);
+											
+											Log.e(TAG, carNum + " : " + plateNum);
+											
+											if(zoneId.equals(l1ZoneId) && carNum.equals(plateNum)){
+												Log.e(TAG, "add to list2");
+												if(carStatus.equals("2")){ //temp car key
+													blankView.setVisibility(View.VISIBLE);
+
+													if(tempDoorNameList.size() == 0){
+														HashMap<String, String> tempKeyFromDB = new HashMap<String, String>();
+														tempKeyFromDB.put("Door", doorName);
+														tempKeyFromDB.put("CARNUM", plateNum);
+														tempKeyFromDB.put("POSSTATUS", carStatus);
+														tempKeyFromDB.put("ZONEID", l1ZoneId); // TODO
+														tempDoorNameList.add(tempKeyFromDB);
+														mTempAdapter.notifyDataSetChanged();
+													}else if(tempDoorNameList.size() > 0){
+														for(int index = 0; index < tempDoorNameList.size(); index++){
+															if(!tempDoorNameList.get(index).get("CARNUM").equals(plateNum) && !tempDoorNameList.get(index).get("ZONEID").equals(l1ZoneId)){
+																HashMap<String, String> tempKeyFromDB = new HashMap<String, String>();
+																tempKeyFromDB.put("Door", doorName);
+																tempKeyFromDB.put("CARNUM", plateNum);
+																tempKeyFromDB.put("POSSTATUS", carStatus);
+																tempKeyFromDB.put("ZONEID", l1ZoneId); // TODO
+																tempDoorNameList.add(tempKeyFromDB);
+																mTempAdapter.notifyDataSetChanged();
+															}
+														}
+													}
+												}else{
+													keyFromDB.put("Door", doorName);
+													keyFromDB.put("BEGIN", authFrom);
+													keyFromDB.put("END", authTo);
+													keyFromDB.put("STATUS", carStatus);
+													doorNameList.add(keyFromDB);
+													mAdapter.notifyDataSetChanged();
+												}
+											}
+											
+										}while(mCursorCar.moveToNext());
+									}
+									mCursorCar.close();
+								}
+							}
+						}
+						
+					}while(mCursor.moveToNext());
+				}
+				mCursor.close();
+			}
+		}
 				
 		mQueue = Volley.newRequestQueue(getActivity());
 		
@@ -158,108 +261,108 @@ public class KeyListListFragment extends Fragment {
 									saveSid(response.getString("sid"));
 
 								
-								// TODO show the keys	
-								doorNameList = new ArrayList<HashMap<String, String>>();
-								mAdapter = new KeyListAdapter(getActivity(), doorNameList);
-								mKeyList.setAdapter(mAdapter);
-								
-								tempDoorNameList = new ArrayList<HashMap<String, String>>();
-								mTempAdapter = new TempKeyListAdapter(getActivity(), tempDoorNameList);
-								mTempKeyList.setAdapter(mTempAdapter);
-								
-								if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
-									if (DBCount() > 0) {
-										Log.e(TAG, String.valueOf(DBCount()));
-										Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME, null);
-										if (mCursor.moveToFirst()) {	
-											int authFromIndex = mCursor.getColumnIndex("authFrom");
-											int authToIndex = mCursor.getColumnIndex("authTo");
-											int doorNamemIndex = mCursor.getColumnIndex("doorName");
-											int doorTypeIndex = mCursor.getColumnIndex("doorType");
-											int zoneIdIndex = mCursor.getColumnIndex("zoneId");
-											int carNumIndex = mCursor.getColumnIndex("plateNum");
-
-											do{						
-												String doorName = mCursor.getString(doorNamemIndex);
-												String authFrom = mCursor.getString(authFromIndex);
-												String authTo = mCursor.getString(authToIndex);
-												String doorType = mCursor.getString(doorTypeIndex);
-												String zoneId = mCursor.getString(zoneIdIndex);
-												String carNum = mCursor.getString(carNumIndex);
-												
-												HashMap<String, String> keyFromDB = new HashMap<String, String>();
-												if(doorType.equals("1")){			
-													Log.e(TAG, "add to list");
-													keyFromDB.put("Door", doorName);
-													keyFromDB.put("BEGIN", authFrom);
-													keyFromDB.put("END", authTo);
-													keyFromDB.put("STATUS", "none");
-													doorNameList.add(keyFromDB);
-													mAdapter.notifyDataSetChanged();
-												}else if(doorType.equals("2")){
-													if (mKeyDBHelper.tabIsExist(CAR_TABLE_NAME)) {
-														if(DBCountCar() > 0){
-															Cursor mCursorCar = mKeyDB.rawQuery("select * from " + CAR_TABLE_NAME, null);
-															if (mCursorCar.moveToFirst()) {
-																
-																int l1ZoneIdIndex = mCursorCar.getColumnIndex("l1ZoneId");
-																int plateNumIndex = mCursorCar.getColumnIndex("plateNum");
-																int carStatusIndex = mCursorCar.getColumnIndex("carStatus");
-																do{
-																	String l1ZoneId = mCursorCar.getString(l1ZoneIdIndex);
-																	String plateNum = mCursorCar.getString(plateNumIndex);
-																	String carStatus = mCursorCar.getString(carStatusIndex);
-																	
-																	Log.e(TAG, carNum + " : " + plateNum);
-																	
-																	if(zoneId.equals(l1ZoneId) && carNum.equals(plateNum)){
-																		Log.e(TAG, "add to list2");
-																		if(carStatus.equals("2")){ //temp car key
-																			blankView.setVisibility(View.VISIBLE);
-
-																			if(tempDoorNameList.size() == 0){
-																				HashMap<String, String> tempKeyFromDB = new HashMap<String, String>();
-																				tempKeyFromDB.put("Door", doorName);
-																				tempKeyFromDB.put("CARNUM", plateNum);
-																				tempKeyFromDB.put("POSSTATUS", carStatus);
-																				tempKeyFromDB.put("ZONEID", l1ZoneId); // TODO
-																				tempDoorNameList.add(tempKeyFromDB);
-																				mTempAdapter.notifyDataSetChanged();
-																			}else if(tempDoorNameList.size() > 0){
-																				for(int index = 0; index < tempDoorNameList.size(); index++){
-																					if(!tempDoorNameList.get(index).get("CARNUM").equals(plateNum) && !tempDoorNameList.get(index).get("ZONEID").equals(l1ZoneId)){
-																						HashMap<String, String> tempKeyFromDB = new HashMap<String, String>();
-																						tempKeyFromDB.put("Door", doorName);
-																						tempKeyFromDB.put("CARNUM", plateNum);
-																						tempKeyFromDB.put("POSSTATUS", carStatus);
-																						tempKeyFromDB.put("ZONEID", l1ZoneId); // TODO
-																						tempDoorNameList.add(tempKeyFromDB);
-																						mTempAdapter.notifyDataSetChanged();
-																					}
-																				}
-																			}
-																		}else{
-																			keyFromDB.put("Door", doorName);
-																			keyFromDB.put("BEGIN", authFrom);
-																			keyFromDB.put("END", authTo);
-																			keyFromDB.put("STATUS", carStatus);
-																			doorNameList.add(keyFromDB);
-																			mAdapter.notifyDataSetChanged();
-																		}
-																	}
-																	
-																}while(mCursorCar.moveToNext());
-															}
-															mCursorCar.close();
-														}
-													}
-												}
-												
-											}while(mCursor.moveToNext());
-										}
-										mCursor.close();
-									}
-								}
+//								// TODO show the keys	
+//								doorNameList = new ArrayList<HashMap<String, String>>();
+//								mAdapter = new KeyListAdapter(getActivity(), doorNameList);
+//								mKeyList.setAdapter(mAdapter);
+//								
+//								tempDoorNameList = new ArrayList<HashMap<String, String>>();
+//								mTempAdapter = new TempKeyListAdapter(getActivity(), tempDoorNameList);
+//								mTempKeyList.setAdapter(mTempAdapter);
+//								
+//								if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
+//									if (DBCount() > 0) {
+//										Log.e(TAG, String.valueOf(DBCount()));
+//										Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME, null);
+//										if (mCursor.moveToFirst()) {	
+//											int authFromIndex = mCursor.getColumnIndex("authFrom");
+//											int authToIndex = mCursor.getColumnIndex("authTo");
+//											int doorNamemIndex = mCursor.getColumnIndex("doorName");
+//											int doorTypeIndex = mCursor.getColumnIndex("doorType");
+//											int zoneIdIndex = mCursor.getColumnIndex("zoneId");
+//											int carNumIndex = mCursor.getColumnIndex("plateNum");
+//
+//											do{						
+//												String doorName = mCursor.getString(doorNamemIndex);
+//												String authFrom = mCursor.getString(authFromIndex);
+//												String authTo = mCursor.getString(authToIndex);
+//												String doorType = mCursor.getString(doorTypeIndex);
+//												String zoneId = mCursor.getString(zoneIdIndex);
+//												String carNum = mCursor.getString(carNumIndex);
+//												
+//												HashMap<String, String> keyFromDB = new HashMap<String, String>();
+//												if(doorType.equals("1")){			
+//													Log.e(TAG, "add to list");
+//													keyFromDB.put("Door", doorName);
+//													keyFromDB.put("BEGIN", authFrom);
+//													keyFromDB.put("END", authTo);
+//													keyFromDB.put("STATUS", "none");
+//													doorNameList.add(keyFromDB);
+//													mAdapter.notifyDataSetChanged();
+//												}else if(doorType.equals("2")){
+//													if (mKeyDBHelper.tabIsExist(CAR_TABLE_NAME)) {
+//														if(DBCountCar() > 0){
+//															Cursor mCursorCar = mKeyDB.rawQuery("select * from " + CAR_TABLE_NAME, null);
+//															if (mCursorCar.moveToFirst()) {
+//																
+//																int l1ZoneIdIndex = mCursorCar.getColumnIndex("l1ZoneId");
+//																int plateNumIndex = mCursorCar.getColumnIndex("plateNum");
+//																int carStatusIndex = mCursorCar.getColumnIndex("carStatus");
+//																do{
+//																	String l1ZoneId = mCursorCar.getString(l1ZoneIdIndex);
+//																	String plateNum = mCursorCar.getString(plateNumIndex);
+//																	String carStatus = mCursorCar.getString(carStatusIndex);
+//																	
+//																	Log.e(TAG, carNum + " : " + plateNum);
+//																	
+//																	if(zoneId.equals(l1ZoneId) && carNum.equals(plateNum)){
+//																		Log.e(TAG, "add to list2");
+//																		if(carStatus.equals("2")){ //temp car key
+//																			blankView.setVisibility(View.VISIBLE);
+//
+//																			if(tempDoorNameList.size() == 0){
+//																				HashMap<String, String> tempKeyFromDB = new HashMap<String, String>();
+//																				tempKeyFromDB.put("Door", doorName);
+//																				tempKeyFromDB.put("CARNUM", plateNum);
+//																				tempKeyFromDB.put("POSSTATUS", carStatus);
+//																				tempKeyFromDB.put("ZONEID", l1ZoneId); // TODO
+//																				tempDoorNameList.add(tempKeyFromDB);
+//																				mTempAdapter.notifyDataSetChanged();
+//																			}else if(tempDoorNameList.size() > 0){
+//																				for(int index = 0; index < tempDoorNameList.size(); index++){
+//																					if(!tempDoorNameList.get(index).get("CARNUM").equals(plateNum) && !tempDoorNameList.get(index).get("ZONEID").equals(l1ZoneId)){
+//																						HashMap<String, String> tempKeyFromDB = new HashMap<String, String>();
+//																						tempKeyFromDB.put("Door", doorName);
+//																						tempKeyFromDB.put("CARNUM", plateNum);
+//																						tempKeyFromDB.put("POSSTATUS", carStatus);
+//																						tempKeyFromDB.put("ZONEID", l1ZoneId); // TODO
+//																						tempDoorNameList.add(tempKeyFromDB);
+//																						mTempAdapter.notifyDataSetChanged();
+//																					}
+//																				}
+//																			}
+//																		}else{
+//																			keyFromDB.put("Door", doorName);
+//																			keyFromDB.put("BEGIN", authFrom);
+//																			keyFromDB.put("END", authTo);
+//																			keyFromDB.put("STATUS", carStatus);
+//																			doorNameList.add(keyFromDB);
+//																			mAdapter.notifyDataSetChanged();
+//																		}
+//																	}
+//																	
+//																}while(mCursorCar.moveToNext());
+//															}
+//															mCursorCar.close();
+//														}
+//													}
+//												}
+//												
+//											}while(mCursor.moveToNext());
+//										}
+//										mCursor.close();
+//									}
+//								}
 								
 								
 								
@@ -379,7 +482,7 @@ public class KeyListListFragment extends Fragment {
 			}
 		};
 		
-		mQueue.add(mJsonRequest);
+//		mQueue.add(mJsonRequest);
 		
 //		if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
 //			Log.e("TESTTESTDBDB", "have the table");

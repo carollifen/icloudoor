@@ -108,6 +108,7 @@ public class KeyFragment extends Fragment {
 	private final String DATABASE_NAME = "KeyDB.db";
 	private final String TABLE_NAME = "KeyInfoTable";
 	private final String CAR_TABLE_NAME = "CarKeyTable";
+	private final String ZONE_TABLE_NAME = "ZoneTable";
 
 	private ArrayList<HashMap<String, String>> carDoorList;
 	private ArrayList<HashMap<String, String>> manDoorList;
@@ -242,6 +243,7 @@ public class KeyFragment extends Fragment {
     private ImageView circle;
     private ImageView radar;
     
+    private SharedPreferences carNumAndPhoneNumShare;
     
     /*
      * new shake
@@ -261,6 +263,8 @@ public class KeyFragment extends Fragment {
 		View view = inflater.inflate(R.layout.key_page, container, false);
         vibrator = (Vibrator)getActivity().getSystemService(Context.VIBRATOR_SERVICE);
 
+        carNumAndPhoneNumShare = getActivity().getSharedPreferences("carNumAndPhoneNum", 0);
+        
 		mKeyDBHelper = new MyDataBaseHelper(getActivity(), DATABASE_NAME);
 		mKeyDB = mKeyDBHelper.getWritableDatabase();
 		
@@ -625,7 +629,51 @@ public class KeyFragment extends Fragment {
 								if (response.getString("sid") != null)
 									saveSid(response.getString("sid"));
 								
-								
+								//TODO DELETE TEMPARY
+								if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
+									if (DBCount() > 0) {
+										
+										Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME,
+												null);
+										if (mCursor.moveToFirst()) {
+											int zoneIdIndex = mCursor.getColumnIndex("zoneId");
+											int deviceIdIndex = mCursor.getColumnIndex("deviceId");
+											int doorNamemIndex = mCursor.getColumnIndex("doorName");
+											int doorTypeIndex = mCursor.getColumnIndex("doorType");
+											int directionIndex = mCursor.getColumnIndex("direction");
+
+											do {
+												HashMap<String, String> temp = new HashMap<String, String>();
+												String deviceId = mCursor.getString(deviceIdIndex);
+												String doorName = mCursor.getString(doorNamemIndex);
+												String doorType = mCursor.getString(doorTypeIndex);
+												String direction = mCursor.getString(directionIndex);
+												String zoneId = mCursor.getString(zoneIdIndex);
+
+												/*  Add new logic for car key
+												 *  select the car doors can be opened, 
+												 *  and all the man doors
+												 */
+												if (doorType.equals("2")) {						
+													Log.e(TAG, "add a car key");
+													temp.put("CDdeviceid", deviceId);
+													temp.put("CDdoorName", doorName);
+													temp.put("CDdoorType", doorType);
+													temp.put("CDDirection", direction);
+													carDoorList.add(temp);		
+												} else if (doorType.equals("1")) {
+													Log.e(TAG, "add man key");
+													temp.put("MDdeviceid", deviceId);
+													temp.put("MDdoorName", doorName);
+													temp.put("MDdoorType", doorType);
+													temp.put("MDDirection", direction);
+													manDoorList.add(temp);
+												}
+											} while (mCursor.moveToNext());
+										}
+						                mCursor.close();
+									}
+								}
 
 							} else if (response.getInt("code") == -81) {
 								if (getActivity() != null)
@@ -658,28 +706,249 @@ public class KeyFragment extends Fragment {
 	}
 	
 	public void parseKeyData(JSONObject response) throws JSONException {
-		Log.e(TAG, "parseKeyData func");
-
+		Log.e("test for new interface", "parseKeyData func");
+		
+		// for new key download interface
 		JSONObject data = response.getJSONObject("data");
 		JSONArray doorAuths = data.getJSONArray("doorAuths");
+		JSONArray zones = data.getJSONArray("zones");
+		JSONArray cars = data.getJSONArray("cars");
+		
+		// for doorauths table -- START
 		for (int index = 0; index < doorAuths.length(); index++) {
 			JSONObject doorData = (JSONObject) doorAuths.get(index);
 			
 			ContentValues value = new ContentValues();
+			
 			if(doorData.getString("deviceId").length() > 0){
-				if(!hasData(mKeyDB, doorData.getString("deviceId"))){
-					Log.e(TAG, "add");
+				if(!hasData(mKeyDB, doorData.getString("deviceId"))){    //insert the new key
+					
 					newNum++;
+					
+					value.put("zoneId", doorData.getString("zoneId"));
+					value.put("doorName", doorData.getString("doorName"));
+					value.put("doorId", doorData.getString("doorId"));
+					value.put("deviceId", doorData.getString("deviceId"));
+					value.put("doorType", doorData.getString("doorType"));
+					value.put("authFrom", doorData.getString("authFrom"));
+					value.put("authTo", doorData.getString("authTo"));
+					
+					if (doorData.getString("doorType").equals("1")) {
+						Log.e(TAG, "add a 1");
+						value.put("direction", "none");
+						value.put("plateNum", "none");
+						mKeyDB.insert(TABLE_NAME, null, value);
+					} else if (doorData.getString("doorType").equals("2")){
+						Log.e(TAG, "add a 2");
+								value.put("plateNum", doorData.getString("plateNum"));
+								value.put("direction", doorData.getString("direction"));
+								mKeyDB.insert(TABLE_NAME, null, value);
+					}
+					Log.e(TAG, "after parse: " + String.valueOf(DBCount()));
+				} else {            // update the old key status
+						ContentValues valueTemp = new ContentValues();
+						valueTemp.put("authFrom", doorData.getString("authFrom"));
+						valueTemp.put("authTo", doorData.getString("authTo"));
+						
+						mKeyDB.update("KeyInfoTable", valueTemp, "deviceId = ?", new String[] {doorData.getString("deviceId")});
+				}
+			}	
+		}
+		
+		//need to delete the old key
+		if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
+			if (DBCount() > 0) {
+				Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME, null);
+				if (mCursor.moveToFirst()) {
+					boolean keepKey = false;
+					int deviceIdIndex = mCursor.getColumnIndex("deviceId");
+					String deviceId = mCursor.getString(deviceIdIndex);
+		
+					do{
+						for (int index = 0; index < doorAuths.length(); index++) {
+							JSONObject doorData = (JSONObject) doorAuths.get(index);
+							
+							if(doorData.getString("deviceId").length() > 0){
+								if(doorData.getString("deviceId").equals(deviceId)){
+									keepKey = true;
+									break;
+								}
+							}
+						}	
+						
+						if(!keepKey){
+							Log.e(TAG, "delete a");
+							//delete in the table
+							mKeyDB.delete("KeyInfoTable", "deviceId = ?", new String[] {deviceId});
+						}
+						
+					}while(mCursor.moveToNext());				
+				}	
+				mCursor.close();
+			}
+		}
+		// for doorauths table -- END
+		
+		// for zones table -- START
+		for (int index = 0; index < zones.length(); index++) {
+			JSONObject zoneData = (JSONObject) zones.get(index);
+			ContentValues value = new ContentValues();
+			
+			if(zoneData.getString("zoneId").length() > 0){
+				if(!hasZoneData(mKeyDB, zoneData.getString("zoneId"))){   // insert new
+					Log.e(TAG, "add a zone");
+					value.put("zoneid", zoneData.getString("zoneId"));		
+					value.put("zonename", zoneData.getString("zoneName"));
+					value.put("parentzoneid", zoneData.getString("parentZoneId"));
+					mKeyDB.insert(ZONE_TABLE_NAME, null, value);
 				}
 			}
 		}
 		
-		if(newNum > 0){
-			keyRedDot.setVisibility(View.VISIBLE); 
-//			keyRedDotNum.setText(String.valueOf(newNum));
+		// delete old
+		if (mKeyDBHelper.tabIsExist(ZONE_TABLE_NAME)) {
+			if (DBCountZone() > 0) {
+				Cursor mCursor = mKeyDB.rawQuery("select * from " + ZONE_TABLE_NAME, null);
+				if (mCursor.moveToFirst()) {
+					boolean keepKey = false;
+					int zoneidIndex = mCursor.getColumnIndex("zoneid");
+					String zoneid = mCursor.getString(zoneidIndex);
+					
+					do{
+						for (int index = 0; index < zones.length(); index++) {
+							JSONObject zoneData = (JSONObject) zones.get(index);
+							
+							if(zoneData.getString("zoneId").length() > 0){
+								if(zoneData.getString("zoneId").equals(zoneid)){
+									keepKey = true;
+									break;
+								}
+							}
+						}		
+						
+						if(!keepKey){
+							Log.e(TAG, "delete a zone");
+							mKeyDB.delete("ZoneTable", "zoneId = ?", new String[] {zoneid});
+						}
+					}while(mCursor.moveToNext());
+				}
+				mCursor.close();
+			}
+		}
+		// for zones table -- END
+		
+		// for cars table -- START
+		for (int index = 0; index < cars.length(); index++) {
+			JSONObject carData = (JSONObject) cars.get(index);
+			
+			if(carData.getString("l1ZoneId").length() > 0){
+				if(!hasCarData(mKeyDB, carData.getString("l1ZoneId"), carData.getString("plateNum"))){   // insert new
+					Log.e(TAG, "add a car");
+					ContentValues value = new ContentValues();
+					value.put("l1ZoneId", carData.getString("l1ZoneId"));
+					value.put("plateNum", carData.getString("plateNum"));
+					value.put("carStatus", carData.getString("carStatus"));
+					value.put("carPosStatus", carData.getString("carPosStatus"));
+					mKeyDB.insert(CAR_TABLE_NAME, null, value);
+					
+					// refresh the carPosStatus to "0" if carPosStatus not "0" and you hava a car key (own or borrowed) when you get the new car key
+					if(!carData.getString("carPosStatus").equals("0") && !carData.getString("carStatus").equals("3")){
+						updatePosStatus(carData.getString("l1ZoneId"), carData.getString("plateNum"));
+					}
+				}else{   // update old
+					ContentValues value = new ContentValues();
+					
+					if(carData.getString("plateNum").equals(carNumAndPhoneNumShare.getString("CARNUM", null))){
+						value.put("carStatus", carData.getString("carStatus"));
+						value.put("carPosStatus", carData.getString("carPosStatus"));
+						
+						mKeyDB.update("CarKeyTable", value, "l1ZoneId = ? and plateNum = ?", new String[] {carData.getString("l1ZoneId"), carData.getString("plateNum")});
+					}
+				}
+			}
+		}
+		
+		// delete old
+		
+			if (mKeyDBHelper.tabIsExist("CarKeyTable")) {
+				if(DBCountCar() > 0){
+					Cursor mCursor = mKeyDB.rawQuery("select * from " + "CarKeyTable", null);
+					if(mCursor.moveToFirst()){
+						boolean keepKey = false;
+						int l1ZoneIdIndex = mCursor.getColumnIndex("l1ZoneId");
+						int plateNumIndex = mCursor.getColumnIndex("plateNum");
+						
+						String l1ZoneId = mCursor.getString(l1ZoneIdIndex);
+						String plateNum = mCursor.getString(plateNumIndex);
+						
+						do{
+							for (int index = 0; index < cars.length(); index++) {
+								JSONObject carData = (JSONObject) cars.get(index);
+								
+								if(carData.getString("l1ZoneId").length() > 0){
+									if(carData.getString("l1ZoneId").equals(l1ZoneId) && carData.getString("plateNum").equals(plateNum)){
+										keepKey = true;
+										break;
+									}
+								}
+							}
+							if(!keepKey){
+								Log.e(TAG, "delete a car");
+								mKeyDB.delete("CarKeyTable", "l1ZoneId = ? and plateNum = ?", new String[] {l1ZoneId, plateNum});
+								mKeyDB.delete("KeyInfoTable", "zoneId = ? and plateNum = ?", new String[] {l1ZoneId, plateNum});
+							}
+						}while(mCursor.moveToNext());
+					}
+					mCursor.close();
+				}
+			}
+		// for cars table -- END
+			
+		if (newNum > 0) {
+			keyRedDot.setVisibility(View.VISIBLE);
 		}
 	}
 	
+	public void updatePosStatus(final String zoneid, final String carnum) {
+		URL updateCarPosStatusURL = null;
+		String sid2 = null;
+		RequestQueue mQueue2;
+		
+		sid2 = loadSid();
+		try {
+			updateCarPosStatusURL = new URL(HOST + "/user/api/updateCarPosStatus.do" + "?sid=" + sid2);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		mQueue2 = Volley.newRequestQueue(getActivity());
+		
+		MyJsonObjectRequest mJsonRequest2 = new MyJsonObjectRequest(Method.POST, updateCarPosStatusURL.toString(), null,
+				new Response.Listener<JSONObject>() {
+
+					@Override
+					public void onResponse(JSONObject response) {
+						Log.e(TAG, "test " + response.toString());
+					}
+				}, new Response.ErrorListener() {
+
+					@Override
+					public void onErrorResponse(VolleyError error) {
+
+					}
+				}) {
+			@Override
+			protected Map<String, String> getParams()
+					throws AuthFailureError {
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("l1ZoneId", zoneid);
+				map.put("plateNum", carnum);
+				map.put("carPosStatus", "0");
+				return map;
+			}
+		};
+		mQueue2.add(mJsonRequest2);
+	}
+
 	// for new channel switch
 	private int getState(boolean state) {
     	if(state) {
@@ -1261,55 +1530,55 @@ public class KeyFragment extends Fragment {
         mOpenDoorState = 0;
 //		checkBlueToothState();
 
-		//TODO DELETE TEMPARY
-		if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
-			if (DBCount() > 0) {
-				
-				Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME,
-						null);
-				if (mCursor.moveToFirst()) {
-					int zoneIdIndex = mCursor.getColumnIndex("zoneId");
-					int deviceIdIndex = mCursor.getColumnIndex("deviceId");
-					int doorNamemIndex = mCursor.getColumnIndex("doorName");
-					int doorTypeIndex = mCursor.getColumnIndex("doorType");
-					int directionIndex = mCursor.getColumnIndex("direction");
-//					int carStatusIndex = mCursor.getColumnIndex("carStatus");
-//					int carPosStatusIndex = mCursor.getColumnIndex("carPosStatus");
-
-					do {
-						HashMap<String, String> temp = new HashMap<String, String>();
-						String deviceId = mCursor.getString(deviceIdIndex);
-						String doorName = mCursor.getString(doorNamemIndex);
-						String doorType = mCursor.getString(doorTypeIndex);
-						String direction = mCursor.getString(directionIndex);
-//						String carStatus = mCursor.getString(carStatusIndex);
-//						String carPosStatus = mCursor.getString(carPosStatusIndex);
-						String zoneId = mCursor.getString(zoneIdIndex);
-
-						/*  Add new logic for car key
-						 *  select the car doors can be opened, 
-						 *  and all the man doors
-						 */
-						if (doorType.equals("2")) {						
-							Log.e(TAG, "add a car key");
-							temp.put("CDdeviceid", deviceId);
-							temp.put("CDdoorName", doorName);
-							temp.put("CDdoorType", doorType);
-							temp.put("CDDirection", direction);
-							carDoorList.add(temp);		
-						} else if (doorType.equals("1")) {
-							Log.e(TAG, "add man key");
-							temp.put("MDdeviceid", deviceId);
-							temp.put("MDdoorName", doorName);
-							temp.put("MDdoorType", doorType);
-							temp.put("MDDirection", direction);
-							manDoorList.add(temp);
-						}
-					} while (mCursor.moveToNext());
-				}
-                mCursor.close();
-			}
-		}
+//		//TODO DELETE TEMPARY
+//		if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
+//			if (DBCount() > 0) {
+//				
+//				Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME,
+//						null);
+//				if (mCursor.moveToFirst()) {
+//					int zoneIdIndex = mCursor.getColumnIndex("zoneId");
+//					int deviceIdIndex = mCursor.getColumnIndex("deviceId");
+//					int doorNamemIndex = mCursor.getColumnIndex("doorName");
+//					int doorTypeIndex = mCursor.getColumnIndex("doorType");
+//					int directionIndex = mCursor.getColumnIndex("direction");
+////					int carStatusIndex = mCursor.getColumnIndex("carStatus");
+////					int carPosStatusIndex = mCursor.getColumnIndex("carPosStatus");
+//
+//					do {
+//						HashMap<String, String> temp = new HashMap<String, String>();
+//						String deviceId = mCursor.getString(deviceIdIndex);
+//						String doorName = mCursor.getString(doorNamemIndex);
+//						String doorType = mCursor.getString(doorTypeIndex);
+//						String direction = mCursor.getString(directionIndex);
+////						String carStatus = mCursor.getString(carStatusIndex);
+////						String carPosStatus = mCursor.getString(carPosStatusIndex);
+//						String zoneId = mCursor.getString(zoneIdIndex);
+//
+//						/*  Add new logic for car key
+//						 *  select the car doors can be opened, 
+//						 *  and all the man doors
+//						 */
+//						if (doorType.equals("2")) {						
+//							Log.e(TAG, "add a car key");
+//							temp.put("CDdeviceid", deviceId);
+//							temp.put("CDdoorName", doorName);
+//							temp.put("CDdoorType", doorType);
+//							temp.put("CDDirection", direction);
+//							carDoorList.add(temp);		
+//						} else if (doorType.equals("1")) {
+//							Log.e(TAG, "add man key");
+//							temp.put("MDdeviceid", deviceId);
+//							temp.put("MDdoorName", doorName);
+//							temp.put("MDdoorType", doorType);
+//							temp.put("MDDirection", direction);
+//							manDoorList.add(temp);
+//						}
+//					} while (mCursor.moveToNext());
+//				}
+//                mCursor.close();
+//			}
+//		}
 
 //        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
 //            @Override
@@ -2472,6 +2741,26 @@ public class KeyFragment extends Fragment {
 				0, 1);
 	}
 
+//	private boolean hasData(SQLiteDatabase mDB, String str){
+//		boolean hasData = false;
+//		Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME,null);
+//		
+//		if(mCursor.moveToFirst()){
+//			int deviceIdIndex = mCursor.getColumnIndex("deviceId");
+//			do{
+//				 String deviceId = mCursor.getString(deviceIdIndex);
+//				 
+//				 if(deviceId.equals(str)) {
+//					 hasData = true;
+//					 break;
+//				 }
+//				 
+//			}while(mCursor.moveToNext());
+//		}
+//        mCursor.close();
+//		return hasData;
+//	}
+	
 	private boolean hasData(SQLiteDatabase mDB, String str){
 		boolean hasData = false;
 		Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME,null);
@@ -2488,15 +2777,78 @@ public class KeyFragment extends Fragment {
 				 
 			}while(mCursor.moveToNext());
 		}
-        mCursor.close();
+		mCursor.close();
 		return hasData;
 	}
 	
-	private long DBCount() {
-		String sql = "SELECT COUNT(*) FROM " + TABLE_NAME;
-		SQLiteStatement statement = mKeyDB.compileStatement(sql);
-		long count = statement.simpleQueryForLong();
-		return count;
+	private boolean hasZoneData(SQLiteDatabase mDB, String str){
+		boolean hasData = false;
+		Cursor mCursor = mKeyDB.rawQuery("select * from " + ZONE_TABLE_NAME, null);
+		
+		if(mCursor.moveToFirst()){
+			int zoneidIndex = mCursor.getColumnIndex("zoneid");
+			do{
+				 String zoneid = mCursor.getString(zoneidIndex);
+				 
+				 if(zoneid.equals(str)) {
+					 hasData = true;
+					 break;
+				 }
+				 
+			}while(mCursor.moveToNext());
+		}
+		mCursor.close();
+		return hasData;
+	}
+	
+	private boolean hasCarData(SQLiteDatabase mDB, String str, String str1){
+		boolean hasData = false;
+		Cursor mCursor = mKeyDB.rawQuery("select * from " + CAR_TABLE_NAME, null);
+		
+		if(mCursor.moveToFirst()){
+			int l1ZoneIdIndex = mCursor.getColumnIndex("l1ZoneId");
+			int plateNumIndex = mCursor.getColumnIndex("plateNum");
+			do{
+				 String l1ZoneId = mCursor.getString(l1ZoneIdIndex);
+				 String plateNum = mCursor.getString(plateNumIndex);
+				 
+				 if(l1ZoneId.equals(str) && plateNum.equals(str1)) {
+					 hasData = true;
+					 break;
+				 }
+				 
+			}while(mCursor.moveToNext());
+		}
+		mCursor.close();
+		return hasData;
+	}
+	
+//	private long DBCount() {
+//		String sql = "SELECT COUNT(*) FROM " + TABLE_NAME;
+//		SQLiteStatement statement = mKeyDB.compileStatement(sql);
+//		long count = statement.simpleQueryForLong();
+//		return count;
+//	}
+//	
+//	private long DBCountCar() {  
+//	    String sql = "SELECT COUNT(*) FROM " + CAR_TABLE_NAME;
+//	    SQLiteStatement statement = mKeyDB.compileStatement(sql);
+//	    long count = statement.simpleQueryForLong();
+//	    return count;
+//	}
+	
+	private long DBCount() {  
+	    String sql = "SELECT COUNT(*) FROM " + TABLE_NAME;
+	    SQLiteStatement statement = mKeyDB.compileStatement(sql);
+	    long count = statement.simpleQueryForLong();
+	    return count;
+	}
+	
+	private long DBCountZone() {  
+	    String sql = "SELECT COUNT(*) FROM " + ZONE_TABLE_NAME;
+	    SQLiteStatement statement = mKeyDB.compileStatement(sql);
+	    long count = statement.simpleQueryForLong();
+	    return count;
 	}
 	
 	private long DBCountCar() {  
