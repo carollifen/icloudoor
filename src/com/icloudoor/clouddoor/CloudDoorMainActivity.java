@@ -195,7 +195,11 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		mMsgFragment = new MsgFragment();
 		currentVersion = android.os.Build.VERSION.SDK_INT;
 		if(currentVersion >= 18){
-			mKeyFragment = new KeyFragment();
+            if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)){
+                mKeyFragmentNoBLE = new KeyFragmentNoBLE();
+            }else {
+                mKeyFragment = new KeyFragment();
+            }
 		}else{
 			mKeyFragmentNoBLE = new KeyFragmentNoBLE();
 		}

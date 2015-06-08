@@ -189,5 +189,6 @@
     </string-array>
 
     <string name="title_activity_xie_yi">XieYiActivity</string>
+    <string name="user_not_exist">用户名不存在</string>
 
 </resources>

@@ -200,6 +200,10 @@ public class RegisterComplete extends Activity implements TextWatcher {
 										Toast.makeText(getApplicationContext(), R.string.phone_num_have_been_registerred, Toast.LENGTH_SHORT).show();
 									} else if (statusCode == -41) {
 										Toast.makeText(getApplicationContext(), R.string.weak_pwd, Toast.LENGTH_SHORT).show();
+									} else if(statusCode == -99) {
+										Toast.makeText(getApplicationContext(),
+												R.string.unknown_err, Toast.LENGTH_SHORT)
+												.show();
 									}
 								}
 							}, new Response.ErrorListener() {

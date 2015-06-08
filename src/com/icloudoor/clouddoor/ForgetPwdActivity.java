@@ -194,6 +194,10 @@ public class ForgetPwdActivity extends Activity implements TextWatcher {
 									Toast.makeText(getApplicationContext(),
 											R.string.send_too_frequently, Toast.LENGTH_SHORT)
 											.show();
+								} else if(RequestCertiStatusCode == -99) {
+									Toast.makeText(getApplicationContext(),
+											R.string.unknown_err, Toast.LENGTH_SHORT)
+											.show();
 								}
 							}
 						}, 

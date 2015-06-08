@@ -362,7 +362,11 @@ public class Login extends Activity implements TextWatcher {
 										Toast.makeText(getApplicationContext(),
 												R.string.login_fail,
 												Toast.LENGTH_SHORT).show();
-									}
+									} else if(loginStatusCode == -99) {
+    									Toast.makeText(getApplicationContext(),
+    											R.string.unknown_err, Toast.LENGTH_SHORT)
+    											.show();
+    								}
 								}
 							}, new Response.ErrorListener() {
 

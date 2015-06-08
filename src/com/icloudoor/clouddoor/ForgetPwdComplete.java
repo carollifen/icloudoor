@@ -193,6 +193,14 @@ public class ForgetPwdComplete extends Activity implements TextWatcher{
 										finish();
 									} else if (statusCode == -41) {
 										Toast.makeText(getApplicationContext(), R.string.weak_pwd, Toast.LENGTH_SHORT).show();
+									} else if(statusCode == -99) {
+										Toast.makeText(getApplicationContext(),
+												R.string.unknown_err, Toast.LENGTH_SHORT)
+												.show();
+									} else if(statusCode == -72) {
+										Toast.makeText(getApplicationContext(),
+												R.string.user_not_exist, Toast.LENGTH_SHORT)
+												.show();
 									}
 								}
 							}, new Response.ErrorListener() {
