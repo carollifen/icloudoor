@@ -26,8 +26,12 @@ import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -60,6 +64,8 @@ public class ForgetPwdComplete extends Activity implements TextWatcher{
 		super.onCreate(savedInstanceState);
 //		getActionBar().hide();
 		setContentView(R.layout.find_pwd_complete);
+		
+		setupUI(findViewById(R.id.main));
 		
 		ETInputPwd = (EditText) findViewById(R.id.forget_pwd_input_new_pwd);
 		ETConfirmPwd = (EditText) findViewById(R.id.forget_pwd_input_new_pwd_again);
@@ -276,4 +282,27 @@ String temp = s.toString();
 		}
 	}
 	
+	public static void hideSoftKeyboard(Activity activity) {
+		InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+		inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+	}
+	
+	public void setupUI(View view) {
+		// Set up touch listener for non-text box views to hide keyboard.
+		if (!(view instanceof EditText)) {
+			view.setOnTouchListener(new OnTouchListener() {
+				public boolean onTouch(View v, MotionEvent event) {
+					hideSoftKeyboard(ForgetPwdComplete.this); 
+					return false;
+				}
+			});
+		}
+		// If a layout container, iterate over children and seed recursion.
+		if (view instanceof ViewGroup) {
+			for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+				View innerView = ((ViewGroup) view).getChildAt(i);
+				setupUI(innerView);
+			}
+		}
+	}
 }
