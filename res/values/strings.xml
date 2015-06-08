@@ -69,6 +69,7 @@
     <string name="no_network">无网络连接，请检查网络</string>
     <string name="can_shake_to_open_door">摇一摇也可开门</string>
     <string name="scanning">正在搜索中...</string>
+    <string name="door_openning">稍等，正在开门...</string>
     <string name="title_activity_contact_wuye">ContactWuyeActivity</string>
     <string name="can_not_use_open_door">该设备不支持开门功能</string>
     <string name="dialog_error_title">下载出错</string>
