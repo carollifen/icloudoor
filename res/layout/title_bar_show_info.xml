@@ -28,7 +28,7 @@
 
     <RelativeLayout 
         android:id="@+id/tomodify_person_info"
-        android:layout_width="56dp"
+        android:layout_width="66dp"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         >
@@ -36,8 +36,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:background="@drawable/new_revise" />
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="16dp"
+            android:text="编辑"
+            android:textSize="18sp"
+            android:textColor="#ffffff" />
         
     </RelativeLayout>
     
