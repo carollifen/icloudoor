@@ -31,7 +31,11 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -39,6 +43,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -70,6 +77,11 @@ public class RegisterActivity extends Activity implements TextWatcher {
 	private RelativeLayout getCertiCodeLayout;
 	private RelativeLayout inputCertiCodeLayout;
 	private RelativeLayout nextLayout;
+	private RelativeLayout xieYiLayout;
+	private TextView xieYiText;
+	private TextView sendText;
+	private CheckBox checkBox;
+	private boolean checkXieyi = false;
 	
 	private boolean isBackKey;
 
@@ -99,23 +111,46 @@ public class RegisterActivity extends Activity implements TextWatcher {
 		getCertiCodeLayout = (RelativeLayout) findViewById(R.id.get_certi_layout);
 		inputCertiCodeLayout = (RelativeLayout) findViewById(R.id.input_certi_layout);
 		nextLayout = (RelativeLayout) findViewById(R.id.next_step_btn_layout);
+		xieYiLayout = (RelativeLayout) findViewById(R.id.xieyi_layout);
 		
 		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) phoneLayout.getLayoutParams();
 		RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) phoneInputLayout.getLayoutParams();
 		RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) getCertiCodeLayout.getLayoutParams();
 		RelativeLayout.LayoutParams params3 = (RelativeLayout.LayoutParams) inputCertiCodeLayout.getLayoutParams();
 		RelativeLayout.LayoutParams params4 = (RelativeLayout.LayoutParams) nextLayout.getLayoutParams();
+		RelativeLayout.LayoutParams params5 = (RelativeLayout.LayoutParams) xieYiLayout.getLayoutParams();
 		params.width = screenWidth - 48*2;
 		params1.width = (screenWidth - 48*2 - 8)*2/3;
 		params2.width = (screenWidth - 48*2 - 8)*1/3;
 		params3.width = screenWidth - 48*2;
 		params4.width = screenWidth - 48*2;
+		params5.width = screenWidth - 48*2;
+		
+		//TODO
+		xieYiText = (TextView) findViewById(R.id.xieyi_text);
+		xieYiText.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent();
+				intent.setClass(RegisterActivity.this, XieYiActivity.class);
+				startActivity(intent);
+			}
+			
+		});
+		//
+		
+		sendText = (TextView) findViewById(R.id.send_text);
+		sendText.setWidth(screenWidth - 48*2);
+		
+		checkBox = (CheckBox) findViewById(R.id.check_box);
 		
 		phoneLayout.setLayoutParams(params);
 		phoneInputLayout.setLayoutParams(params1);
 		getCertiCodeLayout.setLayoutParams(params2);
 		inputCertiCodeLayout.setLayoutParams(params3);
 		nextLayout.setLayoutParams(params4);
+		xieYiLayout.setLayoutParams(params5);
 		
 		phoneInputLayout.setBackgroundResource(R.drawable.shape_left_corner);
 		inputCertiCodeLayout.setBackgroundResource(R.drawable.shape_input_certi_code);
@@ -473,9 +508,33 @@ public class RegisterActivity extends Activity implements TextWatcher {
 		
 		
 		if(ETInputPhoneNum.getText().toString().length() > 10 && ETInputCertiCode.getText().toString().length() > 4){
-			nextLayout.setEnabled(true);
-			TVNextStep.setTextColor(0xFF0065a1);
-			nextLayout.setBackgroundResource(R.drawable.selector_next_step);
+			
+			checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener(){
+
+				@Override
+				public void onCheckedChanged(CompoundButton buttonView,
+						boolean isChecked) {
+					if(isChecked){
+						checkXieyi = true;
+						
+						nextLayout.setEnabled(true);
+						TVNextStep.setTextColor(0xFF0065a1);
+						nextLayout.setBackgroundResource(R.drawable.selector_next_step);
+						Log.e(TAG, "checked!");
+					}else{
+						checkXieyi = false;
+						
+						nextLayout.setEnabled(false);
+						TVNextStep.setTextColor(0xFF999999);
+						nextLayout.setBackgroundResource(R.drawable.shape_next_disable);
+						Log.e(TAG, "unchecked!");
+					}
+				}
+				
+			});
+//			nextLayout.setEnabled(true);
+//			TVNextStep.setTextColor(0xFF0065a1);
+//			nextLayout.setBackgroundResource(R.drawable.selector_next_step);
 //			TVNextStep.setEnabled(true);
 		} else {
 			nextLayout.setEnabled(false);
