@@ -228,13 +228,13 @@ public class UartService extends Service {
         
         
         //TODO
-        if (device != null) { 
-        	if (mBluetoothGatt != null) {
-        		mBluetoothGatt.close(); 
-        		mBluetoothGatt.disconnect(); 
-        		mBluetoothGatt = null; 
-        		}
-        }
+//        if (device != null) {
+//        	if (mBluetoothGatt != null) {
+//        		mBluetoothGatt.close();
+//        		mBluetoothGatt.disconnect();
+//        		mBluetoothGatt = null;
+//        		}
+//        }
         
   
         mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
@@ -267,7 +267,7 @@ public class UartService extends Service {
         if (mBluetoothGatt == null) {
             return;
         }
-        Log.w(TAG, "mBluetoothGatt closed");
+        Log.w("test66", "mBluetoothGatt closed");
         mBluetoothDeviceAddress = null;
         mBluetoothGatt.close();
         mBluetoothGatt = null;
