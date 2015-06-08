@@ -60,8 +60,12 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -158,6 +162,8 @@ public class SetPersonalInfoNotCerti extends Activity {
 		super.onCreate(savedInstanceState);
 //		getActionBar().hide();
 		setContentView(R.layout.set_person_info_not_certi);
+		
+		setupUI(findViewById(R.id.main));
 		
 		upLoadBar = (ProgressBar) findViewById(R.id.uploadBar);
 		upLoadBar.setVisibility(View.INVISIBLE);
@@ -347,6 +353,12 @@ public class SetPersonalInfoNotCerti extends Activity {
 				menuWindow = new SelectPicPopupWindow(SetPersonalInfoNotCerti.this, itemsOnClick); 
 				menuWindow.showAtLocation(SetPersonalInfoNotCerti.this.findViewById(R.id.main), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
 //				openOptionsMenu();
+				
+				View view = getWindow().peekDecorView();
+		        if (view != null) {
+		            InputMethodManager inputmanger = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		            inputmanger.hideSoftInputFromWindow(view.getWindowToken(), 0);
+		        }
 			}
 			
 		});
@@ -1033,5 +1045,28 @@ public class SetPersonalInfoNotCerti extends Activity {
         }
         
     }
-
+    
+    public static void hideSoftKeyboard(Activity activity) {
+		InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+		inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+	}
+	
+	public void setupUI(View view) {
+		// Set up touch listener for non-text box views to hide keyboard.
+		if (!(view instanceof EditText)) {
+			view.setOnTouchListener(new OnTouchListener() {
+				public boolean onTouch(View v, MotionEvent event) {
+					hideSoftKeyboard(SetPersonalInfoNotCerti.this); 
+					return false;
+				}
+			});
+		}
+		// If a layout container, iterate over children and seed recursion.
+		if (view instanceof ViewGroup) {
+			for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+				View innerView = ((ViewGroup) view).getChildAt(i);
+				setupUI(innerView);
+			}
+		}
+	}
 }
