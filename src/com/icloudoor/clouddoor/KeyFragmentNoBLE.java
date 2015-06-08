@@ -84,11 +84,11 @@ import com.android.volley.toolbox.Volley;
 import com.icloudoor.clouddoor.ChannelSwitchView.OnCheckedChangeListener;
 import com.icloudoor.clouddoor.ShakeEventManager;
 import com.icloudoor.clouddoor.UartService;
-import com.icloudoor.clouddoor.ShakeEventManager.ShakeListener;
+//import com.icloudoor.clouddoor.ShakeEventManager.ShakeListener;
 import com.icloudoor.clouddoor.SwitchButton.OnSwitchListener;
 
 @SuppressLint("NewApi")
-public class KeyFragmentNoBLE extends Fragment implements ShakeListener {
+public class KeyFragmentNoBLE extends Fragment {
 
 	private String TAG = this.getClass().getSimpleName();
 	
@@ -1916,9 +1916,9 @@ public class KeyFragmentNoBLE extends Fragment implements ShakeListener {
 		return loadSid.getString("SID", null);
 	}
 
-	@Override
-	public void onShake() {
-		// TODO Auto-generated method stub
-		
-	}
+//	@Override
+//	public void onShake() {
+//		// TODO Auto-generated method stub
+//		
+//	}
 }
