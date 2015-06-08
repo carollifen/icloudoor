@@ -511,13 +511,7 @@ public class KeyFragment extends Fragment {
 				}
 			}
 		});
-			
-		/*
-		 * for new shake
-		 */
-//		sensorManager = (SensorManager) getActivity().getSystemService(getActivity().SENSOR_SERVICE);
-		
-		
+
 		carDoorList = new ArrayList<HashMap<String, String>>();
 		manDoorList = new ArrayList<HashMap<String, String>>();
 //		if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
