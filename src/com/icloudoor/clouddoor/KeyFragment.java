@@ -433,8 +433,8 @@ public class KeyFragment extends Fragment {
 			}
 		});
 
-		carDoorList = new ArrayList<HashMap<String, String>>();
-		manDoorList = new ArrayList<HashMap<String, String>>();
+//		carDoorList = new ArrayList<HashMap<String, String>>();
+//		manDoorList = new ArrayList<HashMap<String, String>>();
 
 		RlOpenKeyList.setOnClickListener(new OnClickListener() {
 			@Override
@@ -479,6 +479,68 @@ public class KeyFragment extends Fragment {
 
 								if (response.getString("sid") != null)
 									saveSid(response.getString("sid"));
+								
+								if(carDoorList != null){
+						        	carDoorList.clear();
+						        	carDoorList = null;
+						        }
+						        if(manDoorList != null){
+						        	manDoorList.clear();
+						        	manDoorList = null;
+						        }
+						        
+						        carDoorList = new ArrayList<HashMap<String, String>>();
+								manDoorList = new ArrayList<HashMap<String, String>>();
+								
+								//TODO DELETE TEMPARY
+								if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
+									if (DBCount() > 0) {
+										
+										Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME,
+												null);
+										if (mCursor.moveToFirst()) {
+											int zoneIdIndex = mCursor.getColumnIndex("zoneId");
+											int deviceIdIndex = mCursor.getColumnIndex("deviceId");
+											int doorNamemIndex = mCursor.getColumnIndex("doorName");
+											int doorTypeIndex = mCursor.getColumnIndex("doorType");
+											int directionIndex = mCursor.getColumnIndex("direction");
+//											int carStatusIndex = mCursor.getColumnIndex("carStatus");
+//											int carPosStatusIndex = mCursor.getColumnIndex("carPosStatus");
+
+											do {
+												HashMap<String, String> temp = new HashMap<String, String>();
+												String deviceId = mCursor.getString(deviceIdIndex);
+												String doorName = mCursor.getString(doorNamemIndex);
+												String doorType = mCursor.getString(doorTypeIndex);
+												String direction = mCursor.getString(directionIndex);
+//												String carStatus = mCursor.getString(carStatusIndex);
+//												String carPosStatus = mCursor.getString(carPosStatusIndex);
+												String zoneId = mCursor.getString(zoneIdIndex);
+
+												/*  Add new logic for car key
+												 *  select the car doors can be opened, 
+												 *  and all the man doors
+												 */
+												if (doorType.equals("2")) {						
+													Log.e(TAG, "add a car key");
+													temp.put("CDdeviceid", deviceId);
+													temp.put("CDdoorName", doorName);
+													temp.put("CDdoorType", doorType);
+													temp.put("CDDirection", direction);
+													carDoorList.add(temp);		
+												} else if (doorType.equals("1")) {
+													Log.e(TAG, "add man key");
+													temp.put("MDdeviceid", deviceId);
+													temp.put("MDdoorName", doorName);
+													temp.put("MDdoorType", doorType);
+													temp.put("MDDirection", direction);
+													manDoorList.add(temp);
+												}
+											} while (mCursor.moveToNext());
+										}
+						                mCursor.close();
+									}
+								}
 								
 							} else if (response.getInt("code") == -81) {
 								if (getActivity() != null)
@@ -1302,6 +1364,18 @@ public class KeyFragment extends Fragment {
         mOpenDoorState = 0;
 //		checkBlueToothState();
 
+        if(carDoorList != null){
+        	carDoorList.clear();
+        	carDoorList = null;
+        }
+        if(manDoorList != null){
+        	manDoorList.clear();
+        	manDoorList = null;
+        }
+        
+        carDoorList = new ArrayList<HashMap<String, String>>();
+		manDoorList = new ArrayList<HashMap<String, String>>();
+        
 		//TODO DELETE TEMPARY
 		if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
 			if (DBCount() > 0) {
