@@ -1518,7 +1518,9 @@ public class KeyFragment extends Fragment {
 
 	private void service_init() {
 		Intent bindIntent = new Intent(getActivity(), UartService.class);
-		getActivity().bindService(bindIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
+		if(!getActivity().bindService(bindIntent, mServiceConnection, Context.BIND_AUTO_CREATE)) {
+			getActivity().finish();
+		}
 		LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
 				UARTStatusChangeReceiver, makeGattUpdateIntentFilter());
 	}
@@ -1573,15 +1575,16 @@ public class KeyFragment extends Fragment {
 				@Override
 				public void run() {
 					boolean findKey = false;
+					boolean bValidKey = false;
 					if (mBTScanning) {
 						mBluetoothAdapter.stopLeScan(mLeScanCallback);
-						mBTScanning = false;
+//						mBTScanning = false;
 					}
 
 					Log.e(TAG, "mDeviceList.size() =" + String.valueOf(mDeviceList.size()));
 
 					// add for the case of only one door -- START
-					if (mDeviceList != null && mDeviceList.size() == 1) {
+					if (mDeviceList != null && mDeviceList.size() == 1) {	// 1.just one door
 						onlyOneDoor = true;
 						for (int i = 0; i < carDoorList.size(); i++) {
 							String tempDID = carDoorList.get(i).get("CDdeviceid");
@@ -1595,22 +1598,25 @@ public class KeyFragment extends Fragment {
 									+ String.valueOf(data[10]) + String.valueOf(data[11]);
 							Log.e("TEST", "CDdeviceID:" + formatDeviceId);
 
-							if (mDeviceList.get(0).getAddress().equals(formatDeviceId)) {// one car door
-								tempCarDoorList.add(mDeviceList.get(0));
-								BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
-								BtnOpenDoor.setEnabled(true);
+							if (mDeviceList.get(0).getAddress().equals(formatDeviceId)) {// 2.one car door
+//								Log.e("TEST69", String.valueOf(mDevRssiValues.get(mDeviceList.get(0).getAddress())));
+								if (mDevRssiValues.get(mDeviceList.get(0).getAddress()) > (int)(-75)) {
+									bValidKey = true;
+									tempCarDoorList.add(mDeviceList.get(0));
+									BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
+									BtnOpenDoor.setEnabled(true);
+									doorName.setText(carDoorList.get(i).get("CDdoorName"));
+									doorNameFlag.setVisibility(View.VISIBLE);
 
-								doorName.setText(carDoorList.get(i).get("CDdoorName"));
-								doorNameFlag.setVisibility(View.VISIBLE);
-
+									isChooseCarChannel = 1;
+									switchBtn.setSwitch(false);
+								}
 								findKey = true;
-								isChooseCarChannel = 1;
-								switchBtn.setSwitch(false);
 								break;
 							}
 						}
 
-						if (!findKey) {
+						if (!findKey) {// 3.one man door
 							for (int i = 0; i < manDoorList.size(); i++) {
 								String tempDID = manDoorList.get(i).get("MDdeviceid");
 								tempDID = tempDID.toUpperCase();
@@ -1624,15 +1630,17 @@ public class KeyFragment extends Fragment {
 								Log.e("TEST", "MDdeviceID:" + formatDeviceId);
 
 								if (mDeviceList.get(0).getAddress().equals(formatDeviceId)) {// one man door
-									tempManDoorList.add(mDeviceList.get(0));
-									BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
-									BtnOpenDoor.setEnabled(true);
+									if (mDevRssiValues.get(mDeviceList.get(0).getAddress()) > (int)(-80)) {
+										bValidKey = true;
+										tempManDoorList.add(mDeviceList.get(0));
+										BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
+										BtnOpenDoor.setEnabled(true);
+										doorName.setText(manDoorList.get(i).get("MDdoorName"));
+										doorNameFlag.setVisibility(View.VISIBLE);
 
-									doorName.setText(manDoorList.get(i).get("MDdoorName"));
-									doorNameFlag.setVisibility(View.VISIBLE);
-
-									isChooseCarChannel = 0;
-									switchBtn.setSwitch(true);
+										isChooseCarChannel = 0;
+										switchBtn.setSwitch(true);
+									}
 									findKey = true;
 									break;
 								}
@@ -1641,10 +1649,10 @@ public class KeyFragment extends Fragment {
 					}
 					// add for the case of only one door -- END		
 
-					if (!findKey) { // more one man door or car door
+					if (!findKey) { // 4.more one door
 						if (mDeviceList != null && mDeviceList.size() > 1) {
 							onlyOneDoor = false;
-							if (isChooseCarChannel == 1) {
+							if (isChooseCarChannel == 1) {// 5.when choose car door
 //								List<BluetoothDevice> tempCarDoorList = new ArrayList<BluetoothDevice>();
 								for (int temp = 0; temp < mDeviceList.size(); temp++) {
 									for (int i = 0; i < carDoorList.size(); i++) {
@@ -1664,7 +1672,7 @@ public class KeyFragment extends Fragment {
 									}
 								}
 								if (findKey) {
-									if (tempCarDoorList.size() == 1) {
+									if (tempCarDoorList.size() == 1) {// 5.1.just one car door
 										for (int i = 0; i < carDoorList.size(); i++) {
 											String tempDID = carDoorList.get(i).get("CDdeviceid");
 											tempDID = tempDID.toUpperCase();
@@ -1678,13 +1686,17 @@ public class KeyFragment extends Fragment {
 											Log.e("TEST", "CDdeviceID:" + formatDeviceId);
 
 											if (tempCarDoorList.get(0).getAddress().equals(formatDeviceId)) {
-												BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
-												BtnOpenDoor.setEnabled(true);
-												doorName.setText(carDoorList.get(i).get("CDdoorName"));
-												doorNameFlag.setVisibility(View.VISIBLE);
+												Log.e("TEST69", "car rssi:"+String.valueOf(mDevRssiValues.get(tempCarDoorList.get(0).getAddress())));
+												if (mDevRssiValues.get(tempCarDoorList.get(0).getAddress()) > (int)(-75)) {
+													bValidKey = true;
+													BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
+													BtnOpenDoor.setEnabled(true);
+													doorName.setText(carDoorList.get(i).get("CDdoorName"));
+													doorNameFlag.setVisibility(View.VISIBLE);
+												}
 											}
 										}
-									}else if (tempCarDoorList.size() > 1){
+									}else if (tempCarDoorList.size() > 1){// 5.2.more one car door
 
 											int maxRssiIndex = 0;
 											int maxRssi = -128;
@@ -1713,15 +1725,18 @@ public class KeyFragment extends Fragment {
 											Log.e("TEST", "CDdeviceID:" + formatDeviceId);
 
 											if (tempCarDoorList.get(deviceIndexToOpen).getAddress().equals(formatDeviceId)) {
-												BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
-												BtnOpenDoor.setEnabled(true);
-												doorName.setText(carDoorList.get(i).get("CDdoorName"));
-												doorNameFlag.setVisibility(View.VISIBLE);
+												if (mDevRssiValues.get(tempCarDoorList.get(deviceIndexToOpen).getAddress()) > (int)(-75)) {
+													bValidKey = true;
+													BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
+													BtnOpenDoor.setEnabled(true);
+													doorName.setText(carDoorList.get(i).get("CDdoorName"));
+													doorNameFlag.setVisibility(View.VISIBLE);
+												}
 											}
 										}
 									}
 								}
-							}else {// man door
+							}else {// 6.choose man door
 //								List<BluetoothDevice> tempManDoorList = new ArrayList<BluetoothDevice>();
 								for (int temp = 0; temp < mDeviceList.size(); temp++) {
 									for (int i = 0; i < manDoorList.size(); i++) {
@@ -1741,7 +1756,7 @@ public class KeyFragment extends Fragment {
 									}
 								}
 								if (findKey) {
-									if (tempManDoorList.size() == 1) {
+									if (tempManDoorList.size() == 1) {// 6.1.just one door
 										for (int i = 0; i < manDoorList.size(); i++) {
 											String tempDID = manDoorList.get(i).get("MDdeviceid");
 											tempDID = tempDID.toUpperCase();
@@ -1755,13 +1770,17 @@ public class KeyFragment extends Fragment {
 											Log.e("TEST", "MDdeviceID:" + formatDeviceId);
 
 											if (tempManDoorList.get(0).getAddress().equals(formatDeviceId)) {
-												BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
-												BtnOpenDoor.setEnabled(true);
-												doorName.setText(manDoorList.get(i).get("MDdoorName"));
-												doorNameFlag.setVisibility(View.VISIBLE);
+												Log.e("TEST69", "man rssi:"+String.valueOf(mDevRssiValues.get(tempManDoorList.get(0).getAddress())));
+												if (mDevRssiValues.get(tempManDoorList.get(0).getAddress()) > (int)(-80)) {
+													bValidKey = true;
+													BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
+													BtnOpenDoor.setEnabled(true);
+													doorName.setText(manDoorList.get(i).get("MDdoorName"));
+													doorNameFlag.setVisibility(View.VISIBLE);
+												}
 											}
 										}
-									}else if (tempManDoorList.size() > 1) {
+									}else if (tempManDoorList.size() > 1) {// 6.2.more one man door
 
 										int maxRssiIndex = 0;
 										int maxRssi = -128;
@@ -1790,10 +1809,14 @@ public class KeyFragment extends Fragment {
 											Log.e("TEST", "MDdeviceID:" + formatDeviceId);
 
 											if (tempManDoorList.get(deviceIndexToOpen).getAddress().equals(formatDeviceId)) {
-												BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
-												BtnOpenDoor.setEnabled(true);
-												doorName.setText(manDoorList.get(i).get("MDdoorName"));
-												doorNameFlag.setVisibility(View.VISIBLE);
+												if (mDevRssiValues.get(tempManDoorList.get(deviceIndexToOpen).getAddress()) > (int)(-80)) {
+													bValidKey = true;
+													BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
+													BtnOpenDoor.setEnabled(true);
+													doorName.setText(manDoorList.get(i).get("MDdoorName"));
+//													Log.e("TEST", manDoorList.get(i).get("MDdoorName") + ",i = " + String.valueOf(i));
+													doorNameFlag.setVisibility(View.VISIBLE);
+												}
 											}
 										}
 									}
@@ -1801,14 +1824,14 @@ public class KeyFragment extends Fragment {
 							}
 						}
 					}
-					if (findKey/*mDeviceList.size() != 0*/) {
+					mBTScanning = false;
+					if (bValidKey/*mDeviceList.size() != 0*/) {
 						scanStatus.setText(R.string.can_shake_to_open_door);
 						myThread.mKeyFindState = true;
 						circle.setVisibility(View.INVISIBLE);
 						radar.setVisibility(View.INVISIBLE);
 						radar.clearAnimation();
 					} else {
-						findKey = false;
 						myThread.mKeyFindState = false;
 						circle.setVisibility(View.VISIBLE);
 						radar.setVisibility(View.VISIBLE);
@@ -1891,8 +1914,8 @@ public class KeyFragment extends Fragment {
        if (btStateOpen) {
 			onlyOneDoor = !onlyOneDoor;
 
-            if (mDeviceList != null && mDeviceList.size() > 0) {
-                if (mDeviceList.get(deviceIndexToOpen).getAddress() != null) {
+//            if (mDeviceList != null && mDeviceList.size() > 0) {
+//                if (mDeviceList.get(deviceIndexToOpen).getAddress() != null) {
 
                     //TODO
                     if (isChooseCarChannel == 1) {
@@ -2037,8 +2060,8 @@ public class KeyFragment extends Fragment {
                         }
                     }, 5000);
 
-                }
-            }
+//                }
+//            }
         }
     }
 
@@ -2175,6 +2198,7 @@ public class KeyFragment extends Fragment {
                     myThread = new MyThread();
                     myThread.start();
 					//populateDeviceList(mBtStateOpen);
+					service_init();
 					break;
 
 				case BluetoothAdapter.STATE_TURNING_ON:
@@ -2313,7 +2337,7 @@ public class KeyFragment extends Fragment {
     public void onStop() {
         super.onStop();
         vibrator.cancel();
-        
+
 //        if (sensorManager != null) {
 //            sensorManager.unregisterListener(sensorEventListener);
 //        }
