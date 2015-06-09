@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:layout_height="64dp"
+    android:orientation="horizontal"
+    android:background="#ffffff">
 
     <View
         android:id="@+id/umeng_fb_reply_item_view_tag"
-        android:layout_width="6dp"
+        android:layout_width="0dp"
         android:layout_height="fill_parent"
-        android:background="@color/umeng_fb_lightblue" />
+        android:background="#ffffff" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -19,7 +20,7 @@
             android:id="@+id/umeng_fb_reply_content_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="6dp">
+            android:layout_marginLeft="16dp">
 
             <RelativeLayout
                 android:id="@+id/umeng_fb_reply_audio_layout"
@@ -33,7 +34,7 @@
                     android:id="@+id/umeng_fb_reply_audio_play_anim"
                     android:layout_width="11dp"
                     android:layout_height="17dp"
-                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="5dp"
                     android:layout_centerVertical="true"
                     android:background="@anim/umeng_fb_audio_play_anim" />
             </RelativeLayout>
@@ -54,12 +55,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/umeng_fb_reply_content_layout"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="16dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="2dp"
             android:gravity="center_vertical"
-            android:textColor="@color/umeng_fb_secondary_text_light"
-            android:textSize="@dimen/umeng_fb_item_time_size" />
+            android:textColor="#999999"
+            android:textSize="10sp" />
 
         <ImageView
             android:id="@+id/umeng_fb_resend"

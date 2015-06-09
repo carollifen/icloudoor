@@ -1,19 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content" >
 
-    <include
-        android:id="@+id/umeng_fb_contact_title"
-        layout="@layout/umeng_fb_reply_item_text" />
+    <RelativeLayout
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="#0065a1" >
 
-    <ImageView
-        android:id="@+id/umeng_fb_action_collapse"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:contentDescription="@string/umeng_fb_contact_info"
-        android:src="@drawable/umeng_fb_arrow_right" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="用户反馈"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title" >
+
+        <include
+            android:id="@+id/umeng_fb_contact_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            layout="@layout/umeng_fb_reply_item_text" />
+
+        <ImageView
+            android:id="@+id/umeng_fb_action_collapse"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:contentDescription="@string/umeng_fb_contact_info"
+            android:src="@drawable/umeng_fb_arrow_right" />
+    </RelativeLayout>
+
 </RelativeLayout>

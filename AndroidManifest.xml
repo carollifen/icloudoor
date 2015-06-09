@@ -386,7 +386,7 @@
         <activity
             android:name=".XieYiActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait"  >
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 

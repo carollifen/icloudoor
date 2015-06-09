@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.umeng.fb.FeedbackAgent;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengRegistrar;
 
@@ -121,11 +122,17 @@ public class CloudDoorMainActivity extends FragmentActivity {
 			+ "/Cloudoor/CacheImage";
 	private String jpegName = "myImage.jpg";
 	
+	private FeedbackAgent agent;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 //		getActionBar().hide();
 		setContentView(R.layout.new_main);
+		
+		// for Umeng Feedback
+		agent = new FeedbackAgent(this);
+		agent.sync();
 		
 		// for Umeng Push Service
 		mPushAgent = PushAgent.getInstance(getApplicationContext());

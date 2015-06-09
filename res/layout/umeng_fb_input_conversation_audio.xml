@@ -5,11 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="#ffffff">
 
     <View
         android:id="@+id/fb_reply_item_view_tag"
-        android:layout_width="6dp"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:background="@color/umeng_fb_gray" />
 
@@ -21,7 +22,7 @@
         <View
             android:id="@+id/fb_reply_item_view_line"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/umeng_fb_item_line_height"
+            android:layout_height="0.5dp"
             android:background="@color/umeng_fb_line" />
 
 
@@ -35,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="4dp"
                 android:layout_marginRight="10dp"
                 android:background="@null"
                 android:src="@drawable/umeng_fb_keyboard" />
@@ -51,7 +52,8 @@
                 android:background="@color/umeng_fb_gray"
                 android:text="@string/umeng_fb_press_speech"
                 android:focusable="true"
-                android:textSize="@dimen/umeng_fb_record_btn_text_size" />
+                android:textSize="15sp"
+                android:textColor="#666666" />
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

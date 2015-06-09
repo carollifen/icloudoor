@@ -4,6 +4,8 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -39,6 +41,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.umeng.fb.FeedbackAgent;
+import com.umeng.fb.model.UserInfo;
 
 public class SettingFragment extends Fragment {
 	private String TAG = this.getClass().getSimpleName();
@@ -100,45 +103,38 @@ public class SettingFragment extends Fragment {
 		View view = inflater.inflate(R.layout.set_page, container, false);
 
 		back_from_user= (RelativeLayout) view.findViewById(R.id.back_from_user);
-		
-		
 		back_from_user.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-//				Intent intent=new Intent(getActivity(),MainActivity.class);
-//				startActivity(intent);
-				 agent = new FeedbackAgent(getActivity());
-//				UserInfo info = agent.getUserInfo();
-//				if (info == null)
-//				  info = new UserInfo();
-//				Map<String, String> contact = info.getContact();
-//				if (contact == null)
-//				contact = new HashMap<String, String>();
-//				String contact_info = "?¡§a????";
-//				//contact.put("name", contact_info);
-//
-//			//	contact.put("email", "*******");
-//				//contact.put("qq", "*******");
-//				//contact.put("phone", "*******");
-//				//contact.put("plain", "*******");
-//				info.setContact(contact);
-//
-//				// optional, setting user gender information.
-//				info.setAgeGroup(1);
-//				info.setGender("male");
-//				//info.setGender("female");
-//
-//				agent.setUserInfo(info);
-//
-//				new Thread(new Runnable() {
-//				            @Override
-//				            public void run() {
-//				                boolean result = agent.updateUserInfo();
-//				            }
-//				        }).start();
-				 agent.removeWelcomeInfo();
+				SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
+				
+				agent = new FeedbackAgent(getActivity());
+				UserInfo info = agent.getUserInfo();
+				if (info == null)
+					info = new UserInfo();
+				Map<String, String> contact = info.getContact();
+				if (contact == null)
+					contact = new HashMap<String, String>();
+
+				
+				if(loginStatus.getString("NAME", null).length() > 0)
+					contact.put("name", loginStatus.getString("NAME", null));
+				if(loginStatus.getString("PHONENUM", null).length() > 0)
+					contact.put("phone", loginStatus.getString("PHONENUM", null));
+				info.setContact(contact);
+				agent.setUserInfo(info);
+
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						boolean result = agent.updateUserInfo();
+					}
+					
+				}).start();
+				
+				agent.setWelcomeInfo(getString(R.string.umeng_fb_reply_content_default));
 				agent.startFeedbackActivity();
 			}
 		});
