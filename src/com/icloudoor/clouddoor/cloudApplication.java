@@ -66,6 +66,8 @@ public class cloudApplication extends Application {
 		    }
 		};
 		mPushAgent.setNotificationClickHandler(notificationClickHandler);
+		CrashHandler crashHandler = CrashHandler.getInstance();
+		crashHandler.init(getApplicationContext());
 	}
 
 }
