@@ -422,10 +422,11 @@ public class KeyFragment extends Fragment {
 						startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 					}else {
 						if (mOpenDoorState == 0) {
-							mOpenDoorState = 1;
-							Log.i("test", "doOpenDoor");
-
-							doOpenDoor(mBtStateOpen);
+							if (!mBTScanning) {
+								mOpenDoorState = 1;
+								Log.i("test", "doOpenDoor");
+								doOpenDoor(mBtStateOpen);
+							}
 						}
 					}
 				}
@@ -1256,7 +1257,9 @@ public class KeyFragment extends Fragment {
                     case 10:
                         if (mOpenDoorState == 0) {
                             Log.i(TAG, "Thread handler");
-                            populateDeviceList(mBtStateOpen);
+							if (mOpenDoorState == 0) {
+								populateDeviceList(mBtStateOpen);
+							}
                         }
                         break;
                     default:
@@ -1518,8 +1521,8 @@ public class KeyFragment extends Fragment {
 									+ String.valueOf(data[10]) + String.valueOf(data[11]);
 							Log.e("TEST", "CDdeviceID:" + formatDeviceId);
 
-							if (mDeviceList.get(0).getAddress().equals(formatDeviceId)) {
-
+							if (mDeviceList.get(0).getAddress().equals(formatDeviceId)) {// one car door
+								tempCarDoorList.add(mDeviceList.get(0));
 								BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
 								BtnOpenDoor.setEnabled(true);
 
@@ -1546,8 +1549,8 @@ public class KeyFragment extends Fragment {
 										+ String.valueOf(data[10]) + String.valueOf(data[11]);
 								Log.e("TEST", "MDdeviceID:" + formatDeviceId);
 
-								if (mDeviceList.get(0).getAddress().equals(formatDeviceId)) {
-
+								if (mDeviceList.get(0).getAddress().equals(formatDeviceId)) {// one man door
+									tempManDoorList.add(mDeviceList.get(0));
 									BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
 									BtnOpenDoor.setEnabled(true);
 
@@ -1564,7 +1567,7 @@ public class KeyFragment extends Fragment {
 					}
 					// add for the case of only one door -- END		
 
-					if (!findKey) {
+					if (!findKey) { // more one man door or car door
 						if (mDeviceList != null && mDeviceList.size() > 1) {
 							onlyOneDoor = false;
 							if (isChooseCarChannel == 1) {

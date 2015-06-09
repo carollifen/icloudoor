@@ -9,10 +9,16 @@ import android.hardware.SensorManager;
 
 public class ShakeEventManager implements SensorEventListener {
 
+    private float lastX;
+    private float lastY;
+    private float lastZ;
+    private long lastUpdateTime;
+    private static final int SPEED_SHRESHOLD = 45;
+    private static final int UPTATE_INTERVAL_TIME = 50;
 
-    private static final int SPEED_SHRESHOLD = 7000;
-
-    private static final int UPTATE_INTERVAL_TIME = 100;
+//    private static final int SPEED_SHRESHOLD = 7000;
+//
+//    private static final int UPTATE_INTERVAL_TIME = 100;
 
     private SensorManager sensorManager;
 
@@ -22,11 +28,11 @@ public class ShakeEventManager implements SensorEventListener {
 
     private Context mContext;
 
-    private float lastX;
-    private float lastY;
-    private float lastZ;
+//    private float lastX;
+//    private float lastY;
+//    private float lastZ;
 
-    private long lastUpdateTime;
+//    private long lastUpdateTime;
 
 
     public ShakeEventManager(Context c) {
@@ -66,14 +72,11 @@ public class ShakeEventManager implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
 
         long currentUpdateTime = System.currentTimeMillis();
-
         long timeInterval = currentUpdateTime - lastUpdateTime;
-
-        if (timeInterval < UPTATE_INTERVAL_TIME)
+        if (timeInterval < UPTATE_INTERVAL_TIME) {
             return;
-
+        }
         lastUpdateTime = currentUpdateTime;
-
 
         float x = event.values[0];
         float y = event.values[1];
@@ -87,11 +90,12 @@ public class ShakeEventManager implements SensorEventListener {
         lastY = y;
         lastZ = z;
 
-        double speed = Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ
-                * deltaZ)
-                / timeInterval * 10000;
-
+        double speed = (Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ
+                * deltaZ) / timeInterval) * 100;
         if (speed >= SPEED_SHRESHOLD) {
+//            mLayoutBottom.setVisibility(View.GONE);
+//            vibrator.vibrate(300);
+//            onShake();
             onShakeListener.onShake();
         }
     }
