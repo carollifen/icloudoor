@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +35,7 @@ import com.icloudoor.clouddoor.Entities.MultipartEntity;
 import com.icloudoor.clouddoor.Entities.Part;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -72,6 +74,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
@@ -122,11 +125,17 @@ public class SetPersonalInfo extends Activity {
 	private RelativeLayout setSexWoman;
 	private ImageView sexMan;
 	private ImageView sexWoman;
-	private EditText birthYear;
-	private EditText birthMonth;
-	private EditText birthDay;
+//	private EditText birthYear;
+//	private EditText birthMonth;
+//	private EditText birthDay;
 	private TextView personalID;
 	private TextView realName;
+	
+	private TextView birthday;
+	final Calendar c = Calendar.getInstance();
+	int mYear = c.get(Calendar.YEAR);
+	int mMonth = c.get(Calendar.MONTH);
+	int mDay = c.get(Calendar.DAY_OF_MONTH);
 
 	private static final int MSG_SUCCESS = 0;// get the image success
 	private static final int MSG_FAILURE = 1;// fail
@@ -207,7 +216,7 @@ public class SetPersonalInfo extends Activity {
 
 		if (ID.length() > 0) {
 			StringBuilder sb = new StringBuilder(ID);
-			for (int i = 3; i < 14; i++) {
+			for (int i = 6; i < 18; i++) {
 				sb.setCharAt(i, '*');
 			}
 			personalID.setText(sb.toString());
@@ -422,6 +431,27 @@ public class SetPersonalInfo extends Activity {
 			}
 
 		});
+		
+		birthday.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+
+					@Override
+					public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+						String s = year + " " + getString(R.string.year) + " " + (monthOfYear + 1) + " " + getString(R.string.month) + " " + dayOfMonth + " " + getString(R.string.day);
+						birthday.setText(s);
+						BirthDay = String.valueOf(year) + "-" 
+								+ (String.valueOf(monthOfYear + 1).length() == 1 ? ("0" + String.valueOf(monthOfYear + 1)) : String.valueOf(monthOfYear + 1)) + "-"
+								+ (String.valueOf(dayOfMonth).length() == 1 ? ("0" + String.valueOf(dayOfMonth)) : String.valueOf(dayOfMonth));
+					}
+					
+				};
+				new DatePickerDialog(SetPersonalInfo.this, onDateSetListener, mYear, mMonth, mDay).show();
+			}
+			
+		});
 
 		sid = loadSid();
 
@@ -438,8 +468,8 @@ public class SetPersonalInfo extends Activity {
 				// Name = realName.getText().toString();
 				Nickname = nickName.getText().toString();
 				// PersonalID = personalID.getText().toString();
-				BirthDay = birthYear.getText().toString() + "-" + (birthMonth.getText().toString().length() == 1 ? ("0" + birthMonth.getText().toString()) : birthMonth.getText().toString())
-						+ "-" + (birthDay.getText().toString().length() == 1 ? ("0" + birthDay.getText().toString()) : birthDay.getText().toString());
+//				BirthDay = birthYear.getText().toString() + "-" + (birthMonth.getText().toString().length() == 1 ? ("0" + birthMonth.getText().toString()) : birthMonth.getText().toString())
+//						+ "-" + (birthDay.getText().toString().length() == 1 ? ("0" + birthDay.getText().toString()) : birthDay.getText().toString());
 				MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
 						Method.POST, setInfoURL.toString(), null,
 						new Response.Listener<JSONObject>() {
@@ -522,9 +552,7 @@ public class SetPersonalInfo extends Activity {
 					Toast.makeText(getApplicationContext(), R.string.plz_input_nickname, Toast.LENGTH_SHORT).show();
 				} else if (ID.equals(null)) {
 					Toast.makeText(getApplicationContext(), R.string.plz_input_id, Toast.LENGTH_SHORT).show();
-				} else if (birthYear.getText().toString().equals(null)
-						|| birthMonth.getText().toString().equals(null)
-						|| birthDay.getText().toString().equals(null)) {
+				} else if (BirthDay.length() < 9) {
 					Toast.makeText(getApplicationContext(), R.string.plz_input_birthday, Toast.LENGTH_SHORT).show();
 				} else if (portraitUrl.equals(null)) {
 					Toast.makeText(getApplicationContext(), R.string.plz_upload_image, Toast.LENGTH_SHORT).show();
@@ -965,19 +993,27 @@ public class SetPersonalInfo extends Activity {
 		setSexWoman = (RelativeLayout) findViewById(R.id.personal_sex_woman);
 		sexMan = (ImageView) findViewById(R.id.personal_SexMan);
 		sexWoman = (ImageView) findViewById(R.id.personal_SexWoman);
-		birthYear = (EditText) findViewById(R.id.personal_year);
-		birthMonth = (EditText) findViewById(R.id.personal_month);
-		birthDay = (EditText) findViewById(R.id.personal_day);
+//		birthYear = (EditText) findViewById(R.id.personal_year);
+//		birthMonth = (EditText) findViewById(R.id.personal_month);
+//		birthDay = (EditText) findViewById(R.id.personal_day);
 		personalID = (TextView) findViewById(R.id.personal_ID);
 		back = (RelativeLayout) findViewById(R.id.btn_back);
 		save = (RelativeLayout) findViewById(R.id.save_person_info);
+		birthday = (TextView) findViewById(R.id.birthday);
 
 		SharedPreferences saveProfile = getSharedPreferences("PROFILE", MODE_PRIVATE);
 
 		nickName.setText(saveProfile.getString("NICKNAME", ""));
-		birthYear.setText(saveProfile.getString("YEAR", ""));
-		birthMonth.setText(saveProfile.getString("MONTH", ""));
-		birthDay.setText(saveProfile.getString("DAY", ""));
+//		birthYear.setText(saveProfile.getString("YEAR", ""));
+//		birthMonth.setText(saveProfile.getString("MONTH", ""));
+//		birthDay.setText(saveProfile.getString("DAY", ""));
+		if(saveProfile.getString("YEAR", "").length() > 0 && saveProfile.getString("MONTH", "").length() > 0 && saveProfile.getString("DAY", "").length() > 0){
+			birthday.setText(saveProfile.getString("YEAR", "") + " " + getString(R.string.year)
+					 + " " + saveProfile.getString("MONTH", "") + " " + getString(R.string.month)
+					 + " " + saveProfile.getString("DAY", "") + " " + getString(R.string.day));
+			
+			BirthDay = saveProfile.getString("YEAR", "") + "-" + saveProfile.getString("MONTH", "") + "-" + saveProfile.getString("DAY", "");				
+		}
 		
 		Sex = saveProfile.getInt("SEX", 1);
 		if(Sex == 1){
