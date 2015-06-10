@@ -206,6 +206,7 @@ public class ForgetPwdActivity extends Activity implements TextWatcher {
 							@Override
 							public void onErrorResponse(VolleyError error) {
 								Log.e(TAG, error.toString());
+								Toast.makeText(ForgetPwdActivity.this, R.string.network_error, Toast.LENGTH_SHORT).show();
 							}
 						}){
 					@Override
@@ -263,7 +264,7 @@ public class ForgetPwdActivity extends Activity implements TextWatcher {
 
 							@Override
 							public void onErrorResponse(VolleyError error) {
-								
+								Toast.makeText(ForgetPwdActivity.this, R.string.network_error, Toast.LENGTH_SHORT).show();
 							}
 						}){
 					@Override
@@ -431,7 +432,7 @@ public class ForgetPwdActivity extends Activity implements TextWatcher {
 
 						@Override
 						public void onErrorResponse(VolleyError error) {
-
+							Toast.makeText(ForgetPwdActivity.this, R.string.network_error, Toast.LENGTH_SHORT).show();
 						}
 					}) {
 				@Override

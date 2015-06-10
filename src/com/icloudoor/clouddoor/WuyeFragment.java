@@ -386,6 +386,8 @@ public class WuyeFragment extends Fragment {
 					@Override
 					public void onErrorResponse(VolleyError error) {
 						// TODO Auto-generated method stub
+						if(getActivity() != null)
+							Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
 					}
 				});
 		mQueue.add(mBannerRequest);
@@ -439,6 +441,8 @@ public class WuyeFragment extends Fragment {
 					@Override
 					public void onErrorResponse(VolleyError error) {
 						Log.e(TAG, error.toString());
+						if(getActivity() != null)
+							Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
 					}
 				});
 		mQueue.add(mJsonRequest);

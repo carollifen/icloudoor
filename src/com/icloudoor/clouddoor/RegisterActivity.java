@@ -244,6 +244,7 @@ public class RegisterActivity extends Activity implements TextWatcher {
 
                         @Override
                         public void onErrorResponse(VolleyError error) {
+    							Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
                         }
                     }) {
                         @Override
@@ -317,7 +318,7 @@ public class RegisterActivity extends Activity implements TextWatcher {
 
 							@Override
 							public void onErrorResponse(VolleyError error) {
-
+								Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
 							}
 						}) {
 					@Override

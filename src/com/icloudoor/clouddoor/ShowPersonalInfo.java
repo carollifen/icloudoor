@@ -329,7 +329,7 @@ public class ShowPersonalInfo extends Activity {
 
 						@Override
 						public void onErrorResponse(VolleyError error) {
-
+							Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
 						}
 					});
 			mQueue.add(mJsonRequest);
@@ -563,7 +563,7 @@ public class ShowPersonalInfo extends Activity {
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
-
+						Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
 					}
 				});
 		mQueue.add(mJsonRequest);

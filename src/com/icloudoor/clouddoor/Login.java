@@ -372,7 +372,7 @@ public class Login extends Activity implements TextWatcher {
 
 								@Override
 								public void onErrorResponse(VolleyError error) {
-
+										Toast.makeText(Login.this, R.string.network_error, Toast.LENGTH_SHORT).show();
 								}
 							}) {
 						@Override

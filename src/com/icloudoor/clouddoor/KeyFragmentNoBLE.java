@@ -806,7 +806,8 @@ public class KeyFragmentNoBLE extends Fragment {
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
-
+						if(getActivity() != null)
+							Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
 					}
 				}) {
 			@Override
@@ -882,6 +883,9 @@ public class KeyFragmentNoBLE extends Fragment {
 					public void onErrorResponse(VolleyError error) {
 						weatherTemp.setText(getString(R.string.weather_not_available));
 						weatherTemp.setTextSize(16);
+						
+						if(getActivity() != null)
+							Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
 					}
 				}) {
 		};

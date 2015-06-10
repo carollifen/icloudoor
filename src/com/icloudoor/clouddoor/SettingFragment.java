@@ -339,6 +339,8 @@ public class SettingFragment extends Fragment {
 
                         @Override
                         public void onErrorResponse(VolleyError error) {
+                        	if(getActivity() != null)
+    							Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
                         }
                     });
                     mQueue.add(mJsonRequest);

@@ -558,7 +558,8 @@ public class KeyFragment extends Fragment {
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
-
+						if(getActivity() != null)
+							Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
 					}
 				}) {
 			@Override
@@ -800,7 +801,8 @@ public class KeyFragment extends Fragment {
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
-
+						if(getActivity() != null)
+							Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
 					}
 				}) {
 			@Override
@@ -1036,8 +1038,6 @@ public class KeyFragment extends Fragment {
 					weatherURL = new URL(HOST + "city=" + String.valueOf(latitude)
 							+ ":" + String.valueOf(longitude)
 							+ "&language=zh-chs&unit=c&aqi=city&key=" + Key);
-					
-//			}
 
 			lhlURL = new URL(lhlHOST + "/user/data/laohuangli/get.do" + "?sid="
 					+ sid);
@@ -1098,7 +1098,8 @@ public class KeyFragment extends Fragment {
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
-
+						if(getActivity() != null)
+							Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
 					}
 				}) {
 			@Override
@@ -1172,6 +1173,9 @@ public class KeyFragment extends Fragment {
 					public void onErrorResponse(VolleyError error) {
 						weatherTemperature.setText(getString(R.string.weather_not_available));
 						weatherTemperature.setTextSize(16);
+						
+						if(getActivity() != null)
+							Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
 					}
 				}) {
 		};

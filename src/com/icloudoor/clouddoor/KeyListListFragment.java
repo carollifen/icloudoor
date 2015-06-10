@@ -463,6 +463,8 @@ public class KeyListListFragment extends Fragment {
 						} catch (JSONException e) {
 							Log.e(TAG, "request error");
 							e.printStackTrace();
+							if(getActivity() != null)
+								Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
 						}
 
 					}
@@ -470,7 +472,8 @@ public class KeyListListFragment extends Fragment {
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
-
+						if(getActivity() != null)
+							Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
 					}
 				}){
 			@Override
@@ -1038,7 +1041,8 @@ public class KeyListListFragment extends Fragment {
 
 								@Override
 								public void onErrorResponse(VolleyError error) {
-
+									if(getActivity() != null)
+										Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
 								}
 							}) {
 						@Override

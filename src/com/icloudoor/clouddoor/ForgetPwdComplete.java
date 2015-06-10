@@ -207,7 +207,7 @@ public class ForgetPwdComplete extends Activity implements TextWatcher{
 
 								@Override
 								public void onErrorResponse(VolleyError error) {
-
+									Toast.makeText(ForgetPwdComplete.this, R.string.network_error, Toast.LENGTH_SHORT).show();
 								}
 							}) {
 						@Override

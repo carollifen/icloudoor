@@ -495,7 +495,7 @@ public class SetPersonalInfo extends Activity {
 
 							@Override
 							public void onErrorResponse(VolleyError error) {
-
+								Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
 							}
 						}) {
 					@Override
@@ -660,10 +660,13 @@ public class SetPersonalInfo extends Activity {
 						}
 
 					} catch (ClientProtocolException e) {
+						Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
 						e.printStackTrace();
 					} catch (IOException e) {
+						Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
 						e.printStackTrace();
 					} catch (JSONException e) {
+						Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
 						e.printStackTrace();
 					}
 				}
@@ -766,10 +769,13 @@ public class SetPersonalInfo extends Activity {
 							});
 						}
 					} catch (ClientProtocolException e) {
+						Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
 						e.printStackTrace();
 					} catch (IOException e) {
+						Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
 						e.printStackTrace();
 					} catch (JSONException e) {
+						Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
 						e.printStackTrace();
 					}
 				}

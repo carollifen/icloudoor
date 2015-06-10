@@ -177,6 +177,7 @@ public class CloudDoorMainActivity extends FragmentActivity {
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					Toast.makeText(CloudDoorMainActivity.this, R.string.network_error, Toast.LENGTH_SHORT).show();
 				}
 			}
 		}, new Response.ErrorListener() {

@@ -32,6 +32,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class WuyeWidgeFragment extends Fragment {
 
@@ -216,8 +217,12 @@ public class WuyeWidgeFragment extends Fragment {
 				out.close();
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
+				if(getActivity() != null)
+					Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
 				e.printStackTrace();
 			} catch (IOException e) {
+				if(getActivity() != null)
+					Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

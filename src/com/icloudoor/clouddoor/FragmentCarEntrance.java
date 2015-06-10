@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request.Method;
@@ -261,7 +262,8 @@ public class FragmentCarEntrance extends Fragment {
 					@Override
 					public void onErrorResponse(VolleyError error) {
 						// TODO Auto-generated method stub
-
+						if(getActivity() != null)
+							Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
 					}
 				}) {
 			@Override

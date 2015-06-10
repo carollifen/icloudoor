@@ -31,6 +31,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -220,9 +221,13 @@ public class WuyeWidgeFragment2 extends Fragment {
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				if(getActivity() != null)
+					Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				if(getActivity() != null)
+					Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
 			}
 
 			mHandler.obtainMessage(MSG_SUCCESS, bitmap).sendToTarget();
