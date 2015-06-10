@@ -114,6 +114,7 @@ public class SetPersonalInfo extends Activity {
 	private int maxClength;
 	private int maxDlength;
 
+	private RelativeLayout addImageLayout;
 	private ImageView personImage;
 	private TextView addImage;
 	private EditText nickName;
@@ -371,7 +372,7 @@ public class SetPersonalInfo extends Activity {
 
 				});
 
-		personImage.setOnClickListener(new OnClickListener() {
+		addImageLayout.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -955,6 +956,7 @@ public class SetPersonalInfo extends Activity {
 	}
 
 	public void initViews() {
+		addImageLayout = (RelativeLayout) findViewById(R.id.personal_AddPhoto_Layout);
 		personImage = (ImageView) findViewById(R.id.personal_AddPhoto);
 		addImage = (TextView) findViewById(R.id.add_image);
 		realName = (TextView) findViewById(R.id.personal_RealName);
@@ -970,16 +972,21 @@ public class SetPersonalInfo extends Activity {
 		back = (RelativeLayout) findViewById(R.id.btn_back);
 		save = (RelativeLayout) findViewById(R.id.save_person_info);
 
-		Sex = 2;
-		sexMan.setImageResource(R.drawable.not_select);
-		sexWoman.setImageResource(R.drawable.select);
-
 		SharedPreferences saveProfile = getSharedPreferences("PROFILE", MODE_PRIVATE);
 
 		nickName.setText(saveProfile.getString("NICKNAME", ""));
 		birthYear.setText(saveProfile.getString("YEAR", ""));
 		birthMonth.setText(saveProfile.getString("MONTH", ""));
 		birthDay.setText(saveProfile.getString("DAY", ""));
+		
+		Sex = saveProfile.getInt("SEX", 1);
+		if(Sex == 1){
+			sexMan.setImageResource(R.drawable.select);
+			sexWoman.setImageResource(R.drawable.not_select);
+		}else if(Sex == 2){
+			sexMan.setImageResource(R.drawable.not_select);
+			sexWoman.setImageResource(R.drawable.select);
+		}
 	}
 
 	private void setSpinner() {

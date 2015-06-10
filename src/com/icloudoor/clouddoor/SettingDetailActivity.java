@@ -123,7 +123,7 @@ public class SettingDetailActivity extends Activity {
 		SharedPreferences setting = getSharedPreferences("SETTING", 0);		
 		canShake = setting.getInt("shake", 1);
 		haveSound = setting.getInt("sound", 1);
-		canDisturb = setting.getInt("disturb", 1);
+		canDisturb = setting.getInt("disturb", 0);
 		switchToCar = setting.getInt("chooseCar", 1);
 		
 		if(canShake == 1)

@@ -113,32 +113,15 @@ public class KeyFragment extends Fragment {
 	private ArrayList<HashMap<String, String>> carDoorList;
 	private ArrayList<HashMap<String, String>> manDoorList;
 
-	private RelativeLayout channelSwitch;
-	private RelativeLayout keyWidge;
-
-	private TextView TvChooseCar;
-	private TextView TvChooseMan;
-	private TextView TvDistrictDoor;
-	private TextView TvCarNumber;
 	private RelativeLayout RlOpenKeyList;
-
-	private ImageView IvChooseCar;
-	private ImageView IvChooseMan;
-	private RelativeLayout IvSearchKey;
 //	private ImageView IvOpenDoorLogo;
 //	private ImageView IvWeatherWidgePush1;
 //	private ImageView IvWeatherWidgePush2;
 
-	private int COLOR_CHANNEL_CHOOSE = 0xFF010101;
-	private int COLOR_CHANNEL_NOT_CHOOSE = 0xFF999999;
-
-	private int canDisturb;
+//	private int canDisturb;
 	private int haveSound;
 	private int canShake;
     private Vibrator vibrator;
-
-	private float alpha_transparent = 0.0f;
-	private float alpha_opaque = 1.0f;
 
 //	private ViewPager mWeatherWidgePager;
 //	private ArrayList<Fragment> mKeyPageFragmentList;
@@ -223,11 +206,8 @@ public class KeyFragment extends Fragment {
 	private List<BluetoothDevice> tempCarDoorList;
 	private List<BluetoothDevice> tempManDoorList;
 	private Map<String, Integer> mDevRssiValues;
-	private BluetoothGattCharacteristic mNotifyCharacteristic;
 
 	private int deviceIndexToOpen = 0;
-	private String NameOfDoorToOpen = null;
-	private String IdOfDoorToOpen = null;
 
 	private SoundPool mSoundPool;
 		
@@ -242,14 +222,7 @@ public class KeyFragment extends Fragment {
     private ImageView radar;
     
     private SharedPreferences carNumAndPhoneNumShare;
-    
-    /*
-     * new shake
-     */
-//    private SensorManager sensorManager;
-//    private static final int SENSOR_SHAKE = 10;
-    
-    
+
 	public KeyFragment() {
 		// Required empty public constructor
 	}
@@ -1600,7 +1573,7 @@ public class KeyFragment extends Fragment {
 									+ String.valueOf(data[6]) + String.valueOf(data[7]) + ":"
 									+ String.valueOf(data[8]) + String.valueOf(data[9]) + ":"
 									+ String.valueOf(data[10]) + String.valueOf(data[11]);
-							Log.e("TEST", "CDdeviceID:" + formatDeviceId);
+//							Log.e("TEST", "CDdeviceID:" + formatDeviceId);
 
 							if (mDeviceList.get(0).getAddress().equals(formatDeviceId)) {// 2.one car door
 //								Log.e("TEST69", String.valueOf(mDevRssiValues.get(mDeviceList.get(0).getAddress())));
@@ -1687,10 +1660,10 @@ public class KeyFragment extends Fragment {
 													+ String.valueOf(data[6]) + String.valueOf(data[7]) + ":"
 													+ String.valueOf(data[8]) + String.valueOf(data[9]) + ":"
 													+ String.valueOf(data[10]) + String.valueOf(data[11]);
-											Log.e("TEST", "CDdeviceID:" + formatDeviceId);
+//											Log.e("TEST", "CDdeviceID:" + formatDeviceId);
 
 											if (tempCarDoorList.get(0).getAddress().equals(formatDeviceId)) {
-												Log.e("TEST69", "car rssi:"+String.valueOf(mDevRssiValues.get(tempCarDoorList.get(0).getAddress())));
+//												Log.e("TEST69", "car rssi:"+String.valueOf(mDevRssiValues.get(tempCarDoorList.get(0).getAddress())));
 												if (mDevRssiValues.get(tempCarDoorList.get(0).getAddress()) > (int)(-75)) {
 													bValidKey = true;
 													BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
@@ -1726,7 +1699,7 @@ public class KeyFragment extends Fragment {
 													+ String.valueOf(data[6]) + String.valueOf(data[7]) + ":"
 													+ String.valueOf(data[8]) + String.valueOf(data[9]) + ":"
 													+ String.valueOf(data[10]) + String.valueOf(data[11]);
-											Log.e("TEST", "CDdeviceID:" + formatDeviceId);
+//											Log.e("TEST", "CDdeviceID:" + formatDeviceId);
 
 											if (tempCarDoorList.get(deviceIndexToOpen).getAddress().equals(formatDeviceId)) {
 												if (mDevRssiValues.get(tempCarDoorList.get(deviceIndexToOpen).getAddress()) > (int)(-75)) {
@@ -1771,10 +1744,10 @@ public class KeyFragment extends Fragment {
 													+ String.valueOf(data[6]) + String.valueOf(data[7]) + ":"
 													+ String.valueOf(data[8]) + String.valueOf(data[9]) + ":"
 													+ String.valueOf(data[10]) + String.valueOf(data[11]);
-											Log.e("TEST", "MDdeviceID:" + formatDeviceId);
+//											Log.e("TEST", "MDdeviceID:" + formatDeviceId);
 
 											if (tempManDoorList.get(0).getAddress().equals(formatDeviceId)) {
-												Log.e("TEST69", "man rssi:"+String.valueOf(mDevRssiValues.get(tempManDoorList.get(0).getAddress())));
+//												Log.e("TEST69", "man rssi:"+String.valueOf(mDevRssiValues.get(tempManDoorList.get(0).getAddress())));
 												if (mDevRssiValues.get(tempManDoorList.get(0).getAddress()) > (int)(-80)) {
 													bValidKey = true;
 													BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
@@ -1882,7 +1855,7 @@ public class KeyFragment extends Fragment {
 
 					if (device.getAddress().equals(formatDeviceId)) {
 						mDevRssiValues.put(device.getAddress(), rssi);
-						Log.e("TEST", "add a car door");
+//						Log.e("TEST69", "add a car door, rssi = " + String.valueOf(rssi));
 						mDeviceList.add(device);
 						bFindKey = true;
 						break;
@@ -1923,6 +1896,7 @@ public class KeyFragment extends Fragment {
 
                     //TODO
                     if (isChooseCarChannel == 1) {
+
                         for (int index = 0; index < carDoorList.size(); index++) {
                             String deviceId = null;
                             String tempDeviceId = null;
@@ -2056,8 +2030,9 @@ public class KeyFragment extends Fragment {
                         @Override
                         public void run() {
                             if (mOpenDoorState != 0) {
-                            	if(getActivity() != null)
-                            		Toast.makeText(getActivity(), R.string.open_door_fail, Toast.LENGTH_SHORT).show();
+								if (getActivity() != null) {
+									Toast.makeText(getActivity(), R.string.open_door_fail, Toast.LENGTH_SHORT).show();
+								}
                             	Log.e("test for open door", "fail");
 								scanStatus.setText(R.string.can_shake_to_open_door);
 								mOpenDoorState = 0;
@@ -2100,82 +2075,10 @@ public class KeyFragment extends Fragment {
 		SharedPreferences setting = getActivity().getSharedPreferences(
 				"SETTING", 0);
 		isChooseCarChannel = setting.getInt("chooseCar", 1);
-		canDisturb = setting.getInt("disturb", 1);
+//		canDisturb = setting.getInt("disturb", 0);
 		haveSound = setting.getInt("sound", 1);
 		canShake = setting.getInt("shake", 0);
-
-//		if (isChooseCarChannel == 1) {
-//			TvChooseCar.setTextColor(COLOR_CHANNEL_CHOOSE);
-//			TvChooseMan.setTextColor(COLOR_CHANNEL_NOT_CHOOSE);
-//			IvChooseCar.setAlpha(alpha_opaque);
-//			IvChooseMan.setAlpha(alpha_transparent);
-//		} else {
-//			TvChooseCar.setTextColor(COLOR_CHANNEL_NOT_CHOOSE);
-//			TvChooseMan.setTextColor(COLOR_CHANNEL_CHOOSE);
-//			IvChooseCar.setAlpha(alpha_transparent);
-//			IvChooseMan.setAlpha(alpha_opaque);
-//		}
-
-//		TvDistrictDoor.setText(R.string.searching_key);
-//		TvDistrictDoor.setTextSize(18);
-//		TvDistrictDoor.setTextColor(0xFFffffff);
-//		TvCarNumber.setText(R.string.can_shake_to_open_door);
-//		TvCarNumber.setTextColor(0xFFffffff);
-//
-//		IvSearchKey.setBackgroundResource(R.drawable.btn_gray);
-//		IvOpenDoorLogo.setImageResource(R.drawable.btn_serch_1);
-//		IvOpenDoorLogo.setEnabled(false);
-
-//		IvWeatherWidgePush1.setImageResource(R.drawable.push_current);
-//		IvWeatherWidgePush2.setImageResource(R.drawable.push_next);
 	}
-
-//	public void InitViewPager() {
-//		mKeyPageFragmentList = new ArrayList<Fragment>();
-//
-//		mWeatherWidgeFragment = new WeatherWidgeFragment();
-//		mWeatherWidgeFragment2 = new WeatherWidgeFragment2();
-//
-//		mKeyPageFragmentList.add(mWeatherWidgeFragment);
-//		mKeyPageFragmentList.add(mWeatherWidgeFragment2);
-//
-//		mKeyPageAdapter = new KeyPageAdapter(mFragmentManager,
-//				mKeyPageFragmentList);
-//		mWeatherWidgePager.setAdapter(mKeyPageAdapter);
-//		mWeatherWidgePager.setCurrentItem(0);
-//		mWeatherWidgePager.setOnPageChangeListener(myPageChangeListener);
-//	}
-
-//	public class MyPageChangeListener implements OnPageChangeListener {
-//
-//		@Override
-//		public void onPageScrollStateChanged(int arg0) {
-//			if (arg0 == 2) {
-//				int index = mWeatherWidgePager.getCurrentItem();
-//				mWeatherWidgePager.setCurrentItem(index);
-//				if (index == 0) {
-//					IvWeatherWidgePush1
-//							.setImageResource(R.drawable.push_current);
-//					IvWeatherWidgePush2.setImageResource(R.drawable.push_next);
-//				} else if (index == 1) {
-//					IvWeatherWidgePush2
-//							.setImageResource(R.drawable.push_current);
-//					IvWeatherWidgePush1.setImageResource(R.drawable.push_next);
-//				}
-//			}
-//		}
-//
-//		@Override
-//		public void onPageScrolled(int arg0, float arg1, int arg2) {
-//
-//		}
-//
-//		@Override
-//		public void onPageSelected(int arg0) {
-//
-//		}
-//
-//	}
 
 	private final BroadcastReceiver mBluetoothStateReceiver = new BroadcastReceiver() {
 		@Override
@@ -2226,20 +2129,6 @@ public class KeyFragment extends Fragment {
 		return intentFilter;
 	}
 	
-//	private Handler handler = new Handler();
-//
-//	private Runnable task = new Runnable() {
-//		public void run() {
-//			// TODOAuto-generated method stub
-//			handler.postDelayed(this, 2 * 100);// set the delay time, ms
-//			// do something here!!
-//			if (mUartService != null) {
-//                mUartService.readRXCharacteristic(mUartService.SIMPLEPROFILE_CHAR2_UUID);
-//            }
-//			Log.e("TEst for response", "print");
-//		}
-//	};
-	
 	private final BroadcastReceiver UARTStatusChangeReceiver = new BroadcastReceiver() {
 
 		public void onReceive(Context context, Intent intent) {
@@ -2248,11 +2137,8 @@ public class KeyFragment extends Fragment {
 
 			if (action.equals(UartService.ACTION_GATT_CONNECTED)) {
 				Log.e("test", "UartService.ACTION_GATT_CONNECTED");
-//				getActivity().runOnUiThread(new Runnable() {
-//					public void run() {
-//					}
-//				});
 			}
+
             if (action.equals(UartService.ACTION_GATT_SERVICES_DISCOVERED)) {
                 Log.e("test", "UartService.ACTION_GATT_SERVICES_DISCOVERED");
                 getActivity().runOnUiThread(new Runnable() {
@@ -2263,12 +2149,12 @@ public class KeyFragment extends Fragment {
                     }
                 });
             }
+
             if (action.equals(UartService.ACTION_GATT_DISCONNECTED)) {
                 Log.e("BLE", "UartService.ACTION_GATT_DISCONNECTED");
                 getActivity().runOnUiThread(new Runnable() {
                     public void run() {
-//						IvOpenDoorLogo.setEnabled(true);
-                        // mUartService.disconnect();
+
                         mUartService.close();
                         if (mOpenDoorState != 0) {
 							if (!mDoorState) {
@@ -2282,10 +2168,12 @@ public class KeyFragment extends Fragment {
                     }
                 });
             }
+
             if (action.equals(UartService.ACTION_GATT_SERVICES_DISCOVERED)) {
                 Log.e("test", "UartService.ACTION_GATT_SERVICES_DISCOVERED");
                 mUartService.enableTXNotification();
             }
+
             if (action.equals(UartService.ACTION_DATA_AVAILABLE)) {
                 Log.e("test", "UartService.ACTION_DATA_AVAILABLE");
 
@@ -2307,30 +2195,21 @@ public class KeyFragment extends Fragment {
                     }
                 });
             }
+
             if (action.equals(UartService.ACTION_MAKESURE_DOOROPENED)) {//new add for response
                 Log.e("test", "UartService.ACTION_MAKESURE_DOOROPENED");
                 final byte[] txValue = intent
                         .getByteArrayExtra(UartService.EXTRA_DATA);
-//                getActivity().runOnUiThread(new Runnable() {
-//					public void run() {
+
                 if (txValue[0] == 0x10) {
                     vibrator.vibrate(500);
                     // door had opened. go on ...
                     Toast.makeText(getActivity(), R.string.open_door_success, Toast.LENGTH_SHORT).show();
 					scanStatus.setText(R.string.can_shake_to_open_door);
 					mDoorState = true;
-//                                        new Handler().postDelayed(new Runnable() {
-//                                            @Override
-//                                            public void run() {
-//                                                Log.e("BLE", "door can open again");
-//                                                mOpenDoorState = 0;
-//                                            }
-//                                        }, 3000);
-
                 }
-//					}
-//                });
             }
+
             if (action.equals(UartService.DEVICE_DOES_NOT_SUPPORT_UART)) {
                 Log.e("BLE", "UartService.DEVICE_DOES_NOT_SUPPORT_UART");
                 mUartService.disconnect();
@@ -2342,10 +2221,6 @@ public class KeyFragment extends Fragment {
     public void onStop() {
         super.onStop();
         vibrator.cancel();
-
-//        if (sensorManager != null) {
-//            sensorManager.unregisterListener(sensorEventListener);
-//        }
     }
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -2469,20 +2344,6 @@ public class KeyFragment extends Fragment {
 		return hasData;
 	}
 	
-//	private long DBCount() {
-//		String sql = "SELECT COUNT(*) FROM " + TABLE_NAME;
-//		SQLiteStatement statement = mKeyDB.compileStatement(sql);
-//		long count = statement.simpleQueryForLong();
-//		return count;
-//	}
-//	
-//	private long DBCountCar() {  
-//	    String sql = "SELECT COUNT(*) FROM " + CAR_TABLE_NAME;
-//	    SQLiteStatement statement = mKeyDB.compileStatement(sql);
-//	    long count = statement.simpleQueryForLong();
-//	    return count;
-//	}
-	
 	private long DBCount() {  
 	    String sql = "SELECT COUNT(*) FROM " + TABLE_NAME;
 	    SQLiteStatement statement = mKeyDB.compileStatement(sql);
@@ -2559,57 +2420,5 @@ public class KeyFragment extends Fragment {
 		SharedPreferences loadUUID = getActivity().getSharedPreferences("SAVEDUUID", 0);
 		return loadUUID.getString("UUID", null);
 	}
-	
-	/*
-	 * for new shake
-	 */
-//    private SensorEventListener sensorEventListener = new SensorEventListener() {
-//
-//        @Override
-//        public void onSensorChanged(SensorEvent event) {
-//            float[] values = event.values;
-//            float x = values[0];
-//            float y = values[1];
-//            float z = values[2];
-//            int medumValue = 19;
-//        if (Math.abs(x) > medumValue || Math.abs(y) > medumValue || Math.abs(z) > medumValue) {
-//                Message msg = new Message();
-//                msg.what = SENSOR_SHAKE;
-//                handler.sendMessage(msg);
-//            }
-//        }
-//
-//        @Override
-//        public void onAccuracyChanged(Sensor sensor, int accuracy) {
-//
-//        }
-//    };
- 
-    /**
-     * when shake, do something
-     */ 
-//    Handler handler = new Handler() {
-//        @Override
-//        public void handleMessage(Message msg) {
-//            super.handleMessage(msg);
-//            switch (msg.what) {
-//            case SENSOR_SHAKE:
-//            	if(mBtStateOpen == false){
-//					Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//		            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-//				}else {
-//					 if (mOpenDoorState == 0) {
-//		                    mOpenDoorState = 1;
-//		                    Log.i("test", "doOpenDoor");
-//
-//		                    if(canShake == 1){
-//		                    	doOpenDoor(mBtStateOpen);
-//		                    }
-//		                }
-//				}
-//                break;
-//            }
-//        }
-//
-//    };
+
 }
