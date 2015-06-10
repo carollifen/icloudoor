@@ -2,15 +2,407 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.icloudoor.clouddoor.XieYiActivity" >
+    android:background="#f8f8f8" >
 
-    <TextView
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="#0065a1" >
+
+        <RelativeLayout
+            android:id="@+id/btn_back"
+            android:layout_width="56dp"
+            android:layout_height="match_parent" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/new_back" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="协议"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/content"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="44dp" >
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true" >
+            
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp" />
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="非攻云门软件许可及服务协议"
+                    android:textColor="#333333"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+                
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp" />
+                
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="#333333"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="5dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp" />
+
+                <!-- 大标题前面六个空格 -->
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:text="      提示条款："
+                    android:textColor="#333333"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:lineSpacingExtra="5dp" />
+
+                <TextView
+                    android:id="@+id/tishi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="#333333"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="5dp" />
+                
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:text="      一、关于服务内容"     
+                    android:textColor="#333333"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:lineSpacingExtra="5dp" />
+                
+                <TextView
+                    android:id="@+id/fuwuneirong"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="#333333"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="5dp" />
+                
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp" />
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:text="      二、关于注册资料"
+                    android:textColor="#333333"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:lineSpacingExtra="5dp" />
+                
+                <TextView
+                    android:id="@+id/zhuceziliao"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="#333333"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="5dp" />
+                
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp" />
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:text="      三、关于账号和密码"
+                    android:textColor="#333333"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:lineSpacingExtra="5dp" />
+                
+                <TextView
+                    android:id="@+id/zhanghaomima"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="#333333"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="5dp" />
+                
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp" />
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:text="      四、您的权利"
+                    android:textColor="#333333"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:lineSpacingExtra="5dp" />
+                
+                <TextView
+                    android:id="@+id/quanli"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="#333333"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="5dp" />
+                
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp" />
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:text="      五、您的义务"
+                    android:textColor="#333333"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:lineSpacingExtra="5dp" />
+                
+                <TextView
+                    android:id="@+id/yiwu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="#333333"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="5dp" />
+                
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp" />
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:text="      六、隐私保护"
+                    android:textColor="#333333"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:lineSpacingExtra="5dp" />
+                
+                <TextView
+                    android:id="@+id/baohu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="#333333"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="5dp" />
+                
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp" />
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:text="      七、免责声明"
+                    android:textColor="#333333"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:lineSpacingExtra="5dp" />
+                
+                <TextView
+                    android:id="@+id/mianze"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="#333333"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="5dp" />
+                
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp" />
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:text="      八、服务变更、中断或终止"
+                    android:textColor="#333333"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:lineSpacingExtra="5dp" />
+                
+                <TextView
+                    android:id="@+id/zhongzhi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="#333333"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="5dp" />
+                
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp" />
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:text="      九、损害赔偿"
+                    android:textColor="#333333"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:lineSpacingExtra="5dp" />
+                
+                <TextView
+                    android:id="@+id/peichang"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="#333333"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="5dp" />
+                
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp" />
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:text="      十、关于广告"
+                    android:textColor="#333333"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:lineSpacingExtra="5dp" />
+                
+                <TextView
+                    android:id="@+id/guanggao"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="#333333"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="5dp" />
+                
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp" />
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:text="      十一、第三方站点的链接"
+                    android:textColor="#333333"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:lineSpacingExtra="5dp" />
+                
+                <TextView
+                    android:id="@+id/disanfang"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="#333333"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="5dp" />
+                
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp" />
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:text="      十二、法律适用及争议解决"
+                    android:textColor="#333333"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:lineSpacingExtra="5dp" />
+                
+                <TextView
+                    android:id="@+id/shiyong"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="#333333"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="5dp" />
+                
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp" />
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:text="      十三、本协议的修改和解释权"
+                    android:textColor="#333333"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:lineSpacingExtra="5dp" />
+                
+                <TextView
+                    android:id="@+id/jieshiquan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="#333333"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="5dp" />
+                
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp" />
+            </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
 
 </RelativeLayout>
