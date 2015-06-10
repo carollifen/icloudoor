@@ -315,18 +315,20 @@ public class SettingFragment extends Fragment {
                                         statusCode = response.getInt("code");
 
                                         isLogin = 0;
-                                        SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
+                                        if(getActivity() != null){
+                                        	SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
                                         Editor editor1 = loginStatus.edit();
                                         editor1.putInt("LOGIN", isLogin);
                                         editor1.commit();
- 
+                                        
                                         Intent intent3 = new Intent();
                                         Bundle bundle = new Bundle();
                                         bundle.putString("phone", loginStatus.getString("PHONENUM", ""));
                                         intent3.putExtras(bundle);
                                         intent3.setClass(getActivity(), Login.class);
                                         startActivity(intent3);
-                                                                            
+                                        }
+                                                                  
                                         CloudDoorMainActivity mainActivity = (CloudDoorMainActivity) getActivity();
                                         mainActivity.finish();
                                     } catch (JSONException e) {

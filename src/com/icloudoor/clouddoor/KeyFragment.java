@@ -2052,7 +2052,8 @@ public class KeyFragment extends Fragment {
                         @Override
                         public void run() {
                             if (mOpenDoorState != 0) {
-                            	Toast.makeText(getActivity(), R.string.open_door_fail, Toast.LENGTH_SHORT).show();
+                            	if(getActivity() != null)
+                            		Toast.makeText(getActivity(), R.string.open_door_fail, Toast.LENGTH_SHORT).show();
                             	Log.e("test for open door", "fail");
 								scanStatus.setText(R.string.can_shake_to_open_door);
 								mOpenDoorState = 0;
