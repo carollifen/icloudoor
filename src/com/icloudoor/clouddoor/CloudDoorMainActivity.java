@@ -298,6 +298,12 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		super.onResume();
 		Log.e(TAG, "onResume");
 		
+		SharedPreferences setting = getSharedPreferences("SETTING", 0);	
+		if(setting.getInt("disturb", 1) == 0)
+			mPushAgent.enable(cloudApplication.mRegisterCallback);
+		else
+			mPushAgent.disable(cloudApplication.mUnregisterCallback);
+		
 		SharedPreferences homeKeyEvent = getSharedPreferences("HOMEKEY", 0);
 		homePressed = homeKeyEvent.getInt("homePressed", 0);
 		

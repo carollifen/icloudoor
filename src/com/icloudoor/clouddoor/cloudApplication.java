@@ -13,6 +13,8 @@ import android.webkit.WebView;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
+import com.umeng.message.IUmengRegisterCallback;
+import com.umeng.message.IUmengUnregisterCallback;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengNotificationClickHandler;
 import com.umeng.message.entity.UMessage;
@@ -24,6 +26,11 @@ public class cloudApplication extends Application {
 	
 	private SharedPreferences queryShare;
 	private Editor queryEditor;
+	
+	public static final String CALLBACK_RECEIVER_ACTION = "callback_receiver_action";
+	public static IUmengRegisterCallback mRegisterCallback;	
+	public static IUmengUnregisterCallback mUnregisterCallback;
+	
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub
@@ -66,6 +73,30 @@ public class cloudApplication extends Application {
 		    }
 		};
 		mPushAgent.setNotificationClickHandler(notificationClickHandler);
+		
+		mRegisterCallback = new IUmengRegisterCallback() {
+
+			@Override
+			public void onRegistered(String registrationId) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(CALLBACK_RECEIVER_ACTION);
+				sendBroadcast(intent);
+			}
+
+		};
+		mPushAgent.setRegisterCallback(mRegisterCallback);
+
+		mUnregisterCallback = new IUmengUnregisterCallback() {
+
+			@Override
+			public void onUnregistered(String registrationId) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(CALLBACK_RECEIVER_ACTION);
+				sendBroadcast(intent);
+			}
+		};
+		mPushAgent.setUnregisterCallback(mUnregisterCallback);
+		
 		CrashHandler crashHandler = CrashHandler.getInstance();
 		crashHandler.init(getApplicationContext());
 	}
