@@ -127,7 +127,7 @@ public class CloudDoorMainActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		getActionBar().hide();
+
 		setContentView(R.layout.new_main);
 		
 		// for Umeng Feedback

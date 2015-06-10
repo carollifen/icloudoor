@@ -53,7 +53,7 @@ public class ResetPwdActivity extends Activity implements TextWatcher {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		getActionBar().hide();
+
 		setContentView(R.layout.set_detail_reset_pwd);
 
 		setupUI(findViewById(R.id.main));
@@ -66,7 +66,6 @@ public class ResetPwdActivity extends Activity implements TextWatcher {
 		ETConfirmNewPwd = (EditText) findViewById(R.id.confirm_new_pwd);
 		TVResetDone = (LinearLayout) findViewById(R.id.reset_pwd_done);
 		
-//		TVResetDone.setTextColor(0xFFcccccc);
 		TVResetDone.setEnabled(false);
 		
 		ETInputOldPwd.addTextChangedListener(this);
@@ -79,9 +78,6 @@ public class ResetPwdActivity extends Activity implements TextWatcher {
 
 			@Override
 			public void onClick(View v) {
-//				Intent intent = new Intent();
-//				intent.setClass(v.getContext(), SettingDetailActivity.class);
-//				startActivity(intent);
 				finish();
 			}
 
@@ -124,11 +120,6 @@ public class ResetPwdActivity extends Activity implements TextWatcher {
 											e.printStackTrace();
 										}
 										Toast.makeText(getApplicationContext(), R.string.forget_success, Toast.LENGTH_SHORT).show();
-										
-//										Intent intent = new Intent();
-//										intent.setClass(getApplicationContext(),
-//												SettingDetailActivity.class);
-//										startActivity(intent);
 										
 										finish();
 									}else if (statusCode == -41) {
@@ -236,10 +227,8 @@ public class ResetPwdActivity extends Activity implements TextWatcher {
 		}
 		
 		if(ETInputNewPwd.getText().toString().length() > 5 && ETConfirmNewPwd.getText().toString().length() > 5 && ETInputOldPwd.getText().toString().length() > 5){
-//			TVResetDone.setTextColor(0xFFffffff);
 			TVResetDone.setEnabled(true);
 		} else {
-//			TVResetDone.setTextColor(0xFFcccccc);
 			TVResetDone.setEnabled(false);
 		}
 	}	

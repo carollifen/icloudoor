@@ -142,7 +142,6 @@ public class ForgetPwdActivity extends Activity implements TextWatcher {
 		//
 		
 		TVGotoNext.setTextColor(0xFF999999);
-//		TVGotoNext.setEnabled(false);
 		
 		ETInputPhoneNum.addTextChangedListener(this);
 		ETInputCertiCode.addTextChangedListener(this);		
@@ -464,17 +463,11 @@ public class ForgetPwdActivity extends Activity implements TextWatcher {
 			getCertiCodeLayout.setEnabled(true);
 			getCertiCodeLayout.setBackgroundResource(R.drawable.shape_right_corner);
 			TVGetCertiCode.setText(getString(R.string.get_certi_code_again));
-//			TVGetCertiCode.setTextSize(17);
-//			TVGetCertiCode.setEnabled(true);
-//			TVGetCertiCode.setBackgroundResource(R.drawable.btn_certi);
 		}
 		@Override
 		public void onTick(long millisUntilFinished){
 			getCertiCodeLayout.setEnabled(false);
 			getCertiCodeLayout.setBackgroundResource(R.drawable.shape_right_corner_pressed);
-//			TVGetCertiCode.setEnabled(false);
-//			TVGetCertiCode.setBackgroundResource(R.drawable.btn_certi_counter);
-//			TVGetCertiCode.setTextSize(16);
 			TVGetCertiCode.setText(getString(R.string.have_send) + '\n' + "(" + millisUntilFinished /1000+")");
 		}
 	}
@@ -559,12 +552,10 @@ public class ForgetPwdActivity extends Activity implements TextWatcher {
 			nextLayout.setEnabled(true);
 			nextLayout.setBackgroundResource(R.drawable.selector_next_step);
 			TVGotoNext.setTextColor(0xFF0065a1);
-//			TVGotoNext.setEnabled(true);
 		} else {
 			nextLayout.setEnabled(false);
 			nextLayout.setBackgroundResource(R.drawable.shape_next_disable);
 			TVGotoNext.setTextColor(0xFF999999);
-//			TVGotoNext.setEnabled(false);
 		}
 	}
 	

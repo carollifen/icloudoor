@@ -63,7 +63,6 @@ public class ShowPersonalInfo extends Activity {
 	private TextView TVName;
 	private TextView TVNickName;
 	private TextView TVSex;
-//	private ImageView IVSexImage;
 	private TextView TVprovince;
 	private TextView TVcity;
 	private TextView TVdistrict;
@@ -104,7 +103,7 @@ public class ShowPersonalInfo extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//getActionBar().hide();
+
 		setContentView(R.layout.show_personal_info);
 		
 		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
@@ -120,7 +119,6 @@ public class ShowPersonalInfo extends Activity {
 		TVName = (TextView) findViewById(R.id.personal_info_name);
 		TVNickName = (TextView) findViewById(R.id.personal_info_NickName);
 		TVSex = (TextView) findViewById(R.id.personal_info_sexName);
-//		IVSexImage = (ImageView) findViewById(R.id.personal_info_sexImage);
 		TVprovince = (TextView) findViewById(R.id.personal_info_province);
 		TVcity = (TextView) findViewById(R.id.personal_info_city);
 		TVdistrict = (TextView) findViewById(R.id.personal_info_district);
@@ -170,8 +168,7 @@ public class ShowPersonalInfo extends Activity {
                         intent.putExtra("Whereis", "settingFace");
                         startActivityForResult(intent, 0);
 					}
-//					intent.setClass(ShowPersonalInfo.this, ModifyPersonalInfo.class);
-					
+
 				} else if (personalInfo.getInt("SETINFO", 1) == 0){
 					Log.e(TAG, "onClick4");
 					intent.setClass(ShowPersonalInfo.this, SetPersonalInfo.class);
@@ -392,15 +389,7 @@ public class ShowPersonalInfo extends Activity {
 		mCursorD.close();
 		return districtName;
 	}
-	
-//	@Override
-//	public void onStart() {
-//		super.onStart();
-//		Log.e("TESTTEST", "onStart show");
-//
-//
-//	}
-	
+
 	@Override
 	public void onResume(){
 		super.onResume();

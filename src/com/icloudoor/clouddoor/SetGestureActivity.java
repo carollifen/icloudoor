@@ -32,22 +32,16 @@ public class SetGestureActivity extends Activity implements OnClickListener {
 	private RelativeLayout mback;
 	
 	private TextView textTip;
-//	private TextView TVSignManage;
-//	private TextView TVAccount;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		getActionBar().hide();
+
 		setContentView(R.layout.activity_set_gesture);
 		
 		mback=(RelativeLayout) findViewById(R.id.set_gesture_btn_back);
 		mback.setOnClickListener(this);
-		
-//		TVSignManage = (TextView) findViewById(R.id.sign_set_manage);
-//		TVAccount = (TextView) findViewById(R.id.sign_set_account);
-//		TVSignManage.setOnClickListener(this);
-//		TVAccount.setOnClickListener(this);
+
 		textTip=(TextView) findViewById(R.id.text_tip);
 		setUpViews();
 	}
@@ -69,7 +63,6 @@ public class SetGestureActivity extends Activity implements OnClickListener {
 					textTip.setText(getString(R.string.draw_gesture_again));
 					textTip.setTextColor(0xFF666666);
 					textTip.setTextSize(17);
-					//Toast.makeText(SetGestureActivity.this, R.string.sign_input_again, Toast.LENGTH_SHORT).show();
 					mGestureContentView.clearDrawlineState(0L);
 				} else {
 					if (inputCode.equals(mFirstPassword)) {

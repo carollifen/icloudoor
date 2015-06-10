@@ -148,7 +148,6 @@ public class SettingFragment extends Fragment {
 		RLShare = (RelativeLayout) view.findViewById(R.id.btn_share);
 		RLUpdate = (RelativeLayout) view.findViewById(R.id.btn_update);
 		showName = (TextView) view.findViewById(R.id.show_name);
-//		showPhoneNum = (TextView) view.findViewById(R.id.show_phoneNum);
 		
 		
 		image = (CircularImage) view.findViewById(R.id.person_image);
@@ -156,13 +155,9 @@ public class SettingFragment extends Fragment {
 		
 		
 		SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);	
-//		phone = loginStatus.getString("PHONENUM", null);	
 		name = loginStatus.getString("NAME", null);
 		portraitUrl = loginStatus.getString("URL", null);
 		
-		
-//		changeNum();
-//		showPhoneNum.setText(phone);
 		if(name != null)
 			showName.setText(name);
 		
@@ -308,10 +303,9 @@ public class SettingFragment extends Fragment {
                                 @Override
                                 public void onResponse(JSONObject response) {
                                     try {
-//                                        if (response.getString("sid") != null) {
-//                                            sid = response.getString("sid");
+
                                             saveSid("SID", null);
-//                                        }
+                                            
                                         statusCode = response.getInt("code");
 
                                         isLogin = 0;

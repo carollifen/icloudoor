@@ -36,7 +36,7 @@ public class SignActivity extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		getActionBar().hide();
+
 		setContentView(R.layout.set_detail_set_sign);
 		
 		mFinishActivityBroadcast=	new Broadcast();
@@ -241,10 +241,8 @@ public class SignActivity extends Activity{
 					switch(event.getAction())
 					{
 					case MotionEvent.ACTION_DOWN:
-//						mlayout.setBackgroundColor(COLORNEW);
 						break;
 					case MotionEvent.ACTION_MOVE:
-//						mlayout.setBackgroundColor(COLOROLD);
 						break;
 					}
 					 
@@ -347,8 +345,6 @@ public class SignActivity extends Activity{
 
 								}
 							});
-
-					// SignActivity.this.onPause();
 					myDialog.show();
 				}
 

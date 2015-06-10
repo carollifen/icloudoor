@@ -160,10 +160,8 @@ public class Login extends Activity implements TextWatcher {
 			
 		});
 		
-//		TVLogin.setTextColor(0xFF015c92);
 		TVLogin.setTextColor(0xFFf3f3f3);
 		loginLayout.setEnabled(false);
-//		TVLogin.setEnabled(false);
 		
 		ETInputPhoneNum.addTextChangedListener(this); 
 		ETInputPwd.addTextChangedListener(this);
@@ -330,29 +328,6 @@ public class Login extends Activity implements TextWatcher {
 													}
 												}, 1000);
 
-										// Intent intent = new Intent();
-										//
-										// SharedPreferences personalInfo =
-										// getSharedPreferences("PERSONSLINFO",
-										// MODE_PRIVATE);
-										// setPersonal =
-										// personalInfo.getInt("SETINFO", 0);
-										//
-										// if(name.length() == 0 || sex == 0 ||
-										// provinceId == 0 || cityId == 0 ||
-										// districtId == 0 || birth.length() ==
-										// 0 || id.length() == 0){
-										// intent.setClass(getApplicationContext(),
-										// SetPersonalInfo.class);
-										// } else {
-										// intent.setClass(getApplicationContext(),
-										// CloudDoorMainActivity.class);
-										// }
-										//
-										// startActivity(intent);
-										//
-										// finish();
-
 										SharedPreferences downPic = getSharedPreferences("DOWNPIC", 0);
 										Editor editor1 = downPic.edit();
 										editor1.putInt("PIC", 0);
@@ -472,13 +447,10 @@ public class Login extends Activity implements TextWatcher {
 			TVLogin.setTextColor(0xFFffffff);
 			loginLayout.setEnabled(true);
 			loginLayout.setBackgroundResource(R.drawable.selector_login_in);
-//			TVLogin.setEnabled(true);
 		} else {
-//			TVLogin.setTextColor(0xFF015c92);
 			TVLogin.setTextColor(0xFFf3f3f3);
 			loginLayout.setEnabled(false);
 			loginLayout.setBackgroundResource(R.drawable.shape_login_btn_disable);
-//			TVLogin.setEnabled(false);
 		}
 	}
 	
@@ -515,7 +487,6 @@ public class Login extends Activity implements TextWatcher {
 				}
 			} else {
 				saveSid("NETSTATE", "NET_NOT_WORK");
-				// Toast.makeText(context, R.string.no_network, Toast.LENGTH_LONG).show();
 			}
 		}
 	};

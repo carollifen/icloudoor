@@ -16,10 +16,6 @@ public class ShakeEventManager implements SensorEventListener {
     private static final int SPEED_SHRESHOLD = 45;
     private static final int UPTATE_INTERVAL_TIME = 50;
 
-//    private static final int SPEED_SHRESHOLD = 7000;
-//
-//    private static final int UPTATE_INTERVAL_TIME = 100;
-
     private SensorManager sensorManager;
 
     private Sensor sensor;
@@ -27,12 +23,6 @@ public class ShakeEventManager implements SensorEventListener {
     private OnShakeListener onShakeListener;
 
     private Context mContext;
-
-//    private float lastX;
-//    private float lastY;
-//    private float lastZ;
-
-//    private long lastUpdateTime;
 
 
     public ShakeEventManager(Context c) {
@@ -93,9 +83,7 @@ public class ShakeEventManager implements SensorEventListener {
         double speed = (Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ
                 * deltaZ) / timeInterval) * 100;
         if (speed >= SPEED_SHRESHOLD) {
-//            mLayoutBottom.setVisibility(View.GONE);
-//            vibrator.vibrate(300);
-//            onShake();
+
             onShakeListener.onShake();
         }
     }

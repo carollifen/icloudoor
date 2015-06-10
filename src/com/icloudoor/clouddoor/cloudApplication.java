@@ -67,9 +67,6 @@ public class cloudApplication extends Application {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-		       // Toast.makeText(context, msg.custom, Toast.LENGTH_LONG).show();
-		       // WebView webview=new WebView(getApplicationContext());
-		        
 		    }
 		};
 		mPushAgent.setNotificationClickHandler(notificationClickHandler);

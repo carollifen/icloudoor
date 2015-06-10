@@ -211,50 +211,9 @@ public class TakePicCamInterface {
 				int y = rotaBitmap.getHeight()/2 - DST_RECT_HEIGHT/2;
 
 				Bitmap rectBitmap = Bitmap.createBitmap(rotaBitmap, x, y, DST_RECT_WIDTH, DST_RECT_HEIGHT);
-				
-				
-//				//to saveBitmap -- START
-//				File parentPath = Environment.getExternalStorageDirectory();
-//				String FIRSTLAYER_FOLDER_NAME = "Cloudoor";
-//				String DST_FOLDER_NAME = "ImageIcon";
-//				
-//				String storagePath = "";
-//				File f = null;
-//				if(storagePath.equals("")){	
-//					storagePath = parentPath.getAbsolutePath() + "/" + FIRSTLAYER_FOLDER_NAME + "/" + DST_FOLDER_NAME;
-//					f = new File(storagePath);
-//					if(!f.exists()){
-//						f.mkdirs();
-//					}
-//				}
-//				
-//				String path = storagePath;
-//				SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyyMMdd-hhmmss");
-//				String dataTake = sDateFormat.format(System.currentTimeMillis());
-//				
-//				String jpegName = path + "/" + dataTake +".jpg";
-//				
-//				try {
-//					FileOutputStream fout = new FileOutputStream(jpegName);
-//					BufferedOutputStream bos = new BufferedOutputStream(fout);
-//					b.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-//					bos.flush();
-//					bos.close();
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}
-//				
-//				Log.e("camera", "pic saved jpegName: " + jpegName);
-//				//to saveBitmap -- end
-				
-				
-				
+			
 				TakePicFileUtil.saveBitmap(rectBitmap);
-				
-				
-				
-				
-				
+		
 				if(rotaBitmap.isRecycled()){
 					rotaBitmap.recycle();
 					rotaBitmap = null;

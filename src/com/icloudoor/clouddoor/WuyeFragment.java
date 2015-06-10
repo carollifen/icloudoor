@@ -62,7 +62,6 @@ public class WuyeFragment extends Fragment {
 	public MyClickListener myClick;
 
 	private AutoScrollViewPager viewPager;
-	// private ViewPager mWuyeWidgePager;
 	private ArrayList<Fragment> mWuyePageFragmentList;
 	private WuyePageAdapter mWuyePageAdapter;
 	public FragmentManager mFragmentManager;
@@ -130,8 +129,6 @@ public class WuyeFragment extends Fragment {
 		mFragmentManager = getChildFragmentManager();
 		viewPager = (AutoScrollViewPager) view
 				.findViewById(R.id.wuye_widge_pager);
-		// mWuyeWidgePager = (ViewPager)
-		// view.findViewById(R.id.wuye_widge_pager);
 		myPageChangeListener = new MyPageChangeListener();
 
 		InitFragmentViews();
@@ -164,26 +161,12 @@ public class WuyeFragment extends Fragment {
 		viewPager.setInterval(4000);
 		viewPager.startAutoScroll();
 		viewPager.setCurrentItem(0);
-		// mWuyeWidgePager.setAdapter(mWuyePageAdapter);
-		// mWuyeWidgePager.setCurrentItem(0);
-		// mWuyeWidgePager.setOnPageChangeListener(myPageChangeListener);
 	}
 	
 	public class MyPageChangeListener implements OnPageChangeListener {
 
 		@Override
 		public void onPageScrollStateChanged(int arg0) {
-			// if (arg0 == 2) {
-			// int index = mWuyeWidgePager.getCurrentItem();
-			// mWuyeWidgePager.setCurrentItem(index);
-			// if(index == 0){
-			// WuyeWidgePush1.setImageResource(R.drawable.wuye_push_current);
-			// WuyeWidgePush2.setImageResource(R.drawable.wuye_push_next);
-			// }else if(index == 1){
-			// WuyeWidgePush2.setImageResource(R.drawable.wuye_push_current);
-			// WuyeWidgePush1.setImageResource(R.drawable.wuye_push_next);
-			// }
-			// }
 		}
 
 		@Override

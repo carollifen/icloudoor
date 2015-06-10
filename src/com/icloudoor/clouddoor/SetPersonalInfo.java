@@ -125,9 +125,6 @@ public class SetPersonalInfo extends Activity {
 	private RelativeLayout setSexWoman;
 	private ImageView sexMan;
 	private ImageView sexWoman;
-//	private EditText birthYear;
-//	private EditText birthMonth;
-//	private EditText birthDay;
 	private TextView personalID;
 	private TextView realName;
 	
@@ -385,15 +382,9 @@ public class SetPersonalInfo extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				// TODO to gallery or camera
-				// Intent intent = new Intent();
-				// intent.setClass(SetPersonalInfo.this,
-				// TakePictureActivity.class);
-				// startActivityForResult(intent, 0);
 
 				menuWindow = new SelectPicPopupWindow(SetPersonalInfo.this, itemsOnClick); 
 				menuWindow.showAtLocation(SetPersonalInfo.this.findViewById(R.id.main), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
-//				openOptionsMenu();
 				
 				View view = getWindow().peekDecorView();
 		        if (view != null) {
@@ -465,11 +456,7 @@ public class SetPersonalInfo extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				// Name = realName.getText().toString();
 				Nickname = nickName.getText().toString();
-				// PersonalID = personalID.getText().toString();
-//				BirthDay = birthYear.getText().toString() + "-" + (birthMonth.getText().toString().length() == 1 ? ("0" + birthMonth.getText().toString()) : birthMonth.getText().toString())
-//						+ "-" + (birthDay.getText().toString().length() == 1 ? ("0" + birthDay.getText().toString()) : birthDay.getText().toString());
 				MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
 						Method.POST, setInfoURL.toString(), null,
 						new Response.Listener<JSONObject>() {
@@ -497,12 +484,6 @@ public class SetPersonalInfo extends Activity {
 									editor.putInt("SETINFO", setPersonal);
 									editor.commit();
 
-									// SharedPreferences loginStatus =
-									// getSharedPreferences("LOGINSTATUS",
-									// MODE_PRIVATE);
-									// Editor editor1 = loginStatus.edit();
-									// editor1.putString("NAME", Name);
-									// editor1.commit();
 									if (whereFrom == null) {
 										Intent intent = new Intent();
 										intent.setClass(SetPersonalInfo.this, CloudDoorMainActivity.class);
@@ -993,9 +974,6 @@ public class SetPersonalInfo extends Activity {
 		setSexWoman = (RelativeLayout) findViewById(R.id.personal_sex_woman);
 		sexMan = (ImageView) findViewById(R.id.personal_SexMan);
 		sexWoman = (ImageView) findViewById(R.id.personal_SexWoman);
-//		birthYear = (EditText) findViewById(R.id.personal_year);
-//		birthMonth = (EditText) findViewById(R.id.personal_month);
-//		birthDay = (EditText) findViewById(R.id.personal_day);
 		personalID = (TextView) findViewById(R.id.personal_ID);
 		back = (RelativeLayout) findViewById(R.id.btn_back);
 		save = (RelativeLayout) findViewById(R.id.save_person_info);
@@ -1004,9 +982,6 @@ public class SetPersonalInfo extends Activity {
 		SharedPreferences saveProfile = getSharedPreferences("PROFILE", MODE_PRIVATE);
 
 		nickName.setText(saveProfile.getString("NICKNAME", ""));
-//		birthYear.setText(saveProfile.getString("YEAR", ""));
-//		birthMonth.setText(saveProfile.getString("MONTH", ""));
-//		birthDay.setText(saveProfile.getString("DAY", ""));
 		if(saveProfile.getString("YEAR", "").length() > 0 && saveProfile.getString("MONTH", "").length() > 0 && saveProfile.getString("DAY", "").length() > 0){
 			birthday.setText(saveProfile.getString("YEAR", "") + " " + getString(R.string.year)
 					 + " " + saveProfile.getString("MONTH", "") + " " + getString(R.string.month)
@@ -1067,11 +1042,6 @@ public class SetPersonalInfo extends Activity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (event.getAction() == KeyEvent.ACTION_DOWN && KeyEvent.KEYCODE_BACK == keyCode) {
-//			setPersonal = 0;
-//			SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
-//			Editor editor = personalInfo.edit();
-//			editor.putInt("SETINFO", setPersonal);
-//			editor.commit();
 
 			finish();
 		}

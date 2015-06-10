@@ -31,7 +31,6 @@ public class ConfirmGestureActivity extends Activity implements OnClickListener 
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-//		getActionBar().hide();
 		
 		setContentView(R.layout.activity_confirmgesture);
 		
@@ -39,11 +38,6 @@ public class ConfirmGestureActivity extends Activity implements OnClickListener 
 		 IntentFilter intentFilter = new IntentFilter();
 		    intentFilter.addAction("com.icloudoor.clouddoor.ACTION_FINISH");
 		    registerReceiver(mFinishActivityBroadcast, intentFilter);
-
-
-
-
-
 		
 		mback=(RelativeLayout) findViewById(R.id.confirm_gesture_btn_back);
 		
@@ -148,24 +142,7 @@ public class ConfirmGestureActivity extends Activity implements OnClickListener 
 					startActivity(intent);
 				}
 			}).show();
-			
-//			MyDialog mdialog =new MyDialog(ConfirmGestureActivity.this,R.style.add_dialog, getString(R.string.login_pwd) , new MyDialog.OnCustomDialogListener() {
-//				
-//				@Override
-//				public void back(int haveset) {
-//					
-//					SharedPreferences setSign = getSharedPreferences("SETSIGN", 0);
-//					Editor editor = setSign.edit();
-//					editor.putInt("HAVESETSIGN", 0);
-//					editor.commit();
-//					SharedPreferences setting = getSharedPreferences(
-//							"SETTING", MODE_PRIVATE);
-//					Editor useSigneditor = setting.edit();
-//					useSigneditor.putInt("useSign", 0);
-//					useSigneditor.commit();
-//				}
-//			});
-//			mdialog.show();
+
 		}
 	}
 	

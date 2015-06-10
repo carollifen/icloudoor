@@ -238,6 +238,10 @@ public class UartService extends Service {
         
   
         mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
+        if (mBluetoothGatt == null){
+            Log.w(TAG, "connectGatt failed.");
+            return false;
+        }
         Log.d("test", "Trying to create a new connection.");
         mBluetoothDeviceAddress = address;
         mConnectionState = STATE_CONNECTING;

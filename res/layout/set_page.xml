@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="91dp"
-            android:text="东东"
+            android:text=""
             android:textColor="#333333"
             android:textSize="15sp" />
 

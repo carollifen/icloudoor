@@ -95,8 +95,6 @@ import com.icloudoor.clouddoor.ShakeEventManager;
 import com.icloudoor.clouddoor.SwitchButton.OnSwitchListener;
 import com.icloudoor.clouddoor.UartService;
 import com.icloudoor.clouddoor.ShakeEventManager.OnShakeListener;
-//import com.icloudoor.clouddoor.animationUtils.MyAnimationLine;
-//import com.icloudoor.clouddoor.animationUtils.MyAnimationView;
 
 @SuppressLint("NewApi")
 public class KeyFragment extends Fragment {
@@ -114,22 +112,11 @@ public class KeyFragment extends Fragment {
 	private ArrayList<HashMap<String, String>> manDoorList;
 
 	private RelativeLayout RlOpenKeyList;
-//	private ImageView IvOpenDoorLogo;
-//	private ImageView IvWeatherWidgePush1;
-//	private ImageView IvWeatherWidgePush2;
 
 //	private int canDisturb;
 	private int haveSound;
 	private int canShake;
     private Vibrator vibrator;
-
-//	private ViewPager mWeatherWidgePager;
-//	private ArrayList<Fragment> mKeyPageFragmentList;
-//	private KeyPageAdapter mKeyPageAdapter;
-//	private WeatherWidgeFragment mWeatherWidgeFragment;
-//	private WeatherWidgeFragment2 mWeatherWidgeFragment2;
-//	public FragmentManager mFragmentManager;
-//	public MyPageChangeListener myPageChangeListener;
 	
 	// for new UI weather
 	private LinearLayout weatherWidge;
@@ -174,26 +161,19 @@ public class KeyFragment extends Fragment {
 	private long mCurrentRequestTime;
 	
 	private ImageView keyRedDot;
-//	private TextView keyRedDotNum;
 	private int newNum;
 	private String uuid;
 	private URL downLoadKeyURL;
 	
 	// for new channel switch
 	private SwitchButton switchBtn;
-//	private LinearLayout channelSwitchLayout;
-//	private ChannelSwitchView csv;
 	private int isChooseCarChannel;   // 1 for car; 2 for man
-    private int mOpenDoorState;
+    private int mOpenDoorState;	// 0 can open; 1 openning; 2 and 3 car door state
 	private boolean onlyOneDoor = false;
 	private StrokeTextView doorName;
     private ImageView doorNameFlag;
 	private TextView scanStatus;
 	private ImageView BtnOpenDoor;
-//	private OpenDoorRingView ringView;
-//	private ImageView halo;
-//	private MyAnimationLine myline;
-//    private MyAnimationView myAnimationView;
     private Animation animation1;
 
 	// for BLE
@@ -213,7 +193,6 @@ public class KeyFragment extends Fragment {
 		
 	private boolean mDoorState = false; // open is true, close is false
 
-//	private String tempDeviceAddr = null;
     private Handler mHandler;
     private MyThread  myThread = null;
     
@@ -279,9 +258,7 @@ public class KeyFragment extends Fragment {
 		contentJi.setSelected(true);
 		
 		keyRedDot = (ImageView) view.findViewById(R.id.key_red_dot);
-//		keyRedDotNum = (TextView) view.findViewById(R.id.key_red_dot_num);
 		keyRedDot.setVisibility(View.INVISIBLE); 
-//		keyRedDotNum.setText("");
 		
 		mQueue = Volley.newRequestQueue(getActivity());
 		sid = loadSid();
@@ -369,10 +346,8 @@ public class KeyFragment extends Fragment {
 
 				switch (event.getAction()) {
 					case MotionEvent.ACTION_DOWN:
-//					ringView.setVisibility(View.VISIBLE);
 						break;
 					case MotionEvent.ACTION_UP:
-//					ringView.setVisibility(View.INVISIBLE);
 						break;
 				}
 				return false;
@@ -405,9 +380,6 @@ public class KeyFragment extends Fragment {
 				}
 			}
 		});
-
-//		carDoorList = new ArrayList<HashMap<String, String>>();
-//		manDoorList = new ArrayList<HashMap<String, String>>();
 
 		RlOpenKeyList.setOnClickListener(new OnClickListener() {
 			@Override
@@ -477,8 +449,6 @@ public class KeyFragment extends Fragment {
 											int doorNamemIndex = mCursor.getColumnIndex("doorName");
 											int doorTypeIndex = mCursor.getColumnIndex("doorType");
 											int directionIndex = mCursor.getColumnIndex("direction");
-//											int carStatusIndex = mCursor.getColumnIndex("carStatus");
-//											int carPosStatusIndex = mCursor.getColumnIndex("carPosStatus");
 
 											do {
 												HashMap<String, String> temp = new HashMap<String, String>();
@@ -486,8 +456,6 @@ public class KeyFragment extends Fragment {
 												String doorName = mCursor.getString(doorNamemIndex);
 												String doorType = mCursor.getString(doorTypeIndex);
 												String direction = mCursor.getString(directionIndex);
-//												String carStatus = mCursor.getString(carStatusIndex);
-//												String carPosStatus = mCursor.getString(carPosStatusIndex);
 												String zoneId = mCursor.getString(zoneIdIndex);
 
 												/*  Add new logic for car key
@@ -1296,7 +1264,7 @@ public class KeyFragment extends Fragment {
                     case 10:
                         if (mOpenDoorState == 0) {
                             Log.i(TAG, "Thread handler");
-							if (mOpenDoorState == 0) {
+							if (!mBTScanning) {
 								populateDeviceList(mBtStateOpen);
 							}
                         }
@@ -1313,14 +1281,10 @@ public class KeyFragment extends Fragment {
                 if (mBluetoothAdapter.isDiscovering()) {
                 } else {
                     mBtStateOpen = true;
+					service_init();
                     Log.i(TAG, "myThread111");
                     myThread = new MyThread();
-                    myThread.start();
-                    //populateDeviceList(mBtStateOpen);
-                    // if(getActivity() != null)
-                    // Toast.makeText(getActivity(), R.string.bt_enabled,
-                    // Toast.LENGTH_SHORT).show();
-                    service_init();
+					myThread.start();
                 }
             }
         } else {
@@ -1332,11 +1296,7 @@ public class KeyFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		
-//		if (sensorManager != null) {
-//            sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
-//        }
-		
+
 		Log.e("TEST", "keyFragment onResume()");
         mOpenDoorState = 0;
 //		checkBlueToothState();
@@ -1365,8 +1325,6 @@ public class KeyFragment extends Fragment {
 					int doorNamemIndex = mCursor.getColumnIndex("doorName");
 					int doorTypeIndex = mCursor.getColumnIndex("doorType");
 					int directionIndex = mCursor.getColumnIndex("direction");
-//					int carStatusIndex = mCursor.getColumnIndex("carStatus");
-//					int carPosStatusIndex = mCursor.getColumnIndex("carPosStatus");
 
 					do {
 						HashMap<String, String> temp = new HashMap<String, String>();
@@ -1374,8 +1332,6 @@ public class KeyFragment extends Fragment {
 						String doorName = mCursor.getString(doorNamemIndex);
 						String doorType = mCursor.getString(doorTypeIndex);
 						String direction = mCursor.getString(directionIndex);
-//						String carStatus = mCursor.getString(carStatusIndex);
-//						String carPosStatus = mCursor.getString(carPosStatusIndex);
 						String zoneId = mCursor.getString(zoneIdIndex);
 
 						/*  Add new logic for car key
@@ -1443,12 +1399,10 @@ public class KeyFragment extends Fragment {
                 if (mBluetoothAdapter.isDiscovering()) {
                 } else{
                     mBtStateOpen = true;
-                    Log.i(TAG, "myThread111");
+					service_init();
+                    Log.i("test63", "myThread");
                     myThread = new MyThread();
-                    myThread.start();
-
-                    //populateDeviceList(mBtStateOpen);
-                    service_init();
+					myThread.start();
                 }
             }
         }else if(requestCode == REQUEST_ENABLE_BT && resultCode == 0){
@@ -1573,10 +1527,8 @@ public class KeyFragment extends Fragment {
 									+ String.valueOf(data[6]) + String.valueOf(data[7]) + ":"
 									+ String.valueOf(data[8]) + String.valueOf(data[9]) + ":"
 									+ String.valueOf(data[10]) + String.valueOf(data[11]);
-//							Log.e("TEST", "CDdeviceID:" + formatDeviceId);
 
 							if (mDeviceList.get(0).getAddress().equals(formatDeviceId)) {// 2.one car door
-//								Log.e("TEST69", String.valueOf(mDevRssiValues.get(mDeviceList.get(0).getAddress())));
 								if (mDevRssiValues.get(mDeviceList.get(0).getAddress()) > (int)(-75)) {
 									bValidKey = true;
 									tempCarDoorList.add(mDeviceList.get(0));
@@ -1630,7 +1582,6 @@ public class KeyFragment extends Fragment {
 						if (mDeviceList != null && mDeviceList.size() > 1) {
 							onlyOneDoor = false;
 							if (isChooseCarChannel == 1) {// 5.when choose car door
-//								List<BluetoothDevice> tempCarDoorList = new ArrayList<BluetoothDevice>();
 								for (int temp = 0; temp < mDeviceList.size(); temp++) {
 									for (int i = 0; i < carDoorList.size(); i++) {
 										String tempDID = carDoorList.get(i).get("CDdeviceid");
@@ -1660,10 +1611,8 @@ public class KeyFragment extends Fragment {
 													+ String.valueOf(data[6]) + String.valueOf(data[7]) + ":"
 													+ String.valueOf(data[8]) + String.valueOf(data[9]) + ":"
 													+ String.valueOf(data[10]) + String.valueOf(data[11]);
-//											Log.e("TEST", "CDdeviceID:" + formatDeviceId);
 
 											if (tempCarDoorList.get(0).getAddress().equals(formatDeviceId)) {
-//												Log.e("TEST69", "car rssi:"+String.valueOf(mDevRssiValues.get(tempCarDoorList.get(0).getAddress())));
 												if (mDevRssiValues.get(tempCarDoorList.get(0).getAddress()) > (int)(-75)) {
 													bValidKey = true;
 													BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
@@ -1714,7 +1663,6 @@ public class KeyFragment extends Fragment {
 									}
 								}
 							}else {// 6.choose man door
-//								List<BluetoothDevice> tempManDoorList = new ArrayList<BluetoothDevice>();
 								for (int temp = 0; temp < mDeviceList.size(); temp++) {
 									for (int i = 0; i < manDoorList.size(); i++) {
 										String tempDID = manDoorList.get(i).get("MDdeviceid");
@@ -1838,9 +1786,6 @@ public class KeyFragment extends Fragment {
 			}
 		}
 		if (!deviceFound) {
-//			if (tempDeviceAddr != device.getAddress()) {
-//				tempDeviceAddr = device.getAddress();
-
 				for (int i = 0; i < carDoorList.size(); i++) {
 					String tempDID = carDoorList.get(i).get("CDdeviceid");
 					tempDID = tempDID.toUpperCase();
@@ -1882,167 +1827,169 @@ public class KeyFragment extends Fragment {
 						}
 					}
 				}
-//			}
 		}
 	}
 	
 	private void doOpenDoor(final boolean btStateOpen) {
         Log.e("BLE", "doOpenDoor");
-       if (btStateOpen) {
+       	if (btStateOpen) {
 			onlyOneDoor = !onlyOneDoor;
+			//TODO
+			if (isChooseCarChannel == 1) {
 
-//            if (mDeviceList != null && mDeviceList.size() > 0) {
-//                if (mDeviceList.get(deviceIndexToOpen).getAddress() != null) {
+				for (int index = 0; index < carDoorList.size(); index++) {
+					String deviceId = null;
+					String tempDeviceId = null;
+					deviceId = carDoorList.get(index).get("CDdeviceid");
+					tempDeviceId = deviceId.toUpperCase();
+					char[] data = tempDeviceId.toCharArray();
+					String formatDeviceId = String.valueOf(data[0]) + String.valueOf(data[1]) + ":"
+							+ String.valueOf(data[2]) + String.valueOf(data[3]) + ":"
+							+ String.valueOf(data[4]) + String.valueOf(data[5]) + ":"
+							+ String.valueOf(data[6]) + String.valueOf(data[7]) + ":"
+							+ String.valueOf(data[8]) + String.valueOf(data[9]) + ":"
+							+ String.valueOf(data[10]) + String.valueOf(data[11]);
 
-                    //TODO
-                    if (isChooseCarChannel == 1) {
+					if (formatDeviceId.equals(tempCarDoorList.get(deviceIndexToOpen).getAddress())) {
+						if (carDoorList.get(index).get("CDDirection").equals("1")) {  // go in
+							if (mKeyDBHelper.tabIsExist(CAR_TABLE_NAME)) {
+								if (DBCountCar() > 0) {
+									Cursor mCursor = mKeyDB.rawQuery("select * from " + CAR_TABLE_NAME, null);
+									if (mCursor.moveToFirst()) {
+										int carStatusIndex = mCursor.getColumnIndex("carStatus");
+										int carPosStatusIndex = mCursor.getColumnIndex("carPosStatus");
+										int l1ZoneIdIndex = mCursor.getColumnIndex("l1ZoneId");
+										int plateNumIndex = mCursor.getColumnIndex("plateNum");
 
-                        for (int index = 0; index < carDoorList.size(); index++) {
-                            String deviceId = null;
-                            String tempDeviceId = null;
-                            deviceId = carDoorList.get(index).get("CDdeviceid");
-                            tempDeviceId = deviceId.toUpperCase();
-                            char[] data = tempDeviceId.toCharArray();
-                            String formatDeviceId = String.valueOf(data[0]) + String.valueOf(data[1]) + ":"
-                                    + String.valueOf(data[2]) + String.valueOf(data[3]) + ":"
-                                    + String.valueOf(data[4]) + String.valueOf(data[5]) + ":"
-                                    + String.valueOf(data[6]) + String.valueOf(data[7]) + ":"
-                                    + String.valueOf(data[8]) + String.valueOf(data[9]) + ":"
-                                    + String.valueOf(data[10]) + String.valueOf(data[11]);
+										do {
+											String carStatus = mCursor.getString(carStatusIndex);
+											String carPosStatus = mCursor.getString(carPosStatusIndex);
+											final String l1ZoneId = mCursor.getString(l1ZoneIdIndex);
+											final String plateNum = mCursor.getString(plateNumIndex);
 
-                            if (formatDeviceId.equals(tempCarDoorList.get(deviceIndexToOpen).getAddress())) {
-                                if (carDoorList.get(index).get("CDDirection").equals("1")) {  // go in
-                                    if (mKeyDBHelper.tabIsExist(CAR_TABLE_NAME)) {
-                                        if (DBCountCar() > 0) {
-                                            Cursor mCursor = mKeyDB.rawQuery("select * from " + CAR_TABLE_NAME, null);
-                                            if (mCursor.moveToFirst()) {
-                                                int carStatusIndex = mCursor.getColumnIndex("carStatus");
-                                                int carPosStatusIndex = mCursor.getColumnIndex("carPosStatus");
-                                                int l1ZoneIdIndex = mCursor.getColumnIndex("l1ZoneId");
-                                                int plateNumIndex = mCursor.getColumnIndex("plateNum");
+											if ((carStatus.equals("1") || carStatus.equals("2"))
+													&& (carPosStatus.equals("0") || carPosStatus.equals("2"))) {
+												// can open
+												scanStatus.setText(R.string.door_openning);
+												if (mUartService != null) {
+													if(mUartService.connect(tempCarDoorList.get(deviceIndexToOpen).getAddress())) {
+														mOpenDoorState = 4;
+													}
 
-                                                do {
-                                                    String carStatus = mCursor.getString(carStatusIndex);
-                                                    String carPosStatus = mCursor.getString(carPosStatusIndex);
-                                                    final String l1ZoneId = mCursor.getString(l1ZoneIdIndex);
-                                                    final String plateNum = mCursor.getString(plateNumIndex);
+													// 30s
+													new Handler().postDelayed(new Runnable() {
+														@Override
+														public void run() {
+															// update
+															// the
+															// carPosStatus
+															ContentValues value = new ContentValues();
+															value.put("carPosStatus", "1");
+															mKeyDB.update(CAR_TABLE_NAME, value, "l1ZoneId=? and plateNum=?",
+																	new String[]{l1ZoneId, plateNum});
+														}
+													}, 30 * 1000);
+												}
 
-                                                    if ((carStatus.equals("1") || carStatus.equals("2"))
-                                                            && (carPosStatus.equals("0") || carPosStatus.equals("2"))) {
-                                                        // can open
-														scanStatus.setText(R.string.door_openning);
-                                                        if (mUartService != null) {
-                                                            mUartService.connect(tempCarDoorList.get(deviceIndexToOpen).getAddress());
+											} else if(carStatus.equals("3")){
+												if (getActivity() != null) {
+													Toast.makeText(getActivity(), R.string.car_already_lend, Toast.LENGTH_SHORT).show();
+												}
+											} else {
+												// can not open
+												if (getActivity() != null) {
+													Log.e(TAG, "sorry, cannot open");
+													Toast.makeText(getActivity(), R.string.sorry_you_are_in_the_zone, Toast.LENGTH_SHORT).show();
+												}
+											}
 
-                                                            // 30s
-                                                            new Handler().postDelayed(new Runnable() {
-                                                                @Override
-                                                                public void run() {
-                                                                    // update
-                                                                    // the
-                                                                    // carPosStatus
-                                                                    ContentValues value = new ContentValues();
-                                                                    value.put("carPosStatus", "1");
-                                                                    mKeyDB.update(CAR_TABLE_NAME, value, "l1ZoneId=? and plateNum=?",
-                                                                            new String[]{l1ZoneId, plateNum});
-                                                                }
-                                                            }, 30 * 1000);
-                                                        }
-
-                                                    } else if(carStatus.equals("3")){
-                                                    	if (getActivity() != null) {
-                                                            Toast.makeText(getActivity(), R.string.car_already_lend, Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    } else {
-                                                        // can not open
-                                                        if (getActivity() != null) {
-                                                            Log.e(TAG, "sorry, cannot open");
-                                                            Toast.makeText(getActivity(), R.string.sorry_you_are_in_the_zone, Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    }
-
-                                                } while (mCursor.moveToNext());
-                                            }
-                                            mCursor.close();
-                                        }
-                                    }
-                                } else if (carDoorList.get(index).get("CDDirection").equals("2")) {  // go out
-                                    if (mKeyDBHelper.tabIsExist(CAR_TABLE_NAME)) {
-                                        if (DBCountCar() > 0) {
-                                            Cursor mCursor = mKeyDB.rawQuery("select * from " + CAR_TABLE_NAME, null);
-                                            if (mCursor.moveToFirst()) {
-                                                int carStatusIndex = mCursor.getColumnIndex("carStatus");
-                                                int carPosStatusIndex = mCursor.getColumnIndex("carPosStatus");
-                                                int l1ZoneIdIndex = mCursor.getColumnIndex("l1ZoneId");
-                                                int plateNumIndex = mCursor.getColumnIndex("plateNum");
-
-                                                do {
-                                                    String carStatus = mCursor.getString(carStatusIndex);
-                                                    String carPosStatus = mCursor.getString(carPosStatusIndex);
-                                                    final String l1ZoneId = mCursor.getString(l1ZoneIdIndex);
-                                                    final String plateNum = mCursor.getString(plateNumIndex);
-
-                                                    if ((carStatus.equals("1") || carStatus.equals("2"))
-                                                            && (carPosStatus.equals("0") || carPosStatus.equals("1"))) {
-                                                        // can open
-														scanStatus.setText(R.string.door_openning);
-                                                        mUartService.connect(tempCarDoorList.get(deviceIndexToOpen).getAddress());
-
-                                                        // 30s
-                                                        new Handler().postDelayed(new Runnable() {
-                                                            @Override
-                                                            public void run() {
-                                                                // update the carPosStatus
-                                                                ContentValues value = new ContentValues();
-                                                                value.put("carPosStatus", "2");
-                                                                mKeyDB.update(CAR_TABLE_NAME, value, "l1ZoneId=? and plateNum=?", new String[]{l1ZoneId, plateNum});
-                                                            }
-                                                        }, 30 * 1000);
-                                                    } else if(carStatus.equals("3")){
-                                                    	if (getActivity() != null) {
-                                                            Toast.makeText(getActivity(), R.string.car_already_lend, Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    } else {
-                                                        // can not open
-                                                        if (getActivity() != null) {
-                                                            Log.e(TAG, "sorry, cannot open");
-                                                            Toast.makeText(getActivity(), R.string.sorry_you_are_out_the_zone, Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    }
-
-                                                } while (mCursor.moveToNext());
-                                            }
-                                            mCursor.close();
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        if (mUartService != null) {
-							// man door, can open
-							scanStatus.setText(R.string.door_openning);
-                            mUartService.connect(tempManDoorList.get(deviceIndexToOpen).getAddress());
-                        }
-                    }
-
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (mOpenDoorState != 0) {
-								if (getActivity() != null) {
-									Toast.makeText(getActivity(), R.string.open_door_fail, Toast.LENGTH_SHORT).show();
+										} while (mCursor.moveToNext());
+									}
+									mCursor.close();
 								}
-                            	Log.e("test for open door", "fail");
-								scanStatus.setText(R.string.can_shake_to_open_door);
-								mOpenDoorState = 0;
-                            }
-                        }
-                    }, 5000);
+							}
+						} else if (carDoorList.get(index).get("CDDirection").equals("2")) {  // go out
+							if (mKeyDBHelper.tabIsExist(CAR_TABLE_NAME)) {
+								if (DBCountCar() > 0) {
+									Cursor mCursor = mKeyDB.rawQuery("select * from " + CAR_TABLE_NAME, null);
+									if (mCursor.moveToFirst()) {
+										int carStatusIndex = mCursor.getColumnIndex("carStatus");
+										int carPosStatusIndex = mCursor.getColumnIndex("carPosStatus");
+										int l1ZoneIdIndex = mCursor.getColumnIndex("l1ZoneId");
+										int plateNumIndex = mCursor.getColumnIndex("plateNum");
 
-//                }
-//            }
-        }
+										do {
+											String carStatus = mCursor.getString(carStatusIndex);
+											String carPosStatus = mCursor.getString(carPosStatusIndex);
+											final String l1ZoneId = mCursor.getString(l1ZoneIdIndex);
+											final String plateNum = mCursor.getString(plateNumIndex);
+
+											if ((carStatus.equals("1") || carStatus.equals("2"))
+													&& (carPosStatus.equals("0") || carPosStatus.equals("1"))) {
+												// can open
+												scanStatus.setText(R.string.door_openning);
+												if (mUartService != null) {
+													if (mUartService.connect(tempCarDoorList.get(deviceIndexToOpen).getAddress())) {
+														mOpenDoorState = 4;
+													}
+												}
+
+												// 30s
+												new Handler().postDelayed(new Runnable() {
+													@Override
+													public void run() {
+														// update the carPosStatus
+														ContentValues value = new ContentValues();
+														value.put("carPosStatus", "2");
+														mKeyDB.update(CAR_TABLE_NAME, value, "l1ZoneId=? and plateNum=?", new String[]{l1ZoneId, plateNum});
+													}
+												}, 30 * 1000);
+											} else if(carStatus.equals("3")){
+												mOpenDoorState = 2;
+												if (getActivity() != null) {
+													Toast.makeText(getActivity(), R.string.car_already_lend, Toast.LENGTH_SHORT).show();
+												}
+											} else {
+												mOpenDoorState = 3;
+												// can not open
+												if (getActivity() != null) {
+													Log.e(TAG, "sorry, cannot open");
+													Toast.makeText(getActivity(), R.string.sorry_you_are_out_the_zone, Toast.LENGTH_SHORT).show();
+												}
+											}
+
+										} while (mCursor.moveToNext());
+									}
+									mCursor.close();
+								}
+							}
+						}
+					}
+				}
+			} else {
+				if (mUartService != null) {
+					// man door, can open
+					scanStatus.setText(R.string.door_openning);
+					if (!mUartService.connect(tempManDoorList.get(deviceIndexToOpen).getAddress())) {
+						mOpenDoorState = 4;
+					}
+				}
+			}
+
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					if (mOpenDoorState > 1) {
+//								if (getActivity() != null) {
+//									Toast.makeText(getActivity(), R.string.open_door_fail, Toast.LENGTH_SHORT).show();
+//								}
+						Log.e("test", "car door fail");
+						scanStatus.setText(R.string.can_shake_to_open_door);
+						mOpenDoorState = 0;
+					}
+				}
+			}, 5000);
+		}
     }
 
 	private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
@@ -2102,11 +2049,10 @@ public class KeyFragment extends Fragment {
 				case BluetoothAdapter.STATE_ON:
 					Log.e("BLE", "BluetoothAdapter.STATE_ON");
                     mBtStateOpen = true;
+					service_init();
                     Log.i(TAG, "myThread111");
                     myThread = new MyThread();
-                    myThread.start();
-					//populateDeviceList(mBtStateOpen);
-					service_init();
+					myThread.start();
 					break;
 
 				case BluetoothAdapter.STATE_TURNING_ON:
@@ -2154,7 +2100,6 @@ public class KeyFragment extends Fragment {
                 Log.e("BLE", "UartService.ACTION_GATT_DISCONNECTED");
                 getActivity().runOnUiThread(new Runnable() {
                     public void run() {
-
                         mUartService.close();
                         if (mOpenDoorState != 0) {
 							if (!mDoorState) {
@@ -2231,13 +2176,12 @@ public class KeyFragment extends Fragment {
 			if (!mUartService.initialize()) {
 				getActivity().finish();
 			}
-
 		}
 
 		public void onServiceDisconnected(ComponentName classname) {
 			Log.e("BLE", "onServiceDisconnected");
 			mUartService = null;
-
+			scanStatus.setText(R.string.can_not_use_open_door);
 		}
 	};
 

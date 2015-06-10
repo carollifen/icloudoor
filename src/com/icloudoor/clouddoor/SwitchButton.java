@@ -58,8 +58,6 @@ public class SwitchButton extends RelativeLayout {
 				.findViewById(R.id.view_switch_image);
 		testView = (ImageView) mFrameView.findViewById(R.id.test);
 		testView1 = (ImageView) mFrameView.findViewById(R.id.test1);
-		// mViewHint = (TextView)
-		// mFrameView.findViewById(R.id.view_switch_text);
 
 		addView(mFrameView);
 		ViewHelper.measureView(this);

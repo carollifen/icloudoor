@@ -13,9 +13,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 
 public class WizardActivity extends CircleViewPager {
-	
-//	private int size;
-	
+
 	private ImageView Btnone;
 	private ImageView Btntwo;
 	private ImageView Btnthree;
@@ -33,7 +31,7 @@ public class WizardActivity extends CircleViewPager {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		getActionBar().hide();
+
 		setContentView(R.layout.activity_wizard);
 		
 		Btnone = (ImageView) findViewById(R.id.Iv_wizard_push1);
@@ -50,59 +48,13 @@ public class WizardActivity extends CircleViewPager {
 		mWizardFragmentList = new ArrayList<Fragment>();
 		
 		mWizardFragOne = new WizardFragmentOne();
-//		mWizardFragOne1 = new WizardFragmentOne();
 		mWizardFragTwo = new WizardFragmentTwo();
 		mWizardFragThree = new WizardFragmentThree();
-//		mWizardFragFour = new WizardFragmentFour();
-//		mWizardFragFour1 = new WizardFragmentFour();
 		
-//		mWizardFragmentList.add(mWizardFragFour1);
 		mWizardFragmentList.add(mWizardFragOne);
 		mWizardFragmentList.add(mWizardFragTwo);
 		mWizardFragmentList.add(mWizardFragThree);
-//		mWizardFragmentList.add(mWizardFragFour);
-//		mWizardFragmentList.add(mWizardFragOne1);
-		
-//		initViewPager(R.id.wizard_pager, mWizardFragmentList ) ;
-//		
-//		setOnPageChangeListener(new OnPageChangeListener() {
-//
-//			@Override
-//			public void onPageScrollStateChanged(int state) {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//
-//			@Override
-//			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//
-//			@Override
-//			public void onPageSelected(int position) {
-//				int a = getRealPosition(position, size-2) ;
-//				
-//				if(a == 0){
-//					Btnone.setImageResource(R.drawable.wizard_push_current);
-//					Btntwo.setImageResource(R.drawable.wizard_push_next);
-//					Btnthree.setImageResource(R.drawable.wizard_push_next);
-//				} else if(a == 1){
-//					Btntwo.setImageResource(R.drawable.wizard_push_current);
-//					Btnone.setImageResource(R.drawable.wizard_push_next);
-//					Btnthree.setImageResource(R.drawable.wizard_push_next);
-//				} else if(a == 2){
-//					Btnthree.setImageResource(R.drawable.wizard_push_current);
-//					Btntwo.setImageResource(R.drawable.wizard_push_next);
-//					Btnone.setImageResource(R.drawable.wizard_push_next);
-//				}
-//				
-//			}
-//			
-//		});
-		
-		
-			
+
 		mWizardPageAdapter = new WizardPageAdapter(mFragmentManager, mWizardFragmentList);
 		mWizardPager.setAdapter(mWizardPageAdapter);
 		mWizardPager.setCurrentItem(0);

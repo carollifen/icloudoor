@@ -36,7 +36,7 @@ public class SettingDetailActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		getActionBar().hide();
+
 		setContentView(R.layout.set_detail);
 		mFinishActivityBroadcast=	new Broadcast();
 		 IntentFilter intentFilter = new IntentFilter();
@@ -45,7 +45,6 @@ public class SettingDetailActivity extends Activity {
 		    //** snip **//
 		
 		TVBtnResetPwd = (LinearLayout) findViewById(R.id.btn_reset_pwd);
-//		TVBtnChangePhone = (TextView) findViewById(R.id.btn_change_phone);
 		
 		IVSetDetailShake = (ImageView) findViewById(R.id.btn_set_detail_shake);
 		IVSetDetailSound = (ImageView) findViewById(R.id.btn_set_detail_sound);
@@ -66,16 +65,7 @@ public class SettingDetailActivity extends Activity {
 			}
 			
 		});
-//		TVBtnChangePhone.setOnClickListener(new OnClickListener(){
-//
-//			@Override
-//			public void onClick(View v) {
-//				Intent intent = new Intent();
-//				intent.setClass(v.getContext(), ChangePhoneActivity.class);
-//				startActivity(intent);
-//			}
-//			
-//		});
+
 		IVBack.setOnClickListener(new OnClickListener(){
 
 			@Override

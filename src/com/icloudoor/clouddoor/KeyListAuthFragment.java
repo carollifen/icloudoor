@@ -161,16 +161,6 @@ public class KeyListAuthFragment extends Fragment {
 		mKeyDBHelper = new MyDataBaseHelper(getActivity(), DATABASE_NAME);
 		mKeyDB = mKeyDBHelper.getReadableDatabase();
 
-//		ArrayList<Map<String, String>> mlist = new ArrayList<Map<String, String>>();
-//		for (int i = 3; i >= 0; i--) {
-//			Map<String, String> map = new HashMap<String, String>();
-//			map.put("keyname", " ½õÐåÏã½­´óÃÅ" + i);
-//			mlist.add(map);
-//		}
-//		LVkeylist.setVisibility(View.GONE);
-
-		// LVkeylist.setAdapter(new MykeyListAdapter(getActivity(), mlist) );
-
 		LVkeylist.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -300,10 +290,6 @@ public class KeyListAuthFragment extends Fragment {
 					carKeyText.setTextColor(0xFF333333);
 					manKeyText.setTextColor(0xFFffffff);
 					isChooseCarKey = false;
-					// LVkeylist.setAdapter(new
-					// SimpleAdapter(getActivity(),mankeylist,
-					// R.layout.keylist_child, new String[]{"mankeyItem"}, new
-					// int[]{R.id.id_keyname}));
 				}
 			}
 
@@ -313,9 +299,6 @@ public class KeyListAuthFragment extends Fragment {
 		btnSubmitText = (TextView) view.findViewById(R.id.btn_submit_text);
 		btnSubmitText.setBackgroundResource(R.drawable.selector_submit_text_bg);
 	    btnSubmitText.setTextColor(getResources().getColorStateList(R.color.test_input_color_selector));
-//		btnSubmitText.setTextColor(ColorDisable);
-//		btnSubmitText.setBackgroundResource(R.drawable.btn_submit_big_disable);
-//		btnSubmitText.setEnabled(false);
 		DisplayMetrics dm = new DisplayMetrics();
 		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
 		int screenWidth = dm.widthPixels;
@@ -323,11 +306,7 @@ public class KeyListAuthFragment extends Fragment {
 		btnSubmitText.setWidth(screenWidth - 32 * 2);
 
 		SharedPreferences status = getActivity().getSharedPreferences("SUBMITSTATUS", 0);
-//		if((status.getBoolean("CarPhone", false) && status.getBoolean("CarNum", false) && TVkeyname.length() > 0)
-//				|| (status.getBoolean("ManPhone", false) && status.getBoolean("ManDate", false) && TVkeyname.length() > 0)){
-//			btnSubmitText.setEnabled(true);
-//		}
-		
+
 		btnSubmitText.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -603,10 +582,6 @@ public class KeyListAuthFragment extends Fragment {
 								+ " = " + contactId, null, null);
 				while (phone.moveToNext()) {
 					String usernumber = phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-					// dateAndPhoneEditor.putString("PHONENUM",
-					// usernumber).commit();
-					// text.setText(usernumber+" ("+username+")");
-					// FragmentManEntrance f=new FragmentManEntrance();
 					mManFragment.getData(usernumber);
 				}
                 phone.close();

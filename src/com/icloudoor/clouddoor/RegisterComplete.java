@@ -56,14 +56,11 @@ public class RegisterComplete extends Activity implements TextWatcher {
 	private RelativeLayout pwdLayout;
 	private RelativeLayout pwdAgainLayout;
 	private RelativeLayout regiCompleteLayout;
-//	private RelativeLayout ShowPwd;
-//	private ImageView IVPwdIcon;
-//	private boolean isHiddenPwd;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		getActionBar().hide();
+
 		setContentView(R.layout.register_complete);
 
 		setupUI(findViewById(R.id.main));
@@ -78,9 +75,7 @@ public class RegisterComplete extends Activity implements TextWatcher {
 		DisplayMetrics dm = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(dm);
 		int screenWidth = dm.widthPixels;
-		
-//		ShowPwd = (RelativeLayout) findViewById(R.id.show_pwd);
-//		IVPwdIcon = (ImageView) findViewById(R.id.btn_show_pwd);
+
 		pwdLayout = (RelativeLayout) findViewById(R.id.regi_input_pwd_layout);
 		pwdAgainLayout = (RelativeLayout) findViewById(R.id.regi_input_pwd_again_layout);
 		regiCompleteLayout = (RelativeLayout) findViewById(R.id.regi_complete_layout);
@@ -101,30 +96,7 @@ public class RegisterComplete extends Activity implements TextWatcher {
 		
 		TVRegiComplete.setTextColor(0xFF999999);
 		regiCompleteLayout.setEnabled(false);
-		
-//		isHiddenPwd = true;
-//		IVPwdIcon.setImageResource(R.drawable.hide_pwd_new);
-//		ShowPwd.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				if (isHiddenPwd) {
-//					isHiddenPwd = false;
-//					ETInputPwd.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-//					IVPwdIcon.setImageResource(R.drawable.show_pwd_new);
-//				} else {
-//					isHiddenPwd = true;
-//					ETInputPwd.setTransformationMethod(PasswordTransformationMethod.getInstance());
-//					IVPwdIcon.setImageResource(R.drawable.hide_pwd_new);
-//				}
-//
-//			}
-//
-//		});
-		
-		//
-		
-		
+
 		TVRegiComplete.setTextColor(0xFF999999);
 		regiCompleteLayout.setEnabled(false);
 		
@@ -184,10 +156,6 @@ public class RegisterComplete extends Activity implements TextWatcher {
 											e.printStackTrace();
 										}
 										Toast.makeText(getApplicationContext(), R.string.regi_success, Toast.LENGTH_SHORT).show();
-										
-//										Intent intent = new Intent();
-//										intent.setClass(getApplicationContext(), Login.class);
-//										startActivity(intent);
 										
 										SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
 										Editor editor = personalInfo.edit();

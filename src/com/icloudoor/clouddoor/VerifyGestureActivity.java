@@ -57,7 +57,7 @@ public class VerifyGestureActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		getActionBar().hide();
+
 		setContentView(R.layout.activity_verify_gesture);
 		
 		IntentFilter intentFilter = new IntentFilter();
@@ -68,7 +68,6 @@ public class VerifyGestureActivity extends Activity {
 
 		
 		mQueue = Volley.newRequestQueue(this);
-//		mback=(RelativeLayout) findViewById(R.id.verify_gesture_btn_back);
 		
 		textTip=(TextView) findViewById(R.id.tip_text);
 		
@@ -76,12 +75,10 @@ public class VerifyGestureActivity extends Activity {
 		textTip.setTextColor(0xFF666666);
 		textTip.setTextSize(17);
 		
-//		mback.setOnClickListener(this);
-		
 		registerReceiver(KillVerifyActivityBroadcast,new IntentFilter("KillVerifyActivity"));
-	 //	IVmanageGesture=(TextView) findViewById(R.id.sign_set_manage);
+
 	 	IVpswLogin=(TextView) findViewById(R.id.sign_set_account);
-	 	//IVmanageGesture.setOnClickListener(this);
+
 	 	IVpswLogin.setOnClickListener(new OnClickListener(){
 
 			@Override
@@ -107,13 +104,6 @@ public class VerifyGestureActivity extends Activity {
 			}
 	 		
 	 	});
-		
-//		phoneNum = (TextView) findViewById(R.id.sign_verify_person_phone);
-//		SharedPreferences loginStatus = getSharedPreferences(
-//				"LOGINSTATUS", MODE_PRIVATE);
-//		phone = loginStatus.getString("PHONENUM", null);
-//		changeNum();
-//		phoneNum.setText(phone);
 		
 		mGestureContainer = (FrameLayout) findViewById(R.id.sign_verify_gesture_container);
 		
@@ -145,11 +135,7 @@ public class VerifyGestureActivity extends Activity {
 					Editor editor = homeKeyEvent.edit();
 					editor.putInt("homePressed", homePressed);
 					editor.commit();
-					
-//					Intent intent = new Intent();
-//					intent.setClass(VerifyGestureActivity.this, CloudDoorMainActivity.class);
-//					startActivity(intent);
-					
+
 					VerifyGestureActivity.this.finish();
 				}
 				
@@ -245,42 +231,6 @@ public class VerifyGestureActivity extends Activity {
 			}
 		}
 	};
-	
-//	@Override
-//	public void onClick(View v) {
-//		// TODO Auto-generated method stub
-//		if (v.getId() == R.id.verify_gesture_btn_back) {
-//		
-//			VerifyGestureActivity.this.finish();
-//		} 
-//		
-//		if (v.getId() == R.id.sign_set_account) {
-//			MyDialog dialog = new MyDialog(VerifyGestureActivity.this,R.style.add_dialog,
-//					getString(R.string.login_pwd), new MyDialog.OnCustomDialogListener() {
-//						@Override
-//						public void back(int haveset) {
-//							Intent cloudIntent = new Intent(
-//									VerifyGestureActivity.this,
-//									CloudDoorMainActivity.class);
-//							startActivity(cloudIntent);
-//							VerifyGestureActivity.this.finish();
-//						}
-//					});
-//			dialog.show();
-//		}
-//	}
-	
-//	public void changeNum(){
-//		if(phone != null){	
-//			StringBuilder sb = new StringBuilder(phone); 
-//			sb.setCharAt(3, '*');
-//			sb.setCharAt(4, '*');
-//			sb.setCharAt(5, '*'); 
-//			sb.setCharAt(6, '*');
-//			phone = sb.toString();
-//		}
-//	}
-	
 	
 	class Broadcast extends BroadcastReceiver
 	{

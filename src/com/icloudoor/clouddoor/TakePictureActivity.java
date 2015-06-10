@@ -36,8 +36,7 @@ public class TakePictureActivity extends Activity implements CamOpenOverCallback
 			}
 		};
 		openThread.start();
-		
-//		getActionBar().hide();
+
 		setContentView(R.layout.take_picture);
 		initUI();
 		initViewParams();

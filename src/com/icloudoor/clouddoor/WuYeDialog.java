@@ -32,7 +32,6 @@ public class WuYeDialog extends Dialog implements android.view.View.OnClickListe
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.wuyedialog_layout);
 		boundTV=(TextView) findViewById(R.id.id_queding);
-		//boundTV.setTextColor(getColorStateList(R.color.test_input_color_selector));
 		boundTV.setOnClickListener(this);
 		
 		

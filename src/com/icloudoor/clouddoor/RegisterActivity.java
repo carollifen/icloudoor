@@ -91,7 +91,7 @@ public class RegisterActivity extends Activity implements TextWatcher {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		getActionBar().hide();
+
 		setContentView(R.layout.register);
 		
 		setupUI(findViewById(R.id.main));
@@ -358,17 +358,11 @@ public class RegisterActivity extends Activity implements TextWatcher {
 			getCertiCodeLayout.setEnabled(true);
 			getCertiCodeLayout.setBackgroundResource(R.drawable.shape_right_corner);
 			TVGetCertiCode.setText(getString(R.string.get_certi_code_again));
-//			TVGetCertiCode.setTextSize(17);
-//			TVGetCertiCode.setEnabled(true);
-//			TVGetCertiCode.setBackgroundResource(R.drawable.btn_certi);
 		}
 		@Override
 		public void onTick(long millisUntilFinished){
 			getCertiCodeLayout.setEnabled(false);
 			getCertiCodeLayout.setBackgroundResource(R.drawable.shape_right_corner_pressed);
-//			TVGetCertiCode.setEnabled(false);
-//			TVGetCertiCode.setTextSize(16);
-//			TVGetCertiCode.setBackgroundResource(R.drawable.btn_certi_counter);
 			TVGetCertiCode.setText(getString(R.string.have_send) + '\n' + "(" + millisUntilFinished /1000+")");
 		}
 	}
@@ -542,15 +536,10 @@ public class RegisterActivity extends Activity implements TextWatcher {
 				}
 				
 			});
-//			nextLayout.setEnabled(true);
-//			TVNextStep.setTextColor(0xFF0065a1);
-//			nextLayout.setBackgroundResource(R.drawable.selector_next_step);
-//			TVNextStep.setEnabled(true);
 		} else {
 			nextLayout.setEnabled(false);
 			TVNextStep.setTextColor(0xFF999999);
 			nextLayout.setBackgroundResource(R.drawable.shape_next_disable);
-//			TVNextStep.setEnabled(false);
 		}
 	}
 
