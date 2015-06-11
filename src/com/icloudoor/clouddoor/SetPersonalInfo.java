@@ -152,7 +152,7 @@ public class SetPersonalInfo extends Activity {
 
 	private RequestQueue mQueue;
 	private URL setInfoURL;
-	private String HOST = "https://zone.icloudoor.com/icloudoor-web";
+	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
 	private String sid;
 	private int statusCode;
 

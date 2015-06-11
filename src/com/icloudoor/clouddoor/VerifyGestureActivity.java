@@ -159,7 +159,7 @@ public class VerifyGestureActivity extends Activity {
 		                    sid = loadSid("SID");
 
 		                    try {
-		                        logOutURL = new URL("https://zone.icloudoor.com/icloudoor-web" + "/user/manage/logout.do"
+		                        logOutURL = new URL("http://zone.icloudoor.com/icloudoor-web" + "/user/manage/logout.do"
 		                                + "?sid=" + sid);
 		                    } catch (MalformedURLException e) {
 		                        e.printStackTrace();

@@ -61,7 +61,7 @@ public class KeyListListFragment extends Fragment {
 	private URL downLoadKeyURL;
 	private RequestQueue mQueue;
 
-	private String HOST = "https://zone.icloudoor.com/icloudoor-web";
+	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
 	private String sid = null;
 	private String uuid = null;
 	private MyJsonObjectRequest mJsonRequest;

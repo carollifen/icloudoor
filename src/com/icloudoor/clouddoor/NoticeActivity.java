@@ -36,9 +36,9 @@ public class NoticeActivity extends Activity {
 	private WebSettings anouncewebSetting;
 
 	private WebView anounceDetailWebView;
-	private String pageurl = "https://zone.icloudoor.com/icloudoor-web/user/prop/zone/notice/page.do";
-	private String HOST = "https://zone.icloudoor.com/icloudoor-web";
-	private String detailurl = "https://zone.icloudoor.com/icloudoor-web/user/prop/zone/notice/detail.do";
+	private String pageurl = "http://zone.icloudoor.com/icloudoor-web/user/prop/zone/notice/page.do";
+	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
+	private String detailurl = "http://zone.icloudoor.com/icloudoor-web/user/prop/zone/notice/detail.do";
 	
 	private Broadcast mFinishActivityBroadcast;
 

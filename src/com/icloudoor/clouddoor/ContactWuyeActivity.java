@@ -33,7 +33,7 @@ public class ContactWuyeActivity extends Activity {
 	
 	private String sid;
 	private URL newurl;
-	private String url = "https://zone.icloudoor.com/icloudoor-web/user/prop/zone/contact/page.do";
+	private String url = "http://zone.icloudoor.com/icloudoor-web/user/prop/zone/contact/page.do";
 	private RequestQueue requestQueue;
 	
 	private String phonenum;

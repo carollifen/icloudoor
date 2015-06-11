@@ -50,7 +50,7 @@ public class ShowPersonalInfo extends Activity {
 	private String TAG = this.getClass().getSimpleName();
 
 	private RequestQueue mQueue;
-	private String HOST = "https://zone.icloudoor.com/icloudoor-web";
+	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
 	private URL getInfoURL;
 	private int statusCode;
 	private String sid;

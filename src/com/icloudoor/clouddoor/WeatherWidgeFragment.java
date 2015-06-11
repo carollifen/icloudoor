@@ -74,13 +74,13 @@ public class WeatherWidgeFragment extends Fragment {
 	private double longitude = 0.0;
 	private double latitude = 0.0;
 	
-	private String HOST = "https://api.thinkpage.cn/v2/weather/all.json?";
+	private String HOST = "http://api.thinkpage.cn/v2/weather/all.json?";
 	private URL weatherURL;
 	private String Key = "XSI7AKYYBY";
 	private RequestQueue mQueue;
 	
 	
-	private String lhlHOST = "https://zone.icloudoor.com/icloudoor-web";
+	private String lhlHOST = "http://zone.icloudoor.com/icloudoor-web";
 	private URL lhlURL;
 	private int lhlCode;
 	private String sid;

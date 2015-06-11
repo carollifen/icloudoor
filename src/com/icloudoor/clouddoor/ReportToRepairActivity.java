@@ -66,8 +66,8 @@ public class ReportToRepairActivity extends Activity {
 	private WebView fixwebview;
 	private String sid;
 	private URL newurl;
-	private String url = "https://zone.icloudoor.com/icloudoor-web/user/prop/zone/rr/add.do";
-	private String resultForup = "https://zone.icloudoor.com/icloudoor-web/user/file/getSignatureAndPolicy.do";
+	private String url = "http://zone.icloudoor.com/icloudoor-web/user/prop/zone/rr/add.do";
+	private String resultForup = "http://zone.icloudoor.com/icloudoor-web/user/file/getSignatureAndPolicy.do";
 
 	JsonObjectRequest upRequest;
 

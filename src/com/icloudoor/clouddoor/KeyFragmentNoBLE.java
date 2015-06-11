@@ -147,12 +147,12 @@ public class KeyFragmentNoBLE extends Fragment {
 	
 	public char centigrade = 176;
 	
-	private String HOST = "https://api.thinkpage.cn/v2/weather/all.json?";
+	private String HOST = "http://api.thinkpage.cn/v2/weather/all.json?";
 	private URL weatherURL;
 	private String Key = "XSI7AKYYBY";
 	private RequestQueue mQueue;
 	
-	private String lhlHOST = "https://zone.icloudoor.com/icloudoor-web";
+	private String lhlHOST = "http://zone.icloudoor.com/icloudoor-web";
 	private URL lhlURL;
 	private int lhlCode;
 	private String sid;

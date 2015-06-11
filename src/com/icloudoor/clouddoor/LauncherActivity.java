@@ -24,7 +24,7 @@ public class LauncherActivity extends Activity {
 		
 		final Intent intent = new Intent();
 		if(CheckFirstRun()){
-    		addShortcutToDesktop();   
+    		//addShortcutToDesktop();
     		
     		intent.setClass(this, WizardActivity.class);
 		}else{

@@ -99,7 +99,7 @@ private String TAG = this.getClass().getSimpleName();
 	
 	private RequestQueue mQueue;
 	private URL updateInfoURL;
-	private String HOST = "https://zone.icloudoor.com/icloudoor-web";
+	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
 	private String sid;
 	private int statusCode;
 	
