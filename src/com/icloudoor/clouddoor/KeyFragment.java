@@ -1282,9 +1282,11 @@ public class KeyFragment extends Fragment {
                 } else {
                     mBtStateOpen = true;
 					service_init();
-                    Log.i(TAG, "myThread111");
-                    myThread = new MyThread();
-					myThread.start();
+                    Log.i("ThreadTest", "myThread111");
+					if (myThread == null) {
+						myThread = new MyThread();
+						myThread.start();
+					}
                 }
             }
         } else {
@@ -1362,18 +1364,18 @@ public class KeyFragment extends Fragment {
 
     private  class MyThread extends Thread {
 
-        private volatile boolean stopThread = false;
+        private volatile boolean mStopThread = false;
 		private volatile boolean mKeyFindState = false;
         private final long mScanningProidShort = 3000;
 		private final long mScanningProidLong = 6000;
 
         public void stopThread() {
-            this.stopThread = true;
+            this.mStopThread = true;
         }
 
         @Override
         public void run() {
-            while (!Thread.currentThread().isInterrupted() && !stopThread) {
+            while (!Thread.currentThread().isInterrupted() && !mStopThread) {
                 Message msg = new Message();
                 msg.what = 10;
                 mHandler.sendMessage(msg);
@@ -1400,9 +1402,11 @@ public class KeyFragment extends Fragment {
                 } else{
                     mBtStateOpen = true;
 					service_init();
-                    Log.i("test63", "myThread");
-                    myThread = new MyThread();
-					myThread.start();
+                    Log.i("ThreadTest", "myThread onActivityResult");
+					if (myThread == null) {
+						myThread = new MyThread();
+						myThread.start();
+					}
                 }
             }
         }else if(requestCode == REQUEST_ENABLE_BT && resultCode == 0){
@@ -1419,6 +1423,7 @@ public class KeyFragment extends Fragment {
 			scanLeDevice(false);
         if (myThread != null) {
             myThread.stopThread();
+			myThread = null;
         }
 	}
 
@@ -2040,6 +2045,11 @@ public class KeyFragment extends Fragment {
 				case BluetoothAdapter.STATE_OFF:
 					Log.e("BLE", "BluetoothAdapter.STATE_OFF");
                     mBtStateOpen = false;
+					if (myThread != null) {
+						Log.e("ThreadTest", "BluetoothAdapter.STATE_OFF1");
+						myThread.stopThread();
+						myThread = null;
+					}
 					break;
 
 				case BluetoothAdapter.STATE_TURNING_OFF:
@@ -2050,9 +2060,11 @@ public class KeyFragment extends Fragment {
 					Log.e("BLE", "BluetoothAdapter.STATE_ON");
                     mBtStateOpen = true;
 					service_init();
-                    Log.i(TAG, "myThread111");
-                    myThread = new MyThread();
-					myThread.start();
+                    Log.i("ThreadTest", "myThread111 STATE_ON");
+					if (myThread == null) {
+						myThread = new MyThread();
+						myThread.start();
+					}
 					break;
 
 				case BluetoothAdapter.STATE_TURNING_ON:
