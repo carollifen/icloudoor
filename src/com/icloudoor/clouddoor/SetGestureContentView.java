@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 
-import com.icloudoor.clouddoor.SetGestureDrawLineView.SetGestureCallBack;
+import com.icloudoor.cloudoor.SetGestureDrawLineView.SetGestureCallBack;
 
 public class SetGestureContentView extends ViewGroup {
 	

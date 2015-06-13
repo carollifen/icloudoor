@@ -1,7 +1,7 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
-import com.icloudoor.clouddoor.SlideView;
-import com.icloudoor.clouddoor.MsgFragment.MessageItem;
+import com.icloudoor.cloudoor.SlideView;
+import com.icloudoor.cloudoor.MsgFragment.MessageItem;
 
 import android.content.Context;
 import android.util.AttributeSet;

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ecf0f7"
-    tools:context="com.icloudoor.clouddoor.WeatherWidgeFragment2" >
+    tools:context="com.icloudoor.cloudoor.WeatherWidgeFragment2" >
 
 
     <TextView

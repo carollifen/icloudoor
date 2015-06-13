@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
 import org.json.JSONException;
 import org.json.JSONObject;

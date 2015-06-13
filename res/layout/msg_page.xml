@@ -10,7 +10,7 @@
         android:layout_height="44dp"
         layout="@layout/title_bar_msg_page" />
     
-    <com.icloudoor.clouddoor.MsgListView
+    <com.icloudoor.cloudoor.MsgListView
         android:id="@+id/msg_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,6 +18,6 @@
         android:dividerHeight="1.0px"
         android:scrollbars="none" 
         android:layout_below="@id/title_bar_msg_page">
-    </com.icloudoor.clouddoor.MsgListView>
+    </com.icloudoor.cloudoor.MsgListView>
 
 </RelativeLayout>

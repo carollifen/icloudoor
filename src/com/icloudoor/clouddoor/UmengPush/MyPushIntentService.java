@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor.UmengPush;
+package com.icloudoor.cloudoor.UmengPush;
 
 import org.android.agoo.client.BaseConstants;
 import org.json.JSONObject;

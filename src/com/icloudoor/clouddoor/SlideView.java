@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -136,7 +136,7 @@ public class SlideView extends LinearLayout {
     }
 
     private void smoothScrollTo(int destX, int destY) {
-        // 缂撴參婊氬姩鍒版寚瀹氫綅缃�
+        // 缂撴參婊氬姩鍒版寚�?�氫綅缃�?
         int scrollX = getScrollX();
         int delta = destX - scrollX;
         mScroller.startScroll(scrollX, 0, delta, 0, Math.abs(delta) * 3);

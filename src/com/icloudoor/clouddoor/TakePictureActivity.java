@@ -1,6 +1,6 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
-import com.icloudoor.clouddoor.TakePicCamInterface.CamOpenOverCallback;
+import com.icloudoor.cloudoor.TakePicCamInterface.CamOpenOverCallback;
 
 import android.app.Activity;
 import android.content.SharedPreferences;

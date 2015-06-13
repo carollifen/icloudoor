@@ -190,5 +190,13 @@
     <string name="title_activity_xie_yi">XieYiActivity</string>
     <string name="user_not_exist">用户名不存在</string>
     <string name="network_error">网络异常</string>
+    <string name="have_already_daka">已签到</string>
+    <string name="title_activity_no_one">NoOneActivity</string>
+    <string name="title_activity_no_two">NoTwoActivity</string>
+    <string name="title_activity_no_three">NoThreeActivity</string>
+    <string name="title_activity_no_other">NoOtherActivity</string>
+    <string name="title_activity_late">LateActivity</string>
+    <string name="title_activity_offwork">OffworkActivity</string>
+    <string name="daka_success">签到成功</string>
 
 </resources>

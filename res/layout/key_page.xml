@@ -17,16 +17,6 @@
         android:layout_marginTop="44dp"
         android:background="@drawable/backgroud_halo"
         >
-        
-<!--         <com.icloudoor.clouddoor.animationUtils.MyAnimationLine -->
-<!--             android:id="@+id/myAnimationLine" -->
-<!--             android:layout_width="match_parent" -->
-<!--             android:layout_height="match_parent" /> -->
-
-<!--         <com.icloudoor.clouddoor.animationUtils.MyAnimationView -->
-<!--             android:id="@+id/myAnimationView" -->
-<!--             android:layout_width="match_parent" -->
-<!--             android:layout_height="match_parent" /> -->
 
 		<ImageView
 		    android:id="@+id/radar_light"
@@ -44,20 +34,6 @@
 		    android:layout_centerInParent="true"
 		    />
 
-<!--         <RelativeLayout -->
-<!--             android:layout_width="250dp" -->
-<!--             android:layout_height="250dp" -->
-<!--             android:layout_centerInParent="true" > -->
-
-<!-- 			<ImageView -->
-<!-- 			    android:id="@+id/halo" -->
-<!-- 			    android:layout_width="match_parent" -->
-<!-- 			    android:layout_height="match_parent" -->
-<!-- 			    android:layout_centerInParent="true" -->
-<!-- 			    android:background="@drawable/halo_shape" /> -->
-			
-<!--         </RelativeLayout> -->
- 
         <ImageView
             android:id="@+id/btn_open_door"
             android:layout_width="188dp"
@@ -75,7 +51,7 @@
             android:textColor="#ffffff"
             android:textSize="12sp" />
         
-        <com.icloudoor.clouddoor.SwitchButton
+        <com.icloudoor.cloudoor.SwitchButton
             android:id="@+id/btn_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -83,14 +59,14 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="80dp" />
         
-<!--         <LinearLayout -->
-<!--             android:id="@+id/channel_switch_layout" -->
-<!--             android:layout_width="wrap_content" -->
-<!--             android:layout_height="wrap_content" -->
-<!--             android:layout_alignParentBottom="true" -->
-<!--             android:layout_centerHorizontal="true" -->
-<!--             android:layout_marginBottom="105dp" > -->
-<!--         </LinearLayout> -->
+        <LinearLayout
+            android:id="@+id/channel_switch_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="80dp" >
+        </LinearLayout>
 </RelativeLayout>
     
     <LinearLayout
@@ -281,7 +257,7 @@
             android:background="@drawable/locale"
             />
         
-        <com.icloudoor.clouddoor.StrokeTextView
+        <com.icloudoor.cloudoor.StrokeTextView
             android:id="@+id/door_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

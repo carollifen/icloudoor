@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -11,8 +11,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.Request.Method;
 import com.android.volley.toolbox.Volley;
-import com.icloudoor.clouddoor.CloudDoorMainActivity.Broadcast;
-import com.icloudoor.clouddoor.SetGestureDrawLineView.SetGestureCallBack;
+import com.icloudoor.cloudoor.CloudDoorMainActivity.Broadcast;
+import com.icloudoor.cloudoor.SetGestureDrawLineView.SetGestureCallBack;
 import com.umeng.common.message.Log;
 
 import android.app.Activity;
@@ -62,15 +62,12 @@ public class VerifyGestureActivity extends Activity {
 		
 		IntentFilter intentFilter = new IntentFilter();
 	    intentFilter.addAction("com.icloudoor.clouddoor.ACTION_FINISH");
-	    mFinishActivityBroadcast=	new Broadcast();
+	    mFinishActivityBroadcast = new Broadcast();
 	    registerReceiver(mFinishActivityBroadcast, intentFilter);
 
-
-		
 		mQueue = Volley.newRequestQueue(this);
 		
 		textTip=(TextView) findViewById(R.id.tip_text);
-		
 		textTip.setText(getString(R.string.input_gesture));
 		textTip.setTextColor(0xFF666666);
 		textTip.setTextSize(17);
@@ -92,6 +89,10 @@ public class VerifyGestureActivity extends Activity {
 								SharedPreferences firstLoginShare=getSharedPreferences("FIRSTLOGINSHARE", 0);
 								Editor mEditor=firstLoginShare.edit();
 								mEditor.putBoolean("FIRSTLOGIN", true).commit();
+
+								Intent intent = new Intent();
+								intent.setAction("com.icloudoor.clouddoor.ACTION_FINISH");
+								sendBroadcast(intent);
 
 								Intent cloudIntent = new Intent(
 										VerifyGestureActivity.this,
@@ -159,7 +160,7 @@ public class VerifyGestureActivity extends Activity {
 		                    sid = loadSid("SID");
 
 		                    try {
-		                        logOutURL = new URL("http://zone.icloudoor.com/icloudoor-web" + "/user/manage/logout.do"
+		                        logOutURL = new URL("http://test.zone.icloudoor.com/icloudoor-web" + "/user/manage/logout.do"
 		                                + "?sid=" + sid);
 		                    } catch (MalformedURLException e) {
 		                        e.printStackTrace();

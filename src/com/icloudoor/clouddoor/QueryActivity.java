@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -30,9 +30,9 @@ public class QueryActivity extends Activity {
 
 	private WebView surveyWebView;
 	private String sid;
-	private String url = "http://zone.icloudoor.com/icloudoor-web/user/prop/zone/survey/page.do";
+	private String url = "http://test.zone.icloudoor.com/icloudoor-web/user/prop/zone/survey/page.do";
 
-	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
+	private String HOST = "http://test.zone.icloudoor.com/icloudoor-web";
 	private String phonenum;
 
 	private WebSettings webSetting;

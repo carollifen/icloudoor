@@ -1,9 +1,9 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.icloudoor.clouddoor.MyDatePickerUtilView.onSelectListener;
+import com.icloudoor.cloudoor.MyDatePickerUtilView.onSelectListener;
 
 import android.app.Activity;
 import android.os.Bundle;

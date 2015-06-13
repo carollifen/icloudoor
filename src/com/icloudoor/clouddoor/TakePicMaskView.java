@@ -1,6 +1,6 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
-import com.icloudoor.clouddoor.TakePicDisplayUtil;
+import com.icloudoor.cloudoor.TakePicDisplayUtil;
 
 import android.content.Context;
 import android.graphics.Canvas;

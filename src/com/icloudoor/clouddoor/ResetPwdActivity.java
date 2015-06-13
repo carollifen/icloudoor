@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -47,7 +47,7 @@ public class ResetPwdActivity extends Activity implements TextWatcher {
 	private String oldPwd, newPwd, confirmPwd;
 
 	private int statusCode;
-	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
+	private String HOST = "http://test.zone.icloudoor.com/icloudoor-web";
 	private String sid = null;
 	
 	@Override

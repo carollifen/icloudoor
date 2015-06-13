@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
@@ -80,7 +80,7 @@ public class WeatherWidgeFragment extends Fragment {
 	private RequestQueue mQueue;
 	
 	
-	private String lhlHOST = "http://zone.icloudoor.com/icloudoor-web";
+	private String lhlHOST = "http://test.zone.icloudoor.com/icloudoor-web";
 	private URL lhlURL;
 	private int lhlCode;
 	private String sid;

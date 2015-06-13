@@ -1,6 +1,6 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
-import com.icloudoor.clouddoor.ForGetDialog .ForGetDialogInterface;
+import com.icloudoor.cloudoor.ForGetDialog.ForGetDialogInterface;
 
 import android.app.Dialog;
 import android.content.Context;

@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,8 +14,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.icloudoor.clouddoor.R.id;
-import com.icloudoor.clouddoor.SetGestureDrawLineView.SetGestureCallBack;
+import com.icloudoor.cloudoor.R.id;
+import com.icloudoor.cloudoor.SetGestureDrawLineView.SetGestureCallBack;
 
 
 public class SetGestureActivity extends Activity implements OnClickListener {

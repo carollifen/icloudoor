@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -50,10 +50,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.icloudoor.clouddoor.Entities.FilePart;
-import com.icloudoor.clouddoor.Entities.MultipartEntity;
-import com.icloudoor.clouddoor.Entities.Part;
-import com.icloudoor.clouddoor.Entities.StringPart;
+import com.icloudoor.cloudoor.Entities.FilePart;
+import com.icloudoor.cloudoor.Entities.MultipartEntity;
+import com.icloudoor.cloudoor.Entities.Part;
+import com.icloudoor.cloudoor.Entities.StringPart;
 import com.umeng.message.PushAgent;
 
 public class ReportToRepairActivity extends Activity {
@@ -66,8 +66,8 @@ public class ReportToRepairActivity extends Activity {
 	private WebView fixwebview;
 	private String sid;
 	private URL newurl;
-	private String url = "http://zone.icloudoor.com/icloudoor-web/user/prop/zone/rr/add.do";
-	private String resultForup = "http://zone.icloudoor.com/icloudoor-web/user/file/getSignatureAndPolicy.do";
+	private String url = "http://test.zone.icloudoor.com/icloudoor-web/user/prop/zone/rr/add.do";
+	private String resultForup = "http://test.zone.icloudoor.com/icloudoor-web/user/file/getSignatureAndPolicy.do";
 
 	JsonObjectRequest upRequest;
 

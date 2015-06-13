@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -15,7 +15,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.icloudoor.clouddoor.RegisterActivity.TimeCount;
+import com.icloudoor.cloudoor.RegisterActivity.TimeCount;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -57,7 +57,7 @@ public class ForgetPwdActivity extends Activity implements TextWatcher {
 	private int ConfirmCertiStatusCode;
 	private String sid = null;
 
-	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
+	private String HOST = "http://test.zone.icloudoor.com/icloudoor-web";
 	
 	// for new ui
 	private RelativeLayout phoneLayout;

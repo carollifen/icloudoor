@@ -1,56 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/sv_container"
-    android:layout_width="164dp"
-    android:layout_height="40dp"
-    android:background="@drawable/slide_large" >
+    android:layout_width="164dip"
+    android:layout_height="40dip"
+    android:background="@drawable/huadong_bg_big" >
 
-    <ImageView
-        android:id="@+id/switch_bar"
-        android:layout_width="84dip"
-        android:layout_height="40dip"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="0.5dip"
-        android:layout_marginRight="0.5dip"
-        android:background="@drawable/slide_small" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal" >"
-
-        <RelativeLayout
-            android:id="@+id/car_layout"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" >
-            
-            <TextView
-                android:id="@+id/car"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="26dp"
-                android:background="@drawable/car_selected" />
-            
-        </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/switch_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
         
-        <RelativeLayout
-            android:id="@+id/man_layout"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" >
-
-            <TextView
-                android:id="@+id/man"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="26dp"
-                android:background="@drawable/man_normal" />
-        </RelativeLayout>
-
-    </LinearLayout>
+        <ImageView
+            android:layout_width="80dip"
+            android:layout_height="40dip"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="0.5dip"
+            android:layout_marginRight="0.5dip"
+            android:background="@drawable/huadong_bg_small" />
+        
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/huadong_arrow" />
+        
+    </RelativeLayout>
 
 </RelativeLayout>

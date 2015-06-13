@@ -161,7 +161,7 @@
         android:layout_marginBottom="150dp"
         android:orientation="horizontal" >
 
-        <com.icloudoor.clouddoor.MyDatePickerUtilView
+        <com.icloudoor.cloudoor.MyDatePickerUtilView
             android:id="@+id/numberpicker"
             android:layout_width="100dp"
             android:layout_height="120dp" />

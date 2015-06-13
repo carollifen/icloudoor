@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -81,11 +81,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.Request.Method;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.icloudoor.clouddoor.ChannelSwitchView.OnCheckedChangeListener;
-import com.icloudoor.clouddoor.ShakeEventManager;
-import com.icloudoor.clouddoor.UartService;
 //import com.icloudoor.clouddoor.ShakeEventManager.ShakeListener;
-import com.icloudoor.clouddoor.SwitchButton.OnSwitchListener;
+import com.icloudoor.cloudoor.ShakeEventManager;
+import com.icloudoor.cloudoor.UartService;
+import com.icloudoor.cloudoor.ChannelSwitchView.OnCheckedChangeListener;
+import com.icloudoor.cloudoor.SwitchButton.OnSwitchListener;
 
 @SuppressLint("NewApi")
 public class KeyFragmentNoBLE extends Fragment {
@@ -152,7 +152,7 @@ public class KeyFragmentNoBLE extends Fragment {
 	private String Key = "XSI7AKYYBY";
 	private RequestQueue mQueue;
 	
-	private String lhlHOST = "http://zone.icloudoor.com/icloudoor-web";
+	private String lhlHOST = "http://test.zone.icloudoor.com/icloudoor-web";
 	private URL lhlURL;
 	private int lhlCode;
 	private String sid;

@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
@@ -61,7 +61,7 @@ public class KeyListListFragment extends Fragment {
 	private URL downLoadKeyURL;
 	private RequestQueue mQueue;
 
-	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
+	private String HOST = "http://test.zone.icloudoor.com/icloudoor-web";
 	private String sid = null;
 	private String uuid = null;
 	private MyJsonObjectRequest mJsonRequest;
@@ -151,7 +151,7 @@ public class KeyListListFragment extends Fragment {
 						String carNum = mCursor.getString(carNumIndex);
 						
 						HashMap<String, String> keyFromDB = new HashMap<String, String>();
-						if(doorType.equals("1")){			
+						if(!doorType.equals("2")){			
 							Log.e(TAG, "add to list");
 							keyFromDB.put("Door", doorName);
 							keyFromDB.put("BEGIN", authFrom);

@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -72,7 +72,7 @@ public class RegisterActivity extends Activity implements TextWatcher {
 	private int ConfirmCertiStatusCode;
 	private String sid = null;
 
-	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
+	private String HOST = "http://test.zone.icloudoor.com/icloudoor-web";
 	
 	// for new ui
 	private RelativeLayout phoneLayout;

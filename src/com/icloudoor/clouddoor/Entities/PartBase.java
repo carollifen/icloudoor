@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor.Entities;
+package com.icloudoor.cloudoor.Entities;
 
 /**
  * Provides setters and getters for the basic Part properties.

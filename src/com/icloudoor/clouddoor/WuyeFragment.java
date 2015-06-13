@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
@@ -72,7 +72,7 @@ public class WuyeFragment extends Fragment {
 
 	private URL unReadURL;
 	private RequestQueue mQueue;
-	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
+	private String HOST = "http://test.zone.icloudoor.com/icloudoor-web";
 	private String sid;
 
 	// for test
@@ -213,7 +213,7 @@ public class WuyeFragment extends Fragment {
 
 		try {
 			bannerURL = new URL(
-					"http://zone.icloudoor.com/icloudoor-web/user/prop/zone/getBannerRotate.do"
+					"http://test.zone.icloudoor.com/icloudoor-web/user/prop/zone/getBannerRotate.do"
 							+ "?sid=" + sid);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -355,7 +355,9 @@ public class WuyeFragment extends Fragment {
 									editor.commit();
 								}
 							} else if (response.getInt("code") == -2) {
-								Toast.makeText(getActivity(), R.string.not_login, Toast.LENGTH_SHORT).show();
+								if (getActivity() != null) {
+									Toast.makeText(getActivity(), R.string.not_login, Toast.LENGTH_SHORT).show();
+								}
 								final Intent intent = new Intent();
 								intent.setClass(getActivity(), Login.class);
 								startActivity(intent);

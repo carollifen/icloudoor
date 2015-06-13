@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -30,9 +30,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.Request.Method;
 import com.android.volley.toolbox.Volley;
-import com.icloudoor.clouddoor.Entities.FilePart;
-import com.icloudoor.clouddoor.Entities.MultipartEntity;
-import com.icloudoor.clouddoor.Entities.Part;
+import com.icloudoor.cloudoor.Entities.FilePart;
+import com.icloudoor.cloudoor.Entities.MultipartEntity;
+import com.icloudoor.cloudoor.Entities.Part;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -152,7 +152,7 @@ public class SetPersonalInfo extends Activity {
 
 	private RequestQueue mQueue;
 	private URL setInfoURL;
-	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
+	private String HOST = "http://test.zone.icloudoor.com/icloudoor-web";
 	private String sid;
 	private int statusCode;
 

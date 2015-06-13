@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -61,12 +61,12 @@ import android.widget.Toast;
 @SuppressLint("ResourceAsColor")
 public class KeyListAuthFragment extends Fragment {
 
-	private String HOST = "http://zone.icloudoor.com/icloudoor-web"
+	private String HOST = "http://test.zone.icloudoor.com/icloudoor-web"
 			+ "/user/api/getMyAddress.do";
 
-	private String postKerUrl = "http://zone.icloudoor.com/icloudoor-web/user/api/authTempCar.do";
+	private String postKerUrl = "http://test.zone.icloudoor.com/icloudoor-web/user/api/authTempCar.do";
 
-	private String postNomalKeyUrl = "http://zone.icloudoor.com/icloudoor-web/user/api/authTempNormal.do";
+	private String postNomalKeyUrl = "http://test.zone.icloudoor.com/icloudoor-web/user/api/authTempNormal.do";
 	private String sid = null;
 
 	private SharedPreferences dateAndPhoneShare;

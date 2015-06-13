@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -57,7 +57,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.icloudoor.clouddoor.WuYeDialog.WuYeDialogCallBack;
+import com.icloudoor.cloudoor.WuYeDialog.WuYeDialogCallBack;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengRegistrar;
 import com.umeng.message.tag.TagManager;
@@ -106,10 +106,13 @@ public class CloudDoorMainActivity extends FragmentActivity {
 	private int lockScreenBefore = 0;
 	
 	private int currentVersion;
+
+
+	public MyThread  myThread = null;
 	
 	// for Umeng Push Service
 	private RequestQueue mRequestQueue;
- 	private String url="http://zone.icloudoor.com/icloudoor-web/user/api/getTags.do";
+ 	private String url="http://test.zone.icloudoor.com/icloudoor-web/user/api/getTags.do";
  	private String tag;
  	private String sid;
  	private PushAgent mPushAgent;
@@ -123,7 +126,58 @@ public class CloudDoorMainActivity extends FragmentActivity {
 	private String jpegName = "myImage.jpg";
 	
 	private FeedbackAgent agent;
-	
+
+
+	Handler mHandler1 = new Handler(){
+		@Override
+		public void handleMessage(Message msg) {
+			switch(msg.what) {
+				case 10:
+					if (mKeyFragment.mOpenDoorState == 0) {
+						Log.i(TAG, "Thread handler");
+						if (!mKeyFragment.mBTScanning) {
+							mKeyFragment.populateDeviceList(mKeyFragment.mBtStateOpen);
+						}
+					}
+					break;
+				default:
+					break;
+			}
+			super.handleMessage(msg);
+		}
+	};
+
+	public  class MyThread extends Thread {
+
+		private volatile boolean mStopThread = false;
+		public volatile boolean mKeyFindState = false;
+		private final long mScanningProidShort = 3000;
+		private final long mScanningProidLong = 6000;
+
+		public void stopThread() {
+			this.mStopThread = true;
+		}
+
+		@Override
+		public void run() {
+			while (!Thread.currentThread().isInterrupted() && !mStopThread) {
+				Message msg = new Message();
+				msg.what = 10;
+				mHandler1.sendMessage(msg);
+				Log.i("ThreadTest", Thread.currentThread().getId() + "myThread");
+				try {
+					Thread.sleep(mScanningProidShort);
+					if (mKeyFindState == true){
+						Log.i("ThreadTest", "mKeyFindState true : "+String.valueOf(mStopThread));
+						Thread.sleep(mScanningProidLong);
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -219,8 +273,12 @@ public class CloudDoorMainActivity extends FragmentActivity {
 //		InitViewPager();
 		InitViews();
 		InitState();
-		
+
 		registerReceiver(mHomeKeyEventReceiver, new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
+
+		myThread = new MyThread();
+		myThread.start();
 	}
 	
 	public void InitViews() {
@@ -438,18 +496,11 @@ public class CloudDoorMainActivity extends FragmentActivity {
 	
 			SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS",
 					MODE_PRIVATE);
-			int userstatus;
-			userstatus = loginStatus.getInt("STATUS", 1);
-			if (userstatus == 1) {
-				new WuYeDialog(this, R.style.add_dialog, "hh",
-						new WuYeDialogCallBack() {
-							@Override
-							public void back() {
-								// TODO Auto-generated method stub
-
-							}
-						}).show();
-			} else if(userstatus == 2) {
+			
+			boolean isHasPropServ;
+			isHasPropServ = loginStatus.getBoolean("isHasPropServ", false);
+			
+			if(isHasPropServ) {
 				bottomTvKey.setTextColor(COLOR_GRAY);
 				bottomTvMsg.setTextColor(COLOR_GRAY);
 				bottomTvSetting.setTextColor(COLOR_GRAY);
@@ -461,9 +512,17 @@ public class CloudDoorMainActivity extends FragmentActivity {
 				bottomIvWuye.setImageResource(R.drawable.wuye_selected);
 				
 				mFragmenetTransaction.replace(R.id.id_content, mWuyeFragment);
+			} else {
+				new WuYeDialog(this, R.style.add_dialog, "hh",
+						new WuYeDialogCallBack() {
+							@Override
+							public void back() {
+								// TODO Auto-generated method stub
+
+							}
+						}).show();
 			}
-			
-			
+
 			break;
 		case R.id.bottom_msg_layout:
 			bottomTvKey.setTextColor(COLOR_GRAY);
@@ -637,9 +696,11 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		
 	}
 	
-	
 	public void onDestroy() {
-        Log.e(TAG, "onDestroy");
+        Log.e("ThreadTest", "onDestroy");
+		if (myThread != null) {
+			myThread.stopThread();
+		}
         super.onDestroy();
 		unregisterReceiver(mHomeKeyEventReceiver);
         unregisterReceiver(mConnectionStatusReceiver);

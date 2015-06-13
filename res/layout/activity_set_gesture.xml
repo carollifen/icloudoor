@@ -15,7 +15,7 @@
         android:orientation="vertical"
         android:layout_marginTop="60dp" >
 
-        <com.icloudoor.clouddoor.LockIndicatorView
+        <com.icloudoor.cloudoor.LockIndicatorView
             android:id="@+id/lock_indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

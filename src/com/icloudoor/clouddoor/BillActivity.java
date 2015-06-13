@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -22,7 +22,7 @@ public class BillActivity extends Activity {
 	private RelativeLayout back;
 	private WebView billWebView;
 	private String sid;
-	private String url = "http://zone.icloudoor.com/icloudoor-web/user/prop/zone/payment/bill.do";
+	private String url = "http://test.zone.icloudoor.com/icloudoor-web/user/prop/zone/payment/bill.do";
 	private WebSettings webSetting;
 	private Broadcast mFinishActivityBroadcast;
 	@Override

@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
 public class AreaDBConfiguration {
 	public static final String DB_PATH = "area";

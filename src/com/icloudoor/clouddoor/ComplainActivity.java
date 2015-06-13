@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -28,7 +28,7 @@ public class ComplainActivity extends Activity {
 	private int TYPE_BAD = 2;
 
 	private WebSettings webSetting;
-	private String url = "http://zone.icloudoor.com/icloudoor-web/user/prop/zone/cp/page.do";
+	private String url = "http://test.zone.icloudoor.com/icloudoor-web/user/prop/zone/cp/page.do";
 
 	private Broadcast mFinishActivityBroadcast;
 

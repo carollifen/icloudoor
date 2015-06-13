@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,7 +50,7 @@ public class ShowPersonalInfo extends Activity {
 	private String TAG = this.getClass().getSimpleName();
 
 	private RequestQueue mQueue;
-	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
+	private String HOST = "http://test.zone.icloudoor.com/icloudoor-web";
 	private URL getInfoURL;
 	private int statusCode;
 	private String sid;
@@ -59,6 +59,7 @@ public class ShowPersonalInfo extends Activity {
 	private String name = null, nickname = null, birthday = null, id = null;
 	private String province = null, city = null, district = null;
 	private int sex = 0, provinceid = 0, cityid = 0, districtid = 0;
+	private boolean isHasPropServ;
 	
 	private TextView TVName;
 	private TextView TVNickName;
@@ -223,10 +224,12 @@ public class ShowPersonalInfo extends Activity {
 									cityid = Data.getInt("cityId");
 									districtid = Data.getInt("districtId");
 									portraitUrl = Data.getString("portraitUrl");
+									isHasPropServ = Data.getBoolean("isHasPropServ");
 
 									SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
 									Editor edit = loginStatus.edit();
 									edit.putString("URL", portraitUrl);
+									edit.putBoolean("isHasPropServ", isHasPropServ);
 									edit.commit();
 
 									SharedPreferences saveProfile = getSharedPreferences("PROFILE", MODE_PRIVATE);
@@ -244,6 +247,7 @@ public class ShowPersonalInfo extends Activity {
 									editor.putString("YEAR", birthday.substring(0, 4));
 									editor.putString("MONTH", birthday.substring(5, 7));
 									editor.putString("DAY", birthday.substring(8));
+									editor.putBoolean("isHasPropServ", isHasPropServ);
 									editor.commit();
 
 									File f = new File(PATH + imageName);

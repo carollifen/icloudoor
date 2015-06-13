@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -75,7 +75,7 @@ public class KeyList extends FragmentActivity{
 	private URL downLoadKeyURL;
 	private RequestQueue mQueue;
 
-	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
+	private String HOST = "http://test.zone.icloudoor.com/icloudoor-web";
 	private String sid = null;
 	private String uuid = null;
 	private MyJsonObjectRequest mJsonRequest;

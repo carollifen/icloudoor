@@ -1,11 +1,11 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.icloudoor.clouddoor.SlideView.OnSlideListener;
-import com.icloudoor.clouddoor.SlideView;
+import com.icloudoor.cloudoor.SlideView;
+import com.icloudoor.cloudoor.SlideView.OnSlideListener;
 
 import android.content.Context;
 import android.os.Bundle;

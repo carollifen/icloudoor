@@ -7,11 +7,11 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
-        <com.icloudoor.clouddoor.TakePicCamSurfaceView
+        <com.icloudoor.cloudoor.TakePicCamSurfaceView
             android:id="@+id/camera_surfaceview"
             android:layout_width="0dip"
             android:layout_height="0dip" />
-        <com.icloudoor.clouddoor.TakePicMaskView
+        <com.icloudoor.cloudoor.TakePicMaskView
             android:id="@+id/view_mask"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

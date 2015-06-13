@@ -17,7 +17,7 @@
         android:layout_height="83dp"
         android:background="@drawable/selector_setting_detail" >
 
-        <com.icloudoor.clouddoor.CircularImage
+        <com.icloudoor.cloudoor.CircularImage
             android:id="@+id/person_image"
             android:layout_width="60dp"
             android:layout_height="60dp"

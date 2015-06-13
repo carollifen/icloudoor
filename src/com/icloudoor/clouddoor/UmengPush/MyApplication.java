@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor.UmengPush;
+package com.icloudoor.cloudoor.UmengPush;
 
 import android.app.Application;
 import android.app.Notification;
@@ -9,7 +9,7 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
-import com.icloudoor.clouddoor.R;
+import com.icloudoor.cloudoor.R;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.IUmengUnregisterCallback;
 import com.umeng.message.PushAgent;

@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor.Entities;
+package com.icloudoor.cloudoor.Entities;
 
 import java.io.IOException;
 import java.io.InputStream;

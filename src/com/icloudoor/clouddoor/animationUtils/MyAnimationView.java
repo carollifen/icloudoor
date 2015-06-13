@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor.animationUtils;
+package com.icloudoor.cloudoor.animationUtils;
 
 import java.io.InputStream;
 

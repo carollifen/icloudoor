@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -65,7 +65,7 @@ public class Login extends Activity implements TextWatcher {
 
 	private String phoneNum, password;
 
-	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
+	private String HOST = "http://test.zone.icloudoor.com/icloudoor-web";
 
 	private int loginStatusCode;
 
@@ -81,6 +81,7 @@ public class Login extends Activity implements TextWatcher {
 	private int sex = 0, provinceId = 0, cityId = 0, districtId = 0;
 	private String portraitUrl, userId;
 	private int userStatus;
+	private boolean isHasPropServ;
 	
 	// for new ui
 	private RelativeLayout phoneLayout;
@@ -270,6 +271,7 @@ public class Login extends Activity implements TextWatcher {
 											provinceId = info.getInt("provinceId");
 											cityId = info.getInt("cityId");
 											districtId = info.getInt("districtId");
+											isHasPropServ = info.getBoolean("isHasPropServ");
 
 											portraitUrl = info.getString("portraitUrl");
 											userId = info.getString("userId");
@@ -286,6 +288,7 @@ public class Login extends Activity implements TextWatcher {
 											editor.putString("URL", portraitUrl);
 											editor.putString("USERID", userId);
 											editor.putInt("STATUS", userStatus);
+											editor.putBoolean("isHasPropServ", isHasPropServ);
 											editor.commit();
 											
 											//

@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,7 +35,7 @@ import com.android.volley.toolbox.Volley;
 import com.umeng.common.message.Log;
 
 public class FragmentCarEntrance extends Fragment {
-	private String HOST = "http://zone.icloudoor.com/icloudoor-web"
+	private String HOST = "http://test.zone.icloudoor.com/icloudoor-web"
 			+ "/user/api/getFamilyUserAndCars.do";
 	private String sid = null;
 

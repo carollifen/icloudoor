@@ -1,4 +1,4 @@
-package com.icloudoor.clouddoor;
+package com.icloudoor.cloudoor;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -59,14 +59,12 @@ public class SettingFragment extends Fragment {
 	private TextView logOut;
 	
 	private TextView showName;
-	private TextView showPhoneNum;
 	private String name;
-	private String phone;
 
 	private MyOnClickListener myClickListener;
 
 	private RequestQueue mQueue;
-	private String HOST = "http://zone.icloudoor.com/icloudoor-web";
+	private String HOST = "http://test.zone.icloudoor.com/icloudoor-web";
 	private URL logOutURL;
 	private String sid = null;
 	private int statusCode;
