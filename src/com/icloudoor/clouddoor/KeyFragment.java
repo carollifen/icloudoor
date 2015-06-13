@@ -2029,7 +2029,7 @@ public class KeyFragment extends Fragment {
 		isChooseCarChannel = setting.getInt("chooseCar", 1);
 //		canDisturb = setting.getInt("disturb", 0);
 		haveSound = setting.getInt("sound", 1);
-		canShake = setting.getInt("shake", 0);
+		canShake = setting.getInt("shake", 1);
 	}
 
 	private final BroadcastReceiver mBluetoothStateReceiver = new BroadcastReceiver() {
